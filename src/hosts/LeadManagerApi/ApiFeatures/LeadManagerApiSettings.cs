@@ -1,0 +1,8 @@
+﻿namespace LeadManagerApi.ApiFeatures;
+
+public sealed class LeadManagerApiSettings
+{
+    public bool ApiKeyRequestHeaderRequired { get; set; } = default!;
+    public string ApiKeyRequestHeaderName { get; set; } = default!;
+    public string ApiKeyRequestHeaderValue { get; set; } = default!;
+}

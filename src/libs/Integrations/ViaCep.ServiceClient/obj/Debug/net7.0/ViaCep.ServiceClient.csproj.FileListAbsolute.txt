@@ -1,0 +1,12 @@
+F:\Codebase\_.NET Solutions\Core\7.x\LeadManager_PactoEnergiaExamTest\backend\src\LeadManager\src\libs\Integrations\ViaCep.ServiceClient\bin\Debug\net7.0\ViaCep.ServiceClient.deps.json
+F:\Codebase\_.NET Solutions\Core\7.x\LeadManager_PactoEnergiaExamTest\backend\src\LeadManager\src\libs\Integrations\ViaCep.ServiceClient\bin\Debug\net7.0\ViaCep.ServiceClient.dll
+F:\Codebase\_.NET Solutions\Core\7.x\LeadManager_PactoEnergiaExamTest\backend\src\LeadManager\src\libs\Integrations\ViaCep.ServiceClient\bin\Debug\net7.0\ViaCep.ServiceClient.pdb
+F:\Codebase\_.NET Solutions\Core\7.x\LeadManager_PactoEnergiaExamTest\backend\src\LeadManager\src\libs\Integrations\ViaCep.ServiceClient\obj\Debug\net7.0\ViaCep.ServiceClient.csproj.AssemblyReference.cache
+F:\Codebase\_.NET Solutions\Core\7.x\LeadManager_PactoEnergiaExamTest\backend\src\LeadManager\src\libs\Integrations\ViaCep.ServiceClient\obj\Debug\net7.0\ViaCep.ServiceClient.GeneratedMSBuildEditorConfig.editorconfig
+F:\Codebase\_.NET Solutions\Core\7.x\LeadManager_PactoEnergiaExamTest\backend\src\LeadManager\src\libs\Integrations\ViaCep.ServiceClient\obj\Debug\net7.0\ViaCep.ServiceClient.AssemblyInfoInputs.cache
+F:\Codebase\_.NET Solutions\Core\7.x\LeadManager_PactoEnergiaExamTest\backend\src\LeadManager\src\libs\Integrations\ViaCep.ServiceClient\obj\Debug\net7.0\ViaCep.ServiceClient.AssemblyInfo.cs
+F:\Codebase\_.NET Solutions\Core\7.x\LeadManager_PactoEnergiaExamTest\backend\src\LeadManager\src\libs\Integrations\ViaCep.ServiceClient\obj\Debug\net7.0\ViaCep.ServiceClient.csproj.CoreCompileInputs.cache
+F:\Codebase\_.NET Solutions\Core\7.x\LeadManager_PactoEnergiaExamTest\backend\src\LeadManager\src\libs\Integrations\ViaCep.ServiceClient\obj\Debug\net7.0\ViaCep.ServiceClient.dll
+F:\Codebase\_.NET Solutions\Core\7.x\LeadManager_PactoEnergiaExamTest\backend\src\LeadManager\src\libs\Integrations\ViaCep.ServiceClient\obj\Debug\net7.0\refint\ViaCep.ServiceClient.dll
+F:\Codebase\_.NET Solutions\Core\7.x\LeadManager_PactoEnergiaExamTest\backend\src\LeadManager\src\libs\Integrations\ViaCep.ServiceClient\obj\Debug\net7.0\ViaCep.ServiceClient.pdb
+F:\Codebase\_.NET Solutions\Core\7.x\LeadManager_PactoEnergiaExamTest\backend\src\LeadManager\src\libs\Integrations\ViaCep.ServiceClient\obj\Debug\net7.0\ref\ViaCep.ServiceClient.dll

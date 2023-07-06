@@ -1,0 +1,11 @@
+obj\Debug\net7.0\InvalidAddressException.4wIk6nol.generated.cs
+obj\Debug\net7.0\InvalidNationalTaxIdentificationNumberException.ndyic1f-.generated.cs
+obj\Debug\net7.0\Entity.UUooNuiH.generated.cs
+obj\Debug\net7.0\IAuditableEntity.BtH8TvEV.generated.cs
+obj\Debug\net7.0\IEntity.ULbykJso.generated.cs
+obj\Debug\net7.0\Lead.O6kR6-Xv.generated.cs
+obj\Debug\net7.0\AssemblyInfo.jFGn7DMv.generated.cs
+obj\Debug\net7.0\Cep.1u3bUDGV.generated.cs
+obj\Debug\net7.0\Cnpj.C+tkxWUS.generated.cs
+obj\Debug\net7.0\Endereco.SsBTyPe6.generated.cs
+obj\Debug\net7.0\Core.GlobalUsings.g.50ymu1T1.generated.cs

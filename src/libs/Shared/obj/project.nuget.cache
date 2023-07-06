@@ -1,0 +1,13 @@
+{
+  "version": 2,
+  "dgSpecHash": "x8ndRhnYV0OAMYhUz8MiiYDe/NnbnKib9Zmk6eePr5XD5OpZgZq4UH8dg3thMBbCq8AKTmyw4CoCQ9nam5WucA==",
+  "success": true,
+  "projectFilePath": "F:\\Codebase\\_.NET Solutions\\Core\\7.x\\LeadManager_PactoEnergiaExamTest\\backend\\src\\LeadManager\\src\\libs\\Shared\\Shared.csproj",
+  "expectedPackageFiles": [
+    "C:\\Users\\rblac\\.nuget\\packages\\fluentvalidation\\11.5.2\\fluentvalidation.11.5.2.nupkg.sha512",
+    "C:\\Users\\rblac\\.nuget\\packages\\mediatr\\12.0.1\\mediatr.12.0.1.nupkg.sha512",
+    "C:\\Users\\rblac\\.nuget\\packages\\mediatr.contracts\\2.0.1\\mediatr.contracts.2.0.1.nupkg.sha512",
+    "C:\\Users\\rblac\\.nuget\\packages\\microsoft.extensions.dependencyinjection.abstractions\\6.0.0\\microsoft.extensions.dependencyinjection.abstractions.6.0.0.nupkg.sha512"
+  ],
+  "logs": []
+}

@@ -1,0 +1,16 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <OutputType>Library</OutputType>
+    <TargetFramework>net7.0</TargetFramework>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <Nullable>enable</Nullable>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\..\..\src\libs\Application\Application.csproj" />
+    <ProjectReference Include="..\..\..\src\libs\Core\Core.csproj" />
+    <ProjectReference Include="..\..\..\src\libs\Integrations\ViaCep.ServiceClient\ViaCep.ServiceClient.csproj" />
+  </ItemGroup>
+
+</Project>
