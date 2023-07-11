@@ -484,3 +484,4 @@ $RECYCLE.BIN/
 /tests/integration-tests/LeadManagerApi.Tests/obj/Debug/net7.0/LeadManagerApi.Tests.csproj.AssemblyReference.cache
 /tests/unit-tests/Application.Tests/obj/Debug/net7.0/Application.Tests.csproj.AssemblyReference.cache
 /tests/unit-tests/Core.Tests/obj/Debug/net7.0/Core.Tests.csproj.AssemblyReference.cache
+/.vs/LeadManager/DesignTimeBuild/.dtbcache.v2
