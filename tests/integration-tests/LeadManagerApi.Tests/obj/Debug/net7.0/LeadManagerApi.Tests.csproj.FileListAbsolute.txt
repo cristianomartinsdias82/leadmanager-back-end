@@ -1,4 +1,3 @@
-F:\Codebase\_.NET Solutions\Core\7.x\LeadManager_PactoEnergiaExamTest\backend\src\LeadManager\tests\integration-tests\LeadManagerApi.Tests\bin\Debug\net7.0\CoverletSourceRootsMapping
 F:\Codebase\_.NET Solutions\Core\7.x\LeadManager_PactoEnergiaExamTest\backend\src\LeadManager\tests\integration-tests\LeadManagerApi.Tests\bin\Debug\net7.0\testhost.dll
 F:\Codebase\_.NET Solutions\Core\7.x\LeadManager_PactoEnergiaExamTest\backend\src\LeadManager\tests\integration-tests\LeadManagerApi.Tests\bin\Debug\net7.0\LeadManagerApi.deps.json
 F:\Codebase\_.NET Solutions\Core\7.x\LeadManager_PactoEnergiaExamTest\backend\src\LeadManager\tests\integration-tests\LeadManagerApi.Tests\bin\Debug\net7.0\LeadManagerApi.runtimeconfig.json
@@ -507,3 +506,4 @@ F:\Codebase\_.NET Solutions\Core\7.x\LeadManager_PactoEnergiaExamTest\backend\sr
 F:\Codebase\_.NET Solutions\Core\7.x\LeadManager_PactoEnergiaExamTest\backend\src\LeadManager\tests\integration-tests\LeadManagerApi.Tests\obj\Debug\net7.0\LeadManagerApi.Tests.pdb
 F:\Codebase\_.NET Solutions\Core\7.x\LeadManager_PactoEnergiaExamTest\backend\src\LeadManager\tests\integration-tests\LeadManagerApi.Tests\obj\Debug\net7.0\LeadManagerApi.Tests.genruntimeconfig.cache
 F:\Codebase\_.NET Solutions\Core\7.x\LeadManager_PactoEnergiaExamTest\backend\src\LeadManager\tests\integration-tests\LeadManagerApi.Tests\obj\Debug\net7.0\ref\LeadManagerApi.Tests.dll
+F:\Codebase\_.NET Solutions\Core\7.x\LeadManager_PactoEnergiaExamTest\backend\src\LeadManager\tests\integration-tests\LeadManagerApi.Tests\bin\Debug\net7.0\CoverletSourceRootsMapping_LeadManagerApi.Tests
