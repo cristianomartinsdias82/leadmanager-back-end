@@ -482,3 +482,5 @@ $RECYCLE.BIN/
 /src/libs/Infrastructure/obj/Debug/net7.0/Infrastructure.csproj.AssemblyReference.cache
 /tests/common/Tests.Common/obj/Debug/net7.0/Tests.Common.csproj.AssemblyReference.cache
 /tests/integration-tests/LeadManagerApi.Tests/obj/Debug/net7.0/LeadManagerApi.Tests.csproj.AssemblyReference.cache
+/tests/unit-tests/Application.Tests/obj/Debug/net7.0/Application.Tests.csproj.AssemblyReference.cache
+/tests/unit-tests/Core.Tests/obj/Debug/net7.0/Core.Tests.csproj.AssemblyReference.cache
