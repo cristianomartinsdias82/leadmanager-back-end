@@ -97,7 +97,7 @@ F:\Codebase\_.NET Solutions\Core\7.x\LeadManager_PactoEnergiaExamTest\backend\sr
 F:\Codebase\_.NET Solutions\Core\7.x\LeadManager_PactoEnergiaExamTest\backend\src\LeadManager\src\tests\unit-tests\Application.Tests\obj\Debug\net7.0\Application.Tests.pdb
 F:\Codebase\_.NET Solutions\Core\7.x\LeadManager_PactoEnergiaExamTest\backend\src\LeadManager\src\tests\unit-tests\Application.Tests\obj\Debug\net7.0\Application.Tests.genruntimeconfig.cache
 F:\Codebase\_.NET Solutions\Core\7.x\LeadManager_PactoEnergiaExamTest\backend\src\LeadManager\src\tests\unit-tests\Application.Tests\obj\Debug\net7.0\ref\Application.Tests.dll
-F:\Codebase\_.NET Solutions\Core\7.x\LeadManager_PactoEnergiaExamTest\backend\src\LeadManager\tests\unit-tests\Application.Tests\bin\Debug\net7.0\CoverletSourceRootsMapping
+F:\Codebase\_.NET Solutions\Core\7.x\LeadManager_PactoEnergiaExamTest\backend\src\LeadManager\tests\unit-tests\Application.Tests\bin\Debug\net7.0\CoverletSourceRootsMapping_Application.Tests
 F:\Codebase\_.NET Solutions\Core\7.x\LeadManager_PactoEnergiaExamTest\backend\src\LeadManager\tests\unit-tests\Application.Tests\bin\Debug\net7.0\testhost.dll
 F:\Codebase\_.NET Solutions\Core\7.x\LeadManager_PactoEnergiaExamTest\backend\src\LeadManager\tests\unit-tests\Application.Tests\bin\Debug\net7.0\testhost.exe
 F:\Codebase\_.NET Solutions\Core\7.x\LeadManager_PactoEnergiaExamTest\backend\src\LeadManager\tests\unit-tests\Application.Tests\bin\Debug\net7.0\xunit.runner.visualstudio.dotnetcore.testadapter.dll

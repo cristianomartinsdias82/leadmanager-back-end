@@ -476,3 +476,9 @@ $RECYCLE.BIN/
 # Windows shortcuts
 *.lnk
 /.vs/LeadManager/v17/.suo
+/.vs/LeadManager/v17/TestStore/0/040.testlog
+/src/hosts/LeadManagerApi/obj/Debug/net7.0/LeadManagerApi.csproj.AssemblyReference.cache
+/src/libs/Application/obj/Debug/net7.0/Application.csproj.AssemblyReference.cache
+/src/libs/Infrastructure/obj/Debug/net7.0/Infrastructure.csproj.AssemblyReference.cache
+/tests/common/Tests.Common/obj/Debug/net7.0/Tests.Common.csproj.AssemblyReference.cache
+/tests/integration-tests/LeadManagerApi.Tests/obj/Debug/net7.0/LeadManagerApi.Tests.csproj.AssemblyReference.cache
