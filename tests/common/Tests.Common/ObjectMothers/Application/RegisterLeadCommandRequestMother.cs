@@ -6,7 +6,7 @@ public class RegisterLeadCommandRequestMother
 {
     private RegisterLeadCommandRequestMother() { }
 
-    public RegisterLeadCommandRequest _request = new RegisterLeadCommandRequest();
+    private RegisterLeadCommandRequest _request = new();
 
     public static RegisterLeadCommandRequestMother Instance
         => new RegisterLeadCommandRequestMother();

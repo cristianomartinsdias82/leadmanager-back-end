@@ -6,13 +6,13 @@ namespace Application.Features.Leads.Commands.UpdateLead;
 public sealed class UpdateLeadCommandRequest : IRequest<ApplicationResponse<UpdateLeadCommandResponse>>
 {
     public Guid? Id { get; set; }
-    public required string Cnpj { get; init; }
-    public required string RazaoSocial { get; init; }
-    public required string Cep { get; init; }
-    public required string Endereco { get; init; }
-    public required string Bairro { get; init; }
-    public required string Cidade { get; init; }
-    public required string Estado { get; init; }
-    public string? Complemento { get; init; }
-    public string? Numero { get; init; }
+    public string? Cnpj { get; set; }
+    public string? RazaoSocial { get; set; }
+    public string? Cep { get; set; }
+    public string? Endereco { get; set; }
+    public string? Bairro { get; set; }
+    public string? Cidade { get; set; }
+    public string? Estado { get; set; }
+    public string? Complemento { get; set; }
+    public string? Numero { get; set; }
 }
