@@ -485,3 +485,4 @@ $RECYCLE.BIN/
 /tests/unit-tests/Application.Tests/obj/Debug/net7.0/Application.Tests.csproj.AssemblyReference.cache
 /tests/unit-tests/Core.Tests/obj/Debug/net7.0/Core.Tests.csproj.AssemblyReference.cache
 /.vs/LeadManager/DesignTimeBuild/.dtbcache.v2
+/.vs/LeadManager/v17/TestStore/0/testlog.manifest
