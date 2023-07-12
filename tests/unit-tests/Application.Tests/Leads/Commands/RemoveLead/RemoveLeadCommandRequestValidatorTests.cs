@@ -10,7 +10,7 @@ public sealed class RemoveLeadCommandRequestValidatorTests
 
     [Theory]
     [MemberData(nameof(InvalidCommandRequestsSimulations))]
-    public void Command_InvalidRequestParameters_ShouldFail(
+    public void Validate_InvalidRequestParameters_ShouldFail(
         RemoveLeadCommandRequest request,
         params string[] expectedErrorMessages)
     {
@@ -25,7 +25,7 @@ public sealed class RemoveLeadCommandRequestValidatorTests
     }
 
     [Fact]
-    public void Command_ValidRequestParameters_ShouldSucceed()
+    public void Validate_ValidRequestParameters_ShouldSucceed()
     {
         //Arrange & Act
         var result = _validator.Validate(new RemoveLeadCommandRequest { Id = Guid.NewGuid() });

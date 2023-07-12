@@ -25,6 +25,7 @@ internal sealed class UpdateLeadCommandHandler : ApplicationRequestHandler<Updat
             request.Cep,
             request.Endereco,
             request.Cidade,
+            request.Estado,
             request.Bairro,
             request.Numero,
             request.Complemento);

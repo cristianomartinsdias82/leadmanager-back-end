@@ -25,6 +25,10 @@ public sealed class UpdateLeadCommandRequestValidator : AbstractValidator<Update
             .WithMessage("Campo Cnpj é inválido.");
         });
 
+        RuleFor(lead => lead.RazaoSocial)
+            .NotEmpty()
+            .WithMessage("Campo Razão social é obrigatório.");
+
         RuleFor(lead => lead.Cep)
             .NotEmpty()
             .WithMessage("Campo Cep é obrigatório.");
@@ -46,11 +50,5 @@ public sealed class UpdateLeadCommandRequestValidator : AbstractValidator<Update
             .WithMessage("Campo Estado é obrigatório.")
             .Length(2)
             .WithMessage("Campo Estado deve conter 2 caracteres.");
-
-        //When(lead => !string.IsNullOrWhiteSpace(lead.Numero),
-        //    () =>
-        //    {
-
-        //    });
     }
 }

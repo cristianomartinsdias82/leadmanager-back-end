@@ -33,9 +33,9 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="Leads\Commands\UpdateLead\" />
     <Folder Include="Leads\Queries\GetLeadById\" />
     <Folder Include="Leads\Queries\GetLeads\" />
+    <Folder Include="TestResults\" />
   </ItemGroup>
 
 </Project>

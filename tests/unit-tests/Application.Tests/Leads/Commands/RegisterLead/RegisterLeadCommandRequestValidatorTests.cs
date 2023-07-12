@@ -11,7 +11,7 @@ public sealed class RegisterLeadCommandRequestValidatorTests
 
     [Theory]
     [MemberData(nameof(ValidCommandRequestsSimulations))]
-    public void Command_ValidRequestParameters_ShouldSucceed(RegisterLeadCommandRequest request)
+    public void Validate_ValidRequestParameters_ShouldSucceed(RegisterLeadCommandRequest request)
     {
         //Arrange
         //Act
@@ -24,7 +24,7 @@ public sealed class RegisterLeadCommandRequestValidatorTests
 
     [Theory]
     [MemberData(nameof(InvalidCommandRequestsSimulations))]
-    public void Command_InvalidRequestParameters_ShouldFail(
+    public void Validate_InvalidRequestParameters_ShouldFail(
         RegisterLeadCommandRequest request,
         params string[] expectedErrorMessages)
     {

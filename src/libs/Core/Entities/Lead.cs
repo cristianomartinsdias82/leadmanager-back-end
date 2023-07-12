@@ -58,6 +58,7 @@ public class Lead : Entity
         string cep,
         string endereco,
         string cidade,
+        string estado,
         string bairro,
         string? numero,
         string? complemento)
@@ -67,6 +68,7 @@ public class Lead : Entity
         Cep = cep;
         Logradouro = endereco;
         Cidade = cidade;
+        Estado = estado;
         Bairro = bairro;
         Numero = numero;
         Complemento = complemento;

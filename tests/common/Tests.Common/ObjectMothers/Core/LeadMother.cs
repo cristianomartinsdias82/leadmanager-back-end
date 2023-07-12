@@ -8,7 +8,7 @@ public class LeadMother
 
     public static Lead XptoLLC()
         => new Lead(
-                "53.302.821/0001-49",
+                CnpjMother.MaskedWellformedValidOne(),
                 "Xpto LLC",
                 "01234-567",
                 "Rua das Pitombeiras",
