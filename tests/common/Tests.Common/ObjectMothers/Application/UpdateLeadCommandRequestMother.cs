@@ -1,5 +1,4 @@
-﻿using Application.Features.Leads.Commands.RegisterLead;
-using Application.Features.Leads.Commands.UpdateLead;
+﻿using Application.Features.Leads.Commands.UpdateLead;
 
 namespace Tests.Common.ObjectMothers.Application;
 

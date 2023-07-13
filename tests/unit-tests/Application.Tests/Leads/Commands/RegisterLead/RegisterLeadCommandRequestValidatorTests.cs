@@ -1,6 +1,7 @@
 ﻿using Application.Features.Leads.Commands.RegisterLead;
 using FluentAssertions;
 using Tests.Common.ObjectMothers.Application;
+using Tests.Common.ObjectMothers.Core;
 using Xunit;
 
 namespace Application.Tests.Leads.Commands.RegisterLead;
@@ -8,6 +9,7 @@ namespace Application.Tests.Leads.Commands.RegisterLead;
 public sealed class RegisterLeadCommandRequestValidatorTests
 {
     private readonly RegisterLeadCommandRequestValidator _validator = new();
+    private static readonly RegisterLeadCommandRequest _validLeadRequest = RegisterLeadCommandRequestMother.XptoIncLeadRequest();
 
     [Theory]
     [MemberData(nameof(ValidCommandRequestsSimulations))]
@@ -51,12 +53,12 @@ public sealed class RegisterLeadCommandRequestValidatorTests
 
     public static IEnumerable<object[]> InvalidCommandRequestsSimulations()
     {
-        var emptyDataRequest = RegisterLeadCommandRequestMother.Instance.Build();
-
         yield return new object[]
         {
-            emptyDataRequest,
+            RegisterLeadCommandRequestMother.Instance
+                .Build(),
             "Campo Cnpj é obrigatório.",
+            "Campo Razão social é obrigatório.",
             "Campo Cep é obrigatório.",
             "Campo Endereço é obrigatório.",
             "Campo Bairro é obrigatório.",
@@ -66,11 +68,10 @@ public sealed class RegisterLeadCommandRequestValidatorTests
 
         yield return new object[]
         {
-            RegisterLeadCommandRequestMother
-                .Instance
-                .WithRazaoSocial("XptoInc")
+            RegisterLeadCommandRequestMother.Instance
+                .WithCnpj(CnpjMother.MaskedWellformedValidOne())
                 .Build(),
-            "Campo Cnpj é obrigatório.",
+            "Campo Razão social é obrigatório.",
             "Campo Cep é obrigatório.",
             "Campo Endereço é obrigatório.",
             "Campo Bairro é obrigatório.",
@@ -80,31 +81,151 @@ public sealed class RegisterLeadCommandRequestValidatorTests
 
         yield return new object[]
         {
-            RegisterLeadCommandRequestMother
-                .Instance
-                .WithCnpj("21.456.987/0005-54")
-                .WithRazaoSocial("XptoInc")
+            RegisterLeadCommandRequestMother.Instance
+                .WithCnpj(CnpjMother.MaskedMalformedValidOne())
                 .Build(),
-            "Campo Cep é obrigatório.",
             "Campo Cnpj é inválido.",
+            "Campo Razão social é obrigatório.",
+            "Campo Cep é obrigatório.",
             "Campo Endereço é obrigatório.",
             "Campo Bairro é obrigatório.",
             "Campo Cidade é obrigatório.",
             "Campo Estado é obrigatório."
         };
 
-        /*
-        
-        ...
-         
-        */
-
-        var xptoIncWithInvalidState = RegisterLeadCommandRequestMother.XptoIncLeadRequest();
-        xptoIncWithInvalidState.Estado = "SPA";
+        yield return new object[]
+        {
+            RegisterLeadCommandRequestMother.Instance
+                .WithCnpj(CnpjMother.UnmaskedValidOne())
+                .Build(),
+            "Campo Cnpj é inválido.",
+            "Campo Razão social é obrigatório.",
+            "Campo Cep é obrigatório.",
+            "Campo Endereço é obrigatório.",
+            "Campo Bairro é obrigatório.",
+            "Campo Cidade é obrigatório.",
+            "Campo Estado é obrigatório."
+        };
 
         yield return new object[]
         {
-            xptoIncWithInvalidState,
+            RegisterLeadCommandRequestMother.Instance
+                .WithCnpj(CnpjMother.UnmaskedInvalidOne())
+                .Build(),
+            "Campo Cnpj é inválido.",
+            "Campo Razão social é obrigatório.",
+            "Campo Cep é obrigatório.",
+            "Campo Endereço é obrigatório.",
+            "Campo Bairro é obrigatório.",
+            "Campo Cidade é obrigatório.",
+            "Campo Estado é obrigatório."
+        };
+
+        yield return new object[]
+        {
+            RegisterLeadCommandRequestMother.Instance
+                .WithCnpj(CnpjMother.MaskedWellformedValidOne())
+                .WithRazaoSocial(_validLeadRequest.RazaoSocial!)
+                .Build(),
+            "Campo Cep é obrigatório.",
+            "Campo Endereço é obrigatório.",
+            "Campo Bairro é obrigatório.",
+            "Campo Cidade é obrigatório.",
+            "Campo Estado é obrigatório."
+        };
+
+        yield return new object[]
+        {
+            RegisterLeadCommandRequestMother.Instance
+                .WithCnpj(CnpjMother.MaskedWellformedValidOne())
+                .WithRazaoSocial(_validLeadRequest.RazaoSocial!)
+                .WithCep(CepMother.MaskedWellformedValidOne())
+                .Build(),
+            "Campo Endereço é obrigatório.",
+            "Campo Bairro é obrigatório.",
+            "Campo Cidade é obrigatório.",
+            "Campo Estado é obrigatório."
+        };
+
+        yield return new object[]
+        {
+            RegisterLeadCommandRequestMother.Instance
+                .WithCnpj(CnpjMother.MaskedWellformedValidOne())
+                .WithRazaoSocial("Xpto Inc.")
+                .WithCep(CepMother.MaskedWellformedValidOne())
+                .WithEndereco("Rua Xpto")
+                .Build(),
+            "Campo Bairro é obrigatório.",
+            "Campo Cidade é obrigatório.",
+            "Campo Estado é obrigatório."
+        };
+
+        yield return new object[]
+        {
+            RegisterLeadCommandRequestMother.Instance
+                .WithCnpj(CnpjMother.MaskedWellformedValidOne())
+                .WithRazaoSocial(_validLeadRequest.RazaoSocial!)
+                .WithCep(CepMother.MaskedWellformedValidOne())
+                .WithEndereco("Rua Xpto")
+                .WithBairro(_validLeadRequest.Bairro!)
+                .Build(),
+            "Campo Cidade é obrigatório.",
+            "Campo Estado é obrigatório."
+        };
+
+        yield return new object[]
+        {
+            RegisterLeadCommandRequestMother.Instance
+                .WithCnpj(CnpjMother.MaskedWellformedValidOne())
+                .WithRazaoSocial(_validLeadRequest.RazaoSocial!)
+                .WithCep(CepMother.MaskedWellformedValidOne())
+                .WithEndereco(_validLeadRequest.Endereco!)
+                .WithBairro(_validLeadRequest.Bairro!)
+                .WithCidade(_validLeadRequest.Cidade!)
+                .Build(),
+            "Campo Estado é obrigatório."
+        };
+
+        yield return new object[]
+        {
+            RegisterLeadCommandRequestMother.Instance
+                .WithCnpj(CnpjMother.MaskedWellformedValidOne())
+                .WithRazaoSocial(_validLeadRequest.RazaoSocial!)
+                .WithCep(CepMother.MaskedWellformedValidOne())
+                .WithEndereco(_validLeadRequest.Endereco!)
+                .WithBairro(_validLeadRequest.Bairro!)
+                .WithCidade(_validLeadRequest.Cidade!)
+                .WithEstado(string.Empty)
+                .Build(),
+            "Campo Estado é obrigatório.",
+            "Campo Estado deve conter 2 caracteres."
+        };
+
+        yield return new object[]
+        {
+            RegisterLeadCommandRequestMother.Instance
+                .WithCnpj(CnpjMother.MaskedWellformedValidOne())
+                .WithRazaoSocial(_validLeadRequest.RazaoSocial!)
+                .WithCep(CepMother.MaskedWellformedValidOne())
+                .WithEndereco(_validLeadRequest.Endereco!)
+                .WithBairro(_validLeadRequest.Bairro!)
+                .WithCidade(_validLeadRequest.Cidade!)
+                .WithEstado("S")
+                .Build(),
+            "Campo Estado deve conter 2 caracteres."
+        };
+
+        yield return new object[]
+        {
+            RegisterLeadCommandRequestMother.Instance
+                .WithCnpj(CnpjMother.MaskedWellformedValidOne())
+                .WithRazaoSocial(_validLeadRequest.RazaoSocial!)
+                .WithCep(CepMother.MaskedWellformedValidOne())
+                .WithEndereco(_validLeadRequest.Endereco!)
+                .WithBairro(_validLeadRequest.Bairro!)
+                .WithCidade(_validLeadRequest.Cidade!)
+                .WithEstado("SPx")
+                .Build(),
             "Campo Estado deve conter 2 caracteres."
         };
     }
