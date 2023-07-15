@@ -33,8 +33,6 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="Leads\Queries\GetLeadById\" />
-    <Folder Include="Leads\Queries\GetLeads\" />
     <Folder Include="TestResults\" />
   </ItemGroup>
 

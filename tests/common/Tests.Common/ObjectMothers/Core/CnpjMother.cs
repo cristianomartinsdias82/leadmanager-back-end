@@ -8,9 +8,9 @@ namespace Tests.Common.ObjectMothers.Core
         private static string maskedValidCnpj = "75.396.039/0001-79";
         private static string maskedInvalidCnpj = "33.646.178/0001-12";
 
-        private static SpanAction<char, string> messUp = (span, value) =>
+        private static SpanAction<char, string> messItUp = (span, cnpj) =>
         {
-            value.AsSpan().CopyTo(span);
+            cnpj.AsSpan().CopyTo(span);
             span[2] = '-';
             span[5] = '/';
         };
@@ -28,9 +28,9 @@ namespace Tests.Common.ObjectMothers.Core
             => Regex.Replace(maskedInvalidCnpj, @"\D", string.Empty);
 
         public static string MaskedMalformedValidOne()
-            => string.Create(maskedValidCnpj.Length, maskedValidCnpj, messUp);
+            => string.Create(maskedValidCnpj.Length, maskedValidCnpj, messItUp);
 
         public static string MaskedMalformedInvalidOne()
-            => string.Create(maskedValidCnpj.Length, maskedInvalidCnpj, messUp);
+            => string.Create(maskedValidCnpj.Length, maskedInvalidCnpj, messItUp);
     }
 }

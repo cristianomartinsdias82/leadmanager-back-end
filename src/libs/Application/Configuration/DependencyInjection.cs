@@ -1,17 +1,17 @@
 ﻿using Application.Behaviors;
-using Application.Features.Leads.Queries.GetLeadById;
 using Application.Features.Addresses.Queries.SearchAddressByZipCode;
+using Application.Features.Leads.Commands.RegisterLead;
+using Application.Features.Leads.Commands.RemoveLead;
+using Application.Features.Leads.Commands.UpdateLead;
+using Application.Features.Leads.Queries.GetLeadById;
+using Application.Features.Leads.Queries.SearchLead;
+using Application.Features.Leads.Queries.Shared;
 using FluentValidation;
 using MediatR;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Shared.Results;
 using ViaCep.ServiceClient.Configuration;
-using Application.Features.Leads.Commands.RegisterLead;
-using Application.Features.Leads.Commands.UpdateLead;
-using Application.Features.Leads.Commands.RemoveLead;
-using Application.Features.Leads.Queries.Shared;
-using Application.Features.Leads.Queries.SearchByCnpjOrRazaoSocial;
 
 namespace Application.Configuration;
 
@@ -57,8 +57,8 @@ public static class DependencyInjection
         config.AddBehavior<IPipelineBehavior<RemoveLeadCommandRequest, ApplicationResponse<RemoveLeadCommandResponse>>,
                             ValidationBehavior<RemoveLeadCommandRequest, RemoveLeadCommandResponse>>();
 
-        config.AddBehavior<IPipelineBehavior<SearchByCnpjOrRazaoSocialQueryRequest, ApplicationResponse<bool>>,
-                            ValidationBehavior<SearchByCnpjOrRazaoSocialQueryRequest, bool>>();
+        config.AddBehavior<IPipelineBehavior<SearchLeadQueryRequest, ApplicationResponse<bool>>,
+                            ValidationBehavior<SearchLeadQueryRequest, bool>>();
 
         return config;
     }

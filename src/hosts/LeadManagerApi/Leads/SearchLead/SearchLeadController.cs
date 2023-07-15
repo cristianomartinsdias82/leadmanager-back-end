@@ -1,4 +1,4 @@
-﻿using Application.Features.Leads.Queries.SearchByCnpjOrRazaoSocial;
+﻿using Application.Features.Leads.Queries.SearchLead;
 using LeadManagerApi.ApiFeatures;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
@@ -17,9 +17,9 @@ namespace LeadManagerApi.Leads.SearchLead
         [ProducesResponseType(typeof(ApplicationResponse<bool>), StatusCodes.Status404NotFound)]
         [ProducesResponseType(typeof(ApplicationResponse<bool>), StatusCodes.Status401Unauthorized)]
         [ProducesResponseType(typeof(ApplicationResponse<bool>), StatusCodes.Status500InternalServerError)]
-        public async Task<IActionResult> SearchByCnpjOrRazaoSocial([FromQuery] string cnpjRazaoSocial, CancellationToken cancellationToken)
+        public async Task<IActionResult> SearchLead([FromQuery] string cnpjRazaoSocial, CancellationToken cancellationToken)
         {
-            var response = await Mediator.Send(new SearchByCnpjOrRazaoSocialQueryRequest(cnpjRazaoSocial), cancellationToken);
+            var response = await Mediator.Send(new SearchLeadQueryRequest(cnpjRazaoSocial), cancellationToken);
 
             return Result(response);
         }
