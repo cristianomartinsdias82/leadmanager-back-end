@@ -489,3 +489,5 @@ $RECYCLE.BIN/
 /src/hosts/LeadManagerApi/obj/Debug/net7.0/ref/LeadManagerApi.dll
 /src/hosts/LeadManagerApi/obj/Debug/net7.0/refint/LeadManagerApi.dll
 /src/libs/Application/obj/Debug/net7.0/Application.csproj.CoreCompileInputs.cache
+/src/libs/Core/obj/Debug/net7.0/Core.csproj.dotnet-codegen.GeneratedFileList.txt
+/src/libs/Core/obj/Debug/net7.0/Core.csproj.dotnet-codegen.rsp
