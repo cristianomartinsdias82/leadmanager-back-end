@@ -51,38 +51,7 @@ public class Lead : Entity
         RazaoSocial = razaoSocial;
     }
 
-    //public Lead(
-    //    string cnpj,
-    //    string razaoSocial,
-    //    string cep,
-    //    string endereco,
-    //    string bairro,
-    //    string cidade,
-    //    string estado,
-    //    string? numero,
-    //    string? complemento)
-    //{
-    //    Documento = ValueObjects.Cnpj.New(cnpj);
-    //    Documento.IfFail(exc => throw exc);
-    //    Endereco = ValueObjects.Endereco.New(cep, endereco, bairro, cidade, estado, numero, complemento);
-    //    Endereco.IfFail(exc => throw exc);
-
-    //    RazaoSocial = razaoSocial;
-    //    Documento.IfSucc(cnpj => Cnpj = cnpj.Value!);
-    //    Endereco.IfSucc(endereco =>
-    //    {
-    //        endereco.Cep.IfSucc(cep => Cep = cep);
-
-    //        Logradouro = endereco.Descricao;
-    //        Cidade = endereco.Cidade;
-    //        Bairro = endereco.Bairro;
-    //        Estado = endereco.Estado;
-    //        Numero = endereco.Numero;
-    //        Complemento = endereco.Complemento;
-    //    });
-    //}
-
-    public ValueTask<bool> Atualizar(
+    public void Atualizar(
         string razaoSocial,
         string cnpj,
         string cep,
@@ -105,8 +74,6 @@ public class Lead : Entity
         Bairro = bairro;
         Numero = numero;
         Complemento = complemento;
-
-        return new ValueTask<bool>(true);
     }
 
     private Result<Cnpj> ValidarCnpj(string cnpj)
