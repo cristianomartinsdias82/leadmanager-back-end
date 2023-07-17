@@ -34,7 +34,7 @@ public sealed class UpdateLeadCommandHandlerTests : IAsyncDisposable
         var request = UpdateLeadCommandRequestMother
                         .Instance
                         .WithId(leadId)
-                        .WithCnpj("12.312.321/0001-23")
+                        .WithCnpj(CnpjMother.MaskedWellformedValidOne())
                         .WithRazaoSocial("XPTO Brasil LLC")
                         .WithCep("11111-111")
                         .WithEndereco("Avenida Carlos Ribeiro")
