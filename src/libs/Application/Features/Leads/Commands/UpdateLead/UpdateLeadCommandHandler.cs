@@ -19,14 +19,14 @@ internal sealed class UpdateLeadCommandHandler : ApplicationRequestHandler<Updat
         if (outdatedLead is null)
             return ApplicationResponse<UpdateLeadCommandResponse>.Create(null!, message: "Lead não encontrado.");
 
-        await outdatedLead.Atualizar(
-            request.RazaoSocial,
-            request.Cnpj,
-            request.Cep,
-            request.Endereco,
-            request.Cidade,
-            request.Estado,
-            request.Bairro,
+        outdatedLead.Atualizar(
+            request.RazaoSocial!,
+            request.Cnpj!,
+            request.Cep!,
+            request.Endereco!,
+            request.Cidade!,
+            request.Estado!,
+            request.Bairro!,
             request.Numero,
             request.Complemento);
 
