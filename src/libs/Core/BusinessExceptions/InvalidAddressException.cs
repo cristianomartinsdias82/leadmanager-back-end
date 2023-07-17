@@ -1,6 +1,6 @@
 ﻿namespace Core.BusinessExceptions;
 
-public class InvalidAddressException : ApplicationException
+public sealed class InvalidAddressException : BusinessException
 {
     public InvalidAddressException(string? message) : base(message) { }
 }

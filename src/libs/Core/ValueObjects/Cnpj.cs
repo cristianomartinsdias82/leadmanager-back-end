@@ -1,6 +1,6 @@
 ﻿using Core.BusinessExceptions;
 using LanguageExt.Common;
-using System.Text.RegularExpressions;
+using Shared.Validation;
 
 namespace Core.ValueObjects;
 
@@ -12,8 +12,8 @@ public class Cnpj
 
     public static Result<Cnpj> New(string cnpj)
     {
-        if (!Regex.IsMatch(cnpj, @"[0-9]{2}\.[0-9]{3}\.[0-9]{3}\/[0-9]{4}\-[0-9]{2}"))
-            return new Result<Cnpj>(new InvalidNationalTaxIdentificationNumberException("Cnpj inválido."));
+        if (!CnpjValidator.IsValidCnpj(cnpj))
+            return new Result<Cnpj>(new InvalidNationalTaxIdentificationNumberException($"O Cnpj {cnpj} é inválido."));
 
         return new Result<Cnpj>(new Cnpj() { Value = cnpj });
     }

@@ -1,6 +1,6 @@
 ﻿namespace Core.BusinessExceptions;
 
-public class InvalidNationalTaxIdentificationNumberException : ApplicationException
+public sealed class InvalidNationalTaxIdentificationNumberException : BusinessException
 {
     public InvalidNationalTaxIdentificationNumberException(string? message) : base(message) { }
 }

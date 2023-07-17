@@ -1,4 +1,5 @@
-﻿using Infrastructure.Persistence.Mappings;
+﻿using Core.BusinessExceptions;
+using Infrastructure.Persistence.Mappings;
 using Microsoft.EntityFrameworkCore;
 using Shared.Results;
 
@@ -44,16 +45,23 @@ public sealed class ErrorHandlingMiddleware
 
     private void HandleError(Exception exc, ref List<Inconsistency>? inconsistencies)
     {
+        inconsistencies = new List<Inconsistency>();
+
         if (exc is DbUpdateException)
         {
-            inconsistencies = new List<Inconsistency>();
-
             var message = exc.InnerException?.Message ?? string.Empty;
             if (message.Contains(LeadEntityMetadata.CnpjColumnIndexName))
                 inconsistencies.Add(new(string.Empty, "Cnpj existente."));
 
             if (message.Contains(LeadEntityMetadata.RazaoSocialColumnIndexName))
                 inconsistencies.Add(new(string.Empty, "Razão Social existente."));
+
+            return;
+        }
+
+        if (exc is BusinessException)
+        {
+            inconsistencies.Add(new(string.Empty, exc.Message));
 
             return;
         }

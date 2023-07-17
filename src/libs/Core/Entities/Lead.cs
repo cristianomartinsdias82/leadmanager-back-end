@@ -8,7 +8,7 @@ public class Lead : Entity
     private Result<Cnpj> Documento { get; set; }
     private Result<Endereco> Endereco { get; set; }
 
-    public string RazaoSocial { get; private set; }
+    public string RazaoSocial { get; private set; } = default!;
     public string Cnpj { get; private set; } = default!;
 
     public string Cep { get; private set; } = default!;
@@ -32,12 +32,9 @@ public class Lead : Entity
         string? numero,
         string? complemento)
     {
-        Documento = ValueObjects.Cnpj.New(cnpj);
-        Documento.IfFail(exc => throw exc);
-        Endereco = ValueObjects.Endereco.New(cep, endereco, bairro, cidade, estado, numero, complemento);
-        Endereco.IfFail(exc => throw exc);
-
-        RazaoSocial = razaoSocial;
+        Documento = ValidarCnpj(cnpj);
+        Endereco = ValidarEndereco(cep, endereco, bairro, cidade, estado, numero, complemento);
+        
         Documento.IfSucc(cnpj => Cnpj = cnpj.Value!);
         Endereco.IfSucc(endereco =>
         {
@@ -50,7 +47,40 @@ public class Lead : Entity
             Numero = endereco.Numero;
             Complemento = endereco.Complemento;
         });
+
+        RazaoSocial = razaoSocial;
     }
+
+    //public Lead(
+    //    string cnpj,
+    //    string razaoSocial,
+    //    string cep,
+    //    string endereco,
+    //    string bairro,
+    //    string cidade,
+    //    string estado,
+    //    string? numero,
+    //    string? complemento)
+    //{
+    //    Documento = ValueObjects.Cnpj.New(cnpj);
+    //    Documento.IfFail(exc => throw exc);
+    //    Endereco = ValueObjects.Endereco.New(cep, endereco, bairro, cidade, estado, numero, complemento);
+    //    Endereco.IfFail(exc => throw exc);
+
+    //    RazaoSocial = razaoSocial;
+    //    Documento.IfSucc(cnpj => Cnpj = cnpj.Value!);
+    //    Endereco.IfSucc(endereco =>
+    //    {
+    //        endereco.Cep.IfSucc(cep => Cep = cep);
+
+    //        Logradouro = endereco.Descricao;
+    //        Cidade = endereco.Cidade;
+    //        Bairro = endereco.Bairro;
+    //        Estado = endereco.Estado;
+    //        Numero = endereco.Numero;
+    //        Complemento = endereco.Complemento;
+    //    });
+    //}
 
     public ValueTask<bool> Atualizar(
         string razaoSocial,
@@ -63,6 +93,9 @@ public class Lead : Entity
         string? numero,
         string? complemento)
     {
+        ValidarCnpj(cnpj);
+        ValidarEndereco(cep, endereco, bairro, cidade, estado, numero, complemento);
+
         RazaoSocial = razaoSocial;
         Cnpj = cnpj;
         Cep = cep;
@@ -74,5 +107,21 @@ public class Lead : Entity
         Complemento = complemento;
 
         return new ValueTask<bool>(true);
+    }
+
+    private Result<Cnpj> ValidarCnpj(string cnpj)
+    {
+        Documento = ValueObjects.Cnpj.New(cnpj);
+        Documento.IfFail(exc => throw exc);
+
+        return Documento;
+    }
+
+    private Result<Endereco> ValidarEndereco(string cep, string endereco, string bairro, string cidade, string estado, string? numero, string? complemento)
+    {
+        Endereco = ValueObjects.Endereco.New(cep, endereco, bairro, cidade, estado, numero, complemento);
+        Endereco.IfFail(exc => throw exc);
+
+        return Endereco;
     }
 }

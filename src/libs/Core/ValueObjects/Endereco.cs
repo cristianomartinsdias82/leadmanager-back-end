@@ -27,7 +27,7 @@ public record Endereco
     {
         var cepResult = ValueObjects.Cep.New(cep);
         if (!cepResult.IsSuccess)
-            return new Result<Endereco>(new InvalidAddressException("Cep inválido."));
+            return new Result<Endereco>(new InvalidZipCodeException($"O Cep {cep} é inválido."));
 
         return new Endereco(
             cepResult.Match(ok => ok.Value, _ => default)!,
