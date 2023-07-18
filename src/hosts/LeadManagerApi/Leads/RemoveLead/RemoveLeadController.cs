@@ -12,7 +12,7 @@ public sealed class RemoveLeadController : LeadManagerController
     public RemoveLeadController(ISender sender) : base(sender) { }
 
     [HttpDelete("{id:Guid}")]
-    [ProducesResponseType(typeof(ApplicationResponse<Guid>), StatusCodes.Status204NoContent)]
+    [ProducesResponseType(typeof(ApplicationResponse<Guid>), StatusCodes.Status200OK)]
     [ProducesResponseType(typeof(ApplicationResponse<Guid>), StatusCodes.Status400BadRequest)]
     [ProducesResponseType(typeof(ApplicationResponse<Guid>), StatusCodes.Status404NotFound)]
     [ProducesResponseType(StatusCodes.Status401Unauthorized)]
@@ -21,8 +21,6 @@ public sealed class RemoveLeadController : LeadManagerController
     {
         var response = await Mediator.Send(new RemoveLeadCommandRequest { Id = id }, cancellationToken);
 
-        return Result(
-            response,
-            onSuccessStatusCodeFactory: (_, response) => StatusCodes.Status204NoContent);
+        return Result(response);
     }
 }
