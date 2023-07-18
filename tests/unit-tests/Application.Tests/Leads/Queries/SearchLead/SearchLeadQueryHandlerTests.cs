@@ -90,6 +90,8 @@ public sealed class SearchLeadQueryHandlerTests : IAsyncDisposable
         yield return new object[] { new SearchLeadQueryRequest(_xptoIncLead.Id, _xptoIncLead.Cnpj) };
         yield return new object[] { new SearchLeadQueryRequest(Guid.NewGuid(), _xptoIncLead.RazaoSocial) };
         yield return new object[] { new SearchLeadQueryRequest(_xptoIncLead.Id, _xptoIncLead.RazaoSocial) };
+        yield return new object[] { new SearchLeadQueryRequest(default, _xptoIncLead.Cnpj) };
+        yield return new object[] { new SearchLeadQueryRequest(default, _xptoIncLead.RazaoSocial) };
     }
 
     public static IEnumerable<object[]> SearchTermsWithNoMatchesSimulations()
@@ -98,5 +100,7 @@ public sealed class SearchLeadQueryHandlerTests : IAsyncDisposable
         yield return new object[] { new SearchLeadQueryRequest(Guid.Empty, "Gumper Inc.") };
         yield return new object[] { new SearchLeadQueryRequest(Guid.NewGuid(), "32.123.123/0001-23") };
         yield return new object[] { new SearchLeadQueryRequest(Guid.NewGuid(), "Gumper Inc.") };
+        yield return new object[] { new SearchLeadQueryRequest(default, "32.123.123/0001-23") };
+        yield return new object[] { new SearchLeadQueryRequest(default, "Gumper Inc.") };
     }
 }
