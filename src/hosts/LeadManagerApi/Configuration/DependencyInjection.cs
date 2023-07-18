@@ -26,7 +26,7 @@ namespace LeadManagerApi.Configuration
                 options.AddPolicy(LeadWebAppCorsPolicy,
                     builder =>
                     {
-                        builder.WithOrigins(apiSettings.Cors_AllowedOrigins)
+                        builder.WithOrigins(apiSettings.Cors_AllowedOrigins.Split(','))
                                .WithMethods("POST", "GET", "PUT", "DELETE", "HEAD", "OPTIONS")
                                .AllowAnyHeader()
                                .AllowCredentials()
