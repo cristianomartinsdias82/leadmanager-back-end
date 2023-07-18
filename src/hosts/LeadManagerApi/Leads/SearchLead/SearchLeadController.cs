@@ -17,9 +17,9 @@ namespace LeadManagerApi.Leads.SearchLead
         [ProducesResponseType(typeof(ApplicationResponse<bool>), StatusCodes.Status404NotFound)]
         [ProducesResponseType(typeof(ApplicationResponse<bool>), StatusCodes.Status401Unauthorized)]
         [ProducesResponseType(typeof(ApplicationResponse<bool>), StatusCodes.Status500InternalServerError)]
-        public async Task<IActionResult> SearchLead([FromQuery] string cnpjRazaoSocial, CancellationToken cancellationToken)
+        public async Task<IActionResult> SearchLead(SearchLeadQueryRequest request, CancellationToken cancellationToken)
         {
-            var response = await Mediator.Send(new SearchLeadQueryRequest(cnpjRazaoSocial), cancellationToken);
+            var response = await Mediator.Send(request, cancellationToken);
 
             return Result(response);
         }

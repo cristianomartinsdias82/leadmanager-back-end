@@ -16,7 +16,12 @@ internal sealed class SearchLeadQueryHandler : ApplicationRequestHandler<SearchL
 
     public override async Task<ApplicationResponse<bool>> Handle(SearchLeadQueryRequest request, CancellationToken cancellationToken)
     {
-        var leadExistsSearchResult = await _leadManagerDbContext.Leads.AnyAsync(ld => ld.Cnpj == request.SearchTerm || ld.RazaoSocial == request.SearchTerm, cancellationToken);
+        var searchTerm = request.SearchTerm!.Trim();
+        
+        var leadExistsSearchResult = await _leadManagerDbContext
+                                            .Leads
+                                            .AnyAsync(ld => (!request.LeadId.HasValue || ld.Id != request.LeadId) &&
+                                                            (ld.Cnpj == searchTerm || ld.RazaoSocial == searchTerm), cancellationToken);
         
         return ApplicationResponse<bool>.Create(leadExistsSearchResult);
     }

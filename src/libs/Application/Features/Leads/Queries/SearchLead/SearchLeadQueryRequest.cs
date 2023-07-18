@@ -3,4 +3,4 @@ using Shared.Results;
 
 namespace Application.Features.Leads.Queries.SearchLead;
 
-public sealed record SearchLeadQueryRequest(string SearchTerm) : IRequest<ApplicationResponse<bool>>;
+public sealed record SearchLeadQueryRequest(Guid? LeadId, string? SearchTerm) : IRequest<ApplicationResponse<bool>>;

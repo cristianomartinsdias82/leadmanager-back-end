@@ -13,7 +13,7 @@ public sealed class GetLeadByIdRequestValidatorTests
     {
         //Arrange
         //Act
-        var result = _validator.Validate(new SearchLeadQueryRequest("Gumper Inc."));
+        var result = _validator.Validate(new SearchLeadQueryRequest(default, "Gumper Inc."));
 
         //Assert
         result.IsValid.Should().BeTrue();
@@ -41,19 +41,19 @@ public sealed class GetLeadByIdRequestValidatorTests
     {
         yield return new object[]
         {
-            new SearchLeadQueryRequest(null!),
+            new SearchLeadQueryRequest(default, null!),
             "Termo para pesquisa é obrigatório."
         };
 
         yield return new object[]
         {
-            new SearchLeadQueryRequest(""),
+            new SearchLeadQueryRequest(default, ""),
             "Termo para pesquisa é obrigatório."
         };
 
         yield return new object[]
         {
-            new SearchLeadQueryRequest(" "),
+            new SearchLeadQueryRequest(default, " "),
             "Termo para pesquisa é obrigatório."
         };
     }

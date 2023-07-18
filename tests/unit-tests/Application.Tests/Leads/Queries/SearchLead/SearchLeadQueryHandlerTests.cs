@@ -25,11 +25,11 @@ public sealed class SearchLeadQueryHandlerTests : IAsyncDisposable
     }
 
     [Theory]
-    [MemberData(nameof(SearchTermsWithMatches))]
-    public async void Handle_WhenDoesNotContainLeads_ShouldReturnFalse(string searchTerm)
+    [MemberData(nameof(SearchTermsWithMatchesSimulations))]
+    public async void Handle_WhenDoesNotContainLeads_ShouldReturnFalse(SearchLeadQueryRequest request)
     {
         //Arrange && Act
-        var result = await _handler.Handle(new(searchTerm), _cts.Token);
+        var result = await _handler.Handle(request, _cts.Token);
 
         //Assert
         result.Should().NotBeNull();
@@ -40,15 +40,15 @@ public sealed class SearchLeadQueryHandlerTests : IAsyncDisposable
     }
 
     [Theory]
-    [MemberData(nameof(SearchTermsWithNoMatches))]
-    public async void Handle_WhenContainsLeads_And_NoLeadSearchMatches_ShouldReturnFalse(string searchTerm)
+    [MemberData(nameof(SearchTermsWithNoMatchesSimulations))]
+    public async void Handle_WhenContainsLeads_And_NoLeadSearchMatches_ShouldReturnFalse(SearchLeadQueryRequest request)
     {
         //Arrange
         await _dbContext.Leads.AddAsync(_xptoIncLead, _cts.Token);
         await _dbContext.SaveChangesAsync(_cts.Token);
 
         //Act
-        var result = await _handler.Handle(new(searchTerm), _cts.Token);
+        var result = await _handler.Handle(request, _cts.Token);
 
         //Assert
         result.Should().NotBeNull();
@@ -59,15 +59,15 @@ public sealed class SearchLeadQueryHandlerTests : IAsyncDisposable
     }
 
     [Theory]
-    [MemberData(nameof(SearchTermsWithMatches))]
-    public async void Handle_WhenContainsLeads_And_LeadSearchMatches_ShouldReturnTrue(string searchTerm)
+    [MemberData(nameof(SearchTermsWithMatchesSimulations))]
+    public async void Handle_WhenContainsLeads_And_LeadSearchMatches_ShouldReturnTrue(SearchLeadQueryRequest request)
     {
         //Arrange
         await _dbContext.Leads.AddAsync(_xptoIncLead, _cts.Token);
         await _dbContext.SaveChangesAsync(_cts.Token);
 
         //Act
-        var result = await _handler.Handle(new(searchTerm), _cts.Token);
+        var result = await _handler.Handle(request, _cts.Token);
 
         //Assert
         result.Should().NotBeNull();
@@ -84,15 +84,19 @@ public sealed class SearchLeadQueryHandlerTests : IAsyncDisposable
         await _dbContext.DisposeAsync();
     }
 
-    public static IEnumerable<object[]> SearchTermsWithMatches()
+    public static IEnumerable<object[]> SearchTermsWithMatchesSimulations()
     {
-        yield return new object[] { _xptoIncLead.Cnpj };
-        yield return new object[] { _xptoIncLead.RazaoSocial };
+        yield return new object[] { new SearchLeadQueryRequest(Guid.NewGuid(), _xptoIncLead.Cnpj) };
+        yield return new object[] { new SearchLeadQueryRequest(_xptoIncLead.Id, _xptoIncLead.Cnpj) };
+        yield return new object[] { new SearchLeadQueryRequest(Guid.NewGuid(), _xptoIncLead.RazaoSocial) };
+        yield return new object[] { new SearchLeadQueryRequest(_xptoIncLead.Id, _xptoIncLead.RazaoSocial) };
     }
 
-    public static IEnumerable<object[]> SearchTermsWithNoMatches()
+    public static IEnumerable<object[]> SearchTermsWithNoMatchesSimulations()
     {
-        yield return new object[] { "32.123.123/0001-23" };
-        yield return new object[] { "Gumper Inc." };
+        yield return new object[] { new SearchLeadQueryRequest(Guid.Empty, "32.123.123/0001-23") };
+        yield return new object[] { new SearchLeadQueryRequest(Guid.Empty, "Gumper Inc.") };
+        yield return new object[] { new SearchLeadQueryRequest(Guid.NewGuid(), "32.123.123/0001-23") };
+        yield return new object[] { new SearchLeadQueryRequest(Guid.NewGuid(), "Gumper Inc.") };
     }
 }
