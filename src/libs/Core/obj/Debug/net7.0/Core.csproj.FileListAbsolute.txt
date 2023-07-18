@@ -1,10 +1,14 @@
 F:\Codebase\_.NET Solutions\Core\7.x\LeadManager_PactoEnergiaExamTest\backend\src\LeadManager\src\libs\Core\bin\Debug\net7.0\Core.deps.json
 F:\Codebase\_.NET Solutions\Core\7.x\LeadManager_PactoEnergiaExamTest\backend\src\LeadManager\src\libs\Core\bin\Debug\net7.0\Core.dll
 F:\Codebase\_.NET Solutions\Core\7.x\LeadManager_PactoEnergiaExamTest\backend\src\LeadManager\src\libs\Core\bin\Debug\net7.0\Core.pdb
+F:\Codebase\_.NET Solutions\Core\7.x\LeadManager_PactoEnergiaExamTest\backend\src\LeadManager\src\libs\Core\bin\Debug\net7.0\Shared.dll
+F:\Codebase\_.NET Solutions\Core\7.x\LeadManager_PactoEnergiaExamTest\backend\src\LeadManager\src\libs\Core\bin\Debug\net7.0\Shared.pdb
 F:\Codebase\_.NET Solutions\Core\7.x\LeadManager_PactoEnergiaExamTest\backend\src\LeadManager\src\libs\Core\obj\Debug\net7.0\Core.csproj.AssemblyReference.cache
 F:\Codebase\_.NET Solutions\Core\7.x\LeadManager_PactoEnergiaExamTest\backend\src\LeadManager\src\libs\Core\obj\Debug\net7.0\Core.csproj.dotnet-codegen.rsp
+F:\Codebase\_.NET Solutions\Core\7.x\LeadManager_PactoEnergiaExamTest\backend\src\LeadManager\src\libs\Core\obj\Debug\net7.0\BusinessException.Hex0Jx3s.generated.cs
 F:\Codebase\_.NET Solutions\Core\7.x\LeadManager_PactoEnergiaExamTest\backend\src\LeadManager\src\libs\Core\obj\Debug\net7.0\InvalidAddressException.4wIk6nol.generated.cs
 F:\Codebase\_.NET Solutions\Core\7.x\LeadManager_PactoEnergiaExamTest\backend\src\LeadManager\src\libs\Core\obj\Debug\net7.0\InvalidNationalTaxIdentificationNumberException.ndyic1f-.generated.cs
+F:\Codebase\_.NET Solutions\Core\7.x\LeadManager_PactoEnergiaExamTest\backend\src\LeadManager\src\libs\Core\obj\Debug\net7.0\InvalidZipCodeException.Iz7cZMPL.generated.cs
 F:\Codebase\_.NET Solutions\Core\7.x\LeadManager_PactoEnergiaExamTest\backend\src\LeadManager\src\libs\Core\obj\Debug\net7.0\Entity.UUooNuiH.generated.cs
 F:\Codebase\_.NET Solutions\Core\7.x\LeadManager_PactoEnergiaExamTest\backend\src\LeadManager\src\libs\Core\obj\Debug\net7.0\IAuditableEntity.BtH8TvEV.generated.cs
 F:\Codebase\_.NET Solutions\Core\7.x\LeadManager_PactoEnergiaExamTest\backend\src\LeadManager\src\libs\Core\obj\Debug\net7.0\IEntity.ULbykJso.generated.cs
@@ -19,6 +23,7 @@ F:\Codebase\_.NET Solutions\Core\7.x\LeadManager_PactoEnergiaExamTest\backend\sr
 F:\Codebase\_.NET Solutions\Core\7.x\LeadManager_PactoEnergiaExamTest\backend\src\LeadManager\src\libs\Core\obj\Debug\net7.0\Core.AssemblyInfoInputs.cache
 F:\Codebase\_.NET Solutions\Core\7.x\LeadManager_PactoEnergiaExamTest\backend\src\LeadManager\src\libs\Core\obj\Debug\net7.0\Core.AssemblyInfo.cs
 F:\Codebase\_.NET Solutions\Core\7.x\LeadManager_PactoEnergiaExamTest\backend\src\LeadManager\src\libs\Core\obj\Debug\net7.0\Core.csproj.CoreCompileInputs.cache
+F:\Codebase\_.NET Solutions\Core\7.x\LeadManager_PactoEnergiaExamTest\backend\src\LeadManager\src\libs\Core\obj\Debug\net7.0\Core.csproj.CopyComplete
 F:\Codebase\_.NET Solutions\Core\7.x\LeadManager_PactoEnergiaExamTest\backend\src\LeadManager\src\libs\Core\obj\Debug\net7.0\Core.dll
 F:\Codebase\_.NET Solutions\Core\7.x\LeadManager_PactoEnergiaExamTest\backend\src\LeadManager\src\libs\Core\obj\Debug\net7.0\refint\Core.dll
 F:\Codebase\_.NET Solutions\Core\7.x\LeadManager_PactoEnergiaExamTest\backend\src\LeadManager\src\libs\Core\obj\Debug\net7.0\Core.pdb

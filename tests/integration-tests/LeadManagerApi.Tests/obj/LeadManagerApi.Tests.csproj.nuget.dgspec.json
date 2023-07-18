@@ -225,7 +225,11 @@
         "frameworks": {
           "net7.0": {
             "targetAlias": "net7.0",
-            "projectReferences": {}
+            "projectReferences": {
+              "F:\\Codebase\\_.NET Solutions\\Core\\7.x\\LeadManager_PactoEnergiaExamTest\\backend\\src\\LeadManager\\src\\libs\\Shared\\Shared.csproj": {
+                "projectPath": "F:\\Codebase\\_.NET Solutions\\Core\\7.x\\LeadManager_PactoEnergiaExamTest\\backend\\src\\LeadManager\\src\\libs\\Shared\\Shared.csproj"
+              }
+            }
           }
         },
         "warningProperties": {

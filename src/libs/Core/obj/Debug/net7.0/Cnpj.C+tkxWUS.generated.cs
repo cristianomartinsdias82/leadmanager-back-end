@@ -9,4 +9,4 @@
 
 using Core.BusinessExceptions;
 using LanguageExt.Common;
-using System.Text.RegularExpressions;
+using Shared.Validation;

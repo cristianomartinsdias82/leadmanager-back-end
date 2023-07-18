@@ -1453,6 +1453,7 @@
       "Core/1.0.0": {
         "dependencies": {
           "LanguageExt.Core": "4.4.3",
+          "Shared": "1.0.0",
           "StronglyTypedId": "0.2.1"
         },
         "runtime": {

@@ -1,6 +1,6 @@
 {
   "version": 2,
-  "dgSpecHash": "YX1L8kRYqDDCA05fyeBo9aL2myNQ6c3NRClBBQX7vnO1EjRHtQrIOs5eHnvecrhsB43DPB+sMD2LAmqHKbAWVQ==",
+  "dgSpecHash": "nzJMlsETsRBVQnpg5tcMDZTD9auQd4gM2nl7aOZGwgMkr2NW7BU4MERdNlHxjdIdgZHcZbYjGWoQJhlu4FQxlQ==",
   "success": true,
   "projectFilePath": "F:\\Codebase\\_.NET Solutions\\Core\\7.x\\LeadManager_PactoEnergiaExamTest\\backend\\src\\LeadManager\\tests\\common\\Tests.Common\\Tests.Common.csproj",
   "expectedPackageFiles": [

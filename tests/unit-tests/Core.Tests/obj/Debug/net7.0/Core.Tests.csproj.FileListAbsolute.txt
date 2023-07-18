@@ -115,9 +115,13 @@ F:\Codebase\_.NET Solutions\Core\7.x\LeadManager_PactoEnergiaExamTest\backend\sr
 F:\Codebase\_.NET Solutions\Core\7.x\LeadManager_PactoEnergiaExamTest\backend\src\LeadManager\tests\unit-tests\Core.Tests\bin\Debug\net7.0\Core.Tests.dll
 F:\Codebase\_.NET Solutions\Core\7.x\LeadManager_PactoEnergiaExamTest\backend\src\LeadManager\tests\unit-tests\Core.Tests\bin\Debug\net7.0\Core.Tests.pdb
 F:\Codebase\_.NET Solutions\Core\7.x\LeadManager_PactoEnergiaExamTest\backend\src\LeadManager\tests\unit-tests\Core.Tests\bin\Debug\net7.0\CodeGeneration.Roslyn.Attributes.dll
+F:\Codebase\_.NET Solutions\Core\7.x\LeadManager_PactoEnergiaExamTest\backend\src\LeadManager\tests\unit-tests\Core.Tests\bin\Debug\net7.0\FluentValidation.dll
 F:\Codebase\_.NET Solutions\Core\7.x\LeadManager_PactoEnergiaExamTest\backend\src\LeadManager\tests\unit-tests\Core.Tests\bin\Debug\net7.0\LanguageExt.Core.dll
+F:\Codebase\_.NET Solutions\Core\7.x\LeadManager_PactoEnergiaExamTest\backend\src\LeadManager\tests\unit-tests\Core.Tests\bin\Debug\net7.0\MediatR.dll
+F:\Codebase\_.NET Solutions\Core\7.x\LeadManager_PactoEnergiaExamTest\backend\src\LeadManager\tests\unit-tests\Core.Tests\bin\Debug\net7.0\MediatR.Contracts.dll
 F:\Codebase\_.NET Solutions\Core\7.x\LeadManager_PactoEnergiaExamTest\backend\src\LeadManager\tests\unit-tests\Core.Tests\bin\Debug\net7.0\Microsoft.Bcl.AsyncInterfaces.dll
 F:\Codebase\_.NET Solutions\Core\7.x\LeadManager_PactoEnergiaExamTest\backend\src\LeadManager\tests\unit-tests\Core.Tests\bin\Debug\net7.0\Microsoft.VisualStudio.CodeCoverage.Shim.dll
+F:\Codebase\_.NET Solutions\Core\7.x\LeadManager_PactoEnergiaExamTest\backend\src\LeadManager\tests\unit-tests\Core.Tests\bin\Debug\net7.0\Microsoft.Extensions.DependencyInjection.Abstractions.dll
 F:\Codebase\_.NET Solutions\Core\7.x\LeadManager_PactoEnergiaExamTest\backend\src\LeadManager\tests\unit-tests\Core.Tests\bin\Debug\net7.0\Microsoft.TestPlatform.CoreUtilities.dll
 F:\Codebase\_.NET Solutions\Core\7.x\LeadManager_PactoEnergiaExamTest\backend\src\LeadManager\tests\unit-tests\Core.Tests\bin\Debug\net7.0\Microsoft.TestPlatform.PlatformAbstractions.dll
 F:\Codebase\_.NET Solutions\Core\7.x\LeadManager_PactoEnergiaExamTest\backend\src\LeadManager\tests\unit-tests\Core.Tests\bin\Debug\net7.0\Microsoft.VisualStudio.TestPlatform.ObjectModel.dll
@@ -198,7 +202,9 @@ F:\Codebase\_.NET Solutions\Core\7.x\LeadManager_PactoEnergiaExamTest\backend\sr
 F:\Codebase\_.NET Solutions\Core\7.x\LeadManager_PactoEnergiaExamTest\backend\src\LeadManager\tests\unit-tests\Core.Tests\bin\Debug\net7.0\zh-Hant\Microsoft.TestPlatform.CrossPlatEngine.resources.dll
 F:\Codebase\_.NET Solutions\Core\7.x\LeadManager_PactoEnergiaExamTest\backend\src\LeadManager\tests\unit-tests\Core.Tests\bin\Debug\net7.0\zh-Hant\Microsoft.VisualStudio.TestPlatform.Common.resources.dll
 F:\Codebase\_.NET Solutions\Core\7.x\LeadManager_PactoEnergiaExamTest\backend\src\LeadManager\tests\unit-tests\Core.Tests\bin\Debug\net7.0\Core.dll
+F:\Codebase\_.NET Solutions\Core\7.x\LeadManager_PactoEnergiaExamTest\backend\src\LeadManager\tests\unit-tests\Core.Tests\bin\Debug\net7.0\Shared.dll
 F:\Codebase\_.NET Solutions\Core\7.x\LeadManager_PactoEnergiaExamTest\backend\src\LeadManager\tests\unit-tests\Core.Tests\bin\Debug\net7.0\Core.pdb
+F:\Codebase\_.NET Solutions\Core\7.x\LeadManager_PactoEnergiaExamTest\backend\src\LeadManager\tests\unit-tests\Core.Tests\bin\Debug\net7.0\Shared.pdb
 F:\Codebase\_.NET Solutions\Core\7.x\LeadManager_PactoEnergiaExamTest\backend\src\LeadManager\tests\unit-tests\Core.Tests\obj\Debug\net7.0\Core.Tests.csproj.AssemblyReference.cache
 F:\Codebase\_.NET Solutions\Core\7.x\LeadManager_PactoEnergiaExamTest\backend\src\LeadManager\tests\unit-tests\Core.Tests\obj\Debug\net7.0\Core.Tests.GeneratedMSBuildEditorConfig.editorconfig
 F:\Codebase\_.NET Solutions\Core\7.x\LeadManager_PactoEnergiaExamTest\backend\src\LeadManager\tests\unit-tests\Core.Tests\obj\Debug\net7.0\Core.Tests.AssemblyInfoInputs.cache
