@@ -26,7 +26,7 @@ namespace LeadManagerApi.Configuration
                 options.AddPolicy(LeadWebAppCorsPolicy,
                     builder =>
                     {
-                        builder.WithOrigins("http://localhost:4200")
+                        builder.WithOrigins(apiSettings.Cors_AllowedOrigins)
                                .WithMethods("POST", "GET", "PUT", "DELETE", "HEAD", "OPTIONS")
                                .AllowAnyHeader()
                                .AllowCredentials()
