@@ -24,7 +24,7 @@ O Lead Manager é um projeto que utiliza as seguintes linguagens, tecnologias, f
 - Sqlite
 - Testes unitários / Unit tests / TDD com xUnit e Fluent Assertions
 - Testes de integração / Integration tests com WebApplicationFactory e MockHttp
-- Integração com o serviço de localização de endereços ViaCep
+- Integração com o serviço de localização de endereços ViaCep via HttpClient tipado
 - Aplicação de princípios SOLID
 - Aplicação de padrões de projeto / design patterns como: Object mother, Singleton, Mediator, Factory, Factory method
 - Aplicação do padrão arquitetural CQRS de maneira lógica com MediatR
