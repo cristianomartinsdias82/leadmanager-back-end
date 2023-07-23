@@ -43,14 +43,14 @@ Como executar o projeto localmente?
 - Garanta que a máquina esteja devidamente configurada, conforme a seção "Pré-requisitos para execução do Front-End da aplicação"
 - Execute o Docker
 - Acesse o Terminal, Command Prompt ou Powershell
-- Execute o seguinte comando para subir um servidor de banco de dados Sql Server
-  docker run -e "MSSQL_PID=Express" -e "ACCEPT_EULA=Y" -e "SA_PASSWORD=Y0urStr0nGP@sswoRD_2023" -p 1433:1433 --name leadmanager-db -d mcr.microsoft.com/mssql/server
+- Execute o seguinte comando para subir um servidor de banco de dados Sql Server:<br/>
+  docker run -e "MSSQL_PID=Express" -e "ACCEPT_EULA=Y" -e "SA_PASSWORD=Y0urStr0nGP@sswoRD_2023" -p 1433:1433 --name leadmanager-db -d mcr.microsoft.com/mssql/server<br/>
 - Navegue até a pasta raíz do projeto (mesma pasta que contém o arquivo LeadManager.sln, por exemplo)
-- Execute o seguinte comando:
-  dotnet build
-  dotnet run
-  (O comando irá compilar a solução, subirá um servidor Kestrel e automaticamente abrirá o navegador web padrão apontado para o Swagger da API)
-NOTA: Em breve, essas etapas para execução da aplicação na máquina local serão simplificadas a uma única linha de comando através do uso de Docker-Compose.
+- Execute os seguintes comandos:<br/>
+  dotnet build<br/>
+  dotnet run<br/>
+  (O comando irá compilar a solução, subirá um servidor Kestrel e automaticamente abrirá o navegador web padrão apontado para o Swagger da API)<br/>
+NOTA: Em breve, essas etapas para execução da aplicação na máquina local serão simplificadas a uma única linha de comando através do uso de Docker-Compose.<br/>
 
 Novas demandas no radar:
 - (User Story) Adicionar endpoint para receber arquivo de leads em formato CSV para fins de adição em lote
