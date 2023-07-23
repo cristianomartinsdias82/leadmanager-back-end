@@ -78,4 +78,4 @@ Em termos de implementação, o que tem de reaproveitável no código-fonte dest
   
   (Continuar a listagem. Afinal, tem muita coisa que vale anotar aqui como índice/referência!)
   
-O projeto está em processo de evolução e sempre pode ser melhorado, tanto em termos de organização (estrutura de pastas, separações de responsabilidades) quanto de algoritmos, usos de elementos Angular mais adequados para situações específicas dentre outras coisas! Portanto, opiniões sempre são muito bem-vindas! :)
+O projeto está em processo de evolução e sempre pode ser melhorado, tanto em termos de organização (estrutura de pastas, separações de responsabilidades) quanto de algoritmos dentre outras coisas! Portanto, opiniões sempre são muito bem-vindas! :)
