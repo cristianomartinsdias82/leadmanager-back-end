@@ -34,10 +34,10 @@ O Lead Manager é um projeto que utiliza as seguintes linguagens, tecnologias, f
 Pré-requisitos para execução do Front-End da aplicação<br/>
 É necessário possuir os seguintes componentes instalados na máquina:
 - SDK do .Net Core 7 (que pode ser obtido através da url: https://nodejs.org/en](https://dotnet.microsoft.com/en-us/download/dotnet/7.0)
-- Docker
-  Se sua máquina for Mac, você pode seguir os passos conforme a url: https://docs.docker.com/desktop/install/mac-install/
-  Se sua máquina for Linux, você pode seguir os passos conforme a url: https://docs.docker.com/desktop/install/linux-install/#generic-installation-steps
-  Se sua máquina for Windows, você pode seguir os passos conforme a url: https://docs.docker.com/desktop/install/windows-install/
+- Docker<br/>
+  Se sua máquina for Mac, você pode seguir os passos conforme a url: https://docs.docker.com/desktop/install/mac-install/<br/>
+  Se sua máquina for Linux, você pode seguir os passos conforme a url: https://docs.docker.com/desktop/install/linux-install/#generic-installation-steps<br/>
+  Se sua máquina for Windows, você pode seguir os passos conforme a url: https://docs.docker.com/desktop/install/windows-install/<br/>
 
 Como executar o projeto localmente?
 - Garanta que a máquina esteja devidamente configurada, conforme a seção "Pré-requisitos para execução do Front-End da aplicação"
