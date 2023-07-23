@@ -99,7 +99,7 @@ Em termos de implementação, o que tem de reaproveitável no código-fonte dest
   Validators<br/>
 - Métodos de testes de integração de endpoints de API
 - Classes WebApplicationFactory e ClassFixtures
-- Class InMemoryLeadManagerDbContextFactory que ajuda na execução de testes com banco de dados em memória
+- Class InMemoryLeadManagerDbContextFactory que ajuda na execução de testes com banco de dados em memória<br/>
 (Continuar a listagem. Afinal, tem muita coisa que vale anotar aqui como índice/referência!)
   
 O projeto está em processo de evolução e sempre pode ser melhorado, tanto em termos de organização (estrutura de pastas, separações de responsabilidades) quanto de algoritmos dentre outras coisas! Portanto, opiniões sempre são muito bem-vindas! :)
