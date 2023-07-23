@@ -63,7 +63,7 @@ Novas demandas no radar:
   - Possibilidade 2: a aplicação deverá ser capaz de validar tokens de autenticação/autorização - incluindo Claims - que possibilitem ou recusem executar os endpoints da API
 - (Technical debt) Criar Dockerfile do projeto
 - (Technical debt) Adicionar a aplicação ao Docker-Compose para simplificar a configuração da máquina e permitir automatizar a execução da mesma em uma única linha de comando
-- (Technical debt) Implementar os testes unitários das classes contidas em libs/Shared; especificamente, das classes ApplicationResponse, Inconsistency e CnpjValidator
+- (Technical debt) Implementar os testes unitários das classes contidas em libs/Shared; especificamente, das classes ApplicationResponse, PaginationOptions, Inconsistency e CnpjValidator
 - (Technical debt) Implementar os testes unitários dos service client de integração com o serviço ViaCep
 - (Technical debt) Implementar os testes de integração dos endpoints:<br/>
   GetLeadById<br/>
