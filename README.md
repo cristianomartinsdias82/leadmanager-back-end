@@ -94,12 +94,43 @@ Em termos de implementação, o que tem de reaproveitável no código-fonte dest
 - Implementação de classes ObjectMother de construção de Requests e Entidades para ótima manutenibilidade das suítes de testes
 - Implementação de classe Factory de DContext em memória para execução dos testes de integração da Api
 - Lógica de auditoria durante o processo de persistência dos dados em LeadsDbContext, gravando o usuário e data/hora da operação
-- Métodos de testes unitários de:<br/>
-  Handlers<br/>
-  Validators<br/>
-- Métodos de testes de integração de endpoints de API
+- Métodos de testes unitários - inclusive com uso de asserções fluentes - de:<br/>
+  Classes Handlers<br/>
+  Classes Validators<br/>
+  Entidades<br/>
+  Classes de estruturas de dados comuns, como ApplicationResponse<T><br/>
+- Métodos de testes de integração - inclusive com uso de asserções fluentes - de endpoints de API
 - Classes WebApplicationFactory e ClassFixtures
 - Class InMemoryLeadManagerDbContextFactory que ajuda na execução de testes com banco de dados em memória<br/>
 (Continuar a listagem. Afinal, tem muita coisa que vale anotar aqui como índice/referência!)
-  
+
+Lista com os principais pacotes Nuget que foram utilizados neste projeto:<br/>
+- MediatR
+- Fluent Validaton
+- Microsoft.EntityFrameworkCore
+- Microsoft.EntityFrameworkCore.Design
+- Microsoft.EntityFrameworkCore.SqlServer
+- Microsoft.EntityFrameworkCore.Tools
+- Microsoft.Extensions.Http.Polly
+- LanguageExt.Core
+- StronglyTypedId
+- RichardSzalay.MockHttp
+- Microsoft.AspNetCore.Mvc.Testing
+- Microsoft.Data.Sqlite.Core
+- Microsoft.EntityFrameworkCore.InMemory
+- Moq
+- coverlet.collector
+- xunit
+- FluentAssertions
+
+Lista com os principais utilitários de linha de comando que foram utilizados neste projeto:<br/>
+- dotnet
+    dotnet restore<br/>
+    dotnet build<br/>
+    dotnet ef<br/>
+    dotnet test<br/>
+    reportgenerator (dotnet-reportgenerator-globaltool)<br/>
+- docker
+- git
+ 
 O projeto está em processo de evolução e sempre pode ser melhorado, tanto em termos de organização (estrutura de pastas, separações de responsabilidades) quanto de algoritmos dentre outras coisas! Portanto, opiniões sempre são muito bem-vindas! :)
