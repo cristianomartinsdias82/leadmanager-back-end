@@ -1,4 +1,5 @@
 ﻿using LeadManagerApi.ApiFeatures;
+using Microsoft.AspNetCore.Http.Features;
 
 namespace LeadManagerApi.Configuration
 {
@@ -14,6 +15,11 @@ namespace LeadManagerApi.Configuration
             services.AddControllers(config =>
             {
                 config.Filters.Add<RequiresApiKeyActionFilter>();
+            });
+
+            services.Configure<FormOptions>(options =>
+            {
+                options.MultipartBodyLengthLimit = apiSettings.FileUpload_MaxSizeInBytes;
             });
 
             services.AddEndpointsApiExplorer();

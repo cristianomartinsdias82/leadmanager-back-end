@@ -12,6 +12,8 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Shared.Results;
 using ViaCep.ServiceClient.Configuration;
+using CrossCutting.Csv.Configuration;
+using Application.Features.Leads.Commands.BulkInsertLead;
 
 namespace Application.Configuration;
 
@@ -29,6 +31,7 @@ public static class DependencyInjection
         });
 
         services.AddIntegrationClientServices(configuration);
+        services.AddCrossCuttingServices(configuration);
 
         return services;
     }
@@ -36,6 +39,13 @@ public static class DependencyInjection
     public static IServiceCollection AddIntegrationClientServices(this IServiceCollection services, IConfiguration configuration)
     {
         services.AddViaCepIntegrationServiceClient(configuration);
+
+        return services;
+    }
+
+    public static IServiceCollection AddCrossCuttingServices(this IServiceCollection services, IConfiguration configuration)
+    {
+        services.AddCsvHelper(configuration);
 
         return services;
     }
@@ -59,6 +69,9 @@ public static class DependencyInjection
 
         config.AddBehavior<IPipelineBehavior<SearchLeadQueryRequest, ApplicationResponse<bool>>,
                             ValidationBehavior<SearchLeadQueryRequest, bool>>();
+
+        config.AddBehavior<IPipelineBehavior<BulkInsertLeadCommandRequest, ApplicationResponse<BulkInsertLeadCommandResponse>>,
+                            ValidationBehavior<BulkInsertLeadCommandRequest, BulkInsertLeadCommandResponse>>();
 
         return config;
     }

@@ -16,6 +16,7 @@ internal sealed class RegisterLeadCommandHandler : ApplicationRequestHandler<Reg
 
     public async override Task<ApplicationResponse<RegisterLeadCommandResponse>> Handle(RegisterLeadCommandRequest request, CancellationToken cancellationToken)
     {
+        //TODO: Add null-forgiving operator to the green-squiggled properties
         var lead = new Lead(
             request.Cnpj,
             request.RazaoSocial,

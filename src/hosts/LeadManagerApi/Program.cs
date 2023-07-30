@@ -2,6 +2,7 @@ using Application.Configuration;
 using Infrastructure.Configuration;
 using LeadManagerApi.ApiFeatures;
 using LeadManagerApi.Configuration;
+using Microsoft.AspNetCore.Server.Kestrel.Core;
 
 namespace LeadManagerApi;
 
@@ -17,6 +18,13 @@ public class Program
         builder.Services.AddApplicationServices(builder.Configuration);
 
         builder.Services.AddInfrastructureServices(builder.Configuration);
+
+        builder.Services.Configure<KestrelServerOptions>(options =>
+        {
+            var apiSettings = builder.Configuration.GetSection(nameof(LeadManagerApiSettings)).Get<LeadManagerApiSettings>()!;
+
+            options.Limits.MaxRequestBodySize = apiSettings.FileUpload_MaxSizeInBytes;
+        });
 
         //TODO: builder.Host.CONFIGURELOGGING()!
 
