@@ -1,11 +1,12 @@
 {
   "version": 2,
-  "dgSpecHash": "nzJMlsETsRBVQnpg5tcMDZTD9auQd4gM2nl7aOZGwgMkr2NW7BU4MERdNlHxjdIdgZHcZbYjGWoQJhlu4FQxlQ==",
+  "dgSpecHash": "CQ0q/EJy9Lz1TwvpYHcwloW+BET8FDU8GkijAKdzby2XeTHihlrcJe0I3ZAxIQbhP2CUW0MiXvMt4ijCEVZclw==",
   "success": true,
   "projectFilePath": "F:\\Codebase\\_.NET Solutions\\Core\\7.x\\LeadManager_PactoEnergiaExamTest\\backend\\src\\LeadManager\\tests\\common\\Tests.Common\\Tests.Common.csproj",
   "expectedPackageFiles": [
     "C:\\Users\\rblac\\.nuget\\packages\\codegeneration.roslyn.attributes\\0.7.63\\codegeneration.roslyn.attributes.0.7.63.nupkg.sha512",
     "C:\\Users\\rblac\\.nuget\\packages\\codegeneration.roslyn.tool\\0.7.63\\codegeneration.roslyn.tool.0.7.63.nupkg.sha512",
+    "C:\\Users\\rblac\\.nuget\\packages\\csvhelper\\30.0.1\\csvhelper.30.0.1.nupkg.sha512",
     "C:\\Users\\rblac\\.nuget\\packages\\fluentvalidation\\11.5.2\\fluentvalidation.11.5.2.nupkg.sha512",
     "C:\\Users\\rblac\\.nuget\\packages\\fluentvalidation.dependencyinjectionextensions\\11.5.2\\fluentvalidation.dependencyinjectionextensions.11.5.2.nupkg.sha512",
     "C:\\Users\\rblac\\.nuget\\packages\\languageext.core\\4.4.3\\languageext.core.4.4.3.nupkg.sha512",

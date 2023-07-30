@@ -1,6 +1,6 @@
 {
   "version": 2,
-  "dgSpecHash": "mBOVYrQZpDxwoeRl/utuH3QOFjEhqYkeOCYMZDLzxNui9kWpkQhUcNUaRQ4TvWeXTN8qmh6T+dIgYTHg3BeVZg==",
+  "dgSpecHash": "ZJvRZVLmATHkWDbBNDdfBdkt325yGdABUpthfTAShs7sC86yKd3zueRvi1kU6KZC2waXTcWSfq8K4ZPt+9rPXA==",
   "success": true,
   "projectFilePath": "F:\\Codebase\\_.NET Solutions\\Core\\7.x\\LeadManager_PactoEnergiaExamTest\\backend\\src\\LeadManager\\src\\libs\\Infrastructure\\Infrastructure.csproj",
   "expectedPackageFiles": [
@@ -8,6 +8,7 @@
     "C:\\Users\\rblac\\.nuget\\packages\\azure.identity\\1.6.0\\azure.identity.1.6.0.nupkg.sha512",
     "C:\\Users\\rblac\\.nuget\\packages\\codegeneration.roslyn.attributes\\0.7.63\\codegeneration.roslyn.attributes.0.7.63.nupkg.sha512",
     "C:\\Users\\rblac\\.nuget\\packages\\codegeneration.roslyn.tool\\0.7.63\\codegeneration.roslyn.tool.0.7.63.nupkg.sha512",
+    "C:\\Users\\rblac\\.nuget\\packages\\csvhelper\\30.0.1\\csvhelper.30.0.1.nupkg.sha512",
     "C:\\Users\\rblac\\.nuget\\packages\\fluentvalidation\\11.5.2\\fluentvalidation.11.5.2.nupkg.sha512",
     "C:\\Users\\rblac\\.nuget\\packages\\fluentvalidation.dependencyinjectionextensions\\11.5.2\\fluentvalidation.dependencyinjectionextensions.11.5.2.nupkg.sha512",
     "C:\\Users\\rblac\\.nuget\\packages\\humanizer.core\\2.14.1\\humanizer.core.2.14.1.nupkg.sha512",

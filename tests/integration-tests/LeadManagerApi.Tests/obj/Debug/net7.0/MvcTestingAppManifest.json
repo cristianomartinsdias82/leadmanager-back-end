@@ -1,9 +1,0 @@
-{
-  "Application, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null": "F:\\Codebase\\_.NET Solutions\\Core\\7.x\\LeadManager_PactoEnergiaExamTest\\backend\\src\\LeadManager\\src\\libs\\Application",
-  "Core, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null": "F:\\Codebase\\_.NET Solutions\\Core\\7.x\\LeadManager_PactoEnergiaExamTest\\backend\\src\\LeadManager\\src\\libs\\Core",
-  "Infrastructure, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null": "F:\\Codebase\\_.NET Solutions\\Core\\7.x\\LeadManager_PactoEnergiaExamTest\\backend\\src\\LeadManager\\src\\libs\\Infrastructure",
-  "LeadManagerApi, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null": "F:\\Codebase\\_.NET Solutions\\Core\\7.x\\LeadManager_PactoEnergiaExamTest\\backend\\src\\LeadManager\\src\\hosts\\LeadManagerApi",
-  "Shared, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null": "F:\\Codebase\\_.NET Solutions\\Core\\7.x\\LeadManager_PactoEnergiaExamTest\\backend\\src\\LeadManager\\src\\libs\\Shared",
-  "Tests.Common, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null": "F:\\Codebase\\_.NET Solutions\\Core\\7.x\\LeadManager_PactoEnergiaExamTest\\backend\\src\\LeadManager\\tests\\common\\Tests.Common",
-  "ViaCep.ServiceClient, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null": "F:\\Codebase\\_.NET Solutions\\Core\\7.x\\LeadManager_PactoEnergiaExamTest\\backend\\src\\LeadManager\\src\\libs\\Integrations\\ViaCep.ServiceClient"
-}
