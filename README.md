@@ -6,6 +6,9 @@ A parte de front-end do projeto consiste atualmente em duas telas.
 Uma para listagem de leads que, a partir dela, os usuários são capazes de:
 - Visualizar uma lista contendo os dados principais de leads existentes
 - Acionar o botão para adicionar novos leads
+  - Via cadastro manual
+  - Via arquivos em lote no formato CSV
+- Acionar o botão para adicionar novos leads
 - Selecionar um lead a fim de removê-lo ou
 - Selecionar um lead e acionar o botão para atualizar os respectivos dados<br/>
 E outra para as operações de adicionar um novo lead ou atualizar um lead previamente selecionado
