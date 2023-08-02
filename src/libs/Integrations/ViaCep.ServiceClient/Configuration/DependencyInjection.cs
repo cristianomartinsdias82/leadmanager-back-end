@@ -11,8 +11,7 @@ namespace ViaCep.ServiceClient.Configuration
             this IServiceCollection services,
             IConfiguration configuration)
         {
-            var settings = new ViaCepIntegrationSettings();
-            configuration.Bind("ServiceIntegrations:ViaCep", settings);
+            var settings = configuration.GetSection("ServiceIntegrations:ViaCep").Get<ViaCepIntegrationSettings>()!;
             services.AddSingleton(settings);
 
             services.AddHttpClient<IViaCepServiceClient, ViaCepServiceClient>(config =>

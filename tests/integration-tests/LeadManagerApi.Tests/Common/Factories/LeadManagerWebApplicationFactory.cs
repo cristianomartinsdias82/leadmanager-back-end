@@ -1,6 +1,6 @@
 ﻿using Application.Contracts.Persistence;
 using Infrastructure.Persistence;
-using LeadManagerApi.ApiFeatures;
+using LeadManagerApi.Configuration;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -148,21 +148,9 @@ public class LeadManagerWebApplicationFactory : WebApplicationFactory<Program>, 
 
                 services.AddHttpContextAccessor();
 
-                services.AddSingleton(factory => {
+                services.AddSingleton(factory => Configuration.GetSection("ServiceIntegrations:ViaCep").Get<ViaCepIntegrationSettings>()!);
 
-                    var settings = new ViaCepIntegrationSettings();
-                    Configuration.Bind("ServiceIntegrations:ViaCep", settings);
-
-                    return settings;
-                });
-
-                services.AddSingleton(factory => {
-
-                    var settings = new LeadManagerApiSettings();
-                    Configuration.Bind(nameof(LeadManagerApiSettings), settings);
-
-                    return settings;
-                });
+                services.AddSingleton(factory => Configuration.GetSection(nameof(LeadManagerApiSettings)).Get<LeadManagerApiSettings>()!);
 
                 services.RemoveAll<IViaCepServiceClient>();
                 services.TryAddScoped<IViaCepServiceClient>(services =>

@@ -1,4 +1,5 @@
-﻿using Microsoft.Extensions.Options;
+﻿using LeadManagerApi.Configuration;
+using Microsoft.Extensions.Options;
 
 namespace LeadManagerApi.ApiFeatures
 {

@@ -1,5 +1,6 @@
 ﻿using Application.Features.Leads.Commands.BulkInsertLead;
 using LeadManagerApi.ApiFeatures;
+using LeadManagerApi.Configuration;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
 using Shared.Results;

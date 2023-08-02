@@ -1,9 +1,8 @@
-﻿namespace ViaCep.ServiceClient
-{
-    public record ViaCepIntegrationSettings
-    {
-        public int RequestTimeoutInSeconds { get; set; }
-        public string Uri { get; set; } = default!;
-        public string Endpoint { get; set; } = default!;
-    }
-}
+﻿namespace ViaCep.ServiceClient;
+
+public sealed record ViaCepIntegrationSettings
+(
+    int RequestTimeoutInSeconds,
+    string Uri,
+    string Endpoint
+);
