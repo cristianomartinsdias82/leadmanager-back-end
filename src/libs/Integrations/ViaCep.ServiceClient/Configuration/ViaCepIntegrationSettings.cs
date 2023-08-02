@@ -1,4 +1,4 @@
-﻿namespace ViaCep.ServiceClient;
+﻿namespace ViaCep.ServiceClient.Configuration;
 
 public sealed record ViaCepIntegrationSettings
 (
