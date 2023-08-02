@@ -3,17 +3,16 @@
 O que é o Lead Manager?<br/>
 É um projeto que tem como objetivo permitir gerenciar de maneira simples e intuitiva - através de operações de listagem, adiçāo, atualizaçāo e remoção - dados de leads.
 A parte de front-end do projeto consiste atualmente em duas telas.
-Uma para listagem de leads que, a partir dela, os usuários são capazes de:
+Uma para listagem de leads a partir da qual os usuários são capazes de:
 - Visualizar uma lista contendo os dados principais de leads existentes
-- Acionar o botão para adicionar novos leads
+- Ir para a tela de adicionar novos leads
   - Via cadastro manual
   - Via arquivos em lote no formato CSV
-- Acionar o botão para adicionar novos leads
 - Selecionar um lead a fim de removê-lo ou
 - Selecionar um lead e acionar o botão para atualizar os respectivos dados<br/>
-E outra para as operações de adicionar um novo lead ou atualizar um lead previamente selecionado
+E outra tela para as operações de adicionar ou atualizar um lead previamente selecionado
 
-O Lead Manager é um projeto que utiliza as seguintes linguagens, tecnologias, funcionalidades e ferramentas:
+O projeto está em constante evolução que utiliza a seguinte plataforma e linguagens, tecnologias, funcionalidades e ferramentas:
 - .Net Core 7
 - Linguagem C#
 - Orientação a objetos
@@ -29,7 +28,7 @@ O Lead Manager é um projeto que utiliza as seguintes linguagens, tecnologias, f
 - Testes de integração / Integration tests com WebApplicationFactory e MockHttp
 - Integração com o serviço de localização de endereços ViaCep via HttpClient tipado
 - Aplicação de princípios SOLID
-- Aplicação de padrões de projeto / design patterns como: Object mother, Singleton, Mediator, Factory, Factory method
+- Aplicação de padrões de projeto / design patterns como: Object mother, Singleton, Mediator, Factory, Factory method, Retry
 - Aplicação do padrão arquitetural CQRS de maneira lógica com MediatR
 - Uso de Pipeline Behaviors para validação de dados de entrada em combinação com FluentValidations
 - Uso de Design dirigido a domínio / domain-driven design / DDD para modalagem das entidades e dos comportamentos da classes e objetos de valor
@@ -38,9 +37,11 @@ Pré-requisitos para execução do Front-End da aplicação<br/>
 É necessário possuir os seguintes componentes instalados na máquina:
 - SDK do .Net Core 7 (que pode ser obtido através da url: https://nodejs.org/en](https://dotnet.microsoft.com/en-us/download/dotnet/7.0)
 - Docker<br/>
-  Se sua máquina for Mac, você pode seguir os passos conforme a url: https://docs.docker.com/desktop/install/mac-install/<br/>
-  Se sua máquina for Linux, você pode seguir os passos conforme a url: https://docs.docker.com/desktop/install/linux-install/#generic-installation-steps<br/>
-  Se sua máquina for Windows, você pode seguir os passos conforme a url: https://docs.docker.com/desktop/install/windows-install/<br/>
+  Se sua máquina for Mac, siga os passos conforme a url: https://docs.docker.com/desktop/install/mac-install/<br/>
+  Se sua máquina for Linux, siga os passos conforme a url: https://docs.docker.com/desktop/install/linux-install/#generic-installation-steps<br/>
+  Se sua máquina for Windows, siga os passos conforme a url: https://docs.docker.com/desktop/install/windows-install/<br/>
+- Azurite<br/>
+  Siga os passos conforme a url https://learn.microsoft.com/en-us/azure/storage/common/storage-use-azurite?tabs=visual-studio<br/>
 
 Como executar o projeto localmente?
 - Garanta que a máquina esteja devidamente configurada, conforme a seção "Pré-requisitos para execução do Front-End da aplicação"
@@ -48,6 +49,8 @@ Como executar o projeto localmente?
 - Acesse o Terminal, Command Prompt ou Powershell
 - Execute o seguinte comando para subir um servidor de banco de dados Sql Server:<br/>
   docker run -e "MSSQL_PID=Express" -e "ACCEPT_EULA=Y" -e "SA_PASSWORD=Y0urStr0nGP@sswoRD_2023" -p 1433:1433 --name leadmanager-db -d mcr.microsoft.com/mssql/server<br/>
+- Execute o Azurite através do seguinte comando:<br/>
+  azurite-blob -l X:\Path\to\blobs
 - Navegue até a pasta raíz do projeto (mesma pasta que contém o arquivo LeadManager.sln, por exemplo)
 - Execute os seguintes comandos:<br/>
   dotnet build<br/>
@@ -93,7 +96,7 @@ Em termos de implementação, o que tem de reaproveitável no código-fonte dest
 - Classe de extensão de validação de Cnpj integrada ao FluentValidations
 - Classe de com lógica de validação de Cnpj utilizando o algoritmo Módulo 1
 - Implementação de um service client de integração com o serviço de localização de endereços ViaCep
-- Classes de exensão de injeção de dependência das camadas Api, Application e Infrastructure para ótima manutenibilidade da lógica de configuração da aplicação web (AddApiServices, AddApplicationServices, AddInfrastructureServices)
+- Classes de extensão de injeção de dependência das camadas Api, Application e Infrastructure para ótima manutenibilidade da lógica de configuração da aplicação web (AddApiServices, AddApplicationServices, AddInfrastructureServices)
 - Implementação de classes ObjectMother de construção de Requests e Entidades para ótima manutenibilidade das suítes de testes
 - Implementação de classe Factory de DContext em memória para execução dos testes de integração da Api
 - Lógica de auditoria durante o processo de persistência dos dados em LeadsDbContext, gravando o usuário e data/hora da operação
@@ -104,17 +107,20 @@ Em termos de implementação, o que tem de reaproveitável no código-fonte dest
   Classes de estruturas de dados comuns, como ApplicationResponse<T><br/>
 - Métodos de testes de integração - inclusive com uso de asserções fluentes - de endpoints de API
 - Classes WebApplicationFactory e ClassFixtures
-- Class InMemoryLeadManagerDbContextFactory que ajuda na execução de testes com banco de dados em memória<br/>
+- Classe InMemoryLeadManagerDbContextFactory que ajuda na execução de testes com banco de dados em memória<br/>
+- Integração com o serviço de armazenamento do Azure (Blob Storage) através da classe BlobStorageProvider para upload de arquivos de lotes de Leads
+  - Contém lógica de política de retentativas com 'back-off' exponencial através do uso da biblioteca Polly
 (Continuar a listagem. Afinal, tem muita coisa que vale anotar aqui como índice/referência!)
 
 Lista com os principais pacotes Nuget que foram utilizados neste projeto:<br/>
 - MediatR
-- Fluent Validaton
+- FluentValidaton
 - Microsoft.EntityFrameworkCore
 - Microsoft.EntityFrameworkCore.Design
 - Microsoft.EntityFrameworkCore.SqlServer
 - Microsoft.EntityFrameworkCore.Tools
 - Microsoft.Extensions.Http.Polly
+- Polly
 - LanguageExt.Core
 - StronglyTypedId
 - RichardSzalay.MockHttp
