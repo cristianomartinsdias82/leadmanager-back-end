@@ -18,6 +18,7 @@
   <ItemGroup>
     <ProjectReference Include="..\Core\Core.csproj" />
     <ProjectReference Include="..\Cross-cutting\Cross-cutting.Csv\CrossCutting.Csv.csproj" />
+    <ProjectReference Include="..\Cross-cutting\Cross-cutting.FileStorage\CrossCutting.FileStorage.csproj" />
     <ProjectReference Include="..\Integrations\ViaCep.ServiceClient\ViaCep.ServiceClient.csproj" />
     <ProjectReference Include="..\Shared\Shared.csproj" />
   </ItemGroup>

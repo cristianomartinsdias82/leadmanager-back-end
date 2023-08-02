@@ -14,6 +14,7 @@ using Shared.Results;
 using ViaCep.ServiceClient.Configuration;
 using CrossCutting.Csv.Configuration;
 using Application.Features.Leads.Commands.BulkInsertLead;
+using CrossCutting.FileStorage.Configuration;
 
 namespace Application.Configuration;
 
@@ -46,6 +47,7 @@ public static class DependencyInjection
     public static IServiceCollection AddCrossCuttingServices(this IServiceCollection services, IConfiguration configuration)
     {
         services.AddCsvHelper(configuration);
+        services.AddStorageServices(configuration);
 
         return services;
     }

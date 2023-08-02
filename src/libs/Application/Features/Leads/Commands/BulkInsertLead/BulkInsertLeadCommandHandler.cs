@@ -2,6 +2,7 @@
 using Application.Features.Leads.Commands.RegisterLead;
 using Core.Entities;
 using CrossCutting.Csv;
+using CrossCutting.FileStorage;
 using FluentValidation;
 using FluentValidation.Results;
 using Microsoft.EntityFrameworkCore;
@@ -17,19 +18,27 @@ internal sealed class BulkInsertLeadCommandHandler : ApplicationRequestHandler<B
     private readonly ILeadManagerDbContext _dbContext;
     private readonly ICsvHelper _csvHelper;
     private readonly IValidator<RegisterLeadCommandRequest> _requestValidator;
+    private readonly IFileStorageProvider _fileStorageProvider;
 
     public BulkInsertLeadCommandHandler(
         ILeadManagerDbContext dbContext,
         ICsvHelper csvHelper,
+        IFileStorageProvider fileStorageProvider,
         IValidator<RegisterLeadCommandRequest> requestValidator)
     {
         _dbContext = dbContext;
         _csvHelper = csvHelper;
         _requestValidator = requestValidator;
+        _fileStorageProvider = fileStorageProvider;
     }
 
     public async override Task<ApplicationResponse<BulkInsertLeadCommandResponse>> Handle(BulkInsertLeadCommandRequest request, CancellationToken cancellationToken)
     {
+        await _fileStorageProvider.UploadAsync(
+            request.InputStream,
+            Guid.NewGuid().ToString(), //TODO: Replace this code with UserId from UserService dependency when it's available
+            cancellationToken: cancellationToken);
+
         var upcomingLeads = new List<RegisterLeadCommandRequest>();
         var validationResult = default(ValidationResult);
         var index = 0;
