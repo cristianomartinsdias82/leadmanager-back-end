@@ -21,6 +21,7 @@ using System.Net.Http.Json;
 using System.Text.Json;
 using Tests.Common.ObjectMothers.Integrations.ViaCep;
 using ViaCep.ServiceClient;
+using ViaCep.ServiceClient.Configuration;
 using ViaCep.ServiceClient.Models;
 using Xunit;
 
