@@ -12,7 +12,7 @@ Uma para listagem de leads a partir da qual os usuários são capazes de:
 - Selecionar um lead e acionar o botão para atualizar os respectivos dados<br/>
 E outra tela para as operações de adicionar ou atualizar um lead previamente selecionado
 
-O projeto está em constante evolução que utiliza a seguinte plataforma e linguagens, tecnologias, funcionalidades e ferramentas:
+O projeto está em constante evolução e utiliza a seguinte plataforma e linguagens, tecnologias, funcionalidades e ferramentas:
 - .Net Core 7
 - Linguagem C#
 - Orientação a objetos
