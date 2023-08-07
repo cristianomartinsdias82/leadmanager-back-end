@@ -492,3 +492,7 @@ $RECYCLE.BIN/
 /src/libs/Application/obj/Debug/net7.0/Application.csproj.CoreCompileInputs.cache
 /src/libs/Core/obj/Debug/net7.0/Core.csproj.dotnet-codegen.GeneratedFileList.txt
 /src/libs/Core/obj/Debug/net7.0/Core.csproj.dotnet-codegen.rsp
+/tests/common/Tests.Common/obj/Debug/net7.0/Tests.Common.assets.cache
+/tests/integration-tests/LeadManagerApi.Tests/obj/Debug/net7.0/LeadManagerApi.Tests.assets.cache
+/tests/unit-tests/Application.Tests/obj/Debug/net7.0/Application.Tests.assets.cache
+/tests/unit-tests/Core.Tests/obj/Debug/net7.0/Core.Tests.assets.cache
