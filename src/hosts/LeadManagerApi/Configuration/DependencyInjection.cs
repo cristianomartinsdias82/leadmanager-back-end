@@ -1,5 +1,6 @@
 ﻿using LeadManagerApi.ApiFeatures;
 using Microsoft.AspNetCore.Http.Features;
+using Microsoft.AspNetCore.Server.Kestrel.Core;
 
 namespace LeadManagerApi.Configuration
 {
@@ -15,6 +16,13 @@ namespace LeadManagerApi.Configuration
             services.AddControllers(config =>
             {
                 config.Filters.Add<RequiresApiKeyActionFilter>();
+            });
+
+            services.Configure<KestrelServerOptions>(options =>
+            {
+                var apiSettings = configuration.GetSection(nameof(LeadManagerApiSettings)).Get<LeadManagerApiSettings>()!;
+
+                options.Limits.MaxRequestBodySize = apiSettings.FileUpload_MaxSizeInBytes;
             });
 
             services.Configure<FormOptions>(options =>

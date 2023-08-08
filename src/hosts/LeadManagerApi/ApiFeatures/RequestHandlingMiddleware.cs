@@ -5,14 +5,14 @@ using Shared.Results;
 
 namespace LeadManagerApi.ApiFeatures;
 
-public sealed class ErrorHandlingMiddleware
+public sealed class RequestHandlingMiddleware
 {
     private readonly RequestDelegate _next;
-    private readonly ILogger<ErrorHandlingMiddleware> _logger;
+    private readonly ILogger<RequestHandlingMiddleware> _logger;
 
-    public ErrorHandlingMiddleware(
+    public RequestHandlingMiddleware(
         RequestDelegate next,
-        ILogger<ErrorHandlingMiddleware> logger)
+        ILogger<RequestHandlingMiddleware> logger)
     {
         _next = next;
         _logger = logger;

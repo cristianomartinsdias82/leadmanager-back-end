@@ -1,4 +1,4 @@
-﻿namespace Infrastructure.Configuration;
+﻿namespace Shared.Settings;
 
 public record DataSourceSettings
 {

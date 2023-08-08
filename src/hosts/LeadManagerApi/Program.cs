@@ -3,6 +3,11 @@ using Infrastructure.Configuration;
 using LeadManagerApi.ApiFeatures;
 using LeadManagerApi.Configuration;
 using Microsoft.AspNetCore.Server.Kestrel.Core;
+using Serilog;
+using Serilog.Sinks.MSSqlServer;
+using Shared.Settings;
+using System.Data;
+using System.Text;
 
 namespace LeadManagerApi;
 
@@ -19,18 +24,9 @@ public class Program
 
         builder.Services.AddInfrastructureServices(builder.Configuration);
 
-        builder.Services.Configure<KestrelServerOptions>(options =>
-        {
-            var apiSettings = builder.Configuration.GetSection(nameof(LeadManagerApiSettings)).Get<LeadManagerApiSettings>()!;
-
-            options.Limits.MaxRequestBodySize = apiSettings.FileUpload_MaxSizeInBytes;
-        });
-
-        //TODO: builder.Host.CONFIGURELOGGING()!
-
         var app = builder.Build();
 
-        //Pipeline configuration
+        //Request pipeline configuration
         app.UseCors(Configuration.DependencyInjection.LeadWebAppCorsPolicy);
 
         if (app.Environment.IsDevelopment())
@@ -47,7 +43,7 @@ public class Program
 
         app.UseDataSourceInitialization();
 
-        app.UseMiddleware<ErrorHandlingMiddleware>();
+        app.UseMiddleware<RequestHandlingMiddleware>();
 
         app.Run();
     }
