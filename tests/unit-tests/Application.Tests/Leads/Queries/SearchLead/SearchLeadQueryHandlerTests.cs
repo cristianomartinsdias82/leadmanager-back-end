@@ -2,15 +2,15 @@
 using Application.Features.Leads.Queries.SearchLead;
 using Application.Tests.Utils.Factories;
 using Core.Entities;
+using FluentAssertions;
 using Microsoft.EntityFrameworkCore;
+using Shared.Results;
 using Tests.Common.ObjectMothers.Core;
 using Xunit;
-using FluentAssertions;
-using Shared.Results;
 
 namespace Application.Tests.Leads.Queries.SearchLead;
 
-public sealed class SearchLeadQueryHandlerTests : IAsyncDisposable
+public sealed class SearchLeadQueryHandlerTests : IAsyncDisposable, IDisposable
 {
     private readonly CancellationTokenSource _cts;
     private readonly ILeadManagerDbContext _dbContext;
@@ -102,5 +102,10 @@ public sealed class SearchLeadQueryHandlerTests : IAsyncDisposable
         yield return new object[] { new SearchLeadQueryRequest(Guid.NewGuid(), "Gumper Inc.") };
         yield return new object[] { new SearchLeadQueryRequest(default, "32.123.123/0001-23") };
         yield return new object[] { new SearchLeadQueryRequest(default, "Gumper Inc.") };
+    }
+
+    public void Dispose()
+    {
+        _cts.Dispose();
     }
 }

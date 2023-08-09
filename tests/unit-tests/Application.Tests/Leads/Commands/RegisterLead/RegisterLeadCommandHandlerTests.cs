@@ -9,13 +9,20 @@ using Xunit;
 
 namespace Application.Tests.Leads.Commands.RegisterLead;
 
-public sealed class RegisterLeadCommandHandlerTests : IAsyncDisposable
+public sealed class RegisterLeadCommandHandlerTests : IAsyncDisposable, IDisposable
 {
     private readonly ILeadManagerDbContext _dbContext;
+    private readonly CancellationTokenSource _cts;
 
     public RegisterLeadCommandHandlerTests()
     {
         _dbContext = InMemoryLeadManagerDbContextFactory.Create();
+        _cts = new();
+    }
+
+    public void Dispose()
+    {
+        _cts.Dispose();
     }
 
     public async ValueTask DisposeAsync()
@@ -28,11 +35,10 @@ public sealed class RegisterLeadCommandHandlerTests : IAsyncDisposable
     {
         //Arrange
         var handler = new RegisterLeadCommandHandler(_dbContext);
-        using var cts = new CancellationTokenSource();
         var request = RegisterLeadCommandRequestMother.XptoIncLeadRequest();
 
         //Act
-        var result = await handler.Handle(request, cts.Token);
+        var result = await handler.Handle(request, _cts.Token);
 
         //Assert
         result.Should().NotBeNull();
@@ -42,7 +48,7 @@ public sealed class RegisterLeadCommandHandlerTests : IAsyncDisposable
         result.Inconsistencies.Should().BeNullOrEmpty();
         result.Should().BeOfType<ApplicationResponse<RegisterLeadCommandResponse>>();
         result.Data.Id.Should().NotBe(Guid.Empty);
-        var newlyCreatedLead = await _dbContext.Leads.FindAsync(result.Data.Id, cts.Token);
+        var newlyCreatedLead = await _dbContext.Leads.FindAsync(result.Data.Id, _cts.Token);
         newlyCreatedLead.Should().NotBeNull();
         newlyCreatedLead!.Cnpj.Should().BeEquivalentTo(request.Cnpj);
     }

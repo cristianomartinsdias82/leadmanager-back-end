@@ -9,13 +9,15 @@ using Xunit;
 
 namespace Application.Tests.Leads.Commands.RemoveLead;
 
-public sealed class RemoveLeadCommandHandlerTests : IAsyncDisposable
+public sealed class RemoveLeadCommandHandlerTests : IAsyncDisposable, IDisposable
 {
     private readonly ILeadManagerDbContext _dbContext;
+    private readonly CancellationTokenSource _cts;
 
     public RemoveLeadCommandHandlerTests()
     {
         _dbContext = InMemoryLeadManagerDbContextFactory.Create();
+        _cts = new();
     }
 
     public async ValueTask DisposeAsync()
@@ -23,16 +25,20 @@ public sealed class RemoveLeadCommandHandlerTests : IAsyncDisposable
         await _dbContext.Leads.ExecuteDeleteAsync();
     }
 
+    public void Dispose()
+    {
+        _cts.Dispose();
+    }
+
     [Fact]
     public async Task Handle_WithNonExistingLead_ShouldReturnResultObjectWithNotFoundMessage()
     {
         //Arrange
         var handler = new RemoveLeadCommandHandler(_dbContext);
-        using var cts = new CancellationTokenSource();
         var request = new RemoveLeadCommandRequest { Id = Guid.Empty };
 
         //Act
-        var result = await handler.Handle(request, cts.Token);
+        var result = await handler.Handle(request, _cts.Token);
 
         //Assert
         result.Should().NotBeNull();
@@ -48,15 +54,14 @@ public sealed class RemoveLeadCommandHandlerTests : IAsyncDisposable
     public async Task Handle_WithExistingLead_ShouldReturnResultObject()
     {
         //Arrange
-        using var cts = new CancellationTokenSource();
         var leadToRemove = LeadMother.XptoLLC();
         await _dbContext.Leads.AddAsync(leadToRemove);
-        await _dbContext.SaveChangesAsync(cts.Token);
+        await _dbContext.SaveChangesAsync(_cts.Token);
         var handler = new RemoveLeadCommandHandler(_dbContext);
         var request = new RemoveLeadCommandRequest { Id = leadToRemove.Id };
 
         //Act
-        var result = await handler.Handle(request, cts.Token);
+        var result = await handler.Handle(request, _cts.Token);
 
         //Assert
         result.Should().NotBeNull();

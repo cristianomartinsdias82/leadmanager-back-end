@@ -11,7 +11,7 @@ using Xunit;
 
 namespace Application.Tests.Leads.Queries.GetLeadById;
 
-public sealed class GetLeadByIdQueryHandlerTests : IAsyncDisposable
+public sealed class GetLeadByIdQueryHandlerTests : IAsyncDisposable, IDisposable
 {
     private readonly GetLeadByIdQueryHandler _handler;
     private readonly ILeadManagerDbContext _dbContext;
@@ -68,5 +68,10 @@ public sealed class GetLeadByIdQueryHandlerTests : IAsyncDisposable
         _cts.Dispose();
         await _dbContext.Leads.ExecuteDeleteAsync();
         await _dbContext.DisposeAsync();
+    }
+
+    public void Dispose()
+    {
+        _cts.Dispose();
     }
 }
