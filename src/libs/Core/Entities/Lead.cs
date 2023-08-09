@@ -1,4 +1,5 @@
-﻿using Core.ValueObjects;
+﻿using Core.Entities.DomainEvents;
+using Core.ValueObjects;
 using LanguageExt.Common;
 
 namespace Core.Entities;

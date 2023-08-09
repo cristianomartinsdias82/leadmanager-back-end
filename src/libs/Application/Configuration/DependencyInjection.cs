@@ -7,11 +7,13 @@ using Application.Features.Leads.Commands.UpdateLead;
 using Application.Features.Leads.Queries.GetLeadById;
 using Application.Features.Leads.Queries.SearchLead;
 using Application.Features.Leads.Queries.Shared;
+using Core.Entities;
 using CrossCutting.Csv.Configuration;
 using CrossCutting.FileStorage.Configuration;
 using CrossCutting.Logging.Configuration;
 using FluentValidation;
 using MediatR;
+using MediatR.NotificationPublishers;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Shared.Results;
@@ -23,14 +25,19 @@ public static class DependencyInjection
 {
     public static IServiceCollection AddApplicationServices(this IServiceCollection services, IConfiguration configuration)
     {
-        var assemblyRef = typeof(DependencyInjection).Assembly;
+        var applicationAssemblyRef = typeof(DependencyInjection).Assembly;
+        var coreAssemblyRef = typeof(IEntity<>).Assembly;
 
-        services.AddValidatorsFromAssembly(assemblyRef);
+        services.AddValidatorsFromAssembly(applicationAssemblyRef);
         
         services.AddMediatR(config =>
         {
-            config.RegisterServicesFromAssembly(assemblyRef);
+            config.RegisterServicesFromAssemblies(coreAssemblyRef, applicationAssemblyRef);
+            config.RegisterServicesFromAssembly(applicationAssemblyRef);
             config.RegisterValidationBehaviors();
+
+            config.NotificationPublisherType = typeof(TaskWhenAllPublisher);
+            config.Lifetime = ServiceLifetime.Scoped;
         });
 
         services.AddIntegrationClientServices(configuration);
