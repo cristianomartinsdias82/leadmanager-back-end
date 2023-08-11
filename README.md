@@ -71,7 +71,7 @@ Backlog:
   Cadastro de lead
   Atualização de dados de lead
   Exclusão de lead
-- (Technical debt) Proteger a API contra acesso indevido, de maneira que somente usuário autenticados possam invocar os endpoints
+- (Technical debt) Proteger a API contra acesso indevido, de maneira que somente usuários autenticados possam invocar os endpoints
   - Possibilidade 1: a aplicação deverá ser capaz de encaminhar a solicitação de autenticação para um servidor de identidade a fim de obter o Token de autenticação
   - Possibilidade 2: a aplicação deverá ser capaz de validar tokens de autenticação/autorização - incluindo Claims - que possibilitem ou recusem executar os endpoints da API
 - (Technical debt) Criar Dockerfile do projeto
