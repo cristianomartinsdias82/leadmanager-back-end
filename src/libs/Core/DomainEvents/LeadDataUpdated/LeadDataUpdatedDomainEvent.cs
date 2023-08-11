@@ -1,6 +1,6 @@
-﻿using Shared.DomainEvents;
+﻿using Shared.Events.DomainEvents;
 
-namespace Core.Entities.DomainEvents;
+namespace Core.DomainEvents.LeadDataUpdated;
 
 public sealed record LeadDataUpdatedDomainEvent(
     Guid LeadId,

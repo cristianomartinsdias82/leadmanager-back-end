@@ -1,5 +1,6 @@
 ﻿using Application.Contracts.Persistence;
 using Application.Features.Leads.Queries.Shared;
+using MediatR;
 using Microsoft.EntityFrameworkCore;
 using Shared.RequestHandling;
 using Shared.Results;
@@ -10,7 +11,9 @@ internal sealed class GetLeadsQueryHandler : ApplicationRequestHandler<GetLeadsQ
 {
     private readonly ILeadManagerDbContext _dbContext;
 
-    public GetLeadsQueryHandler(ILeadManagerDbContext dbContext)
+    public GetLeadsQueryHandler(
+        IMediator mediator,
+        ILeadManagerDbContext dbContext) : base(mediator, default!)
     {
         _dbContext = dbContext;
     }

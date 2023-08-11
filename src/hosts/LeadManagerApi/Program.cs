@@ -2,12 +2,6 @@ using Application.Configuration;
 using Infrastructure.Configuration;
 using LeadManagerApi.ApiFeatures;
 using LeadManagerApi.Configuration;
-using Microsoft.AspNetCore.Server.Kestrel.Core;
-using Serilog;
-using Serilog.Sinks.MSSqlServer;
-using Shared.Settings;
-using System.Data;
-using System.Text;
 
 namespace LeadManagerApi;
 

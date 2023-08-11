@@ -3,7 +3,9 @@ using Application.Features.Leads.Queries.SearchLead;
 using Application.Tests.Utils.Factories;
 using Core.Entities;
 using FluentAssertions;
+using MediatR;
 using Microsoft.EntityFrameworkCore;
+using NSubstitute;
 using Shared.Results;
 using Tests.Common.ObjectMothers.Core;
 using Xunit;
@@ -21,7 +23,7 @@ public sealed class SearchLeadQueryHandlerTests : IAsyncDisposable, IDisposable
     {
         _cts = new();
         _dbContext = InMemoryLeadManagerDbContextFactory.Create();
-        _handler = new(_dbContext);
+        _handler = new(Substitute.For<IMediator>(), _dbContext);
     }
 
     [Theory]

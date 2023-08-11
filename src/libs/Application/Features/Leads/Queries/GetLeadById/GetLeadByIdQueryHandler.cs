@@ -1,5 +1,6 @@
 ﻿using Application.Contracts.Persistence;
 using Application.Features.Leads.Queries.Shared;
+using MediatR;
 using Shared.RequestHandling;
 using Shared.Results;
 
@@ -9,7 +10,9 @@ internal sealed class GetLeadByIdQueryHandler : ApplicationRequestHandler<GetLea
 {
     private readonly ILeadManagerDbContext _dbContext;
 
-    public GetLeadByIdQueryHandler(ILeadManagerDbContext dbContext)
+    public GetLeadByIdQueryHandler(
+        IMediator mediator,
+        ILeadManagerDbContext dbContext) : base(mediator, default!)
     {
         _dbContext = dbContext;
     }

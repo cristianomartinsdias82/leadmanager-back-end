@@ -2,7 +2,9 @@
 using Application.Features.Leads.Commands.RemoveLead;
 using Application.Tests.Utils.Factories;
 using FluentAssertions;
+using MediatR;
 using Microsoft.EntityFrameworkCore;
+using NSubstitute;
 using Shared.Results;
 using Tests.Common.ObjectMothers.Core;
 using Xunit;
@@ -34,7 +36,7 @@ public sealed class RemoveLeadCommandHandlerTests : IAsyncDisposable, IDisposabl
     public async Task Handle_WithNonExistingLead_ShouldReturnResultObjectWithNotFoundMessage()
     {
         //Arrange
-        var handler = new RemoveLeadCommandHandler(_dbContext);
+        var handler = new RemoveLeadCommandHandler(Substitute.For<IMediator>(), _dbContext);
         var request = new RemoveLeadCommandRequest { Id = Guid.Empty };
 
         //Act
@@ -57,7 +59,7 @@ public sealed class RemoveLeadCommandHandlerTests : IAsyncDisposable, IDisposabl
         var leadToRemove = LeadMother.XptoLLC();
         await _dbContext.Leads.AddAsync(leadToRemove);
         await _dbContext.SaveChangesAsync(_cts.Token);
-        var handler = new RemoveLeadCommandHandler(_dbContext);
+        var handler = new RemoveLeadCommandHandler(Substitute.For<IMediator>(), _dbContext);
         var request = new RemoveLeadCommandRequest { Id = leadToRemove.Id };
 
         //Act

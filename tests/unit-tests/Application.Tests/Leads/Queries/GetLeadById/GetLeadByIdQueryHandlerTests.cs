@@ -4,7 +4,9 @@ using Application.Features.Leads.Queries.Shared;
 using Application.Tests.Utils.Factories;
 using Core.Entities;
 using FluentAssertions;
+using MediatR;
 using Microsoft.EntityFrameworkCore;
+using NSubstitute;
 using Shared.Results;
 using Tests.Common.ObjectMothers.Core;
 using Xunit;
@@ -25,7 +27,7 @@ public sealed class GetLeadByIdQueryHandlerTests : IAsyncDisposable, IDisposable
         _dbContext = InMemoryLeadManagerDbContextFactory.Create();
         _dbContext.Leads.Add(_xptoIncLead);
         _dbContext.SaveChangesAsync().GetAwaiter().GetResult();
-        _handler = new(_dbContext);
+        _handler = new(Substitute.For<IMediator>(), _dbContext);
     }
 
     [Fact]

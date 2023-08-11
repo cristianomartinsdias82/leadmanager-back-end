@@ -2,7 +2,9 @@
 using Application.Features.Leads.Commands.RegisterLead;
 using Application.Tests.Utils.Factories;
 using FluentAssertions;
+using MediatR;
 using Microsoft.EntityFrameworkCore;
+using NSubstitute;
 using Shared.Results;
 using Tests.Common.ObjectMothers.Application;
 using Xunit;
@@ -34,7 +36,7 @@ public sealed class RegisterLeadCommandHandlerTests : IAsyncDisposable, IDisposa
     public async Task Handle_ValidRequestParameters_ShouldSucceed()
     {
         //Arrange
-        var handler = new RegisterLeadCommandHandler(_dbContext);
+        var handler = new RegisterLeadCommandHandler(Substitute.For<IMediator>(), _dbContext);
         var request = RegisterLeadCommandRequestMother.XptoIncLeadRequest();
 
         //Act

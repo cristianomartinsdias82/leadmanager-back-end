@@ -5,6 +5,7 @@ using CrossCutting.Csv;
 using CrossCutting.FileStorage;
 using FluentValidation;
 using FluentValidation.Results;
+using MediatR;
 using Microsoft.EntityFrameworkCore;
 using Shared.RequestHandling;
 using Shared.Results;
@@ -21,10 +22,11 @@ internal sealed class BulkInsertLeadCommandHandler : ApplicationRequestHandler<B
     private readonly IFileStorageProvider _fileStorageProvider;
 
     public BulkInsertLeadCommandHandler(
+        IMediator mediator,
         ILeadManagerDbContext dbContext,
         ICsvHelper csvHelper,
         IFileStorageProvider fileStorageProvider,
-        IValidator<RegisterLeadCommandRequest> requestValidator)
+        IValidator<RegisterLeadCommandRequest> requestValidator) : base(mediator, default!)
     {
         _dbContext = dbContext;
         _csvHelper = csvHelper;

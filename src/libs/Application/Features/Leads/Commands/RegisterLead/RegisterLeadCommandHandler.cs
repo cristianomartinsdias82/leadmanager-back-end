@@ -1,5 +1,6 @@
 ﻿using Application.Contracts.Persistence;
 using Core.Entities;
+using MediatR;
 using Shared.RequestHandling;
 using Shared.Results;
 
@@ -9,22 +10,23 @@ internal sealed class RegisterLeadCommandHandler : ApplicationRequestHandler<Reg
 {
     private readonly ILeadManagerDbContext _dbContext;
 
-    public RegisterLeadCommandHandler(ILeadManagerDbContext dbContext)
+    public RegisterLeadCommandHandler(
+        IMediator mediator,
+        ILeadManagerDbContext dbContext) : base(mediator, default!)
     {
         _dbContext = dbContext;
     }
 
     public async override Task<ApplicationResponse<RegisterLeadCommandResponse>> Handle(RegisterLeadCommandRequest request, CancellationToken cancellationToken)
     {
-        //TODO: Add null-forgiving operator to the green-squiggled properties
         var lead = new Lead(
-            request.Cnpj,
-            request.RazaoSocial,
-            request.Cep,
-            request.Endereco,
-            request.Bairro,
-            request.Cidade,
-            request.Estado,
+            request.Cnpj!,
+            request.RazaoSocial!,
+            request.Cep!,
+            request.Endereco!,
+            request.Bairro!,
+            request.Cidade!,
+            request.Estado!,
             request.Numero,
             request.Complemento
         );

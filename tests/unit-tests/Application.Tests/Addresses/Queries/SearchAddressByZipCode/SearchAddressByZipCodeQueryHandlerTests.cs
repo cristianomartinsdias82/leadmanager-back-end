@@ -1,5 +1,6 @@
 ﻿using Application.Features.Addresses.Queries.SearchAddressByZipCode;
 using FluentAssertions;
+using MediatR;
 using NSubstitute;
 using Shared.Results;
 using Tests.Common.ObjectMothers.Integrations.ViaCep;
@@ -33,7 +34,9 @@ public sealed class SearchAddressByZipCodeQueryHandlerTests : IDisposable
             .SearchAsync(Arg.Any<string>(), _cts.Token)
             .Returns(AddressMother.FullAddress());
         var request = new SearchAddressByZipCodeQueryRequest(default!);
-        var handler = new SearchAddressByZipCodeQueryHandler(_viaCepServiceClient);
+        var handler = new SearchAddressByZipCodeQueryHandler(
+                            Substitute.For<IMediator>(),
+                            _viaCepServiceClient);
 
         //Act
         var result = await handler.Handle(request, _cts.Token);
@@ -53,7 +56,9 @@ public sealed class SearchAddressByZipCodeQueryHandlerTests : IDisposable
             .SearchAsync(Arg.Any<string>(), _cts.Token)
             .Returns((Endereco)default);
         var request = new SearchAddressByZipCodeQueryRequest(default!);
-        var handler = new SearchAddressByZipCodeQueryHandler(_viaCepServiceClient);
+        var handler = new SearchAddressByZipCodeQueryHandler(
+                            Substitute.For<IMediator>(),
+                            _viaCepServiceClient);
 
         //Act
         var result = await handler.Handle(request, _cts.Token);
@@ -73,7 +78,9 @@ public sealed class SearchAddressByZipCodeQueryHandlerTests : IDisposable
             .SearchAsync(Arg.Any<string>(), _cts.Token)
             .Returns(AddressMother.FaultedAddress());
         var request = new SearchAddressByZipCodeQueryRequest(default!);
-        var handler = new SearchAddressByZipCodeQueryHandler(_viaCepServiceClient);
+        var handler = new SearchAddressByZipCodeQueryHandler(
+                            Substitute.For<IMediator>(),
+                            _viaCepServiceClient);
 
         //Act
         var result = await handler.Handle(request, _cts.Token);

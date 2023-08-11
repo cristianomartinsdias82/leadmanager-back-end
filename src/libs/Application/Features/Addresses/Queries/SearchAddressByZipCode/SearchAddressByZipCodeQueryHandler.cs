@@ -1,4 +1,5 @@
-﻿using Shared.RequestHandling;
+﻿using MediatR;
+using Shared.RequestHandling;
 using Shared.Results;
 using ViaCep.ServiceClient;
 using ViaCep.ServiceClient.Models;
@@ -9,7 +10,9 @@ internal sealed class SearchAddressByZipCodeQueryHandler : ApplicationRequestHan
 {
     private readonly IViaCepServiceClient _serviceClient;
 
-    public SearchAddressByZipCodeQueryHandler(IViaCepServiceClient serviceClient)
+    public SearchAddressByZipCodeQueryHandler(
+        IMediator mediator,
+        IViaCepServiceClient serviceClient) : base(mediator, default!)
     {
         _serviceClient = serviceClient;
     }

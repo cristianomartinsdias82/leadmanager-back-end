@@ -1,4 +1,4 @@
-﻿using Shared.IntegrationEvents;
+﻿using Shared.Events.IntegrationEvents;
 
 namespace Application.Features.Leads.IntegrationEvents.LeadDataUpdated;
 

@@ -1,4 +1,5 @@
 ﻿using Application.Contracts.Persistence;
+using MediatR;
 using Shared.RequestHandling;
 using Shared.Results;
 
@@ -8,7 +9,9 @@ internal sealed class RemoveLeadCommandHandler : ApplicationRequestHandler<Remov
 {
     private readonly ILeadManagerDbContext _dbContext;
 
-    public RemoveLeadCommandHandler(ILeadManagerDbContext dbContext)
+    public RemoveLeadCommandHandler(
+        IMediator mediator,
+        ILeadManagerDbContext dbContext) : base(mediator, default!)
     {
         _dbContext = dbContext;
     }

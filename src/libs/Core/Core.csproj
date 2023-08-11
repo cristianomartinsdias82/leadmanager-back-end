@@ -8,6 +8,7 @@
 
   <ItemGroup>
     <PackageReference Include="LanguageExt.Core" Version="4.4.3" />
+    <PackageReference Include="Microsoft.Extensions.Logging.Abstractions" Version="7.0.0" />
     <PackageReference Include="StronglyTypedId" Version="0.2.1" />
   </ItemGroup>
 

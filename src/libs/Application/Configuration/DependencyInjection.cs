@@ -7,15 +7,17 @@ using Application.Features.Leads.Commands.UpdateLead;
 using Application.Features.Leads.Queries.GetLeadById;
 using Application.Features.Leads.Queries.SearchLead;
 using Application.Features.Leads.Queries.Shared;
+using Application.Processors;
 using Core.Entities;
 using CrossCutting.Csv.Configuration;
 using CrossCutting.FileStorage.Configuration;
 using CrossCutting.Logging.Configuration;
 using FluentValidation;
 using MediatR;
-using MediatR.NotificationPublishers;
+using MediatR.Pipeline;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using Shared.Events;
 using Shared.Results;
 using ViaCep.ServiceClient.Configuration;
 
@@ -28,38 +30,48 @@ public static class DependencyInjection
         var applicationAssemblyRef = typeof(DependencyInjection).Assembly;
         var coreAssemblyRef = typeof(IEntity<>).Assembly;
 
-        services.AddValidatorsFromAssembly(applicationAssemblyRef);
-        
-        services.AddMediatR(config =>
-        {
-            config.RegisterServicesFromAssemblies(coreAssemblyRef, applicationAssemblyRef);
-            config.RegisterServicesFromAssembly(applicationAssemblyRef);
-            config.RegisterValidationBehaviors();
-
-            config.NotificationPublisherType = typeof(TaskWhenAllPublisher);
-            config.Lifetime = ServiceLifetime.Scoped;
-        });
-
-        services.AddIntegrationClientServices(configuration);
-        services.AddCrossCuttingServices(configuration);
+        services.AddValidatorsFromAssembly(applicationAssemblyRef)
+                .AddMediatR(config =>
+                {
+                    config.RegisterServicesFromAssemblies(coreAssemblyRef, applicationAssemblyRef)
+                          .RegisterServicesFromAssembly(applicationAssemblyRef)
+                          .RegisterBehaviors(services)
+                          .RegisterProcessors(services);
+                })
+                .AddIntegrationClientServices(configuration)
+                .AddCrossCuttingServices(configuration);
 
         return services;
     }
 
-    public static IServiceCollection AddIntegrationClientServices(this IServiceCollection services, IConfiguration configuration)
+    private static IServiceCollection AddIntegrationClientServices(this IServiceCollection services, IConfiguration configuration)
     {
         services.AddViaCepIntegrationServiceClient(configuration);
 
         return services;
     }
 
-    public static IServiceCollection AddCrossCuttingServices(this IServiceCollection services, IConfiguration configuration)
+    private static IServiceCollection AddCrossCuttingServices(this IServiceCollection services, IConfiguration configuration)
     {
         services.AddCsvHelper(configuration);
         services.AddStorageServices(configuration);
         services.AddMultiSinkLogging();
 
         return services;
+    }
+
+    private static MediatRServiceConfiguration RegisterBehaviors(this MediatRServiceConfiguration config, IServiceCollection services)
+    {
+        services.AddTransient(typeof(IPipelineBehavior<,>), typeof(RequestPostProcessorBehavior<,>));
+
+        return config.RegisterValidationBehaviors();
+    }
+
+    private static MediatRServiceConfiguration RegisterProcessors(this MediatRServiceConfiguration config, IServiceCollection services)
+    {
+        services.AddTransient(typeof(IRequestPostProcessor<,>), typeof(HandlerEventDispatchingProcessor<,>));
+
+        return config;
     }
 
     private static MediatRServiceConfiguration RegisterValidationBehaviors(this MediatRServiceConfiguration config)

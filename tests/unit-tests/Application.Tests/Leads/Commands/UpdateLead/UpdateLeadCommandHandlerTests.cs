@@ -5,6 +5,7 @@ using FluentAssertions;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
 using NSubstitute;
+using Shared.Events.EventDispatching;
 using Shared.Results;
 using Tests.Common.ObjectMothers.Application;
 using Tests.Common.ObjectMothers.Core;
@@ -15,15 +16,16 @@ namespace Application.Tests.Leads.Commands.UpdateLead;
 public sealed class UpdateLeadCommandHandlerTests : IAsyncDisposable, IDisposable
 {
     private readonly ILeadManagerDbContext _dbContext;
-    private readonly IPublisher _publisher;
+    private readonly IMediator _mediator;
+    private readonly IEventDispatching _eventDispatcher;
     private readonly CancellationTokenSource _cts;
 
     public UpdateLeadCommandHandlerTests()
     {
         _cts = new();
         _dbContext = InMemoryLeadManagerDbContextFactory.Create();
-        _publisher = Substitute.For<IPublisher>();
-        _publisher.Publish(Arg.Any<INotification>(), Arg.Any<CancellationToken>()).Returns(Task.CompletedTask);
+        _mediator = Substitute.For<IMediator>();
+        _eventDispatcher = Substitute.For<IEventDispatching>();
     }
 
     public void Dispose()
@@ -40,7 +42,7 @@ public sealed class UpdateLeadCommandHandlerTests : IAsyncDisposable, IDisposabl
     public async Task Handle_ValidRequestParametersAndExistingLead_ShouldSucceed()
     {
         //Arrange
-        var handler = new UpdateLeadCommandHandler(_dbContext, _publisher);
+        var handler = new UpdateLeadCommandHandler(_mediator, _eventDispatcher, _dbContext);
         var leadId = Guid.NewGuid();
         var request = UpdateLeadCommandRequestMother
                         .Instance
@@ -80,7 +82,7 @@ public sealed class UpdateLeadCommandHandlerTests : IAsyncDisposable, IDisposabl
     public async Task Handle_ValidRequestParametersWithNonExistingLead_ShouldReturnResultObjectWithNotFoundMessage()
     {
         //Arrange
-        var handler = new UpdateLeadCommandHandler(_dbContext, _publisher);
+        var handler = new UpdateLeadCommandHandler(_mediator, _eventDispatcher, _dbContext);
         var request = UpdateLeadCommandRequestMother
                         .Instance
                         .WithId(Guid.NewGuid())

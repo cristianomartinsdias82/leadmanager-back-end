@@ -1,4 +1,5 @@
 ﻿using Application.Contracts.Persistence;
+using MediatR;
 using Microsoft.EntityFrameworkCore;
 using Shared.RequestHandling;
 using Shared.Results;
@@ -9,7 +10,9 @@ internal sealed class SearchLeadQueryHandler : ApplicationRequestHandler<SearchL
 {
     private readonly ILeadManagerDbContext _leadManagerDbContext;
 
-    public SearchLeadQueryHandler(ILeadManagerDbContext leadManagerDbContext)
+    public SearchLeadQueryHandler(
+        IMediator mediator,
+        ILeadManagerDbContext leadManagerDbContext) : base(mediator, default!)
     {
         _leadManagerDbContext = leadManagerDbContext;
     }
