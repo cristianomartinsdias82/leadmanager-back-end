@@ -18,6 +18,7 @@ O projeto está em constante evolução e utiliza a seguinte plataforma e lingua
 - Orientação a objetos
 - Práticas de Código limpo / Clean code
 - Arquitetura Limpa / Clean architecture, constituída pelas camadas: Core, Application, Infrastructure e Presentation
+- Arquitetura dirigida a eventos através de eventos de domínio e eventos de integração
 - Programação assíncrona baseada em Tasks
 - Asp.Net Core Web Api
 - Swagger
@@ -39,9 +40,9 @@ Pré-requisitos para execução do 'back-end' da aplicação<br/>
 É necessário possuir os seguintes componentes instalados na máquina:
 - SDK do .Net Core 7 (que pode ser obtido através da url: https://nodejs.org/en](https://dotnet.microsoft.com/en-us/download/dotnet/7.0)
 - Docker<br/>
-  Se sua máquina for Mac, siga os passos conforme a url: https://docs.docker.com/desktop/install/mac-install/<br/>
-  Se sua máquina for Linux, siga os passos conforme a url: https://docs.docker.com/desktop/install/linux-install/#generic-installation-steps<br/>
-  Se sua máquina for Windows, siga os passos conforme a url: https://docs.docker.com/desktop/install/windows-install/<br/>
+  Caso a máquina seja Mac, siga os passos conforme a url: https://docs.docker.com/desktop/install/mac-install/<br/>
+  Caso a máquina seja Linux, siga os passos conforme a url: https://docs.docker.com/desktop/install/linux-install/#generic-installation-steps<br/>
+  Caso a máquina seja Windows, siga os passos conforme a url: https://docs.docker.com/desktop/install/windows-install/<br/>
 - Azurite<br/>
   Siga os passos conforme a url https://learn.microsoft.com/en-us/azure/storage/common/storage-use-azurite?tabs=visual-studio<br/>
 
@@ -60,13 +61,17 @@ Como executar o projeto localmente?
   (O comando irá compilar a solução, subirá um servidor Kestrel e automaticamente abrirá o navegador web padrão apontado para o Swagger da API)<br/>
 NOTA: Em breve, essas etapas para execução da aplicação na máquina local serão simplificadas a uma única linha de comando através do uso de Docker-Compose.<br/>
 
-Novas demandas no radar:
-- (User Story) Adicionar endpoint para receber arquivo de leads em formato CSV para fins de adição em lote
-- (User Story) Implementar notificações de sistema para os seguintes eventos:
+Backlog:
+- (Technical debt) Implementar lógica de paginação no lado do servidor. Anotações:
+  - A estrutura PaginationOptions precisar complementada com as propriedades SortColumn e SortDirection(ASC,DESC)
+  - Apenas como sugestão, implementar um método de extension ToSortedPagedList que aceita um PaginationOptions como argumento
+    - Utilizar o overload que aceita um range do tipo X..Y do método Take (LINQ) ao invés de utilizar Skip com Take
+  - A outra possibilidade é criar uma classe PagedList<T> que herda de uma List<T>
+- (Technical debt) Implementar emissão de notificações de sistema para os seguintes eventos (depende da tarefa 'Adicionar infraestrutura necessária para comunicação com o serviço de filas'):
   Cadastro de lead
   Atualização de dados de lead
   Exclusão de lead
-- (User Story) Proteger a API contra acesso indevido, de maneira que somente usuário autenticados possam invocar os endpoints
+- (Technical debt) Proteger a API contra acesso indevido, de maneira que somente usuário autenticados possam invocar os endpoints
   - Possibilidade 1: a aplicação deverá ser capaz de encaminhar a solicitação de autenticação para um servidor de identidade a fim de obter o Token de autenticação
   - Possibilidade 2: a aplicação deverá ser capaz de validar tokens de autenticação/autorização - incluindo Claims - que possibilitem ou recusem executar os endpoints da API
 - (Technical debt) Criar Dockerfile do projeto
@@ -80,11 +85,14 @@ Novas demandas no radar:
   RemoveLead<br/>
   UpdateLead<br/>
   SearchLead<br/>
-  BulkInsertLead<br>
-- (Technical debt) Utilizar StronglyTypedIds na camada de Entidades<br/>
-- (Technical debt) Adicionar HealthChecks, incluindo endpoint na API<br/>
-- (Technical debt) Adicionar um endpoint de métricas, pronto para o Prometheus realizar 'scrapings'<br/>
-- (Technical debt) Preparar a fundação - estrutura de pastas, abstrações, etc - para disparo de eventos de domínio através do uso das funcionalidades disponiveis pelo MediatR (INotification e NotificationHandler)
+  BulkInsertLead<br/>
+- (Technical debt) Utilizar StronglyTypedIds na camada de Entidades
+- (Technical debt) Adicionar HealthChecks, incluindo endpoint na API
+- (Technical debt) Adicionar um endpoint de métricas, pronto para o Prometheus realizar 'scrapings'
+- (Technical debt) Adicionar infraestrutura necessária para comunicação com o serviço de filas; preferência pelo uso do Azure Service Bus
+- (Technical debt) Adicionar um serviço do tipo 'Worker service' que será capaz de conectar à fila de mensagens emitidas pelo Lead Manager
+- (Technical debt) Alterar a data de criação dos Leads para armazenar a data/hora em formato UTC
+- (Technical debt) Integrar a aplicação com alguma ferramenta de telemetria; preferência pelo uso do Data Dog e/ou Jaeger
 
 Em termos de implementação, o que tem de reaproveitável no código-fonte deste projeto e/ou que de repente pode servir como ponto de partida para outros projetos?
 - Estruturação de pastas focado em funcionalidades (casos de uso da aplicação) de maneira que inclusive seja muito fácil encontrar classes de Handlers, Validação, Requests, Testes unitários e de Integração correspondentes
@@ -97,13 +105,29 @@ Em termos de implementação, o que tem de reaproveitável no código-fonte dest
 - Classe de extensão de validação de Cnpj integrada ao FluentValidations
 - Classe de com lógica de validação de Cnpj utilizando o algoritmo Módulo 1
 - Implementação de um service client de integração com o serviço de localização de endereços ViaCep
+- Classe emissora de eventos EventDispatcher
+- Interfaces e abstrações para manipulação de eventos:
+  - IEvent
+    - IDomainEvent
+    - IIntegrationEvent
+- Classes que fazem forte uso da biblioteca MediatR:
+  - Classes base para Command and Query Handlers e Notification Handlers
+  - Command and Query handlers
+  - Pipeline Behaviors
+    - ValidationBehavior
+  - Post Processors
+    - HandlerEventDispatchingProcessor
+  - Notification handlers
+    - Domain event handlers
+    - Integration event handlers
 - Classes de extensão de injeção de dependência das camadas Api, Application e Infrastructure para ótima manutenibilidade da lógica de configuração da aplicação web (AddApiServices, AddApplicationServices, AddInfrastructureServices)
 - Implementação de classes ObjectMother de construção de Requests e Entidades para ótima manutenibilidade das suítes de testes
-- Implementação de classe Factory de DContext em memória para execução dos testes de integração da Api
+- Implementação de classe Factory de DbContext em memória para execução dos testes de integração da Api
 - Lógica de auditoria durante o processo de persistência dos dados em LeadsDbContext, gravando o usuário e data/hora da operação
 - Métodos de testes unitários - inclusive com uso de asserções fluentes - de:<br/>
   Classes Handlers<br/>
   Classes Validators<br/>
+  Classes EventHandler<br/>
   Entidades<br/>
   Classes de estruturas de dados comuns, como ApplicationResponse<T><br/>
 - Métodos de testes de integração - inclusive com uso de asserções fluentes - de endpoints de API
@@ -115,6 +139,7 @@ Em termos de implementação, o que tem de reaproveitável no código-fonte dest
 - Lógica de configuração do tamanho máximo de upload de arquivos
 
 Lista com os principais pacotes Nuget que foram utilizados neste projeto:<br/>
+- LanguageExt.Core
 - MediatR
 - FluentValidaton
 - Microsoft.EntityFrameworkCore
@@ -123,14 +148,12 @@ Lista com os principais pacotes Nuget que foram utilizados neste projeto:<br/>
 - Microsoft.EntityFrameworkCore.Tools
 - Microsoft.Extensions.Http.Polly
 - Polly
-- LanguageExt.Core
-- StronglyTypedId
 - RichardSzalay.MockHttp
 - Microsoft.AspNetCore.Mvc.Testing
 - Microsoft.Data.Sqlite.Core
 - Microsoft.EntityFrameworkCore.InMemory
 - Serilog
-- Moq
+- NSubstitute
 - coverlet.collector
 - xunit
 - FluentAssertions
