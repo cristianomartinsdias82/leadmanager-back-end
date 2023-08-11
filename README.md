@@ -32,8 +32,10 @@ O projeto está em constante evolução e utiliza a seguinte plataforma e lingua
 - Aplicação do padrão arquitetural CQRS de maneira lógica com MediatR
 - Uso de Pipeline Behaviors para validação de dados de entrada em combinação com FluentValidations
 - Uso de Design dirigido a domínio / domain-driven design / DDD para modalagem das entidades e dos comportamentos da classes e objetos de valor
+- Integração com Azurite para armazenamento de arquivos
+- Gravação de log com múltiplos 'Sinks' com Serilog (Console, Arquivo e banco de dados)
 
-Pré-requisitos para execução do Front-End da aplicação<br/>
+Pré-requisitos para execução do 'back-end' da aplicação<br/>
 É necessário possuir os seguintes componentes instalados na máquina:
 - SDK do .Net Core 7 (que pode ser obtido através da url: https://nodejs.org/en](https://dotnet.microsoft.com/en-us/download/dotnet/7.0)
 - Docker<br/>
@@ -68,6 +70,7 @@ Novas demandas no radar:
   - Possibilidade 1: a aplicação deverá ser capaz de encaminhar a solicitação de autenticação para um servidor de identidade a fim de obter o Token de autenticação
   - Possibilidade 2: a aplicação deverá ser capaz de validar tokens de autenticação/autorização - incluindo Claims - que possibilitem ou recusem executar os endpoints da API
 - (Technical debt) Criar Dockerfile do projeto
+- (Technical debt) Criar Docker-compose no projeto
 - (Technical debt) Adicionar a aplicação ao Docker-Compose para simplificar a configuração da máquina e permitir automatizar a execução da mesma em uma única linha de comando
 - (Technical debt) Implementar os testes unitários das classes contidas em libs/Shared; especificamente, das classes ApplicationResponse, PaginationOptions, Inconsistency e CnpjValidator
 - (Technical debt) Implementar os testes unitários dos service client de integração com o serviço ViaCep
@@ -77,13 +80,11 @@ Novas demandas no radar:
   RemoveLead<br/>
   UpdateLead<br/>
   SearchLead<br/>
+  BulkInsertLead<br>
 - (Technical debt) Utilizar StronglyTypedIds na camada de Entidades<br/>
 - (Technical debt) Adicionar HealthChecks, incluindo endpoint na API<br/>
 - (Technical debt) Adicionar um endpoint de métricas, pronto para o Prometheus realizar 'scrapings'<br/>
-- (Technical debt) Preparar a fundação - estrutura de pastas, abstrações, etc - para disparo de eventos de domínio através do uso das funcionalidades disponiveis pelo MediatR (INotification e NotificationHandler)<br/>
-- (Technical debt) Configurar Logging<br/>
-  Possibilidade 1: Utilizar Serilog com sinks para o Console, arquivo e Sql Server<br/>
-  Possibilidade 2: Utilizar NLog<br/>
+- (Technical debt) Preparar a fundação - estrutura de pastas, abstrações, etc - para disparo de eventos de domínio através do uso das funcionalidades disponiveis pelo MediatR (INotification e NotificationHandler)
 
 Em termos de implementação, o que tem de reaproveitável no código-fonte deste projeto e/ou que de repente pode servir como ponto de partida para outros projetos?
 - Estruturação de pastas focado em funcionalidades (casos de uso da aplicação) de maneira que inclusive seja muito fácil encontrar classes de Handlers, Validação, Requests, Testes unitários e de Integração correspondentes
@@ -111,6 +112,7 @@ Em termos de implementação, o que tem de reaproveitável no código-fonte dest
 - Integração com o serviço de armazenamento do Azure (Blob Storage) através da classe BlobStorageProvider para upload de arquivos de lotes de Leads
   - Contém lógica de política de retentativas com 'back-off' exponencial através do uso da biblioteca Polly
 (Continuar a listagem. Afinal, tem muita coisa que vale anotar aqui como índice/referência!)
+- Lógica de configuração do tamanho máximo de upload de arquivos
 
 Lista com os principais pacotes Nuget que foram utilizados neste projeto:<br/>
 - MediatR
@@ -127,6 +129,7 @@ Lista com os principais pacotes Nuget que foram utilizados neste projeto:<br/>
 - Microsoft.AspNetCore.Mvc.Testing
 - Microsoft.Data.Sqlite.Core
 - Microsoft.EntityFrameworkCore.InMemory
+- Serilog
 - Moq
 - coverlet.collector
 - xunit
@@ -142,4 +145,4 @@ Lista com os principais utilitários de linha de comando que foram utilizados ne
 - docker
 - git
  
-O projeto está em processo de evolução e sempre pode ser melhorado, tanto em termos de organização (estrutura de pastas, separações de responsabilidades) quanto de algoritmos dentre outras coisas! Portanto, opiniões sempre são muito bem-vindas! :)
+O projeto está em constante evolução e sempre pode ser melhorado, tanto em termos de organização (estrutura de pastas, separações de responsabilidades) quanto de algoritmos dentre outras coisas! Portanto, opiniões são sempre muito bem-vindas! :)
