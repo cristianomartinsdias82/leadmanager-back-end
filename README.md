@@ -92,6 +92,7 @@ Backlog:
 - (Technical debt) Adicionar infraestrutura necessária para comunicação com o serviço de filas; preferência pelo uso do Azure Service Bus
 - (Technical debt) Adicionar um serviço do tipo 'Worker service' que será capaz de conectar à fila de mensagens emitidas pelo Lead Manager
 - (Technical debt) Alterar a data de criação dos Leads para armazenar a data/hora em formato UTC
+- (Technical debt) Gravar a data/hora - em formato UTC, inclusive - de alteração dos Leads e o id do usuário que a realizou
 - (Technical debt) Integrar a aplicação com alguma ferramenta de telemetria; preferência pelo uso do Data Dog e/ou Jaeger
 
 Em termos de implementação, o que tem de reaproveitável no código-fonte deste projeto e/ou que de repente pode servir como ponto de partida para outros projetos?
