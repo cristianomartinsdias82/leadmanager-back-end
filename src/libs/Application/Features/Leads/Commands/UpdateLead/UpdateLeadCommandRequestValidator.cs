@@ -15,16 +15,6 @@ public sealed class UpdateLeadCommandRequestValidator : AbstractValidator<Update
             .NotEmpty()
             .WithMessage("Campo Id é obrigatório.");
 
-        RuleFor(lead => lead.Cnpj)
-            .NotEmpty()
-            .WithMessage("Campo Cnpj é obrigatório.");
-
-        When(lead => !string.IsNullOrWhiteSpace(lead.Cnpj), () => {
-            RuleFor(lead => lead.Cnpj)
-            .IsValidCnpj()
-            .WithMessage("Campo Cnpj é inválido.");
-        });
-
         RuleFor(lead => lead.RazaoSocial)
             .NotEmpty()
             .WithMessage("Campo Razão social é obrigatório.");

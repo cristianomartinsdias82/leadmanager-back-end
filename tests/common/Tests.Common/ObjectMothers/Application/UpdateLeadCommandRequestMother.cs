@@ -19,12 +19,6 @@ public class UpdateLeadCommandRequestMother
         return this;
     }
 
-    public UpdateLeadCommandRequestMother WithCnpj(string cnpj)
-    {
-        _request.Cnpj = cnpj;
-        return this;
-    }
-
     public UpdateLeadCommandRequestMother WithRazaoSocial(string razaoSocial)
     {
         _request.RazaoSocial = razaoSocial;
@@ -81,7 +75,6 @@ public class UpdateLeadCommandRequestMother
         var xptoInc = RegisterLeadCommandRequestMother.XptoIncLeadRequest();
         return Instance
             .WithId()
-            .WithCnpj(xptoInc.Cnpj!)
             .WithRazaoSocial(xptoInc.RazaoSocial!)
             .WithCep(xptoInc.Cep!)
             .WithEndereco(xptoInc.Endereco!)

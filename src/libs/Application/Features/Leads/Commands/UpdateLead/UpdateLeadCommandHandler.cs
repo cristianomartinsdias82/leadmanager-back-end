@@ -28,7 +28,6 @@ internal sealed class UpdateLeadCommandHandler : ApplicationRequestHandler<Updat
 
         lead.Atualizar(
             request.RazaoSocial!,
-            request.Cnpj!,
             request.Cep!,
             request.Endereco!,
             request.Cidade!,

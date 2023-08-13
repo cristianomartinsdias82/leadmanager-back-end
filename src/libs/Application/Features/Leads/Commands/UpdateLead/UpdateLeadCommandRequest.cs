@@ -6,7 +6,6 @@ namespace Application.Features.Leads.Commands.UpdateLead;
 public sealed class UpdateLeadCommandRequest : IRequest<ApplicationResponse<UpdateLeadCommandResponse>>
 {
     public Guid? Id { get; set; }
-    public string? Cnpj { get; set; }
     public string? RazaoSocial { get; set; }
     public string? Cep { get; set; }
     public string? Endereco { get; set; }

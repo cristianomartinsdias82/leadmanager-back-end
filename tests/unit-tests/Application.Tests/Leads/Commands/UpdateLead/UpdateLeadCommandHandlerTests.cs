@@ -47,7 +47,6 @@ public sealed class UpdateLeadCommandHandlerTests : IAsyncDisposable, IDisposabl
         var request = UpdateLeadCommandRequestMother
                         .Instance
                         .WithId(leadId)
-                        .WithCnpj(CnpjMother.MaskedWellformedValidOne())
                         .WithRazaoSocial("XPTO Brasil LLC")
                         .WithCep("11111-111")
                         .WithEndereco("Avenida Carlos Ribeiro")
@@ -71,7 +70,6 @@ public sealed class UpdateLeadCommandHandlerTests : IAsyncDisposable, IDisposabl
         result.Should().BeOfType<ApplicationResponse<UpdateLeadCommandResponse>>();
         var updatedLead = await _dbContext.Leads.FindAsync(request.Id, _cts.Token);
         updatedLead.Should().NotBeNull();
-        updatedLead!.Cnpj.Should().Be(request.Cnpj);
         updatedLead.Cep.Should().Be(request.Cep);
         updatedLead.Logradouro.Should().Be(request.Endereco);
         updatedLead.Cidade.Should().Be(request.Cidade);
@@ -86,7 +84,6 @@ public sealed class UpdateLeadCommandHandlerTests : IAsyncDisposable, IDisposabl
         var request = UpdateLeadCommandRequestMother
                         .Instance
                         .WithId(Guid.NewGuid())
-                        .WithCnpj("12.312.321/0001-23")
                         .WithRazaoSocial("XPTO Brasil LLC")
                         .WithCep("11111-111")
                         .WithEndereco("Avenida Carlos Ribeiro")

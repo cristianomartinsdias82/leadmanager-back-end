@@ -47,7 +47,6 @@ public sealed class UpdateLeadCommandRequestValidatorTests
             UpdateLeadCommandRequestMother.Instance
                 .Build(),
             "Campo Id é obrigatório.",
-            "Campo Cnpj é obrigatório.",
             "Campo Razão social é obrigatório.",
             "Campo Cep é obrigatório.",
             "Campo Endereço é obrigatório.",
@@ -61,7 +60,6 @@ public sealed class UpdateLeadCommandRequestValidatorTests
             UpdateLeadCommandRequestMother.Instance
                 .WithId()
                 .Build(),
-            "Campo Cnpj é obrigatório.",
             "Campo Razão social é obrigatório.",
             "Campo Cep é obrigatório.",
             "Campo Endereço é obrigatório.",
@@ -74,7 +72,6 @@ public sealed class UpdateLeadCommandRequestValidatorTests
         {
             UpdateLeadCommandRequestMother.Instance
                 .WithId()
-                .WithCnpj(CnpjMother.MaskedWellformedValidOne())
                 .Build(),
             "Campo Razão social é obrigatório.",
             "Campo Cep é obrigatório.",
@@ -88,9 +85,7 @@ public sealed class UpdateLeadCommandRequestValidatorTests
         {
             UpdateLeadCommandRequestMother.Instance
                 .WithId()
-                .WithCnpj(CnpjMother.MaskedMalformedValidOne())
                 .Build(),
-            "Campo Cnpj é inválido.",
             "Campo Razão social é obrigatório.",
             "Campo Cep é obrigatório.",
             "Campo Endereço é obrigatório.",
@@ -103,9 +98,7 @@ public sealed class UpdateLeadCommandRequestValidatorTests
         {
             UpdateLeadCommandRequestMother.Instance
                 .WithId()
-                .WithCnpj(CnpjMother.UnmaskedValidOne())
                 .Build(),
-            "Campo Cnpj é inválido.",
             "Campo Razão social é obrigatório.",
             "Campo Cep é obrigatório.",
             "Campo Endereço é obrigatório.",
@@ -118,9 +111,7 @@ public sealed class UpdateLeadCommandRequestValidatorTests
         {
             UpdateLeadCommandRequestMother.Instance
                 .WithId()
-                .WithCnpj(CnpjMother.UnmaskedInvalidOne())
                 .Build(),
-            "Campo Cnpj é inválido.",
             "Campo Razão social é obrigatório.",
             "Campo Cep é obrigatório.",
             "Campo Endereço é obrigatório.",
@@ -133,7 +124,6 @@ public sealed class UpdateLeadCommandRequestValidatorTests
         {
             UpdateLeadCommandRequestMother.Instance
                 .WithId()
-                .WithCnpj(CnpjMother.MaskedWellformedValidOne())
                 .WithRazaoSocial(_validLeadRequest.RazaoSocial!)
                 .Build(),
             "Campo Cep é obrigatório.",
@@ -147,7 +137,6 @@ public sealed class UpdateLeadCommandRequestValidatorTests
         {
             UpdateLeadCommandRequestMother.Instance
                 .WithId()
-                .WithCnpj(CnpjMother.MaskedWellformedValidOne())
                 .WithRazaoSocial(_validLeadRequest.RazaoSocial!)
                 .WithCep(CepMother.MaskedWellformedValidOne())
                 .Build(),
@@ -161,7 +150,6 @@ public sealed class UpdateLeadCommandRequestValidatorTests
         {
             UpdateLeadCommandRequestMother.Instance
                 .WithId()
-                .WithCnpj(CnpjMother.MaskedWellformedValidOne())
                 .WithRazaoSocial("Xpto Inc.")
                 .WithCep(CepMother.MaskedWellformedValidOne())
                 .WithEndereco("Rua Xpto")
@@ -175,7 +163,6 @@ public sealed class UpdateLeadCommandRequestValidatorTests
         {
             UpdateLeadCommandRequestMother.Instance
                 .WithId()
-                .WithCnpj(CnpjMother.MaskedWellformedValidOne())
                 .WithRazaoSocial(_validLeadRequest.RazaoSocial!)
                 .WithCep(CepMother.MaskedWellformedValidOne())
                 .WithEndereco("Rua Xpto")
@@ -189,7 +176,6 @@ public sealed class UpdateLeadCommandRequestValidatorTests
         {
             UpdateLeadCommandRequestMother.Instance
                 .WithId()
-                .WithCnpj(CnpjMother.MaskedWellformedValidOne())
                 .WithRazaoSocial(_validLeadRequest.RazaoSocial!)
                 .WithCep(CepMother.MaskedWellformedValidOne())
                 .WithEndereco(_validLeadRequest.Endereco!)
@@ -203,7 +189,6 @@ public sealed class UpdateLeadCommandRequestValidatorTests
         {
             UpdateLeadCommandRequestMother.Instance
                 .WithId()
-                .WithCnpj(CnpjMother.MaskedWellformedValidOne())
                 .WithRazaoSocial(_validLeadRequest.RazaoSocial!)
                 .WithCep(CepMother.MaskedWellformedValidOne())
                 .WithEndereco(_validLeadRequest.Endereco!)
@@ -219,7 +204,6 @@ public sealed class UpdateLeadCommandRequestValidatorTests
         {
             UpdateLeadCommandRequestMother.Instance
                 .WithId()
-                .WithCnpj(CnpjMother.MaskedWellformedValidOne())
                 .WithRazaoSocial(_validLeadRequest.RazaoSocial!)
                 .WithCep(CepMother.MaskedWellformedValidOne())
                 .WithEndereco(_validLeadRequest.Endereco!)
@@ -234,7 +218,6 @@ public sealed class UpdateLeadCommandRequestValidatorTests
         {
             UpdateLeadCommandRequestMother.Instance
                 .WithId()
-                .WithCnpj(CnpjMother.MaskedWellformedValidOne())
                 .WithRazaoSocial(_validLeadRequest.RazaoSocial!)
                 .WithCep(CepMother.MaskedWellformedValidOne())
                 .WithEndereco(_validLeadRequest.Endereco!)

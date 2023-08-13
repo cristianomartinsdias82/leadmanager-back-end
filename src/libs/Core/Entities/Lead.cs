@@ -53,7 +53,6 @@ public class Lead : Entity
 
     public void Atualizar(
         string razaoSocial,
-        string cnpj,
         string cep,
         string endereco,
         string cidade,
@@ -62,11 +61,9 @@ public class Lead : Entity
         string? numero,
         string? complemento)
     {
-        ValidarCnpj(cnpj);
         ValidarEndereco(cep, endereco, bairro, cidade, estado, numero, complemento);
 
         RazaoSocial = razaoSocial;
-        Cnpj = cnpj;
         Cep = cep;
         Logradouro = endereco;
         Cidade = cidade;

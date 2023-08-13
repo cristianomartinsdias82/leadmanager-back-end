@@ -143,7 +143,6 @@ public sealed class LeadTests
         //Arrange
         var leadUpdateDraft = new
         {
-            Cnpj = "63.167.653/0001-80",
             RazaoSocial = "Xaxim Ltda-Me",
             Cep = "04661-100",
             Endereco = "Rua das Piracicabas",
@@ -160,7 +159,6 @@ public sealed class LeadTests
         {
             lead.Atualizar(
                 leadUpdateDraft.RazaoSocial,
-                leadUpdateDraft.Cnpj,
                 leadUpdateDraft.Cep,
                 leadUpdateDraft.Endereco,
                 leadUpdateDraft.Cidade,
@@ -177,7 +175,6 @@ public sealed class LeadTests
             .And.NotThrow<InvalidNationalTaxIdentificationNumberException>()
             .And.NotThrow<InvalidZipCodeException>();
         lead.Should().NotBeNull();
-        lead!.Cnpj.Should().NotBeNull().And.BeEquivalentTo(leadUpdateDraft.Cnpj);
         lead!.RazaoSocial.Should().NotBeNull().And.BeEquivalentTo(leadUpdateDraft.RazaoSocial);
         lead!.Cep.Should().NotBeNull().And.BeEquivalentTo(leadUpdateDraft.Cep);
         lead!.Logradouro.Should().NotBeNull().And.BeEquivalentTo(leadUpdateDraft.Endereco);
@@ -186,45 +183,6 @@ public sealed class LeadTests
         lead!.Estado.Should().NotBeNull().And.BeEquivalentTo(leadUpdateDraft.Estado);
         lead!.Numero.Should().NotBeNull().And.BeEquivalentTo(leadUpdateDraft.Numero);
         lead!.Complemento.Should().NotBeNull().And.BeEquivalentTo(leadUpdateDraft.Complemento);
-    }
-
-    [Theory]
-    [MemberData(nameof(InvalidCnpjSimulations))]
-    public void Atualizar_CnpjArgumentIsInvalid_ThrowsInvalidNationalTaxIdentificationNumberException(string cnpj)
-    {
-        //Arrange
-        var leadUpdateDraft = new
-        {
-            Cnpj = cnpj,
-            RazaoSocial = "Xaxim Ltda-Me",
-            Cep = "04661-100",
-            Endereco = "Rua das Piracicabas",
-            Cidade = "Nova Odessa",
-            Bairro = "Vila Mussum",
-            Estado = "SP",
-            Numero = "176",
-            Complemento = "Casa IV"
-        };
-        Lead lead = LeadMother.XptoLLC();
-
-        //Act
-        var updateLead = () =>
-        {
-            lead.Atualizar(
-                leadUpdateDraft.RazaoSocial,
-                leadUpdateDraft.Cnpj,
-                leadUpdateDraft.Cep,
-                leadUpdateDraft.Endereco,
-                leadUpdateDraft.Cidade,
-                leadUpdateDraft.Estado,
-                leadUpdateDraft.Bairro,
-                leadUpdateDraft.Numero,
-                leadUpdateDraft.Complemento);
-        };
-
-        //Assert
-        updateLead.Should().Throw<BusinessException>();
-        updateLead.Should().Throw<InvalidNationalTaxIdentificationNumberException>();
     }
 
     [Theory]
@@ -250,7 +208,6 @@ public sealed class LeadTests
         {
             lead.Atualizar(
                 leadUpdateDraft.RazaoSocial,
-                leadUpdateDraft.Cnpj,
                 leadUpdateDraft.Cep,
                 leadUpdateDraft.Endereco,
                 leadUpdateDraft.Cidade,
