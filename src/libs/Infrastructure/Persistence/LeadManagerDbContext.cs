@@ -2,12 +2,18 @@
 using Core.Entities;
 using Infrastructure.Persistence.Mappings;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Configuration;
 
 namespace Infrastructure.Persistence;
 
 public sealed class LeadManagerDbContext : DbContext, ILeadManagerDbContext
 {
-    public LeadManagerDbContext(DbContextOptions options) : base(options) { }
+    private readonly IConfiguration _configuration;
+
+    public LeadManagerDbContext(DbContextOptions options, IConfiguration configuration) : base(options)
+    {
+        _configuration = configuration;
+    }
 
     public DbSet<Lead> Leads { get; set; }
 
@@ -43,7 +49,7 @@ public sealed class LeadManagerDbContext : DbContext, ILeadManagerDbContext
                 case EntityState.Added:
                     {
                         var auditableEntity = (IAuditableEntity<Guid>)entry.Entity;
-                        auditableEntity.CreatedAt = DateTimeOffset.UtcNow;
+                        auditableEntity.CreatedAt = DateTimeOffset.Now;
                         auditableEntity.CreateAuthorId = Guid.NewGuid(); //identityService.GetUserId();
 
                         break;
