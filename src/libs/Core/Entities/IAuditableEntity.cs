@@ -1,11 +1,10 @@
 ﻿namespace Core.Entities;
 
-public interface IAuditableEntity<UserTKey>
+public interface IAuditableEntity<UserCreationTKey, UserUpdateTKey>
 {
     DateTimeOffset CreatedAt { get; set; }
-    //DateTimeOffset? UpdatedAt { get; set; }
-    //DateTimeOffset? RemovedAt { get; set; }
-    UserTKey CreateAuthorId { get; set; }
-    //UserTKey? UpdateAuthorId { get; set; }
-    //UserTKey? RemoveAuthorId { get; set; }
+    UserCreationTKey CreatedUserId { get; set; }
+
+    DateTimeOffset? UpdatedAt { get; set; }
+    UserUpdateTKey? UpdatedUserId { get; set; }
 }

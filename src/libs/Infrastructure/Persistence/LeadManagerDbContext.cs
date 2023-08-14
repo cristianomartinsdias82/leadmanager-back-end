@@ -33,18 +33,29 @@ public sealed class LeadManagerDbContext : DbContext, ILeadManagerDbContext
 
     public override async Task<int> SaveChangesAsync(CancellationToken cancellationToken = default)
     {
+        var currentUserId = Guid.NewGuid();//identityService.GetUserId();
+        var now = DateTimeOffset.UtcNow;
+
         //https://codewithmukesh.com/blog/audit-trail-implementation-in-aspnet-core/
         foreach (var entry in ChangeTracker
                                 .Entries()
-                                .Where(e => e.Entity is IAuditableEntity<Guid>))
+                                .Where(e => e.Entity is IAuditableEntity<Guid, Guid?>))
         {
             switch (entry.State)
             {
                 case EntityState.Added:
                     {
-                        var auditableEntity = (IAuditableEntity<Guid>)entry.Entity;
-                        auditableEntity.CreatedAt = DateTimeOffset.Now;
-                        auditableEntity.CreateAuthorId = Guid.NewGuid(); //identityService.GetUserId();
+                        var auditableEntity = (IAuditableEntity<Guid, Guid?>)entry.Entity;
+                        auditableEntity.CreatedAt = now;
+                        auditableEntity.CreatedUserId = currentUserId;
+
+                        break;
+                    }
+                case EntityState.Modified:
+                    {
+                        var auditableEntity = (IAuditableEntity<Guid, Guid?>)entry.Entity;
+                        auditableEntity.UpdatedAt = now;
+                        auditableEntity.UpdatedUserId = currentUserId;
 
                         break;
                     }
