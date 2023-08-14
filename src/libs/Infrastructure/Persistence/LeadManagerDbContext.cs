@@ -2,7 +2,6 @@
 using Core.Entities;
 using Infrastructure.Persistence.Mappings;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.Configuration;
 
 namespace Infrastructure.Persistence;
 
