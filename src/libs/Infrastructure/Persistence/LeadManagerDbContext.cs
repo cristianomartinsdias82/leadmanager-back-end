@@ -8,11 +8,8 @@ namespace Infrastructure.Persistence;
 
 public sealed class LeadManagerDbContext : DbContext, ILeadManagerDbContext
 {
-    private readonly IConfiguration _configuration;
-
-    public LeadManagerDbContext(DbContextOptions options, IConfiguration configuration) : base(options)
+    public LeadManagerDbContext(DbContextOptions options) : base(options)
     {
-        _configuration = configuration;
     }
 
     public DbSet<Lead> Leads { get; set; }
@@ -33,9 +30,7 @@ public sealed class LeadManagerDbContext : DbContext, ILeadManagerDbContext
     }
 
     public override int SaveChanges()
-    {
-        return base.SaveChanges();
-    }
+        => SaveChangesAsync().GetAwaiter().GetResult();
 
     public override async Task<int> SaveChangesAsync(CancellationToken cancellationToken = default)
     {
