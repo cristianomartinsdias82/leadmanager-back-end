@@ -35,6 +35,7 @@ O projeto está em constante evolução e utiliza a seguinte plataforma e lingua
 - Uso de Design dirigido a domínio / domain-driven design / DDD para modalagem das entidades e dos comportamentos da classes e objetos de valor
 - Integração com Azurite para armazenamento de arquivos
 - Gravação de log com múltiplos 'Sinks' com Serilog (Console, Arquivo e banco de dados)
+- Armazenamento de dados em cache para ganho de performance nas consultas
 
 Pré-requisitos para execução do 'back-end' da aplicação<br/>
 É necessário possuir os seguintes componentes instalados na máquina:
@@ -68,9 +69,9 @@ Backlog:
     - Utilizar o overload que aceita um range do tipo X..Y do método Take (LINQ) ao invés de utilizar Skip com Take
   - A outra possibilidade é criar uma classe PagedList<T> que herda de uma List<T>
 - (Technical debt) Implementar emissão de notificações de sistema para os seguintes eventos (depende da tarefa 'Adicionar infraestrutura necessária para comunicação com o serviço de filas'):
-  Cadastro de lead
-  Atualização de dados de lead
-  Exclusão de lead
+  Cadastro de lead<br/>
+  Atualização de dados de lead<br/>
+  Exclusão de lead<br/>
 - (Technical debt) Proteger a API contra acesso indevido, de maneira que somente usuários autenticados possam invocar os endpoints
   - Possibilidade 1: a aplicação deverá ser capaz de encaminhar a solicitação de autenticação para um servidor de identidade a fim de obter o Token de autenticação
   - Possibilidade 2: a aplicação deverá ser capaz de validar tokens de autenticação/autorização - incluindo Claims - que possibilitem ou recusem executar os endpoints da API
@@ -90,7 +91,7 @@ Backlog:
 - (Technical debt) Adicionar HealthChecks, incluindo endpoint na API
 - (Technical debt) Adicionar um endpoint de métricas, pronto para o Prometheus realizar 'scrapings'
 - (Technical debt) Adicionar infraestrutura necessária para comunicação com o serviço de filas; preferência pelo uso do Azure Service Bus
-- (Technical debt) Adicionar um serviço do tipo 'Worker service' que será capaz de conectar à fila de mensagens emitidas pelo Lead Manager
+- (Technical debt) Adicionar um serviço do tipo 'Worker service' que será capaz de consumir dados da fila de mensagens emitidas pelo Lead Manager
 - (Technical debt) Integrar a aplicação com alguma ferramenta de telemetria; preferência pelo uso do Data Dog e/ou Jaeger
 
 Em termos de implementação, o que tem de reaproveitável no código-fonte deste projeto e/ou que de repente pode servir como ponto de partida para outros projetos?
@@ -147,6 +148,8 @@ Lista com os principais pacotes Nuget que foram utilizados neste projeto:<br/>
 - Microsoft.EntityFrameworkCore.Tools
 - Microsoft.Extensions.Http.Polly
 - Polly
+- Microsoft.Extensions.Caching.StackExchangeRedis
+- protobuf-net
 - RichardSzalay.MockHttp
 - Microsoft.AspNetCore.Mvc.Testing
 - Microsoft.Data.Sqlite.Core
