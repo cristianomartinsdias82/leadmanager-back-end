@@ -1,5 +1,5 @@
 ﻿using Application.Contracts.Persistence;
-using Application.Features.Leads.Queries.Shared;
+using Application.Features.Leads.Shared;
 using MediatR;
 using Shared.RequestHandling;
 using Shared.Results;
@@ -27,18 +27,18 @@ internal sealed class GetLeadByIdQueryHandler : ApplicationRequestHandler<GetLea
                             operationCode: OperationCodes.NotFound);
 
         var leadDto = new LeadDto
-        (
-            lead.Id,
-            lead.Cnpj,
-            lead.RazaoSocial,
-            lead.Cep,
-            lead.Logradouro,
-            lead.Bairro,
-            lead.Cidade,
-            lead.Estado,
-            lead.Numero,
-            lead.Complemento
-        );
+        {
+            Id = lead.Id,
+            Cnpj = lead.Cnpj,
+            RazaoSocial = lead.RazaoSocial,
+            Cep = lead.Cep,
+            Endereco = lead.Logradouro,
+            Bairro = lead.Bairro,
+            Cidade = lead.Cidade,
+            Estado = lead.Estado,
+            Numero = lead.Numero,
+            Complemento = lead.Complemento
+        };
 
         return ApplicationResponse<LeadDto>.Create(leadDto);
     }

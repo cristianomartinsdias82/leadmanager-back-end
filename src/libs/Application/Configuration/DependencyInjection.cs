@@ -6,12 +6,13 @@ using Application.Features.Leads.Commands.RemoveLead;
 using Application.Features.Leads.Commands.UpdateLead;
 using Application.Features.Leads.Queries.GetLeadById;
 using Application.Features.Leads.Queries.SearchLead;
-using Application.Features.Leads.Queries.Shared;
+using Application.Features.Leads.Shared;
 using Application.Processors;
 using Core.Entities;
 using CrossCutting.Csv.Configuration;
 using CrossCutting.FileStorage.Configuration;
 using CrossCutting.Logging.Configuration;
+using CrossCutting.Caching.Configuration;
 using FluentValidation;
 using MediatR;
 using MediatR.Pipeline;
@@ -51,13 +52,10 @@ public static class DependencyInjection
     }
 
     private static IServiceCollection AddCrossCuttingServices(this IServiceCollection services, IConfiguration configuration)
-    {
-        services.AddCsvHelper(configuration);
-        services.AddStorageServices(configuration);
-        services.AddMultiSinkLogging();
-
-        return services;
-    }
+        => services.AddCsvHelper(configuration)
+                   .AddStorageServices(configuration)
+                   .AddMultiSinkLogging(configuration)
+                   .AddCaching(configuration);
 
     private static MediatRServiceConfiguration RegisterBehaviors(this MediatRServiceConfiguration config, IServiceCollection services)
     {

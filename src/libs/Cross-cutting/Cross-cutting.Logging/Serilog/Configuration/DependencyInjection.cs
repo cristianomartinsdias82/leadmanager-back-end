@@ -11,10 +11,9 @@ namespace CrossCutting.Logging.Configuration;
 
 public static class DependencyInjection
 {
-    public static IServiceCollection AddMultiSinkLogging(this IServiceCollection services)
+    public static IServiceCollection AddMultiSinkLogging(this IServiceCollection services, IConfiguration configuration)
         => services.AddSerilog((serviceProvider, loggerConfiguration) =>
         {
-            var configuration = serviceProvider.GetRequiredService<IConfiguration>();
             var loggingSettings = configuration.GetSection(LoggingSettings.SectionName).Get<LoggingSettings>()!;
             if (!loggingSettings.Enabled)
                 return;

@@ -1,5 +1,5 @@
 ﻿using Application.Features.Leads.Queries.GetLeadById;
-using Application.Features.Leads.Queries.Shared;
+using Application.Features.Leads.Shared;
 using LeadManagerApi.ApiFeatures;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;

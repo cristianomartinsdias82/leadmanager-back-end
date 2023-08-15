@@ -1,4 +1,4 @@
-﻿using Application.Features.Leads.Queries.Shared;
+﻿using Application.Features.Leads.Shared;
 using MediatR;
 using Shared.Results;
 
