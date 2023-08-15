@@ -5,5 +5,5 @@ public sealed record AzureStorageProviderSettings
     string ConnectionString,
     string StorageFolderPath,
     string ContainerName,
-    int MaxUploadRetries
+    int UploadAttemptsMaxCount
 );

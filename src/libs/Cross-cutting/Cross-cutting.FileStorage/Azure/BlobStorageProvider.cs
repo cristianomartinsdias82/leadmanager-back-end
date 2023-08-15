@@ -30,7 +30,7 @@ internal sealed class BlobStorageProvider : FileStorageProvider
         var blobServiceClient = new BlobServiceClient(_settings.ConnectionString);
 
         return await Policy.Handle<Exception>()
-                .WaitAndRetryAsync(_settings.MaxUploadRetries, count => TimeSpan.FromSeconds(Math.Pow(2, count) + Random.Shared.Next(2, 4)))
+                .WaitAndRetryAsync(_settings.UploadAttemptsMaxCount, count => TimeSpan.FromSeconds(Math.Pow(2, count) + Random.Shared.Next(2, 4)))
                 .ExecuteAsync(async () =>
         {
             var containerClient = blobServiceClient.GetBlobContainerClient(_settings.ContainerName);

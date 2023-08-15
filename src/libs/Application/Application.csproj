@@ -14,13 +14,15 @@
     <PackageReference Include="Microsoft.Extensions.Configuration.Abstractions" Version="7.0.0" />
     <PackageReference Include="Microsoft.Extensions.DependencyInjection.Abstractions" Version="7.0.0" />
     <PackageReference Include="Microsoft.Extensions.Hosting.Abstractions" Version="7.0.0" />
+    <PackageReference Include="protobuf-net" Version="3.2.26" />
   </ItemGroup>
 
   <ItemGroup>
     <ProjectReference Include="..\Core\Core.csproj" />
+    <ProjectReference Include="..\Cross-cutting\Cross-cutting.Caching\CrossCutting.Caching.csproj" />
     <ProjectReference Include="..\Cross-cutting\Cross-cutting.Csv\CrossCutting.Csv.csproj" />
     <ProjectReference Include="..\Cross-cutting\Cross-cutting.FileStorage\CrossCutting.FileStorage.csproj" />
-    <ProjectReference Include="..\Cross-cutting\CrossCutting.Logging\CrossCutting.Logging.csproj" />
+    <ProjectReference Include="..\Cross-cutting\Cross-cutting.Logging\CrossCutting.Logging.csproj" />
     <ProjectReference Include="..\Integrations\ViaCep.ServiceClient\ViaCep.ServiceClient.csproj" />
     <ProjectReference Include="..\Shared\Shared.csproj" />
   </ItemGroup>

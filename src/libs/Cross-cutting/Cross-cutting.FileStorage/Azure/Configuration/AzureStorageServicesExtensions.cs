@@ -8,8 +8,8 @@ internal static class AzureStorageServicesExtensions
 {
     public static IServiceCollection AddAzureStorageServices(this IServiceCollection services, IConfiguration configuration)
     {
-        var apiSettings = configuration.GetSection(nameof(AzureStorageProviderSettings)).Get<AzureStorageProviderSettings>()!;
-        services.AddSingleton(apiSettings);
+        var storageSettings = configuration.GetSection(nameof(AzureStorageProviderSettings)).Get<AzureStorageProviderSettings>()!;
+        services.AddSingleton(storageSettings);
 
         services.TryAddSingleton<IFileStorageProvider, BlobStorageProvider>();
 
