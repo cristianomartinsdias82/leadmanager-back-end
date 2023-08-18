@@ -1,4 +1,6 @@
 ﻿using Application.Contracts.Persistence;
+using Application.Features.Leads.Shared;
+using CrossCutting.Caching;
 using Infrastructure.Persistence;
 using LeadManagerApi.Configuration;
 using Microsoft.AspNetCore.Hosting;
@@ -14,6 +16,7 @@ using Microsoft.Extensions.DependencyInjection.Extensions;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
+using NSubstitute;
 using RichardSzalay.MockHttp;
 using System.Data.Common;
 using System.Net;
@@ -178,6 +181,17 @@ public class LeadManagerWebApplicationFactory : WebApplicationFactory<Program>, 
                         leadManagerApiSettings.ApiKeyRequestHeaderValue);
 
                     return new ViaCepServiceClient(httpClient, viaCepApiSettings, default!);
+                });
+
+                services.RemoveAll<ICacheProvider>();
+                services.TryAddScoped(services =>
+                {
+                    var leadDbContext = services.GetRequiredService<ILeadManagerDbContext>();
+                    var cacheProviderMock = Substitute.For<ICacheProvider>();
+                    cacheProviderMock.GetAsync<IEnumerable<LeadDto>>(Arg.Any<string>(), Arg.Any<CancellationToken>())
+                                    .Returns(leadDbContext.Leads.Select(ld => ld.ToDto()).ToList());
+
+                    return cacheProviderMock;
                 });
             });
     }

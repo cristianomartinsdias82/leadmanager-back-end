@@ -1,5 +1,9 @@
 ﻿using Application.Contracts.Persistence;
+using Application.Features.Leads.IntegrationEvents.LeadRemoved;
+using Application.Features.Leads.Shared;
+using Core.DomainEvents.LeadRemoved;
 using MediatR;
+using Shared.Events.EventDispatching;
 using Shared.RequestHandling;
 using Shared.Results;
 
@@ -11,7 +15,8 @@ internal sealed class RemoveLeadCommandHandler : ApplicationRequestHandler<Remov
 
     public RemoveLeadCommandHandler(
         IMediator mediator,
-        ILeadManagerDbContext dbContext) : base(mediator, default!)
+        IEventDispatching eventDispatcher,
+        ILeadManagerDbContext dbContext) : base(mediator, eventDispatcher)
     {
         _dbContext = dbContext;
     }
@@ -20,11 +25,14 @@ internal sealed class RemoveLeadCommandHandler : ApplicationRequestHandler<Remov
     {
         var lead = await _dbContext.Leads.FindAsync(request.Id);
         if (lead is null)
-            return ApplicationResponse<RemoveLeadCommandResponse>.Create(null!, message: "Lead não encontrado.");
+            return ApplicationResponse<RemoveLeadCommandResponse>.Create(default!, message: "Lead não encontrado.");
 
         _dbContext.Leads.Remove(lead);
 
         await _dbContext.SaveChangesAsync(cancellationToken);
+
+        AddEvent(new LeadRemovedDomainEvent(lead));
+        AddEvent(new LeadRemovedIntegrationEvent(lead.ToDto()));
 
         return ApplicationResponse<RemoveLeadCommandResponse>.Create(new RemoveLeadCommandResponse());
     }

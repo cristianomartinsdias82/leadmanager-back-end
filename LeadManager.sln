@@ -51,6 +51,8 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "CrossCutting.Logging", "src
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "CrossCutting.Caching", "src\libs\Cross-cutting\Cross-cutting.Caching\CrossCutting.Caching.csproj", "{94A69D5D-A373-42AC-B36D-BC6234D25585}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Infrastructure.Tests", "tests\unit-tests\Infrastructure.Tests\Infrastructure.Tests.csproj", "{F4EBD59B-5189-4783-BF60-3BF19A908AEB}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -117,6 +119,10 @@ Global
 		{94A69D5D-A373-42AC-B36D-BC6234D25585}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{94A69D5D-A373-42AC-B36D-BC6234D25585}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{94A69D5D-A373-42AC-B36D-BC6234D25585}.Release|Any CPU.Build.0 = Release|Any CPU
+		{F4EBD59B-5189-4783-BF60-3BF19A908AEB}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{F4EBD59B-5189-4783-BF60-3BF19A908AEB}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{F4EBD59B-5189-4783-BF60-3BF19A908AEB}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{F4EBD59B-5189-4783-BF60-3BF19A908AEB}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -144,6 +150,7 @@ Global
 		{1D8B8770-993A-4A6B-80D9-AB3666791603} = {0E78EACF-F14D-4BA2-94A3-37B64AAE5277}
 		{AD48FD14-46D1-4BA3-B599-6DA88CAC1C7B} = {0E78EACF-F14D-4BA2-94A3-37B64AAE5277}
 		{94A69D5D-A373-42AC-B36D-BC6234D25585} = {0E78EACF-F14D-4BA2-94A3-37B64AAE5277}
+		{F4EBD59B-5189-4783-BF60-3BF19A908AEB} = {4DD5DB62-BEDF-44DB-B43C-4B99B185549F}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {F5C96730-41C5-4999-9784-B64A284FE630}

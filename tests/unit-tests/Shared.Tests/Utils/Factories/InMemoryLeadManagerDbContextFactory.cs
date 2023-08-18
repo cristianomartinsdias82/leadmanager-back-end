@@ -2,7 +2,7 @@
 using Infrastructure.Persistence;
 using Microsoft.EntityFrameworkCore;
 
-namespace Application.Tests.Utils.Factories
+namespace Shared.Tests
 {
     public static class InMemoryLeadManagerDbContextFactory
     {

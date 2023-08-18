@@ -1,6 +1,7 @@
 ﻿using Application.Contracts.Persistence;
-using Application.Features.Leads.IntegrationEvents.LeadDataUpdated;
-using Core.DomainEvents.LeadDataUpdated;
+using Application.Features.Leads.IntegrationEvents.LeadUpdated;
+using Application.Features.Leads.Shared;
+using Core.DomainEvents.LeadUpdated;
 using MediatR;
 using Shared.Events.EventDispatching;
 using Shared.RequestHandling;
@@ -38,29 +39,8 @@ internal sealed class UpdateLeadCommandHandler : ApplicationRequestHandler<Updat
         
         await _dbContext.SaveChangesAsync(cancellationToken);
 
-        AddEvent(new LeadDataUpdatedDomainEvent(
-                        lead.Id,
-                        lead.Cnpj,
-                        lead.RazaoSocial,
-                        lead.Cep,
-                        lead.Logradouro,
-                        lead.Cidade,
-                        lead.Estado,
-                        lead.Bairro,
-                        lead.Numero,
-                        lead.Complemento));
-
-        AddEvent(new LeadDataUpdatedIntegrationEvent(
-                        lead.Id,
-                        lead.Cnpj,
-                        lead.RazaoSocial,
-                        lead.Cep,
-                        lead.Logradouro,
-                        lead.Cidade,
-                        lead.Estado,
-                        lead.Bairro,
-                        lead.Numero,
-                        lead.Complemento));
+        AddEvent(new LeadUpdatedDomainEvent(lead));
+        AddEvent(new LeadUpdatedIntegrationEvent(lead.ToDto()));
 
         return ApplicationResponse<UpdateLeadCommandResponse>.Create(new UpdateLeadCommandResponse());
     }

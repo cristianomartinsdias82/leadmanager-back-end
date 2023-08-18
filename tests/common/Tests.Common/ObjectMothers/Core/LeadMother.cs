@@ -29,4 +29,11 @@ public class LeadMother
                 "SP",
                 default,
                 default);
+
+    public static List<Lead> Leads()
+    =>  new List<Lead>()
+        {
+            GumperInc(),
+            XptoLLC()
+        };
 }

@@ -1,6 +1,10 @@
 ﻿using Application.Contracts.Persistence;
+using Application.Features.Leads.IntegrationEvents.LeadRegistered;
+using Application.Features.Leads.Shared;
+using Core.DomainEvents.LeadRegistered;
 using Core.Entities;
 using MediatR;
+using Shared.Events.EventDispatching;
 using Shared.RequestHandling;
 using Shared.Results;
 
@@ -12,7 +16,8 @@ internal sealed class RegisterLeadCommandHandler : ApplicationRequestHandler<Reg
 
     public RegisterLeadCommandHandler(
         IMediator mediator,
-        ILeadManagerDbContext dbContext) : base(mediator, default!)
+        IEventDispatching eventDispatcher,
+        ILeadManagerDbContext dbContext) : base(mediator, eventDispatcher)
     {
         _dbContext = dbContext;
     }
@@ -33,6 +38,9 @@ internal sealed class RegisterLeadCommandHandler : ApplicationRequestHandler<Reg
 
         await _dbContext.Leads.AddAsync(lead);
         await _dbContext.SaveChangesAsync(cancellationToken);
+
+        AddEvent(new LeadRegisteredDomainEvent(lead));
+        AddEvent(new LeadRegisteredIntegrationEvent(lead.ToDto()));
 
         return ApplicationResponse<RegisterLeadCommandResponse>.Create(new(lead.Id));
     }

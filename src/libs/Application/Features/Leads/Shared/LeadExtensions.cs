@@ -6,7 +6,11 @@ namespace Application.Features.Leads.Shared
     {
         public static List<LeadDto> ToDtoList(this IEnumerable<Lead> leads)
             => leads?
-            .Select(lead => new LeadDto
+            .Select(ToDto)
+            .ToList() ?? new List<LeadDto>();
+
+        public static LeadDto ToDto(this Lead lead)
+            => new()
             {
                 Id = lead.Id,
                 Cnpj = lead.Cnpj,
@@ -18,7 +22,6 @@ namespace Application.Features.Leads.Shared
                 Estado = lead.Estado,
                 Numero = lead.Numero,
                 Complemento = lead.Complemento
-            })?
-            .ToList() ?? new List<LeadDto>();
+            };
     }
 }

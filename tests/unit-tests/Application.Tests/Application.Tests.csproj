@@ -11,7 +11,6 @@
 
   <ItemGroup>
     <PackageReference Include="FluentAssertions" Version="6.11.0" />
-    <PackageReference Include="Microsoft.EntityFrameworkCore.InMemory" Version="7.0.10" />
     <PackageReference Include="Microsoft.NET.Test.Sdk" Version="17.7.0" />
     <PackageReference Include="NSubstitute" Version="5.0.0" />
     <PackageReference Include="xunit" Version="2.5.0" />
@@ -30,6 +29,7 @@
     <ProjectReference Include="..\..\..\src\libs\Infrastructure\Infrastructure.csproj" />
     <ProjectReference Include="..\..\..\src\libs\Shared\Shared.csproj" />
     <ProjectReference Include="..\..\common\Tests.Common\Tests.Common.csproj" />
+    <ProjectReference Include="..\Shared.Tests\Shared.Tests.csproj" />
   </ItemGroup>
 
   <ItemGroup>

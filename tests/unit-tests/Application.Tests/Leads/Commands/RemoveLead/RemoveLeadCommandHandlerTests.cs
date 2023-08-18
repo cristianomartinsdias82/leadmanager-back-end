@@ -1,11 +1,12 @@
 ﻿using Application.Contracts.Persistence;
 using Application.Features.Leads.Commands.RemoveLead;
-using Application.Tests.Utils.Factories;
 using FluentAssertions;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
 using NSubstitute;
+using Shared.Events.EventDispatching;
 using Shared.Results;
+using Shared.Tests;
 using Tests.Common.ObjectMothers.Core;
 using Xunit;
 
@@ -13,12 +14,18 @@ namespace Application.Tests.Leads.Commands.RemoveLead;
 
 public sealed class RemoveLeadCommandHandlerTests : IAsyncDisposable, IDisposable
 {
+    private readonly RemoveLeadCommandHandler _handler;
     private readonly ILeadManagerDbContext _dbContext;
+    private readonly IMediator _mediator;
+    private readonly IEventDispatching _eventDispatcher;
     private readonly CancellationTokenSource _cts;
 
     public RemoveLeadCommandHandlerTests()
     {
         _dbContext = InMemoryLeadManagerDbContextFactory.Create();
+        _mediator = Substitute.For<IMediator>();
+        _eventDispatcher = Substitute.For<IEventDispatching>();
+        _handler = new RemoveLeadCommandHandler(_mediator, _eventDispatcher, _dbContext);
         _cts = new();
     }
 
@@ -36,11 +43,10 @@ public sealed class RemoveLeadCommandHandlerTests : IAsyncDisposable, IDisposabl
     public async Task Handle_WithNonExistingLead_ShouldReturnResultObjectWithNotFoundMessage()
     {
         //Arrange
-        var handler = new RemoveLeadCommandHandler(Substitute.For<IMediator>(), _dbContext);
         var request = new RemoveLeadCommandRequest { Id = Guid.Empty };
 
         //Act
-        var result = await handler.Handle(request, _cts.Token);
+        var result = await _handler.Handle(request, _cts.Token);
 
         //Assert
         result.Should().NotBeNull();
@@ -59,11 +65,10 @@ public sealed class RemoveLeadCommandHandlerTests : IAsyncDisposable, IDisposabl
         var leadToRemove = LeadMother.XptoLLC();
         await _dbContext.Leads.AddAsync(leadToRemove);
         await _dbContext.SaveChangesAsync(_cts.Token);
-        var handler = new RemoveLeadCommandHandler(Substitute.For<IMediator>(), _dbContext);
         var request = new RemoveLeadCommandRequest { Id = leadToRemove.Id };
 
         //Act
-        var result = await handler.Handle(request, _cts.Token);
+        var result = await _handler.Handle(request, _cts.Token);
 
         //Assert
         result.Should().NotBeNull();

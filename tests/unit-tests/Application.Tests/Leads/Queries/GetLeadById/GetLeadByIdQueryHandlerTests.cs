@@ -1,13 +1,13 @@
 ﻿using Application.Contracts.Persistence;
 using Application.Features.Leads.Queries.GetLeadById;
 using Application.Features.Leads.Shared;
-using Application.Tests.Utils.Factories;
 using Core.Entities;
 using FluentAssertions;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
 using NSubstitute;
 using Shared.Results;
+using Shared.Tests;
 using Tests.Common.ObjectMothers.Core;
 using Xunit;
 
@@ -16,18 +16,20 @@ namespace Application.Tests.Leads.Queries.GetLeadById;
 public sealed class GetLeadByIdQueryHandlerTests : IAsyncDisposable, IDisposable
 {
     private readonly GetLeadByIdQueryHandler _handler;
+    private readonly IMediator _mediator;
     private readonly ILeadManagerDbContext _dbContext;
-    private readonly CancellationTokenSource _cts;
     private readonly Lead _xptoIncLead;
+    private readonly CancellationTokenSource _cts;
 
     public GetLeadByIdQueryHandlerTests()
     {
         _xptoIncLead = LeadMother.XptoLLC();
-        _cts = new();
         _dbContext = InMemoryLeadManagerDbContextFactory.Create();
         _dbContext.Leads.Add(_xptoIncLead);
         _dbContext.SaveChangesAsync().GetAwaiter().GetResult();
-        _handler = new(Substitute.For<IMediator>(), _dbContext);
+        _mediator = Substitute.For<IMediator>();
+        _handler = new(_mediator, _dbContext);
+        _cts = new();
     }
 
     [Fact]
@@ -67,7 +69,6 @@ public sealed class GetLeadByIdQueryHandlerTests : IAsyncDisposable, IDisposable
 
     public async ValueTask DisposeAsync()
     {
-        _cts.Dispose();
         await _dbContext.Leads.ExecuteDeleteAsync();
         await _dbContext.DisposeAsync();
     }

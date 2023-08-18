@@ -1,5 +1,8 @@
 ﻿using Application.Contracts.Persistence;
 using Application.Features.Leads.Commands.RegisterLead;
+using Application.Features.Leads.IntegrationEvents.LeadBulkInserted;
+using Application.Features.Leads.Shared;
+using Core.DomainEvents.LeadBulkInserted;
 using Core.Entities;
 using CrossCutting.Csv;
 using CrossCutting.FileStorage;
@@ -7,6 +10,7 @@ using FluentValidation;
 using FluentValidation.Results;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
+using Shared.Events.EventDispatching;
 using Shared.RequestHandling;
 using Shared.Results;
 using System.Globalization;
@@ -23,10 +27,11 @@ internal sealed class BulkInsertLeadCommandHandler : ApplicationRequestHandler<B
 
     public BulkInsertLeadCommandHandler(
         IMediator mediator,
+        IEventDispatching eventDispatcher,
         ILeadManagerDbContext dbContext,
         ICsvHelper csvHelper,
         IFileStorageProvider fileStorageProvider,
-        IValidator<RegisterLeadCommandRequest> requestValidator) : base(mediator, default!)
+        IValidator<RegisterLeadCommandRequest> requestValidator) : base(mediator, eventDispatcher)
     {
         _dbContext = dbContext;
         _csvHelper = csvHelper;
@@ -90,20 +95,24 @@ internal sealed class BulkInsertLeadCommandHandler : ApplicationRequestHandler<B
                 inconsistencies: inconsistencies.ToArray()
             );
 
-        await _dbContext.Leads.AddRangeAsync(upcomingLeads
-                                                .Select(lead => new Lead(lead.Cnpj!,
-                                                                         lead.RazaoSocial!,
-                                                                         lead.Cep!,
-                                                                         lead.Endereco!,
-                                                                         lead.Bairro!,
-                                                                         lead.Cidade!,
-                                                                         lead.Estado!,
-                                                                         lead.Numero,
-                                                                         lead.Complemento))
-                                                .ToArray(),
-                                            cancellationToken);
+        var newLeads = upcomingLeads
+                        .Select(lead => new Lead(lead.Cnpj!,
+                                                 lead.RazaoSocial!,
+                                                 lead.Cep!,
+                                                 lead.Endereco!,
+                                                 lead.Bairro!,
+                                                 lead.Cidade!,
+                                                 lead.Estado!,
+                                                 lead.Numero,
+                                                 lead.Complemento))
+                        .ToList();
+
+        await _dbContext.Leads.AddRangeAsync(newLeads, cancellationToken);
 
         await _dbContext.SaveChangesAsync(cancellationToken);
+
+        AddEvent(new LeadBulkInsertedDomainEvent(newLeads));
+        AddEvent(new LeadBulkInsertedIntegrationEvent(newLeads.Select(ld => ld.ToDto()).ToList()));
 
         return ApplicationResponse<BulkInsertLeadCommandResponse>.Create(new());
     }

@@ -66,7 +66,7 @@ public static class DependencyInjection
 
     private static MediatRServiceConfiguration RegisterProcessors(this MediatRServiceConfiguration config, IServiceCollection services)
     {
-        services.AddTransient(typeof(IRequestPostProcessor<,>), typeof(HandlerEventDispatchingProcessor<,>));
+        services.AddTransient(typeof(IRequestPostProcessor<,>), typeof(EventHandlerDispatchingProcessor<,>));
 
         return config;
     }

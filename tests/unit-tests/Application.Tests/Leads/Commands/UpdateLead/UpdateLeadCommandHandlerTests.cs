@@ -1,12 +1,12 @@
 ﻿using Application.Contracts.Persistence;
 using Application.Features.Leads.Commands.UpdateLead;
-using Application.Tests.Utils.Factories;
 using FluentAssertions;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
 using NSubstitute;
 using Shared.Events.EventDispatching;
 using Shared.Results;
+using Shared.Tests;
 using Tests.Common.ObjectMothers.Application;
 using Tests.Common.ObjectMothers.Core;
 using Xunit;
@@ -15,17 +15,19 @@ namespace Application.Tests.Leads.Commands.UpdateLead;
 
 public sealed class UpdateLeadCommandHandlerTests : IAsyncDisposable, IDisposable
 {
+    private readonly UpdateLeadCommandHandler _handler;
     private readonly ILeadManagerDbContext _dbContext;
     private readonly IMediator _mediator;
     private readonly IEventDispatching _eventDispatcher;
-    private readonly CancellationTokenSource _cts;
+    private readonly CancellationTokenSource _cts;    
 
     public UpdateLeadCommandHandlerTests()
     {
-        _cts = new();
         _dbContext = InMemoryLeadManagerDbContextFactory.Create();
         _mediator = Substitute.For<IMediator>();
         _eventDispatcher = Substitute.For<IEventDispatching>();
+        _handler = new UpdateLeadCommandHandler(_mediator, _eventDispatcher, _dbContext);
+        _cts = new();
     }
 
     public void Dispose()
@@ -42,7 +44,6 @@ public sealed class UpdateLeadCommandHandlerTests : IAsyncDisposable, IDisposabl
     public async Task Handle_ValidRequestParametersAndExistingLead_ShouldSucceed()
     {
         //Arrange
-        var handler = new UpdateLeadCommandHandler(_mediator, _eventDispatcher, _dbContext);
         var leadId = Guid.NewGuid();
         var request = UpdateLeadCommandRequestMother
                         .Instance
@@ -60,7 +61,7 @@ public sealed class UpdateLeadCommandHandlerTests : IAsyncDisposable, IDisposabl
         await _dbContext.SaveChangesAsync(_cts.Token);
 
         //Act
-        var result = await handler.Handle(request, _cts.Token);
+        var result = await _handler.Handle(request, _cts.Token);
 
         //Assert
         result.Should().NotBeNull();
@@ -70,7 +71,7 @@ public sealed class UpdateLeadCommandHandlerTests : IAsyncDisposable, IDisposabl
         result.Should().BeOfType<ApplicationResponse<UpdateLeadCommandResponse>>();
         var updatedLead = await _dbContext.Leads.FindAsync(request.Id, _cts.Token);
         updatedLead.Should().NotBeNull();
-        updatedLead.Cep.Should().Be(request.Cep);
+        updatedLead!.Cep.Should().Be(request.Cep);
         updatedLead.Logradouro.Should().Be(request.Endereco);
         updatedLead.Cidade.Should().Be(request.Cidade);
         updatedLead.Estado.Should().Be(request.Estado);
@@ -80,7 +81,6 @@ public sealed class UpdateLeadCommandHandlerTests : IAsyncDisposable, IDisposabl
     public async Task Handle_ValidRequestParametersWithNonExistingLead_ShouldReturnResultObjectWithNotFoundMessage()
     {
         //Arrange
-        var handler = new UpdateLeadCommandHandler(_mediator, _eventDispatcher, _dbContext);
         var request = UpdateLeadCommandRequestMother
                         .Instance
                         .WithId(Guid.NewGuid())
@@ -96,7 +96,7 @@ public sealed class UpdateLeadCommandHandlerTests : IAsyncDisposable, IDisposabl
         await _dbContext.SaveChangesAsync(_cts.Token);
 
         //Act
-        var result = await handler.Handle(request, _cts.Token);
+        var result = await _handler.Handle(request, _cts.Token);
 
         //Assert
         result.Should().NotBeNull();

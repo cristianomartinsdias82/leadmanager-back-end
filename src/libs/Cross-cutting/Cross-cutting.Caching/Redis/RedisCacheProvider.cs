@@ -48,7 +48,7 @@ internal sealed class RedisCacheProvider : CacheProvider
                 });
     }
 
-    public override async Task RemoveAsync<T>(string key, CancellationToken cancellationToken = default)
+    public override async Task RemoveAsync(string key, CancellationToken cancellationToken = default)
     {
         await Policy.Handle<Exception>()
                 .WaitAndRetryAsync(_settings.ConnectionAttemptsMaxCount, count => TimeSpan.FromSeconds(Math.Pow(2, count) + Random.Shared.Next(2, 4)))
