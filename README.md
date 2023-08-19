@@ -37,7 +37,7 @@ O projeto está em constante evolução e utiliza a seguinte plataforma e lingua
 - Uso de Design dirigido a domínio / domain-driven design / DDD para modalagem das entidades e dos comportamentos da classes e objetos de valor
 - Integração com Azurite para armazenamento de arquivos
 - Gravação de log com múltiplos 'Sinks' com Serilog (Console, Arquivo e banco de dados)
-- Armazenamento de dados em cache para ganho de performance nas consultas
+- Integração com Redis para armazenamento de dados em cache para ganho de performance em geral
 
 Pré-requisitos para execução do 'back-end' da aplicação<br/>
 É necessário possuir os seguintes componentes instalados na máquina:
