@@ -54,8 +54,10 @@ Como executar o projeto localmente?
 - Acesse o Terminal, Command Prompt ou Powershell
 - Execute o seguinte comando para subir um servidor de banco de dados Sql Server:<br/>
   docker run -e "MSSQL_PID=Express" -e "ACCEPT_EULA=Y" -e "SA_PASSWORD=Y0urStr0nGP@sswoRD_2023" -p 1433:1433 --name leadmanager-db -d mcr.microsoft.com/mssql/server<br/>
-- Execute o Redis através do seguinte comando:<br/>
-  docker run --name leadmanager-redis -p 6379:6379 -d redis:7.0.12-alpine
+- Execute o seguinte comando para subit um servidor de caching Redis:<br/>
+  docker run --name leadmanager-redis -p 6379:6379 -d redis:7.0.12-alpine<br/>
+  OU<br/>
+  docker run --name leadmanager-redis -p 6379:6379 -d redis/redis-stack-server:latest
 - Acesse outro Terminal, Command Prompt ou Powershell
 - Execute o Azurite através do seguinte comando:<br/>
   azurite-blob -l X:\Path\to\blobs
@@ -109,8 +111,7 @@ Em termos de implementação, o que tem de reaproveitável no código-fonte dest
 - Classe de extensão de validação de Cnpj integrada ao FluentValidations
 - Classe de com lógica de validação de Cnpj utilizando o algoritmo Módulo 1
 - Implementação de um service client de integração com o serviço de localização de endereços ViaCep
-- Classe emissora de eventos EventDispatcher
-- Interfaces e abstrações para manipulação de eventos:
+- Abstrações para manipulação de eventos:
   - IEvent
     - IDomainEvent
     - IIntegrationEvent
@@ -120,14 +121,15 @@ Em termos de implementação, o que tem de reaproveitável no código-fonte dest
   - Pipeline Behaviors
     - ValidationBehavior
   - Post Processors
-    - HandlerEventDispatchingProcessor
+    - EventHandlerDispatchingProcessor
   - Notification handlers
     - Domain event handlers
     - Integration event handlers
+- Classe emissora de eventos EventDispatcher
 - Classes de extensão de injeção de dependência das camadas Api, Application e Infrastructure para ótima manutenibilidade da lógica de configuração da aplicação web (AddApiServices, AddApplicationServices, AddInfrastructureServices)
 - Implementação de classes ObjectMother de construção de Requests e Entidades para ótima manutenibilidade das suítes de testes
 - Implementação de classe Factory de DbContext em memória para execução dos testes de integração da Api
-- Lógica de auditoria durante o processo de persistência dos dados em LeadsDbContext, gravando o usuário e data/hora da operação
+- Lógica de auditoria durante o processo de persistência dos dados em LeadsDbContext, gravando o usuário e data/hora da operação (em formato UTC e baseado no GMT inclusive)
 - Métodos de testes unitários - inclusive com uso de asserções fluentes - de:<br/>
   Classes Handlers<br/>
   Classes Validators<br/>
@@ -141,6 +143,10 @@ Em termos de implementação, o que tem de reaproveitável no código-fonte dest
   - Contém lógica de política de retentativas com 'back-off' exponencial através do uso da biblioteca Polly
 (Continuar a listagem. Afinal, tem muita coisa que vale anotar aqui como índice/referência!)
 - Lógica de configuração do tamanho máximo de upload de arquivos
+- Abstrações para utlização de cache de dados com Redis para ganho de performance
+  - ICacheProvider
+    - Classe que implementa integração com StackExchange Redis, serializando e deserializando inclusive utilizando Protobuf para velocidade e economia de espaço em memória com estes processos
+  - ICachingManagement (que no final das contas é um repositório de dados preenchido com dados da fonte de dados)
 
 Lista com os principais pacotes Nuget que foram utilizados neste projeto:<br/>
 - LanguageExt.Core
