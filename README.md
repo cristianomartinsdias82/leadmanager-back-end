@@ -25,6 +25,7 @@ O projeto está em constante evolução e utiliza a seguinte plataforma e lingua
 - Entity Framework Core
 - Sql Server
 - Sqlite
+- Redis Cache
 - Testes unitários / Unit tests / TDD com xUnit e Fluent Assertions
 - Testes de integração / Integration tests com WebApplicationFactory e MockHttp
 - Integração com o serviço de localização de endereços ViaCep via HttpClient tipado
@@ -53,6 +54,9 @@ Como executar o projeto localmente?
 - Acesse o Terminal, Command Prompt ou Powershell
 - Execute o seguinte comando para subir um servidor de banco de dados Sql Server:<br/>
   docker run -e "MSSQL_PID=Express" -e "ACCEPT_EULA=Y" -e "SA_PASSWORD=Y0urStr0nGP@sswoRD_2023" -p 1433:1433 --name leadmanager-db -d mcr.microsoft.com/mssql/server<br/>
+- Execute o Redis através do seguinte comando:<br/>
+  docker run --name leadmanager-redis -p 6379:6379 -d redis:7.0.12-alpine
+- Acesse outro Terminal, Command Prompt ou Powershell
 - Execute o Azurite através do seguinte comando:<br/>
   azurite-blob -l X:\Path\to\blobs
 - Navegue até a pasta raíz do projeto (mesma pasta que contém o arquivo LeadManager.sln, por exemplo)
