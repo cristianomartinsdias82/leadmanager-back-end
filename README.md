@@ -25,6 +25,7 @@ O projeto está em constante evolução e utiliza a seguinte plataforma e lingua
 - Entity Framework Core
 - Sql Server
 - Sqlite
+- Azurite
 - Redis Cache
 - Testes unitários / Unit tests / TDD com xUnit e Fluent Assertions
 - Testes de integração / Integration tests com WebApplicationFactory e MockHttp
