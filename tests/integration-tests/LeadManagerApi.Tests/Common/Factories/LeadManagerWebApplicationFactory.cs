@@ -22,6 +22,7 @@ using System.Data.Common;
 using System.Net;
 using System.Net.Http.Json;
 using System.Text.Json;
+using Tests.Common.ObjectMothers.Core;
 using Tests.Common.ObjectMothers.Integrations.ViaCep;
 using ViaCep.ServiceClient;
 using ViaCep.ServiceClient.Configuration;
@@ -186,10 +187,11 @@ public class LeadManagerWebApplicationFactory : WebApplicationFactory<Program>, 
                 services.RemoveAll<ICacheProvider>();
                 services.TryAddScoped(services =>
                 {
-                    var leadDbContext = services.GetRequiredService<ILeadManagerDbContext>();
                     var cacheProviderMock = Substitute.For<ICacheProvider>();
-                    cacheProviderMock.GetAsync<IEnumerable<LeadDto>>(Arg.Any<string>(), Arg.Any<CancellationToken>())
-                                    .Returns(leadDbContext.Leads.Select(ld => ld.ToDto()).ToList());
+                    cacheProviderMock.GetAsync<IEnumerable<LeadDto>>(
+                                        Arg.Any<string>(),
+                                        Arg.Any<CancellationToken>())
+                                    .Returns(LeadMother.Leads().Select(ld => ld.ToDto()).ToList());
 
                     return cacheProviderMock;
                 });

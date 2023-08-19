@@ -30,6 +30,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\..\..\src\hosts\LeadManagerApi\LeadManagerApi.csproj" />
+    <ProjectReference Include="..\..\..\src\libs\Cross-cutting\Cross-cutting.Caching\CrossCutting.Caching.csproj" />
     <ProjectReference Include="..\..\common\Tests.Common\Tests.Common.csproj" />
   </ItemGroup>
 
