@@ -1,14 +1,14 @@
 ﻿using Application.Contracts.Caching.Policies;
 using Application.Contracts.Persistence;
+using Application.Features.Leads.Shared;
 using CrossCutting.Caching;
+using FluentAssertions;
 using Infrastructure.Caching;
 using Microsoft.Extensions.Logging;
-using Shared.Tests;
-using Xunit;
-using Application.Features.Leads.Shared;
-using Tests.Common.ObjectMothers.Core;
 using NSubstitute;
-using FluentAssertions;
+using Shared.Tests;
+using Tests.Common.ObjectMothers.Core;
+using Xunit;
 
 namespace Infrastructure.Tests.Caching;
 
