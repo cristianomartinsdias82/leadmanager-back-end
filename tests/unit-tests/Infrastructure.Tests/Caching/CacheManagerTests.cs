@@ -8,9 +8,6 @@ using Xunit;
 using Application.Features.Leads.Shared;
 using Tests.Common.ObjectMothers.Core;
 using NSubstitute;
-using Core.Entities;
-using Core.ValueObjects;
-using Infrastructure.Persistence.Mappings;
 using FluentAssertions;
 
 namespace Infrastructure.Tests.Caching;
