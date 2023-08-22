@@ -19,7 +19,6 @@ public sealed class CacheManagerTests : IDisposable, IAsyncDisposable
     private readonly CancellationTokenSource _cts;
     private readonly ICacheProvider _cacheProviderMock;
     private readonly CachingPoliciesSettings _cachingPoliciesSettings;
-    private readonly ILogger<CacheManager> _logger;
 
     public CacheManagerTests()
     {
@@ -27,12 +26,10 @@ public sealed class CacheManagerTests : IDisposable, IAsyncDisposable
         _dbContext = InMemoryLeadManagerDbContextFactory.Create();
         _cacheProviderMock = Substitute.For<ICacheProvider>();
         _cachingPoliciesSettings = new() { LeadsPolicy = new(default!, default) };
-        _logger = Substitute.For<ILogger<CacheManager>>();
         _cacheManager = new CacheManager(
             _dbContext,
             _cacheProviderMock,
-            _cachingPoliciesSettings,
-            _logger);        
+            _cachingPoliciesSettings);        
     }
 
     [Fact]

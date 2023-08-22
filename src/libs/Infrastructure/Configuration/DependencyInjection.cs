@@ -1,8 +1,10 @@
 ﻿using Application.Contracts.Caching;
 using Application.Contracts.Caching.Policies;
+using Application.Contracts.Messaging;
 using Application.Contracts.Persistence;
 using Infrastructure.Caching;
 using Infrastructure.EventDispatching;
+using Infrastructure.Messaging;
 using Infrastructure.Persistence;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
@@ -17,7 +19,8 @@ public static class DependencyInjection
     public static IServiceCollection AddInfrastructureServices(this IServiceCollection services, IConfiguration configuration)
         => services.AddDataSource(configuration)
                    .AddEventDispatcher(configuration)
-                   .AddCacheManager(configuration);
+                   .AddCacheManager(configuration)
+                   .AddMessageBusHelper(configuration);
 
     private static IServiceCollection AddDataSource(this IServiceCollection services, IConfiguration configuration)
     {
@@ -50,5 +53,13 @@ public static class DependencyInjection
         services.AddSingleton(cachingPoliciesSettings);
 
         return services.AddScoped<ICachingManagement, CacheManager>();
+    }
+
+    private static IServiceCollection AddMessageBusHelper(this IServiceCollection services, IConfiguration configuration)
+    {
+        var messageChannelsSettings = configuration.GetSection(nameof(MessageChannelSettings)).Get<MessageChannelSettings>()!;
+        services.AddSingleton(messageChannelsSettings);
+
+        return services.AddSingleton<IMessageBusHelper, MessageBusHelper>();
     }
 }

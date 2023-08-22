@@ -77,7 +77,6 @@ internal sealed class BulkInsertLeadCommandHandler : ApplicationRequestHandler<B
                 inconsistencies: inconsistencies.ToArray()
             );
 
-        //TODO: Implement a Caching provider (cross-cutting) and retrieve the lead data from it in order to achieve better performance
         var existingLeads = await _dbContext.Leads.ToListAsync(cancellationToken);
 
         upcomingLeads.ForEach(upcLead =>

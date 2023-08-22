@@ -21,7 +21,7 @@ public static class HostExtensions
                 var db = scope.ServiceProvider.GetRequiredService<LeadManagerDbContext>();
                 db.Database.Migrate();
 
-                logger?.LogInformation("Database migration ran with no problem.");
+                logger?.LogInformation("Database migration executed successfully.");
             }
             catch (Exception exc)
             {

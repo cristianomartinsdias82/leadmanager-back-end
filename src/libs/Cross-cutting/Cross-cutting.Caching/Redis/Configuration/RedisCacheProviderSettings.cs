@@ -3,6 +3,6 @@
 public sealed record RedisCacheProviderSettings
 (
     string Server,
-    string PortNumber,
+    int PortNumber,
     int ConnectionAttemptsMaxCount
 );

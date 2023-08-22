@@ -6,7 +6,7 @@ namespace CrossCutting.FileStorage.Azure.Configuration;
 
 internal static class AzureStorageServicesExtensions
 {
-    public static IServiceCollection AddAzureStorageServices(this IServiceCollection services, IConfiguration configuration)
+    public static IServiceCollection AddAzureFileStorageServices(this IServiceCollection services, IConfiguration configuration)
     {
         var storageSettings = configuration.GetSection(nameof(AzureStorageProviderSettings)).Get<AzureStorageProviderSettings>()!;
         services.AddSingleton(storageSettings);

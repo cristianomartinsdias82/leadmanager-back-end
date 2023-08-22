@@ -9,10 +9,11 @@ using Application.Features.Leads.Queries.SearchLead;
 using Application.Features.Leads.Shared;
 using Application.Processors;
 using Core.Entities;
+using CrossCutting.Caching.Configuration;
 using CrossCutting.Csv.Configuration;
 using CrossCutting.FileStorage.Configuration;
 using CrossCutting.Logging.Configuration;
-using CrossCutting.Caching.Configuration;
+using CrossCutting.Messaging.Configuration;
 using FluentValidation;
 using MediatR;
 using MediatR.Pipeline;
@@ -53,9 +54,10 @@ public static class DependencyInjection
 
     private static IServiceCollection AddCrossCuttingServices(this IServiceCollection services, IConfiguration configuration)
         => services.AddCsvHelper(configuration)
-                   .AddStorageServices(configuration)
+                   .AddFileStorage(configuration)
                    .AddMultiSinkLogging(configuration)
-                   .AddCaching(configuration);
+                   .AddCaching(configuration)
+                   .AddMessageBus(configuration);
 
     private static MediatRServiceConfiguration RegisterBehaviors(this MediatRServiceConfiguration config, IServiceCollection services)
     {

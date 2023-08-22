@@ -32,7 +32,7 @@ public class Lead : Entity
         string? numero,
         string? complemento)
     {
-        Id = Guid.NewGuid(); //TODO: Make of Chris Patterson's NewId Nuget Package in order to generate sequential Guids
+        Id = Guid.NewGuid(); //TODO: Make use of Chris Patterson's NewId Nuget Package in order to generate sequential Guids
         Documento = ValidarCnpj(cnpj);
         Endereco = ValidarEndereco(cep, endereco, bairro, cidade, estado, numero, complemento);
         

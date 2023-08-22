@@ -18,6 +18,8 @@ internal sealed class LeadEntityTypeConfiguration : IEntityTypeConfiguration<Lea
         builder.HasKey(x => x.Id)
                 .HasName($"PK_{nameof(Lead)}_{nameof(Lead.Id)}");
 
+        builder.Property(x => x.Id).ValueGeneratedNever();
+
         builder.Property(x => x.Cnpj)
                .IsRequired()
                .HasColumnType("VARCHAR(18)");

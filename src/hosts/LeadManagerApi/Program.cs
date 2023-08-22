@@ -2,6 +2,7 @@ using Application.Configuration;
 using Infrastructure.Configuration;
 using LeadManagerApi.ApiFeatures;
 using LeadManagerApi.Configuration;
+using CrossCutting.Messaging.RabbitMq.Configuration;
 
 namespace LeadManagerApi;
 
@@ -36,6 +37,7 @@ public class Program
         app.MapControllers();
 
         app.UseDataSourceInitialization();
+        app.UseMessageBusInitialization();
 
         app.UseMiddleware<RequestHandlingMiddleware>();
 

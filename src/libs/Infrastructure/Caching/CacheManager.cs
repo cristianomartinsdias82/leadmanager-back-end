@@ -4,7 +4,6 @@ using Application.Contracts.Persistence;
 using Application.Features.Leads.Shared;
 using CrossCutting.Caching;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.Logging;
 
 namespace Infrastructure.Caching;
 
@@ -13,18 +12,15 @@ internal sealed class CacheManager : ICachingManagement
     private readonly ICacheProvider _cacheProvider;
     private readonly ILeadManagerDbContext _dbContext;
     private readonly CachingPolicy _leadsCachingPolicy;
-    private readonly ILogger<CacheManager> _logger;
 
     public CacheManager(
         ILeadManagerDbContext dbContext,
         ICacheProvider cacheProvider,
-        CachingPoliciesSettings cachingPoliciesSettings,
-        ILogger<CacheManager> logger)
+        CachingPoliciesSettings cachingPoliciesSettings)
     {
         _dbContext = dbContext;
         _cacheProvider = cacheProvider;
         _leadsCachingPolicy = cachingPoliciesSettings.LeadsPolicy;
-        _logger = logger;
     }
 
     public async Task<IEnumerable<LeadDto>> GetLeadsAsync(CancellationToken cancellationToken = default)
