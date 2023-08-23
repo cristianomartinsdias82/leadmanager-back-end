@@ -1,6 +1,6 @@
 {
   "version": 2,
-  "dgSpecHash": "AGjrkaeQGMndXUdcy0pWqjdXBMIOKB3OWtlXeUvgPdN1s3QsuR7psqEm09gd6sNN3CasJ3ZDzIp2/OIbl4lCag==",
+  "dgSpecHash": "6Acm1tTEdc2+quX42nrcarbw/V+2zYXh2zGoetPEY2jMUtaQTwkrq6aqhv/RcguD0P5YMveZK9ZO6JCjjwzcBQ==",
   "success": true,
   "projectFilePath": "F:\\Codebase\\_.NET Solutions\\Core\\7.x\\LeadManager_PactoEnergiaExamTest\\backend\\src\\LeadManager\\src\\libs\\Integrations\\ViaCep.ServiceClient\\ViaCep.ServiceClient.csproj",
   "expectedPackageFiles": [

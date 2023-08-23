@@ -9,8 +9,14 @@ F:\Codebase\_.NET Solutions\Core\7.x\LeadManager_PactoEnergiaExamTest\backend\sr
 F:\Codebase\_.NET Solutions\Core\7.x\LeadManager_PactoEnergiaExamTest\backend\src\LeadManager\src\libs\Core\obj\Debug\net7.0\InvalidAddressException.4wIk6nol.generated.cs
 F:\Codebase\_.NET Solutions\Core\7.x\LeadManager_PactoEnergiaExamTest\backend\src\LeadManager\src\libs\Core\obj\Debug\net7.0\InvalidNationalTaxIdentificationNumberException.ndyic1f-.generated.cs
 F:\Codebase\_.NET Solutions\Core\7.x\LeadManager_PactoEnergiaExamTest\backend\src\LeadManager\src\libs\Core\obj\Debug\net7.0\InvalidZipCodeException.Iz7cZMPL.generated.cs
-F:\Codebase\_.NET Solutions\Core\7.x\LeadManager_PactoEnergiaExamTest\backend\src\LeadManager\src\libs\Core\obj\Debug\net7.0\LeadDataUpdatedDomainEvent.NIxaeZhe.generated.cs
-F:\Codebase\_.NET Solutions\Core\7.x\LeadManager_PactoEnergiaExamTest\backend\src\LeadManager\src\libs\Core\obj\Debug\net7.0\LeadDataUpdatedDomainEventHandler.VQfhLOzy.generated.cs
+F:\Codebase\_.NET Solutions\Core\7.x\LeadManager_PactoEnergiaExamTest\backend\src\LeadManager\src\libs\Core\obj\Debug\net7.0\LeadBulkInsertedDomainEvent.kKnCKkRx.generated.cs
+F:\Codebase\_.NET Solutions\Core\7.x\LeadManager_PactoEnergiaExamTest\backend\src\LeadManager\src\libs\Core\obj\Debug\net7.0\LeadBulkInsertedDomainEventHandler.-qE55HYL.generated.cs
+F:\Codebase\_.NET Solutions\Core\7.x\LeadManager_PactoEnergiaExamTest\backend\src\LeadManager\src\libs\Core\obj\Debug\net7.0\LeadRegisteredDomainEvent.fAinV91J.generated.cs
+F:\Codebase\_.NET Solutions\Core\7.x\LeadManager_PactoEnergiaExamTest\backend\src\LeadManager\src\libs\Core\obj\Debug\net7.0\LeadRegisteredDomainEventHandler.5TN5l6-E.generated.cs
+F:\Codebase\_.NET Solutions\Core\7.x\LeadManager_PactoEnergiaExamTest\backend\src\LeadManager\src\libs\Core\obj\Debug\net7.0\LeadRemovedDomainEvent.96e7mDkH.generated.cs
+F:\Codebase\_.NET Solutions\Core\7.x\LeadManager_PactoEnergiaExamTest\backend\src\LeadManager\src\libs\Core\obj\Debug\net7.0\LeadRemovedDomainEventHandler.zHJCeSl3.generated.cs
+F:\Codebase\_.NET Solutions\Core\7.x\LeadManager_PactoEnergiaExamTest\backend\src\LeadManager\src\libs\Core\obj\Debug\net7.0\LeadUpdatedDomainEvent.VqtfOL5q.generated.cs
+F:\Codebase\_.NET Solutions\Core\7.x\LeadManager_PactoEnergiaExamTest\backend\src\LeadManager\src\libs\Core\obj\Debug\net7.0\LeadUpdatedDomainEventHandler.vu8-+uYp.generated.cs
 F:\Codebase\_.NET Solutions\Core\7.x\LeadManager_PactoEnergiaExamTest\backend\src\LeadManager\src\libs\Core\obj\Debug\net7.0\Entity.UUooNuiH.generated.cs
 F:\Codebase\_.NET Solutions\Core\7.x\LeadManager_PactoEnergiaExamTest\backend\src\LeadManager\src\libs\Core\obj\Debug\net7.0\IAuditableEntity.BtH8TvEV.generated.cs
 F:\Codebase\_.NET Solutions\Core\7.x\LeadManager_PactoEnergiaExamTest\backend\src\LeadManager\src\libs\Core\obj\Debug\net7.0\IEntity.ULbykJso.generated.cs

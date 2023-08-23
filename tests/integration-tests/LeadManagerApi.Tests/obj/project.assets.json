@@ -80,6 +80,22 @@
           }
         }
       },
+      "Castle.Core/5.0.0": {
+        "type": "package",
+        "dependencies": {
+          "System.Diagnostics.EventLog": "6.0.0"
+        },
+        "compile": {
+          "lib/net6.0/Castle.Core.dll": {
+            "related": ".xml"
+          }
+        },
+        "runtime": {
+          "lib/net6.0/Castle.Core.dll": {
+            "related": ".xml"
+          }
+        }
+      },
       "CodeGeneration.Roslyn.Attributes/0.7.63": {
         "type": "package",
         "dependencies": {
@@ -121,7 +137,7 @@
           }
         }
       },
-      "FluentAssertions/6.11.0": {
+      "FluentAssertions/6.12.0": {
         "type": "package",
         "dependencies": {
           "System.Configuration.ConfigurationManager": "4.4.0"
@@ -255,10 +271,10 @@
           }
         }
       },
-      "Microsoft.AspNetCore.Mvc.Testing/7.0.9": {
+      "Microsoft.AspNetCore.Mvc.Testing/7.0.10": {
         "type": "package",
         "dependencies": {
-          "Microsoft.AspNetCore.TestHost": "7.0.9",
+          "Microsoft.AspNetCore.TestHost": "7.0.10",
           "Microsoft.Extensions.DependencyModel": "7.0.0",
           "Microsoft.Extensions.Hosting": "7.0.1"
         },
@@ -298,7 +314,7 @@
           "Microsoft.AspNetCore.App"
         ]
       },
-      "Microsoft.AspNetCore.TestHost/7.0.9": {
+      "Microsoft.AspNetCore.TestHost/7.0.10": {
         "type": "package",
         "dependencies": {
           "System.IO.Pipelines": "7.0.0"
@@ -330,7 +346,7 @@
           }
         }
       },
-      "Microsoft.CodeCoverage/17.6.3": {
+      "Microsoft.CodeCoverage/17.7.1": {
         "type": "package",
         "compile": {
           "lib/netcoreapp3.1/Microsoft.VisualStudio.CodeCoverage.Shim.dll": {}
@@ -415,7 +431,7 @@
           }
         }
       },
-      "Microsoft.Data.Sqlite.Core/7.0.9": {
+      "Microsoft.Data.Sqlite.Core/7.0.10": {
         "type": "package",
         "dependencies": {
           "SQLitePCLRaw.core": "2.1.4"
@@ -431,11 +447,11 @@
           }
         }
       },
-      "Microsoft.EntityFrameworkCore/7.0.9": {
+      "Microsoft.EntityFrameworkCore/7.0.10": {
         "type": "package",
         "dependencies": {
-          "Microsoft.EntityFrameworkCore.Abstractions": "7.0.9",
-          "Microsoft.EntityFrameworkCore.Analyzers": "7.0.9",
+          "Microsoft.EntityFrameworkCore.Abstractions": "7.0.10",
+          "Microsoft.EntityFrameworkCore.Analyzers": "7.0.10",
           "Microsoft.Extensions.Caching.Memory": "7.0.0",
           "Microsoft.Extensions.DependencyInjection": "7.0.0",
           "Microsoft.Extensions.Logging": "7.0.0"
@@ -454,7 +470,7 @@
           "buildTransitive/net6.0/Microsoft.EntityFrameworkCore.props": {}
         }
       },
-      "Microsoft.EntityFrameworkCore.Abstractions/7.0.9": {
+      "Microsoft.EntityFrameworkCore.Abstractions/7.0.10": {
         "type": "package",
         "compile": {
           "lib/net6.0/Microsoft.EntityFrameworkCore.Abstractions.dll": {
@@ -467,7 +483,7 @@
           }
         }
       },
-      "Microsoft.EntityFrameworkCore.Analyzers/7.0.9": {
+      "Microsoft.EntityFrameworkCore.Analyzers/7.0.10": {
         "type": "package",
         "compile": {
           "lib/netstandard2.0/_._": {}
@@ -476,10 +492,10 @@
           "lib/netstandard2.0/_._": {}
         }
       },
-      "Microsoft.EntityFrameworkCore.Relational/7.0.9": {
+      "Microsoft.EntityFrameworkCore.Relational/7.0.10": {
         "type": "package",
         "dependencies": {
-          "Microsoft.EntityFrameworkCore": "7.0.9",
+          "Microsoft.EntityFrameworkCore": "7.0.10",
           "Microsoft.Extensions.Configuration.Abstractions": "7.0.0"
         },
         "compile": {
@@ -493,10 +509,10 @@
           }
         }
       },
-      "Microsoft.EntityFrameworkCore.Sqlite/7.0.9": {
+      "Microsoft.EntityFrameworkCore.Sqlite/7.0.10": {
         "type": "package",
         "dependencies": {
-          "Microsoft.EntityFrameworkCore.Sqlite.Core": "7.0.9",
+          "Microsoft.EntityFrameworkCore.Sqlite.Core": "7.0.10",
           "SQLitePCLRaw.bundle_e_sqlite3": "2.1.4"
         },
         "compile": {
@@ -506,11 +522,11 @@
           "lib/net6.0/_._": {}
         }
       },
-      "Microsoft.EntityFrameworkCore.Sqlite.Core/7.0.9": {
+      "Microsoft.EntityFrameworkCore.Sqlite.Core/7.0.10": {
         "type": "package",
         "dependencies": {
-          "Microsoft.Data.Sqlite.Core": "7.0.9",
-          "Microsoft.EntityFrameworkCore.Relational": "7.0.9",
+          "Microsoft.Data.Sqlite.Core": "7.0.10",
+          "Microsoft.EntityFrameworkCore.Relational": "7.0.10",
           "Microsoft.Extensions.DependencyModel": "7.0.0"
         },
         "compile": {
@@ -590,6 +606,25 @@
         },
         "build": {
           "buildTransitive/net6.0/_._": {}
+        }
+      },
+      "Microsoft.Extensions.Caching.StackExchangeRedis/7.0.10": {
+        "type": "package",
+        "dependencies": {
+          "Microsoft.Extensions.Caching.Abstractions": "7.0.0",
+          "Microsoft.Extensions.Logging.Abstractions": "7.0.1",
+          "Microsoft.Extensions.Options": "7.0.1",
+          "StackExchange.Redis": "2.2.4"
+        },
+        "compile": {
+          "lib/net7.0/Microsoft.Extensions.Caching.StackExchangeRedis.dll": {
+            "related": ".xml"
+          }
+        },
+        "runtime": {
+          "lib/net7.0/Microsoft.Extensions.Caching.StackExchangeRedis.dll": {
+            "related": ".xml"
+          }
         }
       },
       "Microsoft.Extensions.Configuration/7.0.0": {
@@ -993,7 +1028,7 @@
           "buildTransitive/net6.0/_._": {}
         }
       },
-      "Microsoft.Extensions.Logging.Abstractions/7.0.0": {
+      "Microsoft.Extensions.Logging.Abstractions/7.0.1": {
         "type": "package",
         "compile": {
           "lib/net7.0/Microsoft.Extensions.Logging.Abstractions.dll": {
@@ -1316,11 +1351,11 @@
           }
         }
       },
-      "Microsoft.NET.Test.Sdk/17.6.3": {
+      "Microsoft.NET.Test.Sdk/17.7.1": {
         "type": "package",
         "dependencies": {
-          "Microsoft.CodeCoverage": "17.6.3",
-          "Microsoft.TestPlatform.TestHost": "17.6.3"
+          "Microsoft.CodeCoverage": "17.7.1",
+          "Microsoft.TestPlatform.TestHost": "17.7.1"
         },
         "compile": {
           "lib/netcoreapp3.1/_._": {}
@@ -1380,7 +1415,7 @@
           }
         }
       },
-      "Microsoft.TestPlatform.ObjectModel/17.6.3": {
+      "Microsoft.TestPlatform.ObjectModel/17.7.1": {
         "type": "package",
         "dependencies": {
           "NuGet.Frameworks": "6.5.0",
@@ -1477,10 +1512,10 @@
           }
         }
       },
-      "Microsoft.TestPlatform.TestHost/17.6.3": {
+      "Microsoft.TestPlatform.TestHost/17.7.1": {
         "type": "package",
         "dependencies": {
-          "Microsoft.TestPlatform.ObjectModel": "17.6.3",
+          "Microsoft.TestPlatform.ObjectModel": "17.7.1",
           "Newtonsoft.Json": "13.0.1"
         },
         "compile": {
@@ -1750,6 +1785,22 @@
           }
         }
       },
+      "NSubstitute/5.0.0": {
+        "type": "package",
+        "dependencies": {
+          "Castle.Core": "5.0.0"
+        },
+        "compile": {
+          "lib/net6.0/NSubstitute.dll": {
+            "related": ".xml"
+          }
+        },
+        "runtime": {
+          "lib/net6.0/NSubstitute.dll": {
+            "related": ".xml"
+          }
+        }
+      },
       "NuGet.Frameworks/6.5.0": {
         "type": "package",
         "compile": {
@@ -1757,6 +1808,22 @@
         },
         "runtime": {
           "lib/netstandard2.0/NuGet.Frameworks.dll": {}
+        }
+      },
+      "Pipelines.Sockets.Unofficial/2.2.0": {
+        "type": "package",
+        "dependencies": {
+          "System.IO.Pipelines": "5.0.0"
+        },
+        "compile": {
+          "lib/net5.0/Pipelines.Sockets.Unofficial.dll": {
+            "related": ".xml"
+          }
+        },
+        "runtime": {
+          "lib/net5.0/Pipelines.Sockets.Unofficial.dll": {
+            "related": ".xml"
+          }
         }
       },
       "Polly/7.2.4": {
@@ -1784,6 +1851,55 @@
         },
         "runtime": {
           "lib/netstandard2.0/Polly.Extensions.Http.dll": {
+            "related": ".xml"
+          }
+        }
+      },
+      "protobuf-net/3.2.26": {
+        "type": "package",
+        "dependencies": {
+          "protobuf-net.Core": "3.2.26"
+        },
+        "compile": {
+          "lib/net6.0/protobuf-net.dll": {
+            "related": ".xml"
+          }
+        },
+        "runtime": {
+          "lib/net6.0/protobuf-net.dll": {
+            "related": ".xml"
+          }
+        }
+      },
+      "protobuf-net.Core/3.2.26": {
+        "type": "package",
+        "dependencies": {
+          "System.Collections.Immutable": "7.0.0"
+        },
+        "compile": {
+          "lib/net6.0/protobuf-net.Core.dll": {
+            "related": ".xml"
+          }
+        },
+        "runtime": {
+          "lib/net6.0/protobuf-net.Core.dll": {
+            "related": ".xml"
+          }
+        }
+      },
+      "RabbitMQ.Client/6.5.0": {
+        "type": "package",
+        "dependencies": {
+          "System.Memory": "4.5.5",
+          "System.Threading.Channels": "7.0.0"
+        },
+        "compile": {
+          "lib/netstandard2.0/RabbitMQ.Client.dll": {
+            "related": ".xml"
+          }
+        },
+        "runtime": {
+          "lib/netstandard2.0/RabbitMQ.Client.dll": {
             "related": ".xml"
           }
         }
@@ -2311,6 +2427,23 @@
           "lib/net6.0/SQLitePCLRaw.provider.e_sqlite3.dll": {}
         }
       },
+      "StackExchange.Redis/2.2.4": {
+        "type": "package",
+        "dependencies": {
+          "Pipelines.Sockets.Unofficial": "2.2.0",
+          "System.Diagnostics.PerformanceCounter": "5.0.0"
+        },
+        "compile": {
+          "lib/net5.0/StackExchange.Redis.dll": {
+            "related": ".xml"
+          }
+        },
+        "runtime": {
+          "lib/net5.0/StackExchange.Redis.dll": {
+            "related": ".xml"
+          }
+        }
+      },
       "StronglyTypedId/0.2.1": {
         "type": "package",
         "dependencies": {
@@ -2459,6 +2592,22 @@
           "lib/netstandard1.3/System.Collections.Concurrent.dll": {}
         }
       },
+      "System.Collections.Immutable/7.0.0": {
+        "type": "package",
+        "compile": {
+          "lib/net7.0/System.Collections.Immutable.dll": {
+            "related": ".xml"
+          }
+        },
+        "runtime": {
+          "lib/net7.0/System.Collections.Immutable.dll": {
+            "related": ".xml"
+          }
+        },
+        "build": {
+          "buildTransitive/net6.0/_._": {}
+        }
+      },
       "System.Configuration.ConfigurationManager/6.0.1": {
         "type": "package",
         "dependencies": {
@@ -2558,6 +2707,31 @@
             "rid": "win"
           },
           "runtimes/win/lib/net7.0/System.Diagnostics.EventLog.dll": {
+            "assetType": "runtime",
+            "rid": "win"
+          }
+        }
+      },
+      "System.Diagnostics.PerformanceCounter/5.0.0": {
+        "type": "package",
+        "dependencies": {
+          "Microsoft.NETCore.Platforms": "5.0.0",
+          "Microsoft.Win32.Registry": "5.0.0",
+          "System.Configuration.ConfigurationManager": "5.0.0",
+          "System.Security.Principal.Windows": "5.0.0"
+        },
+        "compile": {
+          "ref/netstandard2.0/System.Diagnostics.PerformanceCounter.dll": {
+            "related": ".xml"
+          }
+        },
+        "runtime": {
+          "lib/netstandard2.0/System.Diagnostics.PerformanceCounter.dll": {
+            "related": ".xml"
+          }
+        },
+        "runtimeTargets": {
+          "runtimes/win/lib/netcoreapp2.0/System.Diagnostics.PerformanceCounter.dll": {
             "assetType": "runtime",
             "rid": "win"
           }
@@ -3691,6 +3865,22 @@
           "lib/netstandard1.3/System.Threading.dll": {}
         }
       },
+      "System.Threading.Channels/7.0.0": {
+        "type": "package",
+        "compile": {
+          "lib/net7.0/System.Threading.Channels.dll": {
+            "related": ".xml"
+          }
+        },
+        "runtime": {
+          "lib/net7.0/System.Threading.Channels.dll": {
+            "related": ".xml"
+          }
+        },
+        "build": {
+          "buildTransitive/net6.0/_._": {}
+        }
+      },
       "System.Threading.Tasks/4.3.0": {
         "type": "package",
         "dependencies": {
@@ -3916,9 +4106,11 @@
         "framework": ".NETCoreApp,Version=v7.0",
         "dependencies": {
           "Core": "1.0.0",
+          "CrossCutting.Caching": "1.0.0",
           "CrossCutting.Csv": "1.0.0",
           "CrossCutting.FileStorage": "1.0.0",
           "CrossCutting.Logging": "1.0.0",
+          "CrossCutting.Messaging": "1.0.0",
           "FluentValidation": "11.5.2",
           "FluentValidation.DependencyInjectionExtensions": "11.5.2",
           "MediatR": "12.0.1",
@@ -3927,7 +4119,8 @@
           "Microsoft.Extensions.DependencyInjection.Abstractions": "7.0.0",
           "Microsoft.Extensions.Hosting.Abstractions": "7.0.0",
           "Shared": "1.0.0",
-          "ViaCep.ServiceClient": "1.0.0"
+          "ViaCep.ServiceClient": "1.0.0",
+          "protobuf-net": "3.2.26"
         },
         "compile": {
           "bin/placeholder/Application.dll": {}
@@ -3950,6 +4143,24 @@
         },
         "runtime": {
           "bin/placeholder/Core.dll": {}
+        }
+      },
+      "CrossCutting.Caching/1.0.0": {
+        "type": "project",
+        "framework": ".NETCoreApp,Version=v7.0",
+        "dependencies": {
+          "Microsoft.Extensions.Caching.StackExchangeRedis": "7.0.10",
+          "Microsoft.Extensions.Configuration.Abstractions": "7.0.0",
+          "Microsoft.Extensions.Configuration.Binder": "7.0.4",
+          "Microsoft.Extensions.DependencyInjection.Abstractions": "7.0.0",
+          "Polly": "7.2.4",
+          "protobuf-net": "3.2.26"
+        },
+        "compile": {
+          "bin/placeholder/CrossCutting.Caching.dll": {}
+        },
+        "runtime": {
+          "bin/placeholder/CrossCutting.Caching.dll": {}
         }
       },
       "CrossCutting.Csv/1.0.0": {
@@ -4001,12 +4212,33 @@
           "bin/placeholder/CrossCutting.Logging.dll": {}
         }
       },
+      "CrossCutting.Messaging/1.0.0": {
+        "type": "project",
+        "framework": ".NETCoreApp,Version=v7.0",
+        "dependencies": {
+          "Microsoft.Extensions.Configuration.Abstractions": "7.0.0",
+          "Microsoft.Extensions.Configuration.Binder": "7.0.4",
+          "Microsoft.Extensions.DependencyInjection": "7.0.0",
+          "Microsoft.Extensions.Hosting.Abstractions": "7.0.0",
+          "Microsoft.Extensions.Logging.Abstractions": "7.0.1",
+          "RabbitMQ.Client": "6.5.0",
+          "Shared": "1.0.0"
+        },
+        "compile": {
+          "bin/placeholder/CrossCutting.Messaging.dll": {}
+        },
+        "runtime": {
+          "bin/placeholder/CrossCutting.Messaging.dll": {}
+        }
+      },
       "Infrastructure/1.0.0": {
         "type": "project",
         "framework": ".NETCoreApp,Version=v7.0",
         "dependencies": {
           "Application": "1.0.0",
           "Core": "1.0.0",
+          "CrossCutting.Caching": "1.0.0",
+          "CrossCutting.Messaging": "1.0.0",
           "Microsoft.EntityFrameworkCore": "7.0.8",
           "Microsoft.EntityFrameworkCore.SqlServer": "7.0.8",
           "Microsoft.Extensions.Hosting.Abstractions": "7.0.0",
@@ -4025,6 +4257,7 @@
         "dependencies": {
           "Application": "1.0.0",
           "Core": "1.0.0",
+          "CrossCutting.Messaging": "1.0.0",
           "Infrastructure": "1.0.0",
           "MediatR": "12.0.1",
           "Microsoft.AspNetCore.OpenApi": "7.0.8",
@@ -4171,6 +4404,30 @@
         "lib/net6.0/Azure.Storage.Common.xml",
         "lib/netstandard2.0/Azure.Storage.Common.dll",
         "lib/netstandard2.0/Azure.Storage.Common.xml"
+      ]
+    },
+    "Castle.Core/5.0.0": {
+      "sha512": "edc8jjyXqzzy8jFdhs36FZdwmlDDTgqPb2Zy1Q5F/f2uAc88bu/VS/0Tpvgupmpl9zJOvOo5ZizVANb0ltN1NQ==",
+      "type": "package",
+      "path": "castle.core/5.0.0",
+      "files": [
+        ".nupkg.metadata",
+        ".signature.p7s",
+        "ASL - Apache Software Foundation License.txt",
+        "CHANGELOG.md",
+        "LICENSE",
+        "castle-logo.png",
+        "castle.core.5.0.0.nupkg.sha512",
+        "castle.core.nuspec",
+        "lib/net462/Castle.Core.dll",
+        "lib/net462/Castle.Core.xml",
+        "lib/net6.0/Castle.Core.dll",
+        "lib/net6.0/Castle.Core.xml",
+        "lib/netstandard2.0/Castle.Core.dll",
+        "lib/netstandard2.0/Castle.Core.xml",
+        "lib/netstandard2.1/Castle.Core.dll",
+        "lib/netstandard2.1/Castle.Core.xml",
+        "readme.txt"
       ]
     },
     "CodeGeneration.Roslyn.Attributes/0.7.63": {
@@ -4334,15 +4591,15 @@
         "lib/netstandard2.1/CsvHelper.xml"
       ]
     },
-    "FluentAssertions/6.11.0": {
-      "sha512": "aBaagwdNtVKkug1F3imGXUlmoBd8ZUZX8oQ5niThaJhF79SpESe1Gzq7OFuZkQdKD5Pa4Mone+jrbas873AT4g==",
+    "FluentAssertions/6.12.0": {
+      "sha512": "ZXhHT2YwP9lajrwSKbLlFqsmCCvFJMoRSK9t7sImfnCyd0OB3MhgxdoMcVqxbq1iyxD6mD2fiackWmBb7ayiXQ==",
       "type": "package",
-      "path": "fluentassertions/6.11.0",
+      "path": "fluentassertions/6.12.0",
       "files": [
         ".nupkg.metadata",
         ".signature.p7s",
         "FluentAssertions.png",
-        "fluentassertions.6.11.0.nupkg.sha512",
+        "fluentassertions.6.12.0.nupkg.sha512",
         "fluentassertions.nuspec",
         "lib/net47/FluentAssertions.dll",
         "lib/net47/FluentAssertions.pdb",
@@ -4474,10 +4731,10 @@
         "microsoft.aspnetcore.http.features.nuspec"
       ]
     },
-    "Microsoft.AspNetCore.Mvc.Testing/7.0.9": {
-      "sha512": "gWXW7QskbNY99ugj1KHe6jhUJjzimsFQPGvkNIjE7yFZjq9cOP1jZheDlN2U/ENfyloVOQkCNSBMk0UwYy2MYg==",
+    "Microsoft.AspNetCore.Mvc.Testing/7.0.10": {
+      "sha512": "oc4S9+dpqHMoQ2GrMcz05wi2lROCV2XRSiUP07R4oaVEfrWjF8O2jLorNrGpIw4QRDaL2t3uy8kKJ99VCpHaIg==",
       "type": "package",
-      "path": "microsoft.aspnetcore.mvc.testing/7.0.9",
+      "path": "microsoft.aspnetcore.mvc.testing/7.0.10",
       "files": [
         ".nupkg.metadata",
         ".signature.p7s",
@@ -4487,7 +4744,7 @@
         "buildTransitive/net7.0/Microsoft.AspNetCore.Mvc.Testing.targets",
         "lib/net7.0/Microsoft.AspNetCore.Mvc.Testing.dll",
         "lib/net7.0/Microsoft.AspNetCore.Mvc.Testing.xml",
-        "microsoft.aspnetcore.mvc.testing.7.0.9.nupkg.sha512",
+        "microsoft.aspnetcore.mvc.testing.7.0.10.nupkg.sha512",
         "microsoft.aspnetcore.mvc.testing.nuspec",
         "tasks/netstandard2.0/Microsoft.AspNetCore.Mvc.Testing.Tasks.dll"
       ]
@@ -4507,10 +4764,10 @@
         "microsoft.aspnetcore.openapi.nuspec"
       ]
     },
-    "Microsoft.AspNetCore.TestHost/7.0.9": {
-      "sha512": "QHbCXxCpVEKFyZ80JspVjIkjy6LsavJXGUc1qHN3bJk4SipVMTM8rq/lhYM8Gu1xJJX8pH/AqguFa391Nx9RTw==",
+    "Microsoft.AspNetCore.TestHost/7.0.10": {
+      "sha512": "MW0YDhusiVSDL5JDIn+oJo1Cb6gLvmaersLhtEiJYDaJJ5753QMmQkbRui/v4hGyDYSy86otxV8ApG39sgx9fw==",
       "type": "package",
-      "path": "microsoft.aspnetcore.testhost/7.0.9",
+      "path": "microsoft.aspnetcore.testhost/7.0.10",
       "files": [
         ".nupkg.metadata",
         ".signature.p7s",
@@ -4518,7 +4775,7 @@
         "THIRD-PARTY-NOTICES.TXT",
         "lib/net7.0/Microsoft.AspNetCore.TestHost.dll",
         "lib/net7.0/Microsoft.AspNetCore.TestHost.xml",
-        "microsoft.aspnetcore.testhost.7.0.9.nupkg.sha512",
+        "microsoft.aspnetcore.testhost.7.0.10.nupkg.sha512",
         "microsoft.aspnetcore.testhost.nuspec"
       ]
     },
@@ -4545,10 +4802,10 @@
         "useSharedDesignerContext.txt"
       ]
     },
-    "Microsoft.CodeCoverage/17.6.3": {
-      "sha512": "Gorg6F1dOxlI28yHYKhbQ3pOOfHeW6sUfsmwFQFaIV+xttUAZ+l8KarHIfsR+rBAnjY9VH71BXvPXBuObCkXsw==",
+    "Microsoft.CodeCoverage/17.7.1": {
+      "sha512": "NmGwM2ZJy4CAMdJYIp53opUjnXsMbzASX5oQzgxORicJsgz5Lp50fnRI8OmQ/kYNg6dHfr3IjuUoXbsotDX+KA==",
       "type": "package",
-      "path": "microsoft.codecoverage/17.6.3",
+      "path": "microsoft.codecoverage/17.7.1",
       "files": [
         ".nupkg.metadata",
         ".signature.p7s",
@@ -4607,7 +4864,7 @@
         "build/netstandard2.0/zh-Hant/Microsoft.VisualStudio.TraceDataCollector.resources.dll",
         "lib/net462/Microsoft.VisualStudio.CodeCoverage.Shim.dll",
         "lib/netcoreapp3.1/Microsoft.VisualStudio.CodeCoverage.Shim.dll",
-        "microsoft.codecoverage.17.6.3.nupkg.sha512",
+        "microsoft.codecoverage.17.7.1.nupkg.sha512",
         "microsoft.codecoverage.nuspec"
       ]
     },
@@ -4757,10 +5014,10 @@
         "runtimes/win-x86/native/Microsoft.Data.SqlClient.SNI.dll"
       ]
     },
-    "Microsoft.Data.Sqlite.Core/7.0.9": {
-      "sha512": "ow2PPoeW0yFc7NhexacQUw/LVjkO1mLK3VZAxhVIVjmQWlgYl/4mo9/U7uz+z75I+ZN6LUvq9M0ftU3IE75Ilg==",
+    "Microsoft.Data.Sqlite.Core/7.0.10": {
+      "sha512": "SA6LOen490YTforjaNfVDClYpwiG3LmHJM8objq6KwIIFP0fq9Eulhbu6zBl6AduMefQqUA3pllrFFVQpwPoqw==",
       "type": "package",
-      "path": "microsoft.data.sqlite.core/7.0.9",
+      "path": "microsoft.data.sqlite.core/7.0.10",
       "files": [
         ".nupkg.metadata",
         ".signature.p7s",
@@ -4769,14 +5026,14 @@
         "lib/net6.0/Microsoft.Data.Sqlite.xml",
         "lib/netstandard2.0/Microsoft.Data.Sqlite.dll",
         "lib/netstandard2.0/Microsoft.Data.Sqlite.xml",
-        "microsoft.data.sqlite.core.7.0.9.nupkg.sha512",
+        "microsoft.data.sqlite.core.7.0.10.nupkg.sha512",
         "microsoft.data.sqlite.core.nuspec"
       ]
     },
-    "Microsoft.EntityFrameworkCore/7.0.9": {
-      "sha512": "9YuCdQWuRAmYYHqwW1h5ukKMC1fmNvcVHdp3gb8zdHxwSQz7hkGpYOBEjm6dRXRmGRkpUyHL8rwUz4kd53Ev0A==",
+    "Microsoft.EntityFrameworkCore/7.0.10": {
+      "sha512": "24NbXJqJ/x8u88/agqeb1pLdAF9+9StDLA36+P/3g5xsJPOaB2GxXn7epR8dWpZTgHsNZ7cvBMxBgfFmF+xZlg==",
       "type": "package",
-      "path": "microsoft.entityframeworkcore/7.0.9",
+      "path": "microsoft.entityframeworkcore/7.0.10",
       "files": [
         ".nupkg.metadata",
         ".signature.p7s",
@@ -4784,76 +5041,76 @@
         "buildTransitive/net6.0/Microsoft.EntityFrameworkCore.props",
         "lib/net6.0/Microsoft.EntityFrameworkCore.dll",
         "lib/net6.0/Microsoft.EntityFrameworkCore.xml",
-        "microsoft.entityframeworkcore.7.0.9.nupkg.sha512",
+        "microsoft.entityframeworkcore.7.0.10.nupkg.sha512",
         "microsoft.entityframeworkcore.nuspec"
       ]
     },
-    "Microsoft.EntityFrameworkCore.Abstractions/7.0.9": {
-      "sha512": "cfY6Fn7cnP/5pXndL8QYaey/B2nGn1fwze5aSaMJymmbqwqYzFiszHuWbsdVBCDYJc8ok7eB1m/nCc3/rltulQ==",
+    "Microsoft.EntityFrameworkCore.Abstractions/7.0.10": {
+      "sha512": "Z/lDWmGLiT9uNQrp6UXTKZxofSmAKQCiKOz98FDscTbfAGgBXE3DTTqRsPMc8HFIVVSNANSiFRz3JyLg07HN9Q==",
       "type": "package",
-      "path": "microsoft.entityframeworkcore.abstractions/7.0.9",
+      "path": "microsoft.entityframeworkcore.abstractions/7.0.10",
       "files": [
         ".nupkg.metadata",
         ".signature.p7s",
         "Icon.png",
         "lib/net6.0/Microsoft.EntityFrameworkCore.Abstractions.dll",
         "lib/net6.0/Microsoft.EntityFrameworkCore.Abstractions.xml",
-        "microsoft.entityframeworkcore.abstractions.7.0.9.nupkg.sha512",
+        "microsoft.entityframeworkcore.abstractions.7.0.10.nupkg.sha512",
         "microsoft.entityframeworkcore.abstractions.nuspec"
       ]
     },
-    "Microsoft.EntityFrameworkCore.Analyzers/7.0.9": {
-      "sha512": "VvqFD3DdML6LhPCAR/lG2xNX66juylC8v57yUAAYnUSdEUOMRi3lNoT4OrNdG0rere3UOQPhvVl5FH2QdyoF8Q==",
+    "Microsoft.EntityFrameworkCore.Analyzers/7.0.10": {
+      "sha512": "+8NVNpyJTzW6nNh/7RGfldf+mbeboVcn+X1tD8kMBCEJswuy3RqM/qecEEfOfTcWLliZExPMaHwOwtHO6RMpdA==",
       "type": "package",
-      "path": "microsoft.entityframeworkcore.analyzers/7.0.9",
+      "path": "microsoft.entityframeworkcore.analyzers/7.0.10",
       "files": [
         ".nupkg.metadata",
         ".signature.p7s",
         "Icon.png",
         "analyzers/dotnet/cs/Microsoft.EntityFrameworkCore.Analyzers.dll",
         "lib/netstandard2.0/_._",
-        "microsoft.entityframeworkcore.analyzers.7.0.9.nupkg.sha512",
+        "microsoft.entityframeworkcore.analyzers.7.0.10.nupkg.sha512",
         "microsoft.entityframeworkcore.analyzers.nuspec"
       ]
     },
-    "Microsoft.EntityFrameworkCore.Relational/7.0.9": {
-      "sha512": "u7iN6cNd6SJUlpdk24JVIbkji/UbkEEQ7pXncTyT4eXXj+Hz2y4NSZFOAywPGcioIgX1YzbKWDiJhk7hjSFxBQ==",
+    "Microsoft.EntityFrameworkCore.Relational/7.0.10": {
+      "sha512": "PO2QB2Du+pW210UHmepYR12bk+ZOZJCiNkA7zEAxWs+vzvrRAMsUPlDlfgX2LXE7NBsnb0uvZp7a1/qqKf3fRQ==",
       "type": "package",
-      "path": "microsoft.entityframeworkcore.relational/7.0.9",
+      "path": "microsoft.entityframeworkcore.relational/7.0.10",
       "files": [
         ".nupkg.metadata",
         ".signature.p7s",
         "Icon.png",
         "lib/net6.0/Microsoft.EntityFrameworkCore.Relational.dll",
         "lib/net6.0/Microsoft.EntityFrameworkCore.Relational.xml",
-        "microsoft.entityframeworkcore.relational.7.0.9.nupkg.sha512",
+        "microsoft.entityframeworkcore.relational.7.0.10.nupkg.sha512",
         "microsoft.entityframeworkcore.relational.nuspec"
       ]
     },
-    "Microsoft.EntityFrameworkCore.Sqlite/7.0.9": {
-      "sha512": "otP72XqfG9UdO0+3O2p1UEx4MLXSAulXc8tIvuq+v1KPtBj/GuMZeJIz+eCu09Xv6fJ6k7aUb8J/x+H0rqOjjA==",
+    "Microsoft.EntityFrameworkCore.Sqlite/7.0.10": {
+      "sha512": "gGOZWOvpRDC2bQAUNwpYzjYRTFbSJKNK60KOnvrstvvKKeM/4dVo7i0dxIvZaHpUuIRnlDybBrSK253/BBsfhg==",
       "type": "package",
-      "path": "microsoft.entityframeworkcore.sqlite/7.0.9",
+      "path": "microsoft.entityframeworkcore.sqlite/7.0.10",
       "files": [
         ".nupkg.metadata",
         ".signature.p7s",
         "Icon.png",
         "lib/net6.0/_._",
-        "microsoft.entityframeworkcore.sqlite.7.0.9.nupkg.sha512",
+        "microsoft.entityframeworkcore.sqlite.7.0.10.nupkg.sha512",
         "microsoft.entityframeworkcore.sqlite.nuspec"
       ]
     },
-    "Microsoft.EntityFrameworkCore.Sqlite.Core/7.0.9": {
-      "sha512": "uLy1swPL4AD6BQsu3SEIzSWKc6gIlmoSAYZX39VnbrqvzkGmMsgEgdCsJIZvdjAW/vzhPazACKMYna1iif04sg==",
+    "Microsoft.EntityFrameworkCore.Sqlite.Core/7.0.10": {
+      "sha512": "9ujvh/RXXyXmSsh0yY3zI7S+E+ILzndLVsDkigXGkDPVrDqp7/ynqElj0Xb/e4qWHbg/ogoRe5rvUs0jzfl+xg==",
       "type": "package",
-      "path": "microsoft.entityframeworkcore.sqlite.core/7.0.9",
+      "path": "microsoft.entityframeworkcore.sqlite.core/7.0.10",
       "files": [
         ".nupkg.metadata",
         ".signature.p7s",
         "Icon.png",
         "lib/net6.0/Microsoft.EntityFrameworkCore.Sqlite.dll",
         "lib/net6.0/Microsoft.EntityFrameworkCore.Sqlite.xml",
-        "microsoft.entityframeworkcore.sqlite.core.7.0.9.nupkg.sha512",
+        "microsoft.entityframeworkcore.sqlite.core.7.0.10.nupkg.sha512",
         "microsoft.entityframeworkcore.sqlite.core.nuspec"
       ]
     },
@@ -5154,6 +5411,25 @@
         "microsoft.extensions.caching.memory.7.0.0.nupkg.sha512",
         "microsoft.extensions.caching.memory.nuspec",
         "useSharedDesignerContext.txt"
+      ]
+    },
+    "Microsoft.Extensions.Caching.StackExchangeRedis/7.0.10": {
+      "sha512": "1Mnr1Hd1U523kafJIm7KJp6fjyLphXwtU8xBKGIy2BWlw9edfgcx2BciZLHYJcFINbKukR9ATqAr9xt9lqqsnQ==",
+      "type": "package",
+      "path": "microsoft.extensions.caching.stackexchangeredis/7.0.10",
+      "files": [
+        ".nupkg.metadata",
+        ".signature.p7s",
+        "Icon.png",
+        "THIRD-PARTY-NOTICES.TXT",
+        "lib/net462/Microsoft.Extensions.Caching.StackExchangeRedis.dll",
+        "lib/net462/Microsoft.Extensions.Caching.StackExchangeRedis.xml",
+        "lib/net7.0/Microsoft.Extensions.Caching.StackExchangeRedis.dll",
+        "lib/net7.0/Microsoft.Extensions.Caching.StackExchangeRedis.xml",
+        "lib/netstandard2.0/Microsoft.Extensions.Caching.StackExchangeRedis.dll",
+        "lib/netstandard2.0/Microsoft.Extensions.Caching.StackExchangeRedis.xml",
+        "microsoft.extensions.caching.stackexchangeredis.7.0.10.nupkg.sha512",
+        "microsoft.extensions.caching.stackexchangeredis.nuspec"
       ]
     },
     "Microsoft.Extensions.Configuration/7.0.0": {
@@ -5674,10 +5950,10 @@
         "useSharedDesignerContext.txt"
       ]
     },
-    "Microsoft.Extensions.Logging.Abstractions/7.0.0": {
-      "sha512": "kmn78+LPVMOWeITUjIlfxUPDsI0R6G0RkeAMBmQxAJ7vBJn4q2dTva7pWi65ceN5vPGjJ9q/Uae2WKgvfktJAw==",
+    "Microsoft.Extensions.Logging.Abstractions/7.0.1": {
+      "sha512": "pkeBFx0vqMW/A3aUVHh7MPu3WkBhaVlezhSZeb1c9XD0vUReYH1TLFSy5MxJgZfmz5LZzYoErMorlYZiwpOoNA==",
       "type": "package",
-      "path": "microsoft.extensions.logging.abstractions/7.0.0",
+      "path": "microsoft.extensions.logging.abstractions/7.0.1",
       "files": [
         ".nupkg.metadata",
         ".signature.p7s",
@@ -5739,7 +6015,7 @@
         "lib/net7.0/Microsoft.Extensions.Logging.Abstractions.xml",
         "lib/netstandard2.0/Microsoft.Extensions.Logging.Abstractions.dll",
         "lib/netstandard2.0/Microsoft.Extensions.Logging.Abstractions.xml",
-        "microsoft.extensions.logging.abstractions.7.0.0.nupkg.sha512",
+        "microsoft.extensions.logging.abstractions.7.0.1.nupkg.sha512",
         "microsoft.extensions.logging.abstractions.nuspec",
         "useSharedDesignerContext.txt"
       ]
@@ -6137,10 +6413,10 @@
         "microsoft.identitymodel.tokens.nuspec"
       ]
     },
-    "Microsoft.NET.Test.Sdk/17.6.3": {
-      "sha512": "MglaNTl646dC2xpHKotSk1xscmHO5uV3x3NK057IUA9BM3Wgl16WMEb9ptGczk518JfLd1+Th5OAYwnoWgHQQQ==",
+    "Microsoft.NET.Test.Sdk/17.7.1": {
+      "sha512": "o1qyqDOR8eMuQrC1e5EMMcE+Wm3rwES5aHNWaJpi2A5qwVOru23zsdXkndT6hgl79QsJsqKp+/RNcayIzpHjvA==",
       "type": "package",
-      "path": "microsoft.net.test.sdk/17.6.3",
+      "path": "microsoft.net.test.sdk/17.7.1",
       "files": [
         ".nupkg.metadata",
         ".signature.p7s",
@@ -6156,7 +6432,7 @@
         "buildMultiTargeting/Microsoft.NET.Test.Sdk.props",
         "lib/net462/_._",
         "lib/netcoreapp3.1/_._",
-        "microsoft.net.test.sdk.17.6.3.nupkg.sha512",
+        "microsoft.net.test.sdk.17.7.1.nupkg.sha512",
         "microsoft.net.test.sdk.nuspec"
       ]
     },
@@ -6225,10 +6501,10 @@
         "microsoft.sqlserver.server.nuspec"
       ]
     },
-    "Microsoft.TestPlatform.ObjectModel/17.6.3": {
-      "sha512": "gSqtX3RvcFisaLPs6sKXdZkSwUix83NQ9nOU/w6pYrHTl+d8GsVHSL9rvDNxMgoV5BNOdyU7zK7JOfbSaVMDWQ==",
+    "Microsoft.TestPlatform.ObjectModel/17.7.1": {
+      "sha512": "nDmV03yHIdAiG5J3ZEjMyJM2XDjmWORuKgbrGzqlAipBEjUuy5Z5S7WwSqUv9OiaUrtCn9dNYmjfMELUi08leQ==",
       "type": "package",
-      "path": "microsoft.testplatform.objectmodel/17.6.3",
+      "path": "microsoft.testplatform.objectmodel/17.7.1",
       "files": [
         ".nupkg.metadata",
         ".signature.p7s",
@@ -6321,14 +6597,14 @@
         "lib/netstandard2.0/zh-Hans/Microsoft.VisualStudio.TestPlatform.ObjectModel.resources.dll",
         "lib/netstandard2.0/zh-Hant/Microsoft.TestPlatform.CoreUtilities.resources.dll",
         "lib/netstandard2.0/zh-Hant/Microsoft.VisualStudio.TestPlatform.ObjectModel.resources.dll",
-        "microsoft.testplatform.objectmodel.17.6.3.nupkg.sha512",
+        "microsoft.testplatform.objectmodel.17.7.1.nupkg.sha512",
         "microsoft.testplatform.objectmodel.nuspec"
       ]
     },
-    "Microsoft.TestPlatform.TestHost/17.6.3": {
-      "sha512": "lrgRXKFfIZSPlhuoQGLtciO/osL+4oADYEYb0d5or7n7YyJATIWespq3lRgz2IQpRh6N7cm0DnCOWeZiCRGzxA==",
+    "Microsoft.TestPlatform.TestHost/17.7.1": {
+      "sha512": "WCU1NyBarz0tih+I9K5OWN1dVo3z562Iek/VAqWNWRFWw1GeUGqB61iixrBvZO77sjTtBc1cXO8H95uImfmEdw==",
       "type": "package",
-      "path": "microsoft.testplatform.testhost/17.6.3",
+      "path": "microsoft.testplatform.testhost/17.7.1",
       "files": [
         ".nupkg.metadata",
         ".signature.p7s",
@@ -6391,7 +6667,7 @@
         "lib/netcoreapp3.1/zh-Hant/Microsoft.TestPlatform.CommunicationUtilities.resources.dll",
         "lib/netcoreapp3.1/zh-Hant/Microsoft.TestPlatform.CrossPlatEngine.resources.dll",
         "lib/netcoreapp3.1/zh-Hant/Microsoft.VisualStudio.TestPlatform.Common.resources.dll",
-        "microsoft.testplatform.testhost.17.6.3.nupkg.sha512",
+        "microsoft.testplatform.testhost.17.7.1.nupkg.sha512",
         "microsoft.testplatform.testhost.nuspec"
       ]
     },
@@ -6546,6 +6822,24 @@
         "packageIcon.png"
       ]
     },
+    "NSubstitute/5.0.0": {
+      "sha512": "CWGy4oXvcJcZzL7m5Rr/eMSejFXMDq1RRMlsbL6eltS3AuN/d8GH3ZzUcuStQcCSlcx+hpsgTxdnb3lhozWG6w==",
+      "type": "package",
+      "path": "nsubstitute/5.0.0",
+      "files": [
+        ".nupkg.metadata",
+        ".signature.p7s",
+        "icon.png",
+        "lib/net462/NSubstitute.dll",
+        "lib/net462/NSubstitute.xml",
+        "lib/net6.0/NSubstitute.dll",
+        "lib/net6.0/NSubstitute.xml",
+        "lib/netstandard2.0/NSubstitute.dll",
+        "lib/netstandard2.0/NSubstitute.xml",
+        "nsubstitute.5.0.0.nupkg.sha512",
+        "nsubstitute.nuspec"
+      ]
+    },
     "NuGet.Frameworks/6.5.0": {
       "sha512": "QWINE2x3MbTODsWT1Gh71GaGb5icBz4chS8VYvTgsBnsi8esgN6wtHhydd7fvToWECYGq7T4cgBBDiKD/363fg==",
       "type": "package",
@@ -6559,6 +6853,29 @@
         "lib/netstandard2.0/NuGet.Frameworks.dll",
         "nuget.frameworks.6.5.0.nupkg.sha512",
         "nuget.frameworks.nuspec"
+      ]
+    },
+    "Pipelines.Sockets.Unofficial/2.2.0": {
+      "sha512": "7hzHplEIVOGBl5zOQZGX/DiJDHjq+RVRVrYgDiqXb6RriqWAdacXxp+XO9WSrATCEXyNOUOQg9aqQArsjase/A==",
+      "type": "package",
+      "path": "pipelines.sockets.unofficial/2.2.0",
+      "files": [
+        ".nupkg.metadata",
+        ".signature.p7s",
+        "lib/net461/Pipelines.Sockets.Unofficial.dll",
+        "lib/net461/Pipelines.Sockets.Unofficial.xml",
+        "lib/net472/Pipelines.Sockets.Unofficial.dll",
+        "lib/net472/Pipelines.Sockets.Unofficial.xml",
+        "lib/net5.0/Pipelines.Sockets.Unofficial.dll",
+        "lib/net5.0/Pipelines.Sockets.Unofficial.xml",
+        "lib/netcoreapp3.1/Pipelines.Sockets.Unofficial.dll",
+        "lib/netcoreapp3.1/Pipelines.Sockets.Unofficial.xml",
+        "lib/netstandard2.0/Pipelines.Sockets.Unofficial.dll",
+        "lib/netstandard2.0/Pipelines.Sockets.Unofficial.xml",
+        "lib/netstandard2.1/Pipelines.Sockets.Unofficial.dll",
+        "lib/netstandard2.1/Pipelines.Sockets.Unofficial.xml",
+        "pipelines.sockets.unofficial.2.2.0.nupkg.sha512",
+        "pipelines.sockets.unofficial.nuspec"
       ]
     },
     "Polly/7.2.4": {
@@ -6599,6 +6916,62 @@
         "lib/netstandard2.0/Polly.Extensions.Http.xml",
         "polly.extensions.http.3.0.0.nupkg.sha512",
         "polly.extensions.http.nuspec"
+      ]
+    },
+    "protobuf-net/3.2.26": {
+      "sha512": "zBzBiKs4yP+tzQOsRA5WbI/zayS6eFv8g0KIKNPI7/RUY1nk9Oe+STmtbUYkNUkO3T3SidEoZv+tF1nmgTSutQ==",
+      "type": "package",
+      "path": "protobuf-net/3.2.26",
+      "files": [
+        ".nupkg.metadata",
+        ".signature.p7s",
+        "lib/net462/protobuf-net.dll",
+        "lib/net462/protobuf-net.xml",
+        "lib/net6.0/protobuf-net.dll",
+        "lib/net6.0/protobuf-net.xml",
+        "lib/netstandard2.0/protobuf-net.dll",
+        "lib/netstandard2.0/protobuf-net.xml",
+        "lib/netstandard2.1/protobuf-net.dll",
+        "lib/netstandard2.1/protobuf-net.xml",
+        "protobuf-net.3.2.26.nupkg.sha512",
+        "protobuf-net.nuspec",
+        "protobuf-net.png"
+      ]
+    },
+    "protobuf-net.Core/3.2.26": {
+      "sha512": "s8oJW9dBVxix4p8uqMbeG++DIGjgzOFAKoP2i5wayeeFOKBqG+cCBO2S/CAC4MAFlb5m1Os2m/miLcqRCgqJ7Q==",
+      "type": "package",
+      "path": "protobuf-net.core/3.2.26",
+      "files": [
+        ".nupkg.metadata",
+        ".signature.p7s",
+        "lib/net462/protobuf-net.Core.dll",
+        "lib/net462/protobuf-net.Core.xml",
+        "lib/net6.0/protobuf-net.Core.dll",
+        "lib/net6.0/protobuf-net.Core.xml",
+        "lib/netstandard2.0/protobuf-net.Core.dll",
+        "lib/netstandard2.0/protobuf-net.Core.xml",
+        "lib/netstandard2.1/protobuf-net.Core.dll",
+        "lib/netstandard2.1/protobuf-net.Core.xml",
+        "protobuf-net.core.3.2.26.nupkg.sha512",
+        "protobuf-net.core.nuspec",
+        "protobuf-net.png"
+      ]
+    },
+    "RabbitMQ.Client/6.5.0": {
+      "sha512": "9hY5HiWPtCla1/l0WmXmLnqoX7iKE3neBQUWnetIJrRpOvTbO//XQfQDh++xgHCshL40Kv/6bR0HDkmJz46twg==",
+      "type": "package",
+      "path": "rabbitmq.client/6.5.0",
+      "files": [
+        ".nupkg.metadata",
+        ".signature.p7s",
+        "icon.png",
+        "lib/net461/RabbitMQ.Client.dll",
+        "lib/net461/RabbitMQ.Client.xml",
+        "lib/netstandard2.0/RabbitMQ.Client.dll",
+        "lib/netstandard2.0/RabbitMQ.Client.xml",
+        "rabbitmq.client.6.5.0.nupkg.sha512",
+        "rabbitmq.client.nuspec"
       ]
     },
     "RichardSzalay.MockHttp/6.0.0": {
@@ -7178,6 +7551,27 @@
         "sqlitepclraw.provider.e_sqlite3.nuspec"
       ]
     },
+    "StackExchange.Redis/2.2.4": {
+      "sha512": "wM0OuRyRaZTFndFRjIOvas4jjkeclRJsmNm0eAx5tOju3SQisrLubNaSFT/dBypi4Vh1n7nYc1gWpw9L7ernOg==",
+      "type": "package",
+      "path": "stackexchange.redis/2.2.4",
+      "files": [
+        ".nupkg.metadata",
+        ".signature.p7s",
+        "lib/net461/StackExchange.Redis.dll",
+        "lib/net461/StackExchange.Redis.xml",
+        "lib/net472/StackExchange.Redis.dll",
+        "lib/net472/StackExchange.Redis.xml",
+        "lib/net5.0/StackExchange.Redis.dll",
+        "lib/net5.0/StackExchange.Redis.xml",
+        "lib/netcoreapp3.1/StackExchange.Redis.dll",
+        "lib/netcoreapp3.1/StackExchange.Redis.xml",
+        "lib/netstandard2.0/StackExchange.Redis.dll",
+        "lib/netstandard2.0/StackExchange.Redis.xml",
+        "stackexchange.redis.2.2.4.nupkg.sha512",
+        "stackexchange.redis.nuspec"
+      ]
+    },
     "StronglyTypedId/0.2.1": {
       "sha512": "u4iIugBvaBiV1NXAS+jBkxDp+VyNFzgOzeRBgQx9QAtKmwFmOh6bOFt9Ac25XCcfhTvp8OT4eLCmCPAUPObIxg==",
       "type": "package",
@@ -7532,6 +7926,34 @@
         "system.collections.concurrent.nuspec"
       ]
     },
+    "System.Collections.Immutable/7.0.0": {
+      "sha512": "dQPcs0U1IKnBdRDBkrCTi1FoajSTBzLcVTpjO4MBCMC7f4pDOIPzgBoX8JjG7X6uZRJ8EBxsi8+DR1JuwjnzOQ==",
+      "type": "package",
+      "path": "system.collections.immutable/7.0.0",
+      "files": [
+        ".nupkg.metadata",
+        ".signature.p7s",
+        "Icon.png",
+        "LICENSE.TXT",
+        "README.md",
+        "THIRD-PARTY-NOTICES.TXT",
+        "buildTransitive/net461/System.Collections.Immutable.targets",
+        "buildTransitive/net462/_._",
+        "buildTransitive/net6.0/_._",
+        "buildTransitive/netcoreapp2.0/System.Collections.Immutable.targets",
+        "lib/net462/System.Collections.Immutable.dll",
+        "lib/net462/System.Collections.Immutable.xml",
+        "lib/net6.0/System.Collections.Immutable.dll",
+        "lib/net6.0/System.Collections.Immutable.xml",
+        "lib/net7.0/System.Collections.Immutable.dll",
+        "lib/net7.0/System.Collections.Immutable.xml",
+        "lib/netstandard2.0/System.Collections.Immutable.dll",
+        "lib/netstandard2.0/System.Collections.Immutable.xml",
+        "system.collections.immutable.7.0.0.nupkg.sha512",
+        "system.collections.immutable.nuspec",
+        "useSharedDesignerContext.txt"
+      ]
+    },
     "System.Configuration.ConfigurationManager/6.0.1": {
       "sha512": "jXw9MlUu/kRfEU0WyTptAVueupqIeE3/rl0EZDMlf8pcvJnitQ8HeVEp69rZdaStXwTV72boi/Bhw8lOeO+U2w==",
       "type": "package",
@@ -7781,6 +8203,44 @@
         "system.diagnostics.eventlog.7.0.0.nupkg.sha512",
         "system.diagnostics.eventlog.nuspec",
         "useSharedDesignerContext.txt"
+      ]
+    },
+    "System.Diagnostics.PerformanceCounter/5.0.0": {
+      "sha512": "kcQWWtGVC3MWMNXdMDWfrmIlFZZ2OdoeT6pSNVRtk9+Sa7jwdPiMlNwb0ZQcS7NRlT92pCfmjRtkSWUW3RAKwg==",
+      "type": "package",
+      "path": "system.diagnostics.performancecounter/5.0.0",
+      "files": [
+        ".nupkg.metadata",
+        ".signature.p7s",
+        "Icon.png",
+        "LICENSE.TXT",
+        "THIRD-PARTY-NOTICES.TXT",
+        "lib/MonoAndroid10/_._",
+        "lib/MonoTouch10/_._",
+        "lib/net461/System.Diagnostics.PerformanceCounter.dll",
+        "lib/net461/System.Diagnostics.PerformanceCounter.xml",
+        "lib/netstandard2.0/System.Diagnostics.PerformanceCounter.dll",
+        "lib/netstandard2.0/System.Diagnostics.PerformanceCounter.xml",
+        "lib/xamarinios10/_._",
+        "lib/xamarinmac20/_._",
+        "lib/xamarintvos10/_._",
+        "lib/xamarinwatchos10/_._",
+        "ref/MonoAndroid10/_._",
+        "ref/MonoTouch10/_._",
+        "ref/net461/System.Diagnostics.PerformanceCounter.dll",
+        "ref/net461/System.Diagnostics.PerformanceCounter.xml",
+        "ref/netstandard2.0/System.Diagnostics.PerformanceCounter.dll",
+        "ref/netstandard2.0/System.Diagnostics.PerformanceCounter.xml",
+        "ref/xamarinios10/_._",
+        "ref/xamarinmac20/_._",
+        "ref/xamarintvos10/_._",
+        "ref/xamarinwatchos10/_._",
+        "runtimes/win/lib/netcoreapp2.0/System.Diagnostics.PerformanceCounter.dll",
+        "runtimes/win/lib/netcoreapp2.0/System.Diagnostics.PerformanceCounter.xml",
+        "system.diagnostics.performancecounter.5.0.0.nupkg.sha512",
+        "system.diagnostics.performancecounter.nuspec",
+        "useSharedDesignerContext.txt",
+        "version.txt"
       ]
     },
     "System.Diagnostics.Tools/4.3.0": {
@@ -10842,6 +11302,35 @@
         "system.threading.nuspec"
       ]
     },
+    "System.Threading.Channels/7.0.0": {
+      "sha512": "qmeeYNROMsONF6ndEZcIQ+VxR4Q/TX/7uIVLJqtwIWL7dDWeh0l1UIqgo4wYyjG//5lUNhwkLDSFl+pAWO6oiA==",
+      "type": "package",
+      "path": "system.threading.channels/7.0.0",
+      "files": [
+        ".nupkg.metadata",
+        ".signature.p7s",
+        "Icon.png",
+        "LICENSE.TXT",
+        "THIRD-PARTY-NOTICES.TXT",
+        "buildTransitive/net461/System.Threading.Channels.targets",
+        "buildTransitive/net462/_._",
+        "buildTransitive/net6.0/_._",
+        "buildTransitive/netcoreapp2.0/System.Threading.Channels.targets",
+        "lib/net462/System.Threading.Channels.dll",
+        "lib/net462/System.Threading.Channels.xml",
+        "lib/net6.0/System.Threading.Channels.dll",
+        "lib/net6.0/System.Threading.Channels.xml",
+        "lib/net7.0/System.Threading.Channels.dll",
+        "lib/net7.0/System.Threading.Channels.xml",
+        "lib/netstandard2.0/System.Threading.Channels.dll",
+        "lib/netstandard2.0/System.Threading.Channels.xml",
+        "lib/netstandard2.1/System.Threading.Channels.dll",
+        "lib/netstandard2.1/System.Threading.Channels.xml",
+        "system.threading.channels.7.0.0.nupkg.sha512",
+        "system.threading.channels.nuspec",
+        "useSharedDesignerContext.txt"
+      ]
+    },
     "System.Threading.Tasks/4.3.0": {
       "sha512": "LbSxKEdOUhVe8BezB/9uOGGppt+nZf6e1VFyw6v3DN6lqitm0OSn2uXMOdtP0M3W4iMcqcivm2J6UgqiwwnXiA==",
       "type": "package",
@@ -11364,6 +11853,11 @@
       "path": "../../../src/libs/Core/Core.csproj",
       "msbuildProject": "../../../src/libs/Core/Core.csproj"
     },
+    "CrossCutting.Caching/1.0.0": {
+      "type": "project",
+      "path": "../../../src/libs/Cross-cutting/Cross-cutting.Caching/CrossCutting.Caching.csproj",
+      "msbuildProject": "../../../src/libs/Cross-cutting/Cross-cutting.Caching/CrossCutting.Caching.csproj"
+    },
     "CrossCutting.Csv/1.0.0": {
       "type": "project",
       "path": "../../../src/libs/Cross-cutting/Cross-cutting.Csv/CrossCutting.Csv.csproj",
@@ -11376,8 +11870,13 @@
     },
     "CrossCutting.Logging/1.0.0": {
       "type": "project",
-      "path": "../../../src/libs/Cross-cutting/CrossCutting.Logging/CrossCutting.Logging.csproj",
-      "msbuildProject": "../../../src/libs/Cross-cutting/CrossCutting.Logging/CrossCutting.Logging.csproj"
+      "path": "../../../src/libs/Cross-cutting/Cross-cutting.Logging/CrossCutting.Logging.csproj",
+      "msbuildProject": "../../../src/libs/Cross-cutting/Cross-cutting.Logging/CrossCutting.Logging.csproj"
+    },
+    "CrossCutting.Messaging/1.0.0": {
+      "type": "project",
+      "path": "../../../src/libs/Cross-cutting/Cross-cutting.Messaging/CrossCutting.Messaging.csproj",
+      "msbuildProject": "../../../src/libs/Cross-cutting/Cross-cutting.Messaging/CrossCutting.Messaging.csproj"
     },
     "Infrastructure/1.0.0": {
       "type": "project",
@@ -11407,12 +11906,15 @@
   },
   "projectFileDependencyGroups": {
     "net7.0": [
-      "FluentAssertions >= 6.11.0",
+      "CrossCutting.Caching >= 1.0.0",
+      "CrossCutting.Messaging >= 1.0.0",
+      "FluentAssertions >= 6.12.0",
       "LeadManagerApi >= 1.0.0",
-      "Microsoft.AspNetCore.Mvc.Testing >= 7.0.9",
-      "Microsoft.Data.Sqlite.Core >= 7.0.9",
-      "Microsoft.EntityFrameworkCore.Sqlite >= 7.0.9",
-      "Microsoft.NET.Test.Sdk >= 17.6.3",
+      "Microsoft.AspNetCore.Mvc.Testing >= 7.0.10",
+      "Microsoft.Data.Sqlite.Core >= 7.0.10",
+      "Microsoft.EntityFrameworkCore.Sqlite >= 7.0.10",
+      "Microsoft.NET.Test.Sdk >= 17.7.1",
+      "NSubstitute >= 5.0.0",
       "RichardSzalay.MockHttp >= 6.0.0",
       "Tests.Common >= 1.0.0",
       "coverlet.collector >= 6.0.0",
@@ -11457,6 +11959,12 @@
             "F:\\Codebase\\_.NET Solutions\\Core\\7.x\\LeadManager_PactoEnergiaExamTest\\backend\\src\\LeadManager\\src\\hosts\\LeadManagerApi\\LeadManagerApi.csproj": {
               "projectPath": "F:\\Codebase\\_.NET Solutions\\Core\\7.x\\LeadManager_PactoEnergiaExamTest\\backend\\src\\LeadManager\\src\\hosts\\LeadManagerApi\\LeadManagerApi.csproj"
             },
+            "F:\\Codebase\\_.NET Solutions\\Core\\7.x\\LeadManager_PactoEnergiaExamTest\\backend\\src\\LeadManager\\src\\libs\\Cross-cutting\\Cross-cutting.Caching\\CrossCutting.Caching.csproj": {
+              "projectPath": "F:\\Codebase\\_.NET Solutions\\Core\\7.x\\LeadManager_PactoEnergiaExamTest\\backend\\src\\LeadManager\\src\\libs\\Cross-cutting\\Cross-cutting.Caching\\CrossCutting.Caching.csproj"
+            },
+            "F:\\Codebase\\_.NET Solutions\\Core\\7.x\\LeadManager_PactoEnergiaExamTest\\backend\\src\\LeadManager\\src\\libs\\Cross-cutting\\Cross-cutting.Messaging\\CrossCutting.Messaging.csproj": {
+              "projectPath": "F:\\Codebase\\_.NET Solutions\\Core\\7.x\\LeadManager_PactoEnergiaExamTest\\backend\\src\\LeadManager\\src\\libs\\Cross-cutting\\Cross-cutting.Messaging\\CrossCutting.Messaging.csproj"
+            },
             "F:\\Codebase\\_.NET Solutions\\Core\\7.x\\LeadManager_PactoEnergiaExamTest\\backend\\src\\LeadManager\\tests\\common\\Tests.Common\\Tests.Common.csproj": {
               "projectPath": "F:\\Codebase\\_.NET Solutions\\Core\\7.x\\LeadManager_PactoEnergiaExamTest\\backend\\src\\LeadManager\\tests\\common\\Tests.Common\\Tests.Common.csproj"
             }
@@ -11475,23 +11983,27 @@
         "dependencies": {
           "FluentAssertions": {
             "target": "Package",
-            "version": "[6.11.0, )"
+            "version": "[6.12.0, )"
           },
           "Microsoft.AspNetCore.Mvc.Testing": {
             "target": "Package",
-            "version": "[7.0.9, )"
+            "version": "[7.0.10, )"
           },
           "Microsoft.Data.Sqlite.Core": {
             "target": "Package",
-            "version": "[7.0.9, )"
+            "version": "[7.0.10, )"
           },
           "Microsoft.EntityFrameworkCore.Sqlite": {
             "target": "Package",
-            "version": "[7.0.9, )"
+            "version": "[7.0.10, )"
           },
           "Microsoft.NET.Test.Sdk": {
             "target": "Package",
-            "version": "[17.6.3, )"
+            "version": "[17.7.1, )"
+          },
+          "NSubstitute": {
+            "target": "Package",
+            "version": "[5.0.0, )"
           },
           "RichardSzalay.MockHttp": {
             "target": "Package",
@@ -11530,7 +12042,7 @@
             "privateAssets": "all"
           }
         },
-        "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\7.0.304\\RuntimeIdentifierGraph.json"
+        "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\7.0.400\\RuntimeIdentifierGraph.json"
       }
     }
   }

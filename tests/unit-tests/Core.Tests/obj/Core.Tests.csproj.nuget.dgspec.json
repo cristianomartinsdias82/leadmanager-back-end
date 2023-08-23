@@ -37,14 +37,20 @@
               "F:\\Codebase\\_.NET Solutions\\Core\\7.x\\LeadManager_PactoEnergiaExamTest\\backend\\src\\LeadManager\\src\\libs\\Core\\Core.csproj": {
                 "projectPath": "F:\\Codebase\\_.NET Solutions\\Core\\7.x\\LeadManager_PactoEnergiaExamTest\\backend\\src\\LeadManager\\src\\libs\\Core\\Core.csproj"
               },
+              "F:\\Codebase\\_.NET Solutions\\Core\\7.x\\LeadManager_PactoEnergiaExamTest\\backend\\src\\LeadManager\\src\\libs\\Cross-cutting\\Cross-cutting.Caching\\CrossCutting.Caching.csproj": {
+                "projectPath": "F:\\Codebase\\_.NET Solutions\\Core\\7.x\\LeadManager_PactoEnergiaExamTest\\backend\\src\\LeadManager\\src\\libs\\Cross-cutting\\Cross-cutting.Caching\\CrossCutting.Caching.csproj"
+              },
               "F:\\Codebase\\_.NET Solutions\\Core\\7.x\\LeadManager_PactoEnergiaExamTest\\backend\\src\\LeadManager\\src\\libs\\Cross-cutting\\Cross-cutting.Csv\\CrossCutting.Csv.csproj": {
                 "projectPath": "F:\\Codebase\\_.NET Solutions\\Core\\7.x\\LeadManager_PactoEnergiaExamTest\\backend\\src\\LeadManager\\src\\libs\\Cross-cutting\\Cross-cutting.Csv\\CrossCutting.Csv.csproj"
               },
               "F:\\Codebase\\_.NET Solutions\\Core\\7.x\\LeadManager_PactoEnergiaExamTest\\backend\\src\\LeadManager\\src\\libs\\Cross-cutting\\Cross-cutting.FileStorage\\CrossCutting.FileStorage.csproj": {
                 "projectPath": "F:\\Codebase\\_.NET Solutions\\Core\\7.x\\LeadManager_PactoEnergiaExamTest\\backend\\src\\LeadManager\\src\\libs\\Cross-cutting\\Cross-cutting.FileStorage\\CrossCutting.FileStorage.csproj"
               },
-              "F:\\Codebase\\_.NET Solutions\\Core\\7.x\\LeadManager_PactoEnergiaExamTest\\backend\\src\\LeadManager\\src\\libs\\Cross-cutting\\CrossCutting.Logging\\CrossCutting.Logging.csproj": {
-                "projectPath": "F:\\Codebase\\_.NET Solutions\\Core\\7.x\\LeadManager_PactoEnergiaExamTest\\backend\\src\\LeadManager\\src\\libs\\Cross-cutting\\CrossCutting.Logging\\CrossCutting.Logging.csproj"
+              "F:\\Codebase\\_.NET Solutions\\Core\\7.x\\LeadManager_PactoEnergiaExamTest\\backend\\src\\LeadManager\\src\\libs\\Cross-cutting\\Cross-cutting.Logging\\CrossCutting.Logging.csproj": {
+                "projectPath": "F:\\Codebase\\_.NET Solutions\\Core\\7.x\\LeadManager_PactoEnergiaExamTest\\backend\\src\\LeadManager\\src\\libs\\Cross-cutting\\Cross-cutting.Logging\\CrossCutting.Logging.csproj"
+              },
+              "F:\\Codebase\\_.NET Solutions\\Core\\7.x\\LeadManager_PactoEnergiaExamTest\\backend\\src\\LeadManager\\src\\libs\\Cross-cutting\\Cross-cutting.Messaging\\CrossCutting.Messaging.csproj": {
+                "projectPath": "F:\\Codebase\\_.NET Solutions\\Core\\7.x\\LeadManager_PactoEnergiaExamTest\\backend\\src\\LeadManager\\src\\libs\\Cross-cutting\\Cross-cutting.Messaging\\CrossCutting.Messaging.csproj"
               },
               "F:\\Codebase\\_.NET Solutions\\Core\\7.x\\LeadManager_PactoEnergiaExamTest\\backend\\src\\LeadManager\\src\\libs\\Integrations\\ViaCep.ServiceClient\\ViaCep.ServiceClient.csproj": {
                 "projectPath": "F:\\Codebase\\_.NET Solutions\\Core\\7.x\\LeadManager_PactoEnergiaExamTest\\backend\\src\\LeadManager\\src\\libs\\Integrations\\ViaCep.ServiceClient\\ViaCep.ServiceClient.csproj"
@@ -92,6 +98,10 @@
             "Microsoft.Extensions.Hosting.Abstractions": {
               "target": "Package",
               "version": "[7.0.0, )"
+            },
+            "protobuf-net": {
+              "target": "Package",
+              "version": "[3.2.26, )"
             }
           },
           "imports": [
@@ -110,7 +120,7 @@
               "privateAssets": "all"
             }
           },
-          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\7.0.304\\RuntimeIdentifierGraph.json"
+          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\7.0.400\\RuntimeIdentifierGraph.json"
         }
       }
     },
@@ -189,7 +199,94 @@
               "privateAssets": "all"
             }
           },
-          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\7.0.304\\RuntimeIdentifierGraph.json"
+          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\7.0.400\\RuntimeIdentifierGraph.json"
+        }
+      }
+    },
+    "F:\\Codebase\\_.NET Solutions\\Core\\7.x\\LeadManager_PactoEnergiaExamTest\\backend\\src\\LeadManager\\src\\libs\\Cross-cutting\\Cross-cutting.Caching\\CrossCutting.Caching.csproj": {
+      "version": "1.0.0",
+      "restore": {
+        "projectUniqueName": "F:\\Codebase\\_.NET Solutions\\Core\\7.x\\LeadManager_PactoEnergiaExamTest\\backend\\src\\LeadManager\\src\\libs\\Cross-cutting\\Cross-cutting.Caching\\CrossCutting.Caching.csproj",
+        "projectName": "CrossCutting.Caching",
+        "projectPath": "F:\\Codebase\\_.NET Solutions\\Core\\7.x\\LeadManager_PactoEnergiaExamTest\\backend\\src\\LeadManager\\src\\libs\\Cross-cutting\\Cross-cutting.Caching\\CrossCutting.Caching.csproj",
+        "packagesPath": "C:\\Users\\rblac\\.nuget\\packages\\",
+        "outputPath": "F:\\Codebase\\_.NET Solutions\\Core\\7.x\\LeadManager_PactoEnergiaExamTest\\backend\\src\\LeadManager\\src\\libs\\Cross-cutting\\Cross-cutting.Caching\\obj\\",
+        "projectStyle": "PackageReference",
+        "fallbackFolders": [
+          "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages"
+        ],
+        "configFilePaths": [
+          "C:\\Users\\rblac\\AppData\\Roaming\\NuGet\\NuGet.Config",
+          "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.FallbackLocation.config",
+          "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
+        ],
+        "originalTargetFrameworks": [
+          "net7.0"
+        ],
+        "sources": {
+          "C:\\Program Files (x86)\\Microsoft SDKs\\NuGetPackages\\": {},
+          "C:\\Program Files\\dotnet\\library-packs": {},
+          "https://api.nuget.org/v3/index.json": {},
+          "https://pkgs.dev.azure.com/dnceng/public/_packaging/dotnet7/nuget/v3/index.json": {}
+        },
+        "frameworks": {
+          "net7.0": {
+            "targetAlias": "net7.0",
+            "projectReferences": {}
+          }
+        },
+        "warningProperties": {
+          "warnAsError": [
+            "NU1605"
+          ]
+        }
+      },
+      "frameworks": {
+        "net7.0": {
+          "targetAlias": "net7.0",
+          "dependencies": {
+            "Microsoft.Extensions.Caching.StackExchangeRedis": {
+              "target": "Package",
+              "version": "[7.0.10, )"
+            },
+            "Microsoft.Extensions.Configuration.Abstractions": {
+              "target": "Package",
+              "version": "[7.0.0, )"
+            },
+            "Microsoft.Extensions.Configuration.Binder": {
+              "target": "Package",
+              "version": "[7.0.4, )"
+            },
+            "Microsoft.Extensions.DependencyInjection.Abstractions": {
+              "target": "Package",
+              "version": "[7.0.0, )"
+            },
+            "Polly": {
+              "target": "Package",
+              "version": "[7.2.4, )"
+            },
+            "protobuf-net": {
+              "target": "Package",
+              "version": "[3.2.26, )"
+            }
+          },
+          "imports": [
+            "net461",
+            "net462",
+            "net47",
+            "net471",
+            "net472",
+            "net48",
+            "net481"
+          ],
+          "assetTargetFallback": true,
+          "warn": true,
+          "frameworkReferences": {
+            "Microsoft.NETCore.App": {
+              "privateAssets": "all"
+            }
+          },
+          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\7.0.400\\RuntimeIdentifierGraph.json"
         }
       }
     },
@@ -264,7 +361,7 @@
               "privateAssets": "all"
             }
           },
-          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\7.0.304\\RuntimeIdentifierGraph.json"
+          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\7.0.400\\RuntimeIdentifierGraph.json"
         }
       }
     },
@@ -351,18 +448,18 @@
               "privateAssets": "all"
             }
           },
-          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\7.0.304\\RuntimeIdentifierGraph.json"
+          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\7.0.400\\RuntimeIdentifierGraph.json"
         }
       }
     },
-    "F:\\Codebase\\_.NET Solutions\\Core\\7.x\\LeadManager_PactoEnergiaExamTest\\backend\\src\\LeadManager\\src\\libs\\Cross-cutting\\CrossCutting.Logging\\CrossCutting.Logging.csproj": {
+    "F:\\Codebase\\_.NET Solutions\\Core\\7.x\\LeadManager_PactoEnergiaExamTest\\backend\\src\\LeadManager\\src\\libs\\Cross-cutting\\Cross-cutting.Logging\\CrossCutting.Logging.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "F:\\Codebase\\_.NET Solutions\\Core\\7.x\\LeadManager_PactoEnergiaExamTest\\backend\\src\\LeadManager\\src\\libs\\Cross-cutting\\CrossCutting.Logging\\CrossCutting.Logging.csproj",
+        "projectUniqueName": "F:\\Codebase\\_.NET Solutions\\Core\\7.x\\LeadManager_PactoEnergiaExamTest\\backend\\src\\LeadManager\\src\\libs\\Cross-cutting\\Cross-cutting.Logging\\CrossCutting.Logging.csproj",
         "projectName": "CrossCutting.Logging",
-        "projectPath": "F:\\Codebase\\_.NET Solutions\\Core\\7.x\\LeadManager_PactoEnergiaExamTest\\backend\\src\\LeadManager\\src\\libs\\Cross-cutting\\CrossCutting.Logging\\CrossCutting.Logging.csproj",
+        "projectPath": "F:\\Codebase\\_.NET Solutions\\Core\\7.x\\LeadManager_PactoEnergiaExamTest\\backend\\src\\LeadManager\\src\\libs\\Cross-cutting\\Cross-cutting.Logging\\CrossCutting.Logging.csproj",
         "packagesPath": "C:\\Users\\rblac\\.nuget\\packages\\",
-        "outputPath": "F:\\Codebase\\_.NET Solutions\\Core\\7.x\\LeadManager_PactoEnergiaExamTest\\backend\\src\\LeadManager\\src\\libs\\Cross-cutting\\CrossCutting.Logging\\obj\\",
+        "outputPath": "F:\\Codebase\\_.NET Solutions\\Core\\7.x\\LeadManager_PactoEnergiaExamTest\\backend\\src\\LeadManager\\src\\libs\\Cross-cutting\\Cross-cutting.Logging\\obj\\",
         "projectStyle": "PackageReference",
         "fallbackFolders": [
           "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages"
@@ -430,7 +527,98 @@
               "privateAssets": "all"
             }
           },
-          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\7.0.304\\RuntimeIdentifierGraph.json"
+          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\7.0.400\\RuntimeIdentifierGraph.json"
+        }
+      }
+    },
+    "F:\\Codebase\\_.NET Solutions\\Core\\7.x\\LeadManager_PactoEnergiaExamTest\\backend\\src\\LeadManager\\src\\libs\\Cross-cutting\\Cross-cutting.Messaging\\CrossCutting.Messaging.csproj": {
+      "version": "1.0.0",
+      "restore": {
+        "projectUniqueName": "F:\\Codebase\\_.NET Solutions\\Core\\7.x\\LeadManager_PactoEnergiaExamTest\\backend\\src\\LeadManager\\src\\libs\\Cross-cutting\\Cross-cutting.Messaging\\CrossCutting.Messaging.csproj",
+        "projectName": "CrossCutting.Messaging",
+        "projectPath": "F:\\Codebase\\_.NET Solutions\\Core\\7.x\\LeadManager_PactoEnergiaExamTest\\backend\\src\\LeadManager\\src\\libs\\Cross-cutting\\Cross-cutting.Messaging\\CrossCutting.Messaging.csproj",
+        "packagesPath": "C:\\Users\\rblac\\.nuget\\packages\\",
+        "outputPath": "F:\\Codebase\\_.NET Solutions\\Core\\7.x\\LeadManager_PactoEnergiaExamTest\\backend\\src\\LeadManager\\src\\libs\\Cross-cutting\\Cross-cutting.Messaging\\obj\\",
+        "projectStyle": "PackageReference",
+        "fallbackFolders": [
+          "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages"
+        ],
+        "configFilePaths": [
+          "C:\\Users\\rblac\\AppData\\Roaming\\NuGet\\NuGet.Config",
+          "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.FallbackLocation.config",
+          "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
+        ],
+        "originalTargetFrameworks": [
+          "net7.0"
+        ],
+        "sources": {
+          "C:\\Program Files (x86)\\Microsoft SDKs\\NuGetPackages\\": {},
+          "C:\\Program Files\\dotnet\\library-packs": {},
+          "https://api.nuget.org/v3/index.json": {},
+          "https://pkgs.dev.azure.com/dnceng/public/_packaging/dotnet7/nuget/v3/index.json": {}
+        },
+        "frameworks": {
+          "net7.0": {
+            "targetAlias": "net7.0",
+            "projectReferences": {
+              "F:\\Codebase\\_.NET Solutions\\Core\\7.x\\LeadManager_PactoEnergiaExamTest\\backend\\src\\LeadManager\\src\\libs\\Shared\\Shared.csproj": {
+                "projectPath": "F:\\Codebase\\_.NET Solutions\\Core\\7.x\\LeadManager_PactoEnergiaExamTest\\backend\\src\\LeadManager\\src\\libs\\Shared\\Shared.csproj"
+              }
+            }
+          }
+        },
+        "warningProperties": {
+          "warnAsError": [
+            "NU1605"
+          ]
+        }
+      },
+      "frameworks": {
+        "net7.0": {
+          "targetAlias": "net7.0",
+          "dependencies": {
+            "Microsoft.Extensions.Configuration.Abstractions": {
+              "target": "Package",
+              "version": "[7.0.0, )"
+            },
+            "Microsoft.Extensions.Configuration.Binder": {
+              "target": "Package",
+              "version": "[7.0.4, )"
+            },
+            "Microsoft.Extensions.DependencyInjection": {
+              "target": "Package",
+              "version": "[7.0.0, )"
+            },
+            "Microsoft.Extensions.Hosting.Abstractions": {
+              "target": "Package",
+              "version": "[7.0.0, )"
+            },
+            "Microsoft.Extensions.Logging.Abstractions": {
+              "target": "Package",
+              "version": "[7.0.1, )"
+            },
+            "RabbitMQ.Client": {
+              "target": "Package",
+              "version": "[6.5.0, )"
+            }
+          },
+          "imports": [
+            "net461",
+            "net462",
+            "net47",
+            "net471",
+            "net472",
+            "net48",
+            "net481"
+          ],
+          "assetTargetFallback": true,
+          "warn": true,
+          "frameworkReferences": {
+            "Microsoft.NETCore.App": {
+              "privateAssets": "all"
+            }
+          },
+          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\7.0.400\\RuntimeIdentifierGraph.json"
         }
       }
     },
@@ -521,7 +709,7 @@
               "privateAssets": "all"
             }
           },
-          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\7.0.304\\RuntimeIdentifierGraph.json"
+          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\7.0.400\\RuntimeIdentifierGraph.json"
         }
       }
     },
@@ -592,7 +780,7 @@
               "privateAssets": "all"
             }
           },
-          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\7.0.304\\RuntimeIdentifierGraph.json"
+          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\7.0.400\\RuntimeIdentifierGraph.json"
         }
       }
     },
@@ -663,7 +851,7 @@
               "privateAssets": "all"
             }
           },
-          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\7.0.304\\RuntimeIdentifierGraph.json"
+          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\7.0.400\\RuntimeIdentifierGraph.json"
         }
       }
     },
@@ -757,7 +945,7 @@
               "privateAssets": "all"
             }
           },
-          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\7.0.304\\RuntimeIdentifierGraph.json"
+          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\7.0.400\\RuntimeIdentifierGraph.json"
         }
       }
     }
