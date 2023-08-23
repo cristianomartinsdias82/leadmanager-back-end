@@ -15,6 +15,7 @@ internal static class RabbitMqServiceExtensions
 
         services.TryAddSingleton<IRabbitMqChannelFactory, RabbitMqChannelFactory>();
         services.TryAddSingleton<IMessageDispatching, RabbitMqMessageDispatcher>();
+        services.TryAddTransient<IMessageConsumption, RabbitMqMessageConsumer>();
 
         return services;
     }
