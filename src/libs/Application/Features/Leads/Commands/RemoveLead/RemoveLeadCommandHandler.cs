@@ -1,4 +1,5 @@
-﻿using Application.Contracts.Persistence;
+﻿using Application.Contracts.Caching;
+using Application.Contracts.Persistence;
 using Application.Features.Leads.IntegrationEvents.LeadRemoved;
 using Application.Features.Leads.Shared;
 using Core.DomainEvents.LeadRemoved;
@@ -12,13 +13,16 @@ namespace Application.Features.Leads.Commands.RemoveLead;
 internal sealed class RemoveLeadCommandHandler : ApplicationRequestHandler<RemoveLeadCommandRequest, RemoveLeadCommandResponse>
 {
     private readonly ILeadManagerDbContext _dbContext;
+    private readonly ICachingManagement _cachingManager;
 
     public RemoveLeadCommandHandler(
         IMediator mediator,
         IEventDispatching eventDispatcher,
-        ILeadManagerDbContext dbContext) : base(mediator, eventDispatcher)
+        ILeadManagerDbContext dbContext,
+        ICachingManagement cachingManager) : base(mediator, eventDispatcher)
     {
         _dbContext = dbContext;
+        _cachingManager = cachingManager;
     }
 
     public async override Task<ApplicationResponse<RemoveLeadCommandResponse>> Handle(RemoveLeadCommandRequest request, CancellationToken cancellationToken)
@@ -31,8 +35,11 @@ internal sealed class RemoveLeadCommandHandler : ApplicationRequestHandler<Remov
 
         await _dbContext.SaveChangesAsync(cancellationToken);
 
+        var leadDto = lead.ToDto();
+        await _cachingManager.RemoveLeadEntryAsync(leadDto, cancellationToken);
+
         AddEvent(new LeadRemovedDomainEvent(lead));
-        AddEvent(new LeadRemovedIntegrationEvent(lead.ToDto()));
+        AddEvent(new LeadRemovedIntegrationEvent(leadDto));
 
         return ApplicationResponse<RemoveLeadCommandResponse>.Create(new RemoveLeadCommandResponse());
     }

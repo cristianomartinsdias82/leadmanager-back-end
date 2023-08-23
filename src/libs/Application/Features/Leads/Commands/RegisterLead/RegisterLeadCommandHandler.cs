@@ -1,4 +1,5 @@
-﻿using Application.Contracts.Persistence;
+﻿using Application.Contracts.Caching;
+using Application.Contracts.Persistence;
 using Application.Features.Leads.IntegrationEvents.LeadRegistered;
 using Application.Features.Leads.Shared;
 using Core.DomainEvents.LeadRegistered;
@@ -13,13 +14,16 @@ namespace Application.Features.Leads.Commands.RegisterLead;
 internal sealed class RegisterLeadCommandHandler : ApplicationRequestHandler<RegisterLeadCommandRequest, RegisterLeadCommandResponse>
 {
     private readonly ILeadManagerDbContext _dbContext;
+    private readonly ICachingManagement _cachingManager;
 
     public RegisterLeadCommandHandler(
         IMediator mediator,
         IEventDispatching eventDispatcher,
-        ILeadManagerDbContext dbContext) : base(mediator, eventDispatcher)
+        ILeadManagerDbContext dbContext,
+        ICachingManagement cachingManager) : base(mediator, eventDispatcher)
     {
         _dbContext = dbContext;
+        _cachingManager = cachingManager;
     }
 
     public async override Task<ApplicationResponse<RegisterLeadCommandResponse>> Handle(RegisterLeadCommandRequest request, CancellationToken cancellationToken)
@@ -39,8 +43,11 @@ internal sealed class RegisterLeadCommandHandler : ApplicationRequestHandler<Reg
         await _dbContext.Leads.AddAsync(lead);
         await _dbContext.SaveChangesAsync(cancellationToken);
 
+        var leadDto = lead.ToDto();
+        await _cachingManager.AddLeadEntryAsync(leadDto, cancellationToken);
+
         AddEvent(new LeadRegisteredDomainEvent(lead));
-        AddEvent(new LeadRegisteredIntegrationEvent(lead.ToDto()));
+        AddEvent(new LeadRegisteredIntegrationEvent(leadDto));
 
         return ApplicationResponse<RegisterLeadCommandResponse>.Create(new(lead.Id));
     }

@@ -1,9 +1,12 @@
-﻿using Application.Contracts.Persistence;
+﻿using Application.Contracts.Caching;
+using Application.Contracts.Persistence;
 using Application.Features.Leads.Commands.RegisterLead;
+using Application.Features.Leads.Shared;
 using FluentAssertions;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
 using NSubstitute;
+using Shared.Events;
 using Shared.Events.EventDispatching;
 using Shared.Results;
 using Shared.Tests;
@@ -16,6 +19,7 @@ public sealed class RegisterLeadCommandHandlerTests : IAsyncDisposable, IDisposa
 {
     private readonly RegisterLeadCommandHandler _handler;
     private readonly ILeadManagerDbContext _dbContext;
+    private readonly ICachingManagement _cachingManager;
     private readonly IMediator _mediator;
     private readonly IEventDispatching _eventDispatcher;
     private readonly CancellationTokenSource _cts;
@@ -25,7 +29,8 @@ public sealed class RegisterLeadCommandHandlerTests : IAsyncDisposable, IDisposa
         _dbContext = InMemoryLeadManagerDbContextFactory.Create();
         _mediator = Substitute.For<IMediator>();
         _eventDispatcher = Substitute.For<IEventDispatching>();
-        _handler = new RegisterLeadCommandHandler(_mediator, _eventDispatcher, _dbContext);
+        _cachingManager = Substitute.For<ICachingManagement>();
+        _handler = new RegisterLeadCommandHandler(_mediator, _eventDispatcher, _dbContext, _cachingManager);
         _cts = new();
     }
 
@@ -59,5 +64,7 @@ public sealed class RegisterLeadCommandHandlerTests : IAsyncDisposable, IDisposa
         var newlyCreatedLead = await _dbContext.Leads.FindAsync(result.Data.Id, _cts.Token);
         newlyCreatedLead.Should().NotBeNull();
         newlyCreatedLead!.Cnpj.Should().BeEquivalentTo(request.Cnpj);
+        _eventDispatcher.Received(2).AddEvent(Arg.Any<IEvent>());
+        await _cachingManager.Received(1).AddLeadEntryAsync(Arg.Any<LeadDto>(), _cts.Token);
     }
 }

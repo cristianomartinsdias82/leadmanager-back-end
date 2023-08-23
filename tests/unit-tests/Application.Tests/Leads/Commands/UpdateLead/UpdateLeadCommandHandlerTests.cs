@@ -1,9 +1,12 @@
-﻿using Application.Contracts.Persistence;
+﻿using Application.Contracts.Caching;
+using Application.Contracts.Persistence;
 using Application.Features.Leads.Commands.UpdateLead;
+using Application.Features.Leads.Shared;
 using FluentAssertions;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
 using NSubstitute;
+using Shared.Events;
 using Shared.Events.EventDispatching;
 using Shared.Results;
 using Shared.Tests;
@@ -17,6 +20,7 @@ public sealed class UpdateLeadCommandHandlerTests : IAsyncDisposable, IDisposabl
 {
     private readonly UpdateLeadCommandHandler _handler;
     private readonly ILeadManagerDbContext _dbContext;
+    private readonly ICachingManagement _cachingManager;
     private readonly IMediator _mediator;
     private readonly IEventDispatching _eventDispatcher;
     private readonly CancellationTokenSource _cts;    
@@ -26,7 +30,8 @@ public sealed class UpdateLeadCommandHandlerTests : IAsyncDisposable, IDisposabl
         _dbContext = InMemoryLeadManagerDbContextFactory.Create();
         _mediator = Substitute.For<IMediator>();
         _eventDispatcher = Substitute.For<IEventDispatching>();
-        _handler = new UpdateLeadCommandHandler(_mediator, _eventDispatcher, _dbContext);
+        _cachingManager = Substitute.For<ICachingManagement>();
+        _handler = new UpdateLeadCommandHandler(_mediator, _eventDispatcher, _dbContext, _cachingManager);
         _cts = new();
     }
 
@@ -75,6 +80,8 @@ public sealed class UpdateLeadCommandHandlerTests : IAsyncDisposable, IDisposabl
         updatedLead.Logradouro.Should().Be(request.Endereco);
         updatedLead.Cidade.Should().Be(request.Cidade);
         updatedLead.Estado.Should().Be(request.Estado);
+        _eventDispatcher.Received(2).AddEvent(Arg.Any<IEvent>());
+        await _cachingManager.Received(1).UpdateLeadEntryAsync(Arg.Any<LeadDto>(), _cts.Token);
     }
 
     [Fact]
@@ -105,5 +112,7 @@ public sealed class UpdateLeadCommandHandlerTests : IAsyncDisposable, IDisposabl
         result.Inconsistencies.Should().BeNullOrEmpty();
         result.Should().BeOfType<ApplicationResponse<UpdateLeadCommandResponse>>();
         result.Message.Should().BeEquivalentTo("Lead não encontrado.");
+        _eventDispatcher.Received(0).AddEvent(Arg.Any<IEvent>());
+        await _cachingManager.Received(0).UpdateLeadEntryAsync(Arg.Any<LeadDto>(), _cts.Token);
     }
 }

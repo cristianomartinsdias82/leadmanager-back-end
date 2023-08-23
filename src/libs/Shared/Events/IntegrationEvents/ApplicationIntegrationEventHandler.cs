@@ -2,6 +2,7 @@
 
 namespace Shared.Events.IntegrationEvents;
 
+//TODO: Does ApplicationIntegrationEventHandler<TIntegrationEvent> class really belong to Shared project?
 public abstract class ApplicationIntegrationEventHandler<TIntegrationEvent> : INotificationHandler<TIntegrationEvent>
     where TIntegrationEvent : IIntegrationEvent
 {

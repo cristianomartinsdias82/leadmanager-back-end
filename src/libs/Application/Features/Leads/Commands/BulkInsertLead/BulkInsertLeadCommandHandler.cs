@@ -1,4 +1,5 @@
-﻿using Application.Contracts.Persistence;
+﻿using Application.Contracts.Caching;
+using Application.Contracts.Persistence;
 using Application.Features.Leads.Commands.RegisterLead;
 using Application.Features.Leads.IntegrationEvents.LeadBulkInserted;
 using Application.Features.Leads.Shared;
@@ -24,16 +25,19 @@ internal sealed class BulkInsertLeadCommandHandler : ApplicationRequestHandler<B
     private readonly ICsvHelper _csvHelper;
     private readonly IValidator<RegisterLeadCommandRequest> _requestValidator;
     private readonly IFileStorageProvider _fileStorageProvider;
+    private readonly ICachingManagement _cachingManager;
 
     public BulkInsertLeadCommandHandler(
         IMediator mediator,
         IEventDispatching eventDispatcher,
         ILeadManagerDbContext dbContext,
+        ICachingManagement cachingManager,
         ICsvHelper csvHelper,
         IFileStorageProvider fileStorageProvider,
         IValidator<RegisterLeadCommandRequest> requestValidator) : base(mediator, eventDispatcher)
     {
         _dbContext = dbContext;
+        _cachingManager = cachingManager;
         _csvHelper = csvHelper;
         _requestValidator = requestValidator;
         _fileStorageProvider = fileStorageProvider;
@@ -110,8 +114,11 @@ internal sealed class BulkInsertLeadCommandHandler : ApplicationRequestHandler<B
 
         await _dbContext.SaveChangesAsync(cancellationToken);
 
+        var leadDtos = newLeads.Select(ld => ld.ToDto()).ToList();
+        await _cachingManager.AddLeadEntriesAsync(leadDtos, cancellationToken);
+
         AddEvent(new LeadBulkInsertedDomainEvent(newLeads));
-        AddEvent(new LeadBulkInsertedIntegrationEvent(newLeads.Select(ld => ld.ToDto()).ToList()));
+        AddEvent(new LeadBulkInsertedIntegrationEvent(leadDtos));
 
         return ApplicationResponse<BulkInsertLeadCommandResponse>.Create(new());
     }

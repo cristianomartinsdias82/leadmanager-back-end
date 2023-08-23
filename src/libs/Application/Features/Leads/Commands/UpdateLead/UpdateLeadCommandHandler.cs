@@ -1,4 +1,5 @@
-﻿using Application.Contracts.Persistence;
+﻿using Application.Contracts.Caching;
+using Application.Contracts.Persistence;
 using Application.Features.Leads.IntegrationEvents.LeadUpdated;
 using Application.Features.Leads.Shared;
 using Core.DomainEvents.LeadUpdated;
@@ -12,12 +13,15 @@ namespace Application.Features.Leads.Commands.UpdateLead;
 internal sealed class UpdateLeadCommandHandler : ApplicationRequestHandler<UpdateLeadCommandRequest, UpdateLeadCommandResponse>
 {
     private readonly ILeadManagerDbContext _dbContext;
+    private readonly ICachingManagement _cachingManager;
 
     public UpdateLeadCommandHandler(
         IMediator mediator,
         IEventDispatching eventDispatcher,
-        ILeadManagerDbContext dbContext) : base(mediator, eventDispatcher)
+        ILeadManagerDbContext dbContext,
+        ICachingManagement cachingManager) : base(mediator, eventDispatcher)
     {
+        _cachingManager = cachingManager;
         _dbContext = dbContext;
     }
 
@@ -39,8 +43,11 @@ internal sealed class UpdateLeadCommandHandler : ApplicationRequestHandler<Updat
         
         await _dbContext.SaveChangesAsync(cancellationToken);
 
+        var leadDto = lead.ToDto();
+        await _cachingManager.UpdateLeadEntryAsync(leadDto, cancellationToken);
+
         AddEvent(new LeadUpdatedDomainEvent(lead));
-        AddEvent(new LeadUpdatedIntegrationEvent(lead.ToDto()));
+        AddEvent(new LeadUpdatedIntegrationEvent(leadDto));
 
         return ApplicationResponse<UpdateLeadCommandResponse>.Create(new UpdateLeadCommandResponse());
     }
