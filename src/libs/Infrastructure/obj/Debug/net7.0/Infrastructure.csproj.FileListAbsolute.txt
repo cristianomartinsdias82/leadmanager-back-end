@@ -1,3 +1,8 @@
+F:\Codebase\_.NET Solutions\Core\7.x\LeadManager_PactoEnergiaExamTest\backend\src\LeadManager\src\libs\Infrastructure\obj\Debug\net7.0\Infrastructure.csproj.AssemblyReference.cache
+F:\Codebase\_.NET Solutions\Core\7.x\LeadManager_PactoEnergiaExamTest\backend\src\LeadManager\src\libs\Infrastructure\obj\Debug\net7.0\Infrastructure.GeneratedMSBuildEditorConfig.editorconfig
+F:\Codebase\_.NET Solutions\Core\7.x\LeadManager_PactoEnergiaExamTest\backend\src\LeadManager\src\libs\Infrastructure\obj\Debug\net7.0\Infrastructure.AssemblyInfoInputs.cache
+F:\Codebase\_.NET Solutions\Core\7.x\LeadManager_PactoEnergiaExamTest\backend\src\LeadManager\src\libs\Infrastructure\obj\Debug\net7.0\Infrastructure.AssemblyInfo.cs
+F:\Codebase\_.NET Solutions\Core\7.x\LeadManager_PactoEnergiaExamTest\backend\src\LeadManager\src\libs\Infrastructure\obj\Debug\net7.0\Infrastructure.csproj.CoreCompileInputs.cache
 F:\Codebase\_.NET Solutions\Core\7.x\LeadManager_PactoEnergiaExamTest\backend\src\LeadManager\src\libs\Infrastructure\bin\Debug\net7.0\Infrastructure.deps.json
 F:\Codebase\_.NET Solutions\Core\7.x\LeadManager_PactoEnergiaExamTest\backend\src\LeadManager\src\libs\Infrastructure\bin\Debug\net7.0\Infrastructure.runtimeconfig.json
 F:\Codebase\_.NET Solutions\Core\7.x\LeadManager_PactoEnergiaExamTest\backend\src\LeadManager\src\libs\Infrastructure\bin\Debug\net7.0\Infrastructure.dll
@@ -20,11 +25,6 @@ F:\Codebase\_.NET Solutions\Core\7.x\LeadManager_PactoEnergiaExamTest\backend\sr
 F:\Codebase\_.NET Solutions\Core\7.x\LeadManager_PactoEnergiaExamTest\backend\src\LeadManager\src\libs\Infrastructure\bin\Debug\net7.0\CrossCutting.FileStorage.pdb
 F:\Codebase\_.NET Solutions\Core\7.x\LeadManager_PactoEnergiaExamTest\backend\src\LeadManager\src\libs\Infrastructure\bin\Debug\net7.0\CrossCutting.Logging.pdb
 F:\Codebase\_.NET Solutions\Core\7.x\LeadManager_PactoEnergiaExamTest\backend\src\LeadManager\src\libs\Infrastructure\bin\Debug\net7.0\ViaCep.ServiceClient.pdb
-F:\Codebase\_.NET Solutions\Core\7.x\LeadManager_PactoEnergiaExamTest\backend\src\LeadManager\src\libs\Infrastructure\obj\Debug\net7.0\Infrastructure.csproj.AssemblyReference.cache
-F:\Codebase\_.NET Solutions\Core\7.x\LeadManager_PactoEnergiaExamTest\backend\src\LeadManager\src\libs\Infrastructure\obj\Debug\net7.0\Infrastructure.GeneratedMSBuildEditorConfig.editorconfig
-F:\Codebase\_.NET Solutions\Core\7.x\LeadManager_PactoEnergiaExamTest\backend\src\LeadManager\src\libs\Infrastructure\obj\Debug\net7.0\Infrastructure.AssemblyInfoInputs.cache
-F:\Codebase\_.NET Solutions\Core\7.x\LeadManager_PactoEnergiaExamTest\backend\src\LeadManager\src\libs\Infrastructure\obj\Debug\net7.0\Infrastructure.AssemblyInfo.cs
-F:\Codebase\_.NET Solutions\Core\7.x\LeadManager_PactoEnergiaExamTest\backend\src\LeadManager\src\libs\Infrastructure\obj\Debug\net7.0\Infrastructure.csproj.CoreCompileInputs.cache
 F:\Codebase\_.NET Solutions\Core\7.x\LeadManager_PactoEnergiaExamTest\backend\src\LeadManager\src\libs\Infrastructure\obj\Debug\net7.0\Infrastructure.csproj.CopyComplete
 F:\Codebase\_.NET Solutions\Core\7.x\LeadManager_PactoEnergiaExamTest\backend\src\LeadManager\src\libs\Infrastructure\obj\Debug\net7.0\Infrastructure.dll
 F:\Codebase\_.NET Solutions\Core\7.x\LeadManager_PactoEnergiaExamTest\backend\src\LeadManager\src\libs\Infrastructure\obj\Debug\net7.0\refint\Infrastructure.dll

@@ -1,3 +1,9 @@
+F:\Codebase\_.NET Solutions\Core\7.x\LeadManager_PactoEnergiaExamTest\backend\src\LeadManager\src\hosts\LeadManagerApi\obj\Debug\net7.0\LeadManagerApi.csproj.AssemblyReference.cache
+F:\Codebase\_.NET Solutions\Core\7.x\LeadManager_PactoEnergiaExamTest\backend\src\LeadManager\src\hosts\LeadManagerApi\obj\Debug\net7.0\LeadManagerApi.GeneratedMSBuildEditorConfig.editorconfig
+F:\Codebase\_.NET Solutions\Core\7.x\LeadManager_PactoEnergiaExamTest\backend\src\LeadManager\src\hosts\LeadManagerApi\obj\Debug\net7.0\LeadManagerApi.AssemblyInfoInputs.cache
+F:\Codebase\_.NET Solutions\Core\7.x\LeadManager_PactoEnergiaExamTest\backend\src\LeadManager\src\hosts\LeadManagerApi\obj\Debug\net7.0\LeadManagerApi.AssemblyInfo.cs
+F:\Codebase\_.NET Solutions\Core\7.x\LeadManager_PactoEnergiaExamTest\backend\src\LeadManager\src\hosts\LeadManagerApi\obj\Debug\net7.0\LeadManagerApi.csproj.CoreCompileInputs.cache
+F:\Codebase\_.NET Solutions\Core\7.x\LeadManager_PactoEnergiaExamTest\backend\src\LeadManager\src\hosts\LeadManagerApi\obj\Debug\net7.0\LeadManagerApi.MvcApplicationPartsAssemblyInfo.cache
 F:\Codebase\_.NET Solutions\Core\7.x\LeadManager_PactoEnergiaExamTest\backend\src\LeadManager\src\hosts\LeadManagerApi\bin\Debug\net7.0\appsettings.Development.json
 F:\Codebase\_.NET Solutions\Core\7.x\LeadManager_PactoEnergiaExamTest\backend\src\LeadManager\src\hosts\LeadManagerApi\bin\Debug\net7.0\appsettings.IntegrationTests.json
 F:\Codebase\_.NET Solutions\Core\7.x\LeadManager_PactoEnergiaExamTest\backend\src\LeadManager\src\hosts\LeadManagerApi\bin\Debug\net7.0\appsettings.json
@@ -110,13 +116,6 @@ F:\Codebase\_.NET Solutions\Core\7.x\LeadManager_PactoEnergiaExamTest\backend\sr
 F:\Codebase\_.NET Solutions\Core\7.x\LeadManager_PactoEnergiaExamTest\backend\src\LeadManager\src\hosts\LeadManagerApi\bin\Debug\net7.0\CrossCutting.Logging.pdb
 F:\Codebase\_.NET Solutions\Core\7.x\LeadManager_PactoEnergiaExamTest\backend\src\LeadManager\src\hosts\LeadManagerApi\bin\Debug\net7.0\Shared.pdb
 F:\Codebase\_.NET Solutions\Core\7.x\LeadManager_PactoEnergiaExamTest\backend\src\LeadManager\src\hosts\LeadManagerApi\bin\Debug\net7.0\ViaCep.ServiceClient.pdb
-F:\Codebase\_.NET Solutions\Core\7.x\LeadManager_PactoEnergiaExamTest\backend\src\LeadManager\src\hosts\LeadManagerApi\obj\Debug\net7.0\LeadManagerApi.csproj.AssemblyReference.cache
-F:\Codebase\_.NET Solutions\Core\7.x\LeadManager_PactoEnergiaExamTest\backend\src\LeadManager\src\hosts\LeadManagerApi\obj\Debug\net7.0\LeadManagerApi.GeneratedMSBuildEditorConfig.editorconfig
-F:\Codebase\_.NET Solutions\Core\7.x\LeadManager_PactoEnergiaExamTest\backend\src\LeadManager\src\hosts\LeadManagerApi\obj\Debug\net7.0\LeadManagerApi.AssemblyInfoInputs.cache
-F:\Codebase\_.NET Solutions\Core\7.x\LeadManager_PactoEnergiaExamTest\backend\src\LeadManager\src\hosts\LeadManagerApi\obj\Debug\net7.0\LeadManagerApi.AssemblyInfo.cs
-F:\Codebase\_.NET Solutions\Core\7.x\LeadManager_PactoEnergiaExamTest\backend\src\LeadManager\src\hosts\LeadManagerApi\obj\Debug\net7.0\LeadManagerApi.csproj.CoreCompileInputs.cache
-F:\Codebase\_.NET Solutions\Core\7.x\LeadManager_PactoEnergiaExamTest\backend\src\LeadManager\src\hosts\LeadManagerApi\obj\Debug\net7.0\LeadManagerApi.MvcApplicationPartsAssemblyInfo.cs
-F:\Codebase\_.NET Solutions\Core\7.x\LeadManager_PactoEnergiaExamTest\backend\src\LeadManager\src\hosts\LeadManagerApi\obj\Debug\net7.0\LeadManagerApi.MvcApplicationPartsAssemblyInfo.cache
 F:\Codebase\_.NET Solutions\Core\7.x\LeadManager_PactoEnergiaExamTest\backend\src\LeadManager\src\hosts\LeadManagerApi\obj\Debug\net7.0\staticwebassets\msbuild.LeadManagerApi.Microsoft.AspNetCore.StaticWebAssets.props
 F:\Codebase\_.NET Solutions\Core\7.x\LeadManager_PactoEnergiaExamTest\backend\src\LeadManager\src\hosts\LeadManagerApi\obj\Debug\net7.0\staticwebassets\msbuild.build.LeadManagerApi.props
 F:\Codebase\_.NET Solutions\Core\7.x\LeadManager_PactoEnergiaExamTest\backend\src\LeadManager\src\hosts\LeadManagerApi\obj\Debug\net7.0\staticwebassets\msbuild.buildMultiTargeting.LeadManagerApi.props
