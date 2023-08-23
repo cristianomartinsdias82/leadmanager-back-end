@@ -34,6 +34,9 @@ internal sealed class CacheManager : ICachingManagement
 
         var leads = await _dbContext.Leads.ToListAsync(cancellationToken);
 
+        if (leads.Count.Equals(0))
+            return Enumerable.Empty<LeadDto>();
+
         await _cacheProvider.SetAsync(
             _leadsCachingPolicy.CacheKey,
             cachedLeads = leads.ToDtoList(),
@@ -47,8 +50,11 @@ internal sealed class CacheManager : ICachingManagement
     {
         ArgumentNullException.ThrowIfNull(lead);
 
-        var cachedLeads = await GetLeadsAsync(cancellationToken);
-        var leads = cachedLeads.ToList();
+        var cachedLeads = await _cacheProvider
+                                    .GetAsync<IEnumerable<LeadDto>>(
+                                        _leadsCachingPolicy.CacheKey,
+                                        cancellationToken);
+        var leads = cachedLeads?.ToList() ?? new ();
         leads.Add(lead);
 
         await _cacheProvider.SetAsync<IEnumerable<LeadDto>>(
@@ -62,8 +68,11 @@ internal sealed class CacheManager : ICachingManagement
     {
         ArgumentNullException.ThrowIfNull(leads);
 
-        var cachedLeads = await GetLeadsAsync(cancellationToken);
-        var existingLeads = cachedLeads.ToList();
+        var cachedLeads = await _cacheProvider
+                                    .GetAsync<IEnumerable<LeadDto>>(
+                                        _leadsCachingPolicy.CacheKey,
+                                        cancellationToken);
+        var existingLeads = cachedLeads?.ToList() ?? new();
         existingLeads.AddRange(leads);
 
         await _cacheProvider.SetAsync<IEnumerable<LeadDto>>(
@@ -82,8 +91,14 @@ internal sealed class CacheManager : ICachingManagement
     {
         ArgumentNullException.ThrowIfNull(lead);
 
-        var cachedLeads = await GetLeadsAsync(cancellationToken);
-        var leads = cachedLeads.ToList();
+        var cachedLeads = await _cacheProvider
+                                    .GetAsync<IEnumerable<LeadDto>>(
+                                        _leadsCachingPolicy.CacheKey,
+                                        cancellationToken);
+        if (!cachedLeads?.Any() ?? false)
+            return;
+
+        var leads = cachedLeads!.ToList();
         var leadToRemove = leads.FirstOrDefault(ld => ld.Id == lead.Id);
         if (leadToRemove is null)
             return;
@@ -103,7 +118,6 @@ internal sealed class CacheManager : ICachingManagement
         var cachedLeads = await GetLeadsAsync(cancellationToken);
         var leads = cachedLeads.ToList();
         var outdatedLead = leads.FirstOrDefault(ld => ld.Id == lead.Id);
-
         if (outdatedLead is null)
             return;
 

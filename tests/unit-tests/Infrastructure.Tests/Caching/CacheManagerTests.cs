@@ -4,7 +4,6 @@ using Application.Features.Leads.Shared;
 using CrossCutting.Caching;
 using FluentAssertions;
 using Infrastructure.Caching;
-using Microsoft.Extensions.Logging;
 using NSubstitute;
 using Shared.Tests;
 using Tests.Common.ObjectMothers.Core;
@@ -19,6 +18,7 @@ public sealed class CacheManagerTests : IDisposable, IAsyncDisposable
     private readonly CancellationTokenSource _cts;
     private readonly ICacheProvider _cacheProviderMock;
     private readonly CachingPoliciesSettings _cachingPoliciesSettings;
+    private readonly List<LeadDto> _leadDtos;
 
     public CacheManagerTests()
     {
@@ -29,7 +29,8 @@ public sealed class CacheManagerTests : IDisposable, IAsyncDisposable
         _cacheManager = new CacheManager(
             _dbContext,
             _cacheProviderMock,
-            _cachingPoliciesSettings);        
+            _cachingPoliciesSettings);
+        _leadDtos = LeadMother.Leads().ToDtoList();
     }
 
     [Fact]
@@ -90,11 +91,8 @@ public sealed class CacheManagerTests : IDisposable, IAsyncDisposable
     [Fact]
     public async Task AddLeadEntries_ValidArgument_ShouldRunSuccessfully()
     {
-        //Arrange
-        var leadsDto = LeadMother.Leads().Select(ld => ld.ToDto()).ToList();
-
-        //Act
-        await _cacheManager.AddLeadEntriesAsync(leadsDto, _cts.Token);
+        //Arrange && Act
+        await _cacheManager.AddLeadEntriesAsync(_leadDtos, _cts.Token);
 
         //Assert
         await _cacheProviderMock
@@ -134,12 +132,11 @@ public sealed class CacheManagerTests : IDisposable, IAsyncDisposable
     public async Task UpdateLeadEntry_ValidArgument_ExistingLead_ShouldRunSuccessfully()
     {
         //Arrange
-        var leadsDto = LeadMother.Leads().Select(ld => ld.ToDto()).ToList();
         _cacheProviderMock
             .GetAsync<IEnumerable<LeadDto>>(Arg.Any<string>(), _cts.Token)
-            .Returns(leadsDto);
+            .Returns(_leadDtos);
 
-        var updatedLead = leadsDto.First();     
+        var updatedLead = _leadDtos.First();     
 
         //Act
         await _cacheManager.UpdateLeadEntryAsync(updatedLead, _cts.Token);
@@ -163,7 +160,6 @@ public sealed class CacheManagerTests : IDisposable, IAsyncDisposable
     public async Task UpdateLeadEntry_ValidArgument_NonExistingLead_ShouldRunSuccessfully()
     {
         //Arrange
-        var leadsDto = LeadMother.Leads().Select(ld => ld.ToDto()).ToList();
         _cacheProviderMock
             .GetAsync<IEnumerable<LeadDto>>(Arg.Any<string>(), _cts.Token)
             .Returns(Enumerable.Empty<LeadDto>());
@@ -209,12 +205,11 @@ public sealed class CacheManagerTests : IDisposable, IAsyncDisposable
     public async Task RemoveLeadEntry_ValidArgument_ExistingLead_ShouldRunSuccessfully()
     {
         //Arrange
-        var leadsDto = LeadMother.Leads().Select(ld => ld.ToDto()).ToList();
         _cacheProviderMock
             .GetAsync<IEnumerable<LeadDto>>(Arg.Any<string>(), _cts.Token)
-            .Returns(leadsDto);
+            .Returns(_leadDtos);
 
-        var leadToRemove = leadsDto.First();
+        var leadToRemove = _leadDtos.First();
 
         //Act
         await _cacheManager.RemoveLeadEntryAsync(leadToRemove, _cts.Token);
@@ -276,9 +271,8 @@ public sealed class CacheManagerTests : IDisposable, IAsyncDisposable
     public async Task GetLeads_NonEmptyList_ReturnsLeadsList()
     {
         //Arrange
-        var leads = LeadMother.Leads().Select(ld => ld.ToDto()).ToList();
         _cacheProviderMock.GetAsync<IEnumerable<LeadDto>>(Arg.Any<string>(), _cts.Token)
-                          .Returns(leads);
+                          .Returns(_leadDtos);
         
         //Act
         var cachedLeads = await _cacheManager.GetLeadsAsync(_cts.Token);
@@ -287,9 +281,9 @@ public sealed class CacheManagerTests : IDisposable, IAsyncDisposable
         await _cacheProviderMock
                 .Received(1)
                 .GetAsync<IEnumerable<LeadDto>>(Arg.Any<string>(), _cts.Token);
-        leads.Count.Should().Be(cachedLeads.Count());
-        for(var i = 0; i < leads.Count; i++)
-            leads[i].Id = cachedLeads.ElementAt(i).Id;
+        _leadDtos.Count.Should().Be(cachedLeads.Count());
+        for(var i = 0; i < _leadDtos.Count; i++)
+            _leadDtos[i].Id = cachedLeads.ElementAt(i).Id;
     }
 
     [Fact]

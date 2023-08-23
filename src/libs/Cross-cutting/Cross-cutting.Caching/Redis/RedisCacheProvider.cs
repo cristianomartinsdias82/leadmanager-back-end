@@ -18,15 +18,14 @@ internal sealed class RedisCacheProvider : CacheProvider
         _settings = settings;
     }
 
-    public override async Task<T> GetAsync<T>(string key, CancellationToken cancellationToken = default)
+    public override Task<T> GetAsync<T>(string key, CancellationToken cancellationToken = default)
     {
         T? item = default;
-        return await Policy.Handle<Exception>()
+        return Policy.Handle<Exception>()
                 .WaitAndRetryAsync(_settings.ConnectionAttemptsMaxCount, count => TimeSpan.FromSeconds(Math.Pow(2, count) + Random.Shared.Next(2, 4)))
                 .ExecuteAsync(async () =>
                 {
                     var itemData = await _cache.GetAsync(key, cancellationToken);
-
                     if (itemData is not null)
                         item = FromByteArray(itemData, item!);
 
@@ -34,9 +33,9 @@ internal sealed class RedisCacheProvider : CacheProvider
                 });
     }
 
-    public override async Task SetAsync<T>(string key, T item, int ttlInSeconds = 300, CancellationToken cancellationToken = default)
+    public override Task SetAsync<T>(string key, T item, int ttlInSeconds = 300, CancellationToken cancellationToken = default)
     {
-        await Policy.Handle<Exception>()
+        return Policy.Handle<Exception>()
                 .WaitAndRetryAsync(_settings.ConnectionAttemptsMaxCount, count => TimeSpan.FromSeconds(Math.Pow(2, count) + Random.Shared.Next(2, 4)))
                 .ExecuteAsync(async () =>
                 {
@@ -48,9 +47,9 @@ internal sealed class RedisCacheProvider : CacheProvider
                 });
     }
 
-    public override async Task RemoveAsync(string key, CancellationToken cancellationToken = default)
+    public override Task RemoveAsync(string key, CancellationToken cancellationToken = default)
     {
-        await Policy.Handle<Exception>()
+        return Policy.Handle<Exception>()
                 .WaitAndRetryAsync(_settings.ConnectionAttemptsMaxCount, count => TimeSpan.FromSeconds(Math.Pow(2, count) + Random.Shared.Next(2, 4)))
                 .ExecuteAsync(async () =>
                 {

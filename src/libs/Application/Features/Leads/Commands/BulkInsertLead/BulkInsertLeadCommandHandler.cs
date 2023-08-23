@@ -82,13 +82,13 @@ internal sealed class BulkInsertLeadCommandHandler : ApplicationRequestHandler<B
             );
 
         var existingLeads = await _dbContext.Leads.ToListAsync(cancellationToken);
-
-        upcomingLeads.ForEach(upcLead =>
-        {
-            if (existingLeads.Any(exsLead => string.Compare(upcLead.Cnpj, exsLead.Cnpj, true, culture) == 0 ||
-                                             string.Compare(upcLead.RazaoSocial, exsLead.RazaoSocial, true, culture) == 0))
-                inconsistencies.Add(new(string.Empty, $"Lead {upcLead.Cnpj} - {upcLead.RazaoSocial} já existente."));
-        });
+        if (existingLeads.Count > 0)
+            upcomingLeads.ForEach(upcLead =>
+            {
+                if (existingLeads.Any(exsLead => string.Compare(upcLead.Cnpj, exsLead.Cnpj, true, culture) == 0 ||
+                                                 string.Compare(upcLead.RazaoSocial, exsLead.RazaoSocial, true, culture) == 0))
+                    inconsistencies.Add(new(string.Empty, $"Lead {upcLead.Cnpj} - {upcLead.RazaoSocial} já existente."));
+            });
 
         if (inconsistencies.Count > 0)
             return ApplicationResponse<BulkInsertLeadCommandResponse>.Create(
@@ -114,8 +114,10 @@ internal sealed class BulkInsertLeadCommandHandler : ApplicationRequestHandler<B
 
         await _dbContext.SaveChangesAsync(cancellationToken);
 
-        var leadDtos = newLeads.Select(ld => ld.ToDto()).ToList();
+        var leadDtos = newLeads.ToDtoList();
         await _cachingManager.AddLeadEntriesAsync(leadDtos, cancellationToken);
+
+        var cachedLeads = await _cachingManager.GetLeadsAsync(cancellationToken);
 
         AddEvent(new LeadBulkInsertedDomainEvent(newLeads));
         AddEvent(new LeadBulkInsertedIntegrationEvent(leadDtos));

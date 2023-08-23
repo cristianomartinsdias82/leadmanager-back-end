@@ -193,7 +193,7 @@ public class LeadManagerWebApplicationFactory : WebApplicationFactory<Program>, 
                     cacheProviderMock.GetAsync<IEnumerable<LeadDto>>(
                                         Arg.Any<string>(),
                                         Arg.Any<CancellationToken>())
-                                    .Returns(LeadMother.Leads().Select(ld => ld.ToDto()).ToList());
+                                    .Returns(LeadMother.Leads().ToDtoList());
 
                     return cacheProviderMock;
                 });
