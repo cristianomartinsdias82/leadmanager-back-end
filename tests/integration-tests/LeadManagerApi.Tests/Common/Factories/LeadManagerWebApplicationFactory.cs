@@ -1,6 +1,8 @@
 ﻿using Application.Contracts.Persistence;
 using Application.Features.Leads.Shared;
 using CrossCutting.Caching;
+using CrossCutting.Messaging;
+using CrossCutting.Messaging.RabbitMq;
 using Infrastructure.Persistence;
 using LeadManagerApi.Configuration;
 using Microsoft.AspNetCore.Hosting;
@@ -195,6 +197,9 @@ public class LeadManagerWebApplicationFactory : WebApplicationFactory<Program>, 
 
                     return cacheProviderMock;
                 });
+
+                services.RemoveAll<IRabbitMqChannelFactory>();
+                services.TryAddSingleton(services => Substitute.For<IRabbitMqChannelFactory>());
             });
     }
 }
