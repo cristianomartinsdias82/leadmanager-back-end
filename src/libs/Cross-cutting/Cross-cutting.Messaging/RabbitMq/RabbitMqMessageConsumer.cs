@@ -1,41 +1,52 @@
-﻿using RabbitMQ.Client.Events;
+﻿using Microsoft.Extensions.Logging;
+using RabbitMQ.Client.Events;
 
 namespace CrossCutting.Messaging.RabbitMq;
 
 internal sealed class RabbitMqMessageConsumer : MessageConsumer
 {
     private readonly IRabbitMqChannelFactory _rabbitMqChannelFactory;
+    private readonly ILogger<RabbitMqMessageConsumer> _logger;
 
-    public RabbitMqMessageConsumer(IRabbitMqChannelFactory rabbitMqChannelFactory)
+    public RabbitMqMessageConsumer(
+        IRabbitMqChannelFactory rabbitMqChannelFactory,
+        ILogger<RabbitMqMessageConsumer> logger)
     {
         _rabbitMqChannelFactory = rabbitMqChannelFactory;
+        _logger = logger;
     }
 
     public override void Subscribe(
-        Action<ReadOnlyMemory<byte>> messageReceived,
-        IDictionary<string, object> arguments,
-        string queueName)
+        Func<byte[], bool> onMessageReceived,
+        string queueName,
+        string consumerIdentifier,
+        IDictionary<string, object> arguments)
     {
-        using var channel = _rabbitMqChannelFactory.CreateChannel();
+        var channel = _rabbitMqChannelFactory.CreateChannel();
         var consumer = new EventingBasicConsumer(channel);
         consumer.Received += (model, ea) =>
         {
-            //TODO: Implement Polly Retry Pattern here!
+            var acknowledge = false;
             try
             {
-                messageReceived(ea.Body);
-
-                channel.BasicAck(ea.DeliveryTag, false);
+                acknowledge = onMessageReceived(ea.Body.ToArray());
             }
-            catch(Exception)
+            catch (Exception e)
             {
-                channel.BasicNack(ea.DeliveryTag, false, true);
+                _logger.LogError(e, "Error when receiving message from queue {queueName} for consumer {consumerIdentifier}", queueName, consumerIdentifier);
+            }
+            finally
+            {
+                if (acknowledge)
+                    channel.BasicAck(ea.DeliveryTag, false);
+                else
+                    channel.BasicNack(ea.DeliveryTag, false, true);
             }
         };
 
         channel.BasicConsume(queueName,
                              false,
-                             string.Empty,
+                             consumerIdentifier,
                              true,
                              false,
                              arguments,

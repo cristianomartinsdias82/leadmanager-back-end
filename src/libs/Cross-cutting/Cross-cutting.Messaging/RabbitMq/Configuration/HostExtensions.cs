@@ -6,7 +6,7 @@ using RabbitMQ.Client;
 
 namespace CrossCutting.Messaging.RabbitMq.Configuration;
 
-public static class HostExtensions
+public static class RabbitMqHostExtensions
 {
     public static IHost UseMessageBusInitialization(this IHost app)
     {
@@ -44,8 +44,8 @@ public static class HostExtensions
                     autoDelete: channelSettings.AutoDelete,
                     arguments: new Dictionary<string, object>
                     {
-                    {"x-dead-letter-exchange", channelSettings.DeadLetterExchange},
-                    {"x-dead-letter-routing-key", channelSettings.DeadLetterRoutingKey}
+                        {"x-dead-letter-exchange", channelSettings.DeadLetterExchange},
+                        {"x-dead-letter-routing-key", channelSettings.DeadLetterRoutingKey}
                     });
 
                 // Declare the dead-letter exchange
@@ -66,7 +66,7 @@ public static class HostExtensions
                 channel.QueueBind(
                     channelSettings.QueueName,
                     channelSettings.TopicName,
-                    routingKey: string.Empty);
+                    routingKey: channelSettings.RoutingKey);
             }
 
             logger?.LogInformation("Core messaging infrastructure initialized successfully.");

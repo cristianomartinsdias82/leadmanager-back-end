@@ -8,6 +8,7 @@
 public sealed record ChannelSettings(
     string QueueName,
     string TopicName,
+    string RoutingKey,
     string DeadLetterQueueName,
     string DeadLetterExchange,
     string DeadLetterRoutingKey,

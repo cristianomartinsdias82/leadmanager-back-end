@@ -56,10 +56,5 @@ public static class DependencyInjection
     }
 
     private static IServiceCollection AddMessageBusHelper(this IServiceCollection services, IConfiguration configuration)
-    {
-        var messageChannelsSettings = configuration.GetSection(nameof(MessageChannelSettings)).Get<MessageChannelSettings>()!;
-        services.AddSingleton(messageChannelsSettings);
-
-        return services.AddSingleton<IMessageBusHelper, MessageBusHelper>();
-    }
+        => services.AddSingleton<IMessageBusHelper, MessageBusHelper>();
 }

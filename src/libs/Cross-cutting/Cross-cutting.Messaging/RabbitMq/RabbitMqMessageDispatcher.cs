@@ -13,7 +13,10 @@ internal sealed class RabbitMqMessageDispatcher : MessageDispatcher
         _rabbitMqChannelFactory = rabbitMqChannelFactory;
     }
 
-    public override Task SendToQueueAsync<T>(string queueName, T data, CancellationToken cancellationToken = default)
+    public override Task SendToQueueAsync<T>(
+        string queueName,
+        T data,
+        CancellationToken cancellationToken = default)
     {
         using var channel = _rabbitMqChannelFactory.CreateChannel();
         channel.BasicPublish(
@@ -25,7 +28,10 @@ internal sealed class RabbitMqMessageDispatcher : MessageDispatcher
         return Task.CompletedTask;
     }
 
-    public override Task SendToQueueAsync(string queueName, byte[] bytes, CancellationToken cancellationToken = default)
+    public override Task SendToQueueAsync(
+        string queueName,
+        byte[] bytes,
+        CancellationToken cancellationToken = default)
     {
         using var channel = _rabbitMqChannelFactory.CreateChannel();
         channel.BasicPublish(string.Empty, queueName, default!, bytes);
@@ -33,18 +39,26 @@ internal sealed class RabbitMqMessageDispatcher : MessageDispatcher
         return Task.CompletedTask;
     }
 
-    public override Task SendToTopicAsync<T>(string topicName, T data, CancellationToken cancellationToken = default)
+    public override Task SendToTopicAsync<T>(
+        string topicName,
+        string routingKey,
+        T data,
+        CancellationToken cancellationToken = default)
     {
         using var channel = _rabbitMqChannelFactory.CreateChannel();
-        channel.BasicPublish(topicName, string.Empty, default!, Encoding.UTF8.GetBytes(JsonSerializer.Serialize(data)));
+        channel.BasicPublish(topicName, routingKey, default!, Encoding.UTF8.GetBytes(JsonSerializer.Serialize(data)));
 
         return Task.CompletedTask;
     }
 
-    public override Task SendToTopicAsync(string topicName, byte[] bytes, CancellationToken cancellationToken = default)
+    public override Task SendToTopicAsync(
+        string topicName,
+        string routingKey,
+        byte[] bytes,
+        CancellationToken cancellationToken = default)
     {
         using var channel = _rabbitMqChannelFactory.CreateChannel();
-        channel.BasicPublish(topicName, string.Empty, default!, bytes);
+        channel.BasicPublish(topicName, routingKey, default!, bytes);
 
         return Task.CompletedTask;
     }

@@ -20,18 +20,21 @@ public sealed class MessageBusHelper : IMessageBusHelper
     public Task SendToLeadRemovedChannelAsync(LeadDto removedLead, CancellationToken cancellationToken = default)
         => _messageDispatcher.SendToTopicAsync(
             _messageChannelSettings.RemovedLeadChannel.TopicName,
+            _messageChannelSettings.RemovedLeadChannel.RoutingKey,
             removedLead,
             cancellationToken);
 
     public Task SendToLeadUpdatedChannelAsync(LeadDto updatedLead, CancellationToken cancellationToken = default)
         => _messageDispatcher.SendToTopicAsync(
             _messageChannelSettings.UpdatedLeadChannel.TopicName,
+            _messageChannelSettings.UpdatedLeadChannel.RoutingKey,
             updatedLead,
             cancellationToken);
 
     public Task SendToNewlyCreatedLeadsChannelAsync(List<LeadDto> newlyCreatedLeads, CancellationToken cancellationToken = default)
         =>_messageDispatcher.SendToTopicAsync(
             _messageChannelSettings.NewlyRegisteredLeadsChannel.TopicName,
+            _messageChannelSettings.NewlyRegisteredLeadsChannel.RoutingKey,
             newlyCreatedLeads,
             cancellationToken);
 }

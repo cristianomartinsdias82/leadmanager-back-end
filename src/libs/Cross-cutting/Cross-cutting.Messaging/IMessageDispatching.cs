@@ -14,11 +14,13 @@ public interface IMessageDispatching
 
     Task SendToTopicAsync<T>(
         string topicName,
+        string routingKey,
         T data,
         CancellationToken cancellationToken = default);
 
     Task SendToTopicAsync(
         string topicName,
+        string routingKey,
         byte[] bytes,
         CancellationToken cancellationToken = default);
 }
