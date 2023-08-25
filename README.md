@@ -27,6 +27,8 @@ O projeto está em constante evolução e utiliza a seguinte plataforma e lingua
 - Sqlite
 - Azurite
 - Redis Cache
+- RabbitMQ
+- Serialização binária como Protobuf para performance e economia de espaço (compõe as features que fazem uso de cache)
 - Testes unitários / Unit tests / TDD com xUnit e Fluent Assertions
 - Testes de integração / Integration tests com WebApplicationFactory e MockHttp
 - Integração com o serviço de localização de endereços ViaCep via HttpClient tipado
@@ -38,6 +40,7 @@ O projeto está em constante evolução e utiliza a seguinte plataforma e lingua
 - Integração com Azurite para armazenamento de arquivos
 - Gravação de log com múltiplos 'Sinks' com Serilog (Console, Arquivo e banco de dados)
 - Integração com Redis para armazenamento de dados em cache para ganho de performance em geral
+- Integração com RabbitMQ para mensageria de dados, ajudando na composição da implementação de arquittura dirigida a eventos / event-driven architecture / EDA
 
 Pré-requisitos para execução do 'back-end' da aplicação<br/>
 É necessário possuir os seguintes componentes instalados na máquina:
@@ -59,6 +62,8 @@ Como executar o projeto localmente?
   docker run --name leadmanager-redis -p 6379:6379 -d redis:7.0.12-alpine<br/>
   OU<br/>
   docker run --name leadmanager-redis -p 6379:6379 -d redis/redis-stack-server:latest
+- Execute o seguinte comando para subir um servidor de mensageria RabbitMQ:<br/>
+  docker run -d --hostname leadmanager-rabbit-management --name leadmanager-messagebus -p 8080:15672 -p 5672:5672 rabbitmq:3-management
 - Acesse outro Terminal, Command Prompt ou Powershell
 - Execute o Azurite através do seguinte comando:<br/>
   azurite-blob -l X:\Path\to\blobs
@@ -75,10 +80,6 @@ Backlog:
   - Apenas como sugestão, implementar um método de extension ToSortedPagedList que aceita um PaginationOptions como argumento
     - Utilizar o overload que aceita um range do tipo X..Y do método Take (LINQ) ao invés de utilizar Skip com Take
   - A outra possibilidade é criar uma classe PagedList<T> que herda de uma List<T>
-- (Technical debt) Implementar emissão de notificações de sistema para os seguintes eventos (depende da tarefa 'Adicionar infraestrutura necessária para comunicação com o serviço de filas'):
-  Cadastro de lead<br/>
-  Atualização de dados de lead<br/>
-  Exclusão de lead<br/>
 - (Technical debt) Proteger a API contra acesso indevido, de maneira que somente usuários autenticados possam invocar os endpoints
   - Possibilidade 1: a aplicação deverá ser capaz de encaminhar a solicitação de autenticação para um servidor de identidade a fim de obter o Token de autenticação
   - Possibilidade 2: a aplicação deverá ser capaz de validar tokens de autenticação/autorização - incluindo Claims - que possibilitem ou recusem executar os endpoints da API
@@ -144,10 +145,11 @@ Em termos de implementação, o que tem de reaproveitável no código-fonte dest
   - Contém lógica de política de retentativas com 'back-off' exponencial através do uso da biblioteca Polly
 (Continuar a listagem. Afinal, tem muita coisa que vale anotar aqui como índice/referência!)
 - Lógica de configuração do tamanho máximo de upload de arquivos
-- Abstrações para utlização de cache de dados com Redis para ganho de performance
+- Abstrações para utilização de cache de dados com Redis para ganho de performance
   - ICacheProvider
     - Classe que implementa integração com StackExchange Redis, serializando e deserializando inclusive utilizando Protobuf para velocidade e economia de espaço em memória com estes processos
   - ICachingManagement (que no final das contas é um repositório de dados preenchido com dados da fonte de dados)
+- Abstrações para integração com serviço de mensageria RabbitMQ
 
 Lista com os principais pacotes Nuget que foram utilizados neste projeto:<br/>
 - LanguageExt.Core
@@ -161,6 +163,7 @@ Lista com os principais pacotes Nuget que foram utilizados neste projeto:<br/>
 - Polly
 - Microsoft.Extensions.Caching.StackExchangeRedis
 - protobuf-net
+- RabbitMQ.Client
 - RichardSzalay.MockHttp
 - Microsoft.AspNetCore.Mvc.Testing
 - Microsoft.Data.Sqlite.Core
