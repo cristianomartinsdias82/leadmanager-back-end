@@ -61,6 +61,8 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "LeadManagerRemovedLead.Cons
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "LeadManagerUpdatedLead.Consumer", "src\hosts\LeadManagerUpdatedLead.Consumer\LeadManagerUpdatedLead.Consumer.csproj", "{FA0B1B95-09CC-40CA-8972-F5322D937ADE}"
 EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "LeadManager.BackendServices.Consumers.Common", "src\hosts\LeadManager.BackendServices.ConsumersCommon\LeadManager.BackendServices.Consumers.Common.csproj", "{D0131566-9F18-443F-B72B-A63C2A79A15B}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -147,6 +149,10 @@ Global
 		{FA0B1B95-09CC-40CA-8972-F5322D937ADE}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{FA0B1B95-09CC-40CA-8972-F5322D937ADE}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{FA0B1B95-09CC-40CA-8972-F5322D937ADE}.Release|Any CPU.Build.0 = Release|Any CPU
+		{D0131566-9F18-443F-B72B-A63C2A79A15B}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{D0131566-9F18-443F-B72B-A63C2A79A15B}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{D0131566-9F18-443F-B72B-A63C2A79A15B}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{D0131566-9F18-443F-B72B-A63C2A79A15B}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -179,6 +185,7 @@ Global
 		{614D212D-3994-4072-B707-60881162A4C4} = {B297EC06-E0FF-4D6F-88ED-54F72C02F429}
 		{1D7C20B6-74A5-452A-9991-14E60924F824} = {B297EC06-E0FF-4D6F-88ED-54F72C02F429}
 		{FA0B1B95-09CC-40CA-8972-F5322D937ADE} = {B297EC06-E0FF-4D6F-88ED-54F72C02F429}
+		{D0131566-9F18-443F-B72B-A63C2A79A15B} = {B297EC06-E0FF-4D6F-88ED-54F72C02F429}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {F5C96730-41C5-4999-9784-B64A284FE630}

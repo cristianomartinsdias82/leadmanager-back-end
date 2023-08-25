@@ -1,24 +1,12 @@
-using CrossCutting.Messaging.Configuration;
-using CrossCutting.Messaging.RabbitMq.Configuration;
+using CrossCutting.Messaging.Consumers.BackendServices.Common;
 
 namespace LeadManagerNewlyCreatedLeads.Consumer;
 
 public class Program
 {
     public async static Task Main(string[] args)
-    {
-        var host = Host
-            .CreateDefaultBuilder(args)
-            .ConfigureServices(services =>
-            {
-                services
-                    .AddMessageBus(services.BuildServiceProvider().GetRequiredService<IConfiguration>())
-                    .AddHostedService<NewlyCreatedLeadsConsumerWorker>();
-            })
-            .Build();
-
-        host.UseMessageBusInitialization();
-
-        await host.RunAsync();
-    }
+        => await ConsumerServiceHostBuilder.New(args)
+                                     .WithHostedService<NewlyCreatedLeadsConsumerWorker>()
+                                     .Build()
+                                     .RunAsync();
 }
