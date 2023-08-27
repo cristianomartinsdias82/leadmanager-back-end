@@ -63,9 +63,9 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "LeadManagerUpdatedLead.Cons
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "LeadManager.BackendServices.Consumers.Common", "src\hosts\LeadManager.BackendServices.ConsumersCommon\LeadManager.BackendServices.Consumers.Common.csproj", "{D0131566-9F18-443F-B72B-A63C2A79A15B}"
 EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "foreground", "foreground", "{6A278CFE-5241-47FC-97D5-FC7D48B08F86}"
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "backends-for-front-end", "backends-for-front-end", "{6A278CFE-5241-47FC-97D5-FC7D48B08F86}"
 EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "background", "background", "{71C8B27E-0340-4390-A8DC-4DD3776E4E27}"
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "background-services", "background-services", "{71C8B27E-0340-4390-A8DC-4DD3776E4E27}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
