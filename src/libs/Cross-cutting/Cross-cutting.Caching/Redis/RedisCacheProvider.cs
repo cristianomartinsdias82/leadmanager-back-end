@@ -1,7 +1,7 @@
 ﻿using CrossCutting.Caching.Redis.Configuration;
+using CrossCutting.Serialization.ProtoBuf;
 using Microsoft.Extensions.Caching.Distributed;
 using Polly;
-using ProtoBuf;
 
 namespace CrossCutting.Caching.Redis;
 
@@ -27,7 +27,7 @@ internal sealed class RedisCacheProvider : CacheProvider
                 {
                     var itemData = await _cache.GetAsync(key, cancellationToken);
                     if (itemData is not null)
-                        item = FromByteArray(itemData, item!);
+                        item = ProtoBufSerializer.Deserialize<T>(itemData);
 
                     return item!;
                 });
@@ -41,7 +41,7 @@ internal sealed class RedisCacheProvider : CacheProvider
                 {
                     await _cache.SetAsync(
                                     key,
-                                    ToByteArray(item),
+                                    item is not null ? ProtoBufSerializer.Serialize(item) : default!,
                                     new DistributedCacheEntryOptions { AbsoluteExpirationRelativeToNow = TimeSpan.FromSeconds(ttlInSeconds) },
                                     cancellationToken);
                 });
@@ -58,14 +58,4 @@ internal sealed class RedisCacheProvider : CacheProvider
                                     cancellationToken);
                 });
     }
-
-    private static byte[] ToByteArray<T>(T item)
-    {
-        using var ms = new MemoryStream();
-        Serializer.Serialize(ms, item);
-        return ms.ToArray();
-    }
-
-    private static T FromByteArray<T>(ReadOnlyMemory<byte> span, T defaultValue = default!)
-        => Serializer.Deserialize(span, defaultValue);
 }

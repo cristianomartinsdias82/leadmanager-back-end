@@ -1,8 +1,8 @@
 ﻿using Application.Contracts.Caching;
 using Application.Contracts.Caching.Policies;
 using Application.Contracts.Persistence;
-using Application.Features.Leads.Shared;
 using CrossCutting.Caching;
+using CrossCutting.MessageContracts;
 using Microsoft.EntityFrameworkCore;
 
 namespace Infrastructure.Caching;
@@ -23,9 +23,9 @@ internal sealed class CacheManager : ICachingManagement
         _leadsCachingPolicy = cachingPoliciesSettings.LeadsPolicy;
     }
 
-    public async Task<IEnumerable<LeadDto>> GetLeadsAsync(CancellationToken cancellationToken = default)
+    public async Task<IEnumerable<LeadData>> GetLeadsAsync(CancellationToken cancellationToken = default)
     {
-        var cachedLeads = await _cacheProvider.GetAsync<IEnumerable<LeadDto>>(
+        var cachedLeads = await _cacheProvider.GetAsync<IEnumerable<LeadData>>(
             _leadsCachingPolicy.CacheKey,
             cancellationToken);
 
@@ -35,47 +35,48 @@ internal sealed class CacheManager : ICachingManagement
         var leads = await _dbContext.Leads.ToListAsync(cancellationToken);
 
         if (leads.Count.Equals(0))
-            return Enumerable.Empty<LeadDto>();
+            return Enumerable.Empty<LeadData>();
 
         await _cacheProvider.SetAsync(
             _leadsCachingPolicy.CacheKey,
-            cachedLeads = leads.ToDtoList(),
+            cachedLeads = leads.AsMessageContractList(),
             ttlInSeconds: _leadsCachingPolicy.TtlInSeconds,
             cancellationToken: cancellationToken);
 
         return cachedLeads;
     }
 
-    public async Task AddLeadEntryAsync(LeadDto lead, CancellationToken cancellationToken = default)
+    public async Task AddLeadEntryAsync(LeadData lead, CancellationToken cancellationToken = default)
     {
-        ArgumentNullException.ThrowIfNull(lead);
+        if (lead.IsNull)
+            throw new ArgumentNullException();
 
         var cachedLeads = await _cacheProvider
-                                    .GetAsync<IEnumerable<LeadDto>>(
+                                    .GetAsync<IEnumerable<LeadData>>(
                                         _leadsCachingPolicy.CacheKey,
                                         cancellationToken);
         var leads = cachedLeads?.ToList() ?? new ();
         leads.Add(lead);
 
-        await _cacheProvider.SetAsync<IEnumerable<LeadDto>>(
+        await _cacheProvider.SetAsync<IEnumerable<LeadData>>(
                 _leadsCachingPolicy.CacheKey,
                 leads,
                 _leadsCachingPolicy.TtlInSeconds,
                 cancellationToken);
     }
 
-    public async Task AddLeadEntriesAsync(List<LeadDto> leads, CancellationToken cancellationToken = default)
+    public async Task AddLeadEntriesAsync(List<LeadData> leads, CancellationToken cancellationToken = default)
     {
         ArgumentNullException.ThrowIfNull(leads);
 
         var cachedLeads = await _cacheProvider
-                                    .GetAsync<IEnumerable<LeadDto>>(
+                                    .GetAsync<IEnumerable<LeadData>>(
                                         _leadsCachingPolicy.CacheKey,
                                         cancellationToken);
         var existingLeads = cachedLeads?.ToList() ?? new();
         existingLeads.AddRange(leads);
 
-        await _cacheProvider.SetAsync<IEnumerable<LeadDto>>(
+        await _cacheProvider.SetAsync<IEnumerable<LeadData>>(
                 _leadsCachingPolicy.CacheKey,
                 existingLeads,
                 _leadsCachingPolicy.TtlInSeconds,
@@ -87,12 +88,13 @@ internal sealed class CacheManager : ICachingManagement
         await _cacheProvider.RemoveAsync(_leadsCachingPolicy.CacheKey, cancellationToken);
     }
 
-    public async Task RemoveLeadEntryAsync(LeadDto lead, CancellationToken cancellationToken = default)
+    public async Task RemoveLeadEntryAsync(LeadData lead, CancellationToken cancellationToken = default)
     {
-        ArgumentNullException.ThrowIfNull(lead);
+        if (lead.IsNull)
+            throw new ArgumentNullException();
 
         var cachedLeads = await _cacheProvider
-                                    .GetAsync<IEnumerable<LeadDto>>(
+                                    .GetAsync<IEnumerable<LeadData>>(
                                         _leadsCachingPolicy.CacheKey,
                                         cancellationToken);
         if (!cachedLeads?.Any() ?? false)
@@ -100,31 +102,32 @@ internal sealed class CacheManager : ICachingManagement
 
         var leads = cachedLeads!.ToList();
         var leadToRemove = leads.FirstOrDefault(ld => ld.Id == lead.Id);
-        if (leadToRemove is null)
+        if (leadToRemove.IsNull)
             return;
 
         leads.Remove(leadToRemove);
-        await _cacheProvider.SetAsync<IEnumerable<LeadDto>>(
+        await _cacheProvider.SetAsync<IEnumerable<LeadData>>(
                 _leadsCachingPolicy.CacheKey,
                 leads,
                 _leadsCachingPolicy.TtlInSeconds,
                 cancellationToken);
     }
 
-    public async Task UpdateLeadEntryAsync(LeadDto lead, CancellationToken cancellationToken = default)
+    public async Task UpdateLeadEntryAsync(LeadData lead, CancellationToken cancellationToken = default)
     {
-        ArgumentNullException.ThrowIfNull(lead);
+        if (lead.IsNull)
+            throw new ArgumentNullException();
 
         var cachedLeads = await GetLeadsAsync(cancellationToken);
         var leads = cachedLeads.ToList();
         var outdatedLead = leads.FirstOrDefault(ld => ld.Id == lead.Id);
-        if (outdatedLead is null)
+        if (outdatedLead.IsNull)
             return;
 
         leads.Remove(outdatedLead);
         leads.Add(lead);
 
-        await _cacheProvider.SetAsync<IEnumerable<LeadDto>>(
+        await _cacheProvider.SetAsync<IEnumerable<LeadData>>(
                 _leadsCachingPolicy.CacheKey,
                 leads,
                 _leadsCachingPolicy.TtlInSeconds,

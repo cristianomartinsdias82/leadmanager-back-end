@@ -1,6 +1,5 @@
-﻿using RabbitMQ.Client;
-using System.Text;
-using System.Text.Json;
+﻿using CrossCutting.Serialization.ProtoBuf;
+using RabbitMQ.Client;
 
 namespace CrossCutting.Messaging.RabbitMq;
 
@@ -13,7 +12,7 @@ internal sealed class RabbitMqMessageDispatcher : MessageDispatcher
         _rabbitMqChannelFactory = rabbitMqChannelFactory;
     }
 
-    public override Task SendToQueueAsync<T>(
+    public override ValueTask SendToQueueAsync<T>(
         string queueName,
         T data,
         CancellationToken cancellationToken = default)
@@ -23,12 +22,12 @@ internal sealed class RabbitMqMessageDispatcher : MessageDispatcher
             string.Empty,
             queueName,
             default!,
-            Encoding.UTF8.GetBytes(JsonSerializer.Serialize(data)));
+            ProtoBufSerializer.Serialize(data!));
 
-        return Task.CompletedTask;
+        return new();
     }
 
-    public override Task SendToQueueAsync(
+    public override ValueTask SendToQueueAsync(
         string queueName,
         byte[] bytes,
         CancellationToken cancellationToken = default)
@@ -36,22 +35,26 @@ internal sealed class RabbitMqMessageDispatcher : MessageDispatcher
         using var channel = _rabbitMqChannelFactory.CreateChannel();
         channel.BasicPublish(string.Empty, queueName, default!, bytes);
 
-        return Task.CompletedTask;
+        return new();
     }
 
-    public override Task SendToTopicAsync<T>(
+    public override ValueTask SendToTopicAsync<T>(
         string topicName,
         string routingKey,
         T data,
         CancellationToken cancellationToken = default)
     {
         using var channel = _rabbitMqChannelFactory.CreateChannel();
-        channel.BasicPublish(topicName, routingKey, default!, Encoding.UTF8.GetBytes(JsonSerializer.Serialize(data)));
+        channel.BasicPublish(
+            topicName,
+            routingKey,
+            default!,
+            ProtoBufSerializer.Serialize(data!));
 
-        return Task.CompletedTask;
+        return new();
     }
 
-    public override Task SendToTopicAsync(
+    public override ValueTask SendToTopicAsync(
         string topicName,
         string routingKey,
         byte[] bytes,
@@ -60,6 +63,6 @@ internal sealed class RabbitMqMessageDispatcher : MessageDispatcher
         using var channel = _rabbitMqChannelFactory.CreateChannel();
         channel.BasicPublish(topicName, routingKey, default!, bytes);
 
-        return Task.CompletedTask;
+        return new();
     }
 }

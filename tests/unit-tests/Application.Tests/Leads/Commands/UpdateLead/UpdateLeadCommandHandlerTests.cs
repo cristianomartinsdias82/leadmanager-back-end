@@ -1,7 +1,7 @@
 ﻿using Application.Contracts.Caching;
 using Application.Contracts.Persistence;
 using Application.Features.Leads.Commands.UpdateLead;
-using Application.Features.Leads.Shared;
+using CrossCutting.MessageContracts;
 using FluentAssertions;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
@@ -80,8 +80,8 @@ public sealed class UpdateLeadCommandHandlerTests : IAsyncDisposable, IDisposabl
         updatedLead.Logradouro.Should().Be(request.Endereco);
         updatedLead.Cidade.Should().Be(request.Cidade);
         updatedLead.Estado.Should().Be(request.Estado);
-        _eventDispatcher.Received(2).AddEvent(Arg.Any<IEvent>());
-        await _cachingManager.Received(1).UpdateLeadEntryAsync(Arg.Any<LeadDto>(), _cts.Token);
+        _eventDispatcher.Received(1).AddEvent(Arg.Any<IEvent>());
+        await _cachingManager.Received(1).UpdateLeadEntryAsync(Arg.Any<LeadData>(), _cts.Token);
     }
 
     [Fact]
@@ -113,6 +113,6 @@ public sealed class UpdateLeadCommandHandlerTests : IAsyncDisposable, IDisposabl
         result.Should().BeOfType<ApplicationResponse<UpdateLeadCommandResponse>>();
         result.Message.Should().BeEquivalentTo("Lead não encontrado.");
         _eventDispatcher.Received(0).AddEvent(Arg.Any<IEvent>());
-        await _cachingManager.Received(0).UpdateLeadEntryAsync(Arg.Any<LeadDto>(), _cts.Token);
+        await _cachingManager.Received(0).UpdateLeadEntryAsync(Arg.Any<LeadData>(), _cts.Token);
     }
 }

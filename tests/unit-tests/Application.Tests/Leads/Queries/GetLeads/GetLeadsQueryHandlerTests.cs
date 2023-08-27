@@ -1,6 +1,7 @@
 ﻿using Application.Contracts.Caching;
 using Application.Features.Leads.Queries.GetLeads;
 using Application.Features.Leads.Shared;
+using CrossCutting.MessageContracts;
 using FluentAssertions;
 using MediatR;
 using NSubstitute;
@@ -31,7 +32,7 @@ public sealed class GetLeadsQueryHandlerTests : IDisposable
         //Arrange && Act
         var result = await _handler.Handle(new(default!), _cts.Token);
         _cachingManagerMock.GetLeadsAsync(_cts.Token)
-                          .Returns(Enumerable.Empty<LeadDto>());
+                          .Returns(Enumerable.Empty<LeadData>());
 
         //Assert
         result.Should().NotBeNull();
@@ -48,7 +49,7 @@ public sealed class GetLeadsQueryHandlerTests : IDisposable
         //Arrange
         var leads = LeadMother.Leads();
         _cachingManagerMock.GetLeadsAsync(_cts.Token)
-                          .Returns(leads.ToDtoList());
+                          .Returns(leads.AsMessageContractList());
 
         //Act
         var result = await _handler.Handle(new(default!), _cts.Token);

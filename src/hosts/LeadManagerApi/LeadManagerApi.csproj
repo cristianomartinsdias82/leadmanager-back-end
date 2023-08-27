@@ -23,7 +23,6 @@
   <ItemGroup>
     <ProjectReference Include="..\..\libs\Application\Application.csproj" />
     <ProjectReference Include="..\..\libs\Core\Core.csproj" />
-    <ProjectReference Include="..\..\libs\Cross-cutting\Cross-cutting.Messaging\CrossCutting.Messaging.csproj" />
     <ProjectReference Include="..\..\libs\Infrastructure\Infrastructure.csproj" />
   </ItemGroup>
 

@@ -2,23 +2,23 @@
 
 public interface IMessageDispatching
 {
-    Task SendToQueueAsync<T>(
+    ValueTask SendToQueueAsync<T>(
         string queueName,
         T data,
         CancellationToken cancellationToken = default);
 
-    Task SendToQueueAsync(
+    ValueTask SendToQueueAsync(
         string queueName,
         byte[] bytes,
         CancellationToken cancellationToken = default);
 
-    Task SendToTopicAsync<T>(
+    ValueTask SendToTopicAsync<T>(
         string topicName,
         string routingKey,
         T data,
         CancellationToken cancellationToken = default);
 
-    Task SendToTopicAsync(
+    ValueTask SendToTopicAsync(
         string topicName,
         string routingKey,
         byte[] bytes,

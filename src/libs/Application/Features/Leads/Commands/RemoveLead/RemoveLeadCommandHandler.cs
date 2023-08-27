@@ -1,8 +1,8 @@
 ﻿using Application.Contracts.Caching;
 using Application.Contracts.Persistence;
 using Application.Features.Leads.IntegrationEvents.LeadRemoved;
-using Application.Features.Leads.Shared;
 using Core.DomainEvents.LeadRemoved;
+using CrossCutting.MessageContracts;
 using MediatR;
 using Shared.Events.EventDispatching;
 using Shared.RequestHandling;
@@ -35,10 +35,9 @@ internal sealed class RemoveLeadCommandHandler : ApplicationRequestHandler<Remov
 
         await _dbContext.SaveChangesAsync(cancellationToken);
 
-        var leadDto = lead.ToDto();
+        var leadDto = lead.AsMessageContract();
         await _cachingManager.RemoveLeadEntryAsync(leadDto, cancellationToken);
 
-        AddEvent(new LeadRemovedDomainEvent(lead));
         AddEvent(new LeadRemovedIntegrationEvent(leadDto));
 
         return ApplicationResponse<RemoveLeadCommandResponse>.Create(new RemoveLeadCommandResponse());

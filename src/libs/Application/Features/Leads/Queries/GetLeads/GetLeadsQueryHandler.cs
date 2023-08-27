@@ -21,6 +21,6 @@ internal sealed class GetLeadsQueryHandler : ApplicationRequestHandler<GetLeadsQ
     {
         var cachedLeads = await _cachingManager.GetLeadsAsync(cancellationToken);
 
-        return ApplicationResponse<IEnumerable<LeadDto>>.Create(cachedLeads);
+        return ApplicationResponse<IEnumerable<LeadDto>>.Create(cachedLeads.AsDtoList());
     }
 }

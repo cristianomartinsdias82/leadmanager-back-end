@@ -2,6 +2,7 @@
 using Application.Contracts.Persistence;
 using Application.Features.Leads.Shared;
 using CrossCutting.Caching;
+using CrossCutting.MessageContracts;
 using FluentAssertions;
 using Infrastructure.Caching;
 using NSubstitute;
@@ -18,7 +19,7 @@ public sealed class CacheManagerTests : IDisposable, IAsyncDisposable
     private readonly CancellationTokenSource _cts;
     private readonly ICacheProvider _cacheProviderMock;
     private readonly CachingPoliciesSettings _cachingPoliciesSettings;
-    private readonly List<LeadDto> _leadDtos;
+    private readonly List<LeadData> _leadDtos;
 
     public CacheManagerTests()
     {
@@ -30,7 +31,7 @@ public sealed class CacheManagerTests : IDisposable, IAsyncDisposable
             _dbContext,
             _cacheProviderMock,
             _cachingPoliciesSettings);
-        _leadDtos = LeadMother.Leads().ToDtoList();
+        _leadDtos = LeadMother.Leads().AsMessageContractList();
     }
 
     [Fact]
@@ -40,7 +41,7 @@ public sealed class CacheManagerTests : IDisposable, IAsyncDisposable
         await Assert.ThrowsAsync<ArgumentNullException>(async () => await _cacheManager.AddLeadEntryAsync(default!, _cts.Token));
         await _cacheProviderMock
                 .Received(0)
-                .GetAsync<IEnumerable<LeadDto>>(
+                .GetAsync<IEnumerable<LeadData>>(
                     key: Arg.Any<string>(),
                     cancellationToken: _cts.Token);
     }
@@ -49,7 +50,7 @@ public sealed class CacheManagerTests : IDisposable, IAsyncDisposable
     public async Task AddLeadEntry_ValidArgument_ShouldRunSuccessfully()
     {
         //Arrange
-        var leadDto = LeadMother.XptoLLC().ToDto();
+        var leadDto = LeadMother.XptoLLC().AsMessageContract();
        
         //Act
         await _cacheManager.AddLeadEntryAsync(leadDto, _cts.Token);
@@ -57,14 +58,14 @@ public sealed class CacheManagerTests : IDisposable, IAsyncDisposable
         //Assert
         await _cacheProviderMock
                 .Received(1)
-                .GetAsync<IEnumerable<LeadDto>>(
+                .GetAsync<IEnumerable<LeadData>>(
                     key: Arg.Any<string>(),
                     cancellationToken: _cts.Token);
         await _cacheProviderMock
                 .Received(1)
                 .SetAsync(
                     key: Arg.Any<string>(),
-                    item: Arg.Any<IEnumerable<LeadDto>>(),
+                    item: Arg.Any<IEnumerable<LeadData>>(),
                     ttlInSeconds: Arg.Any<int>(),
                     cancellationToken: _cts.Token);
     }
@@ -76,14 +77,14 @@ public sealed class CacheManagerTests : IDisposable, IAsyncDisposable
         await Assert.ThrowsAsync<ArgumentNullException>(async () => await _cacheManager.AddLeadEntriesAsync(default!, _cts.Token));
         await _cacheProviderMock
                 .Received(0)
-                .GetAsync<IEnumerable<LeadDto>>(
+                .GetAsync<IEnumerable<LeadData>>(
                     key: Arg.Any<string>(),
                     cancellationToken: _cts.Token);
         await _cacheProviderMock
                 .Received(0)
                 .SetAsync(
                     key: Arg.Any<string>(),
-                    item: Arg.Any<IEnumerable<LeadDto>>(),
+                    item: Arg.Any<IEnumerable<LeadData>>(),
                     ttlInSeconds: Arg.Any<int>(),
                     cancellationToken: _cts.Token);
     }
@@ -97,14 +98,15 @@ public sealed class CacheManagerTests : IDisposable, IAsyncDisposable
         //Assert
         await _cacheProviderMock
                 .Received(1)
-                .GetAsync<IEnumerable<LeadDto>>(
+                .GetAsync<IEnumerable<LeadData>>(
                     key: Arg.Any<string>(),
                     cancellationToken: _cts.Token);
+
         await _cacheProviderMock
                 .Received(1)
                 .SetAsync(
                     key: Arg.Any<string>(),
-                    item: Arg.Any<IEnumerable<LeadDto>>(),
+                    item: Arg.Any<IEnumerable<LeadData>>(),
                     ttlInSeconds: Arg.Any<int>(),
                     cancellationToken: _cts.Token);
     }
@@ -116,14 +118,15 @@ public sealed class CacheManagerTests : IDisposable, IAsyncDisposable
         await Assert.ThrowsAsync<ArgumentNullException>(async () => await _cacheManager.UpdateLeadEntryAsync(default!, _cts.Token));
         await _cacheProviderMock
                 .Received(0)
-                .GetAsync<IEnumerable<LeadDto>>(
+                .GetAsync<IEnumerable<LeadData>>(
                     key: Arg.Any<string>(),
                     cancellationToken: _cts.Token);
+
         await _cacheProviderMock
                 .Received(0)
                 .SetAsync(
                     key: Arg.Any<string>(),
-                    item: Arg.Any<IEnumerable<LeadDto>>(),
+                    item: Arg.Any<IEnumerable<LeadData>>(),
                     ttlInSeconds: Arg.Any<int>(),
                     cancellationToken: _cts.Token);
     }
@@ -133,7 +136,7 @@ public sealed class CacheManagerTests : IDisposable, IAsyncDisposable
     {
         //Arrange
         _cacheProviderMock
-            .GetAsync<IEnumerable<LeadDto>>(Arg.Any<string>(), _cts.Token)
+            .GetAsync<IEnumerable<LeadData>>(Arg.Any<string>(), _cts.Token)
             .Returns(_leadDtos);
 
         var updatedLead = _leadDtos.First();     
@@ -144,14 +147,15 @@ public sealed class CacheManagerTests : IDisposable, IAsyncDisposable
         //Assert
         await _cacheProviderMock
                 .Received(1)
-                .GetAsync<IEnumerable<LeadDto>>(
+                .GetAsync<IEnumerable<LeadData>>(
                     key: Arg.Any<string>(),
                     cancellationToken: _cts.Token);
+
         await _cacheProviderMock
                 .Received(1)
                 .SetAsync(
                     key: Arg.Any<string>(),
-                    item: Arg.Any<IEnumerable<LeadDto>>(),
+                    item: Arg.Any<IEnumerable<LeadData>>(),
                     ttlInSeconds: Arg.Any<int>(),
                     cancellationToken: _cts.Token);
     }
@@ -161,23 +165,23 @@ public sealed class CacheManagerTests : IDisposable, IAsyncDisposable
     {
         //Arrange
         _cacheProviderMock
-            .GetAsync<IEnumerable<LeadDto>>(Arg.Any<string>(), _cts.Token)
-            .Returns(Enumerable.Empty<LeadDto>());
+            .GetAsync<IEnumerable<LeadData>>(Arg.Any<string>(), _cts.Token)
+            .Returns(Enumerable.Empty<LeadData>());
 
         //Act
-        await _cacheManager.UpdateLeadEntryAsync(LeadMother.GumperInc().ToDto(), _cts.Token);
+        await _cacheManager.UpdateLeadEntryAsync(LeadMother.GumperInc().AsMessageContract(), _cts.Token);
 
         //Assert
         await _cacheProviderMock
                 .Received(1)
-                .GetAsync<IEnumerable<LeadDto>>(
+                .GetAsync<IEnumerable<LeadData>>(
                     key: Arg.Any<string>(),
                     cancellationToken: _cts.Token);
         await _cacheProviderMock
                 .Received(0)
                 .SetAsync(
                     key: Arg.Any<string>(),
-                    item: Arg.Any<IEnumerable<LeadDto>>(),
+                    item: Arg.Any<IEnumerable<LeadData>>(),
                     ttlInSeconds: Arg.Any<int>(),
                     cancellationToken: _cts.Token);
     }
@@ -189,14 +193,14 @@ public sealed class CacheManagerTests : IDisposable, IAsyncDisposable
         await Assert.ThrowsAsync<ArgumentNullException>(async () => await _cacheManager.RemoveLeadEntryAsync(default!, _cts.Token));
         await _cacheProviderMock
                 .Received(0)
-                .GetAsync<IEnumerable<LeadDto>>(
+                .GetAsync<IEnumerable<LeadData>>(
                     key: Arg.Any<string>(),
                     cancellationToken: _cts.Token);
         await _cacheProviderMock
                 .Received(0)
                 .SetAsync(
                     key: Arg.Any<string>(),
-                    item: Arg.Any<IEnumerable<LeadDto>>(),
+                    item: Arg.Any<IEnumerable<LeadData>>(),
                     ttlInSeconds: Arg.Any<int>(),
                     cancellationToken: _cts.Token);
     }
@@ -206,7 +210,7 @@ public sealed class CacheManagerTests : IDisposable, IAsyncDisposable
     {
         //Arrange
         _cacheProviderMock
-            .GetAsync<IEnumerable<LeadDto>>(Arg.Any<string>(), _cts.Token)
+            .GetAsync<IEnumerable<LeadData>>(Arg.Any<string>(), _cts.Token)
             .Returns(_leadDtos);
 
         var leadToRemove = _leadDtos.First();
@@ -217,14 +221,14 @@ public sealed class CacheManagerTests : IDisposable, IAsyncDisposable
         //Assert
         await _cacheProviderMock
                 .Received(1)
-                .GetAsync<IEnumerable<LeadDto>>(
+                .GetAsync<IEnumerable<LeadData>>(
                     key: Arg.Any<string>(),
                     cancellationToken: _cts.Token);
         await _cacheProviderMock
                 .Received(1)
                 .SetAsync(
                     key: Arg.Any<string>(),
-                    item: Arg.Any<IEnumerable<LeadDto>>(),
+                    item: Arg.Any<IEnumerable<LeadData>>(),
                     ttlInSeconds: Arg.Any<int>(),
                     cancellationToken: _cts.Token);
     }
@@ -234,23 +238,24 @@ public sealed class CacheManagerTests : IDisposable, IAsyncDisposable
     {
         //Arrange
         _cacheProviderMock
-            .GetAsync<IEnumerable<LeadDto>>(Arg.Any<string>(), _cts.Token)
-            .Returns(Enumerable.Empty<LeadDto>());
+            .GetAsync<IEnumerable<LeadData>>(Arg.Any<string>(), _cts.Token)
+            .Returns(Enumerable.Empty<LeadData>());
 
         //Act
-        await _cacheManager.RemoveLeadEntryAsync(LeadMother.XptoLLC().ToDto(), _cts.Token);
+        await _cacheManager.RemoveLeadEntryAsync(LeadMother.XptoLLC().AsMessageContract(), _cts.Token);
 
         //Assert
         await _cacheProviderMock
                 .Received(1)
-                .GetAsync<IEnumerable<LeadDto>>(
+                .GetAsync<IEnumerable<LeadData>>(
                     key: Arg.Any<string>(),
                     cancellationToken: _cts.Token);
+
         await _cacheProviderMock
                 .Received(0)
                 .SetAsync(
                     key: Arg.Any<string>(),
-                    item: Arg.Any<IEnumerable<LeadDto>>(),
+                    item: Arg.Any<IEnumerable<LeadData>>(),
                     ttlInSeconds: Arg.Any<int>(),
                     cancellationToken: _cts.Token);
     }
@@ -271,7 +276,7 @@ public sealed class CacheManagerTests : IDisposable, IAsyncDisposable
     public async Task GetLeads_NonEmptyList_ReturnsLeadsList()
     {
         //Arrange
-        _cacheProviderMock.GetAsync<IEnumerable<LeadDto>>(Arg.Any<string>(), _cts.Token)
+        _cacheProviderMock.GetAsync<IEnumerable<LeadData>>(Arg.Any<string>(), _cts.Token)
                           .Returns(_leadDtos);
         
         //Act
@@ -280,10 +285,10 @@ public sealed class CacheManagerTests : IDisposable, IAsyncDisposable
         //Assert
         await _cacheProviderMock
                 .Received(1)
-                .GetAsync<IEnumerable<LeadDto>>(Arg.Any<string>(), _cts.Token);
-        _leadDtos.Count.Should().Be(cachedLeads.Count());
+                .GetAsync<IEnumerable<LeadData>>(Arg.Any<string>(), _cts.Token);
+        _leadDtos.Count.Should().NotBe(0).And.Be(cachedLeads.Count());
         for(var i = 0; i < _leadDtos.Count; i++)
-            _leadDtos[i].Id = cachedLeads.ElementAt(i).Id;
+            _leadDtos[i].Id.Should().Be(cachedLeads.ElementAt(i).Id);
     }
 
     [Fact]
@@ -295,7 +300,7 @@ public sealed class CacheManagerTests : IDisposable, IAsyncDisposable
         //Assert
         await _cacheProviderMock
                 .Received(1)
-                .GetAsync<IEnumerable<LeadDto>>(Arg.Any<string>(), _cts.Token);
+                .GetAsync<IEnumerable<LeadData>>(Arg.Any<string>(), _cts.Token);
         cachedLeads.Count().Should().Be(0);
     }
 

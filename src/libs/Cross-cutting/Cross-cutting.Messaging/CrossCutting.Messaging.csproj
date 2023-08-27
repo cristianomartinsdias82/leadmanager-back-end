@@ -18,6 +18,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\..\Shared\Shared.csproj" />
+    <ProjectReference Include="..\Cross-cutting.Serialization.ProtoBuf\CrossCutting.Serialization.ProtoBuf.csproj" />
   </ItemGroup>
 
 </Project>

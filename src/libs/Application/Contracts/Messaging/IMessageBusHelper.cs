@@ -1,10 +1,18 @@
-﻿using Application.Features.Leads.Shared;
+﻿using CrossCutting.MessageContracts;
 
 namespace Application.Contracts.Messaging;
 
 public interface IMessageBusHelper
 {
-    Task SendToNewlyCreatedLeadsChannelAsync(List<LeadDto> newlyCreatedLeads, CancellationToken cancellationToken = default);
-    Task SendToLeadUpdatedChannelAsync(LeadDto updatedLead, CancellationToken cancellationToken = default);
-    Task SendToLeadRemovedChannelAsync(LeadDto removedLead, CancellationToken cancellationToken = default);
+    ValueTask SendToNewlyCreatedLeadsChannelAsync(
+        List<LeadData> newlyCreatedLeads,
+        CancellationToken cancellationToken = default);
+
+    ValueTask SendToLeadUpdatedChannelAsync(
+        LeadData updatedLead,
+        CancellationToken cancellationToken = default);
+
+    ValueTask SendToLeadRemovedChannelAsync(
+        LeadData removedLead,
+        CancellationToken cancellationToken = default);
 }

@@ -22,6 +22,16 @@ public static class RabbitMqHostExtensions
             messageChannelSettings.RemovedLeadChannel
         };
 
+        /*
+        //Resiliency logic
+        return await Policy.Handle()
+                .WaitAndRetryAsync(_settings.UploadAttemptsMaxCount, count => TimeSpan.FromSeconds(Math.Pow(2, count) + Random.Shared.Next(2, 4)))
+                .ExecuteAsync(async () =>
+        {
+            
+        });
+        */
+
         //TODO: Wrap this code into a Policy.Execute block (from Polly library)
         //TODO: Log every step of the code below
         try

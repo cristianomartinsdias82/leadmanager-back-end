@@ -26,20 +26,6 @@ internal sealed class GetLeadByIdQueryHandler : ApplicationRequestHandler<GetLea
                             message: "Lead não encontrado.",
                             operationCode: OperationCodes.NotFound);
 
-        var leadDto = new LeadDto
-        {
-            Id = lead.Id,
-            Cnpj = lead.Cnpj,
-            RazaoSocial = lead.RazaoSocial,
-            Cep = lead.Cep,
-            Endereco = lead.Logradouro,
-            Bairro = lead.Bairro,
-            Cidade = lead.Cidade,
-            Estado = lead.Estado,
-            Numero = lead.Numero,
-            Complemento = lead.Complemento
-        };
-
-        return ApplicationResponse<LeadDto>.Create(leadDto);
+        return ApplicationResponse<LeadDto>.Create(lead.AsDto());
     }
 }

@@ -2,6 +2,7 @@
 using Application.Contracts.Persistence;
 using Application.Features.Leads.Commands.RegisterLead;
 using Application.Features.Leads.Shared;
+using CrossCutting.MessageContracts;
 using FluentAssertions;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
@@ -64,7 +65,7 @@ public sealed class RegisterLeadCommandHandlerTests : IAsyncDisposable, IDisposa
         var newlyCreatedLead = await _dbContext.Leads.FindAsync(result.Data.Id, _cts.Token);
         newlyCreatedLead.Should().NotBeNull();
         newlyCreatedLead!.Cnpj.Should().BeEquivalentTo(request.Cnpj);
-        _eventDispatcher.Received(2).AddEvent(Arg.Any<IEvent>());
-        await _cachingManager.Received(1).AddLeadEntryAsync(Arg.Any<LeadDto>(), _cts.Token);
+        _eventDispatcher.Received(1).AddEvent(Arg.Any<IEvent>());
+        await _cachingManager.Received(1).AddLeadEntryAsync(Arg.Any<LeadData>(), _cts.Token);
     }
 }

@@ -1,7 +1,7 @@
 ﻿using Application.Contracts.Caching;
 using Application.Contracts.Persistence;
 using Application.Features.Leads.Commands.RemoveLead;
-using Application.Features.Leads.Shared;
+using CrossCutting.MessageContracts;
 using FluentAssertions;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
@@ -66,8 +66,8 @@ public sealed class RemoveLeadCommandHandlerTests : IAsyncDisposable, IDisposabl
         result.Message.Should().BeNullOrEmpty();
         var lead = await _dbContext.Leads.FindAsync(request.Id);
         lead.Should().BeNull();
-        _eventDispatcher.Received(2).AddEvent(Arg.Any<IEvent>());
-        await _cachingManager.Received(1).RemoveLeadEntryAsync(Arg.Any<LeadDto>(), _cts.Token);
+        _eventDispatcher.Received(1).AddEvent(Arg.Any<IEvent>());
+        await _cachingManager.Received(1).RemoveLeadEntryAsync(Arg.Any<LeadData>(), _cts.Token);
     }
 
     [Fact]
@@ -88,6 +88,6 @@ public sealed class RemoveLeadCommandHandlerTests : IAsyncDisposable, IDisposabl
         result.Inconsistencies.Should().BeNullOrEmpty();
         result.Message.Should().BeEquivalentTo("Lead não encontrado.");
         _eventDispatcher.Received(0).AddEvent(Arg.Any<IEvent>());
-        await _cachingManager.Received(0).RemoveLeadEntryAsync(Arg.Any<LeadDto>(), _cts.Token);
+        await _cachingManager.Received(0).RemoveLeadEntryAsync(Arg.Any<LeadData>(), _cts.Token);
     }
 }

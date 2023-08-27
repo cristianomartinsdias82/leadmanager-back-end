@@ -1,7 +1,7 @@
 ﻿using Application.Contracts.Caching;
 using Application.Contracts.Persistence;
 using Application.Features.Leads.IntegrationEvents.LeadUpdated;
-using Application.Features.Leads.Shared;
+using CrossCutting.MessageContracts;
 using Core.DomainEvents.LeadUpdated;
 using MediatR;
 using Shared.Events.EventDispatching;
@@ -43,10 +43,9 @@ internal sealed class UpdateLeadCommandHandler : ApplicationRequestHandler<Updat
         
         await _dbContext.SaveChangesAsync(cancellationToken);
 
-        var leadDto = lead.ToDto();
+        var leadDto = lead.AsMessageContract();
         await _cachingManager.UpdateLeadEntryAsync(leadDto, cancellationToken);
 
-        AddEvent(new LeadUpdatedDomainEvent(lead));
         AddEvent(new LeadUpdatedIntegrationEvent(leadDto));
 
         return ApplicationResponse<UpdateLeadCommandResponse>.Create(new UpdateLeadCommandResponse());

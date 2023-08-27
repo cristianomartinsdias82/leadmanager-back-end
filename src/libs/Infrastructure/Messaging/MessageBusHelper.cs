@@ -1,5 +1,5 @@
 ﻿using Application.Contracts.Messaging;
-using Application.Features.Leads.Shared;
+using CrossCutting.MessageContracts;
 using CrossCutting.Messaging;
 
 namespace Infrastructure.Messaging;
@@ -17,21 +17,21 @@ public sealed class MessageBusHelper : IMessageBusHelper
         _messageChannelSettings = messageChannelsSettings;
     }
 
-    public Task SendToLeadRemovedChannelAsync(LeadDto removedLead, CancellationToken cancellationToken = default)
+    public ValueTask SendToLeadRemovedChannelAsync(LeadData removedLead, CancellationToken cancellationToken = default)
         => _messageDispatcher.SendToTopicAsync(
             _messageChannelSettings.RemovedLeadChannel.TopicName,
             _messageChannelSettings.RemovedLeadChannel.RoutingKey,
             removedLead,
             cancellationToken);
 
-    public Task SendToLeadUpdatedChannelAsync(LeadDto updatedLead, CancellationToken cancellationToken = default)
+    public ValueTask SendToLeadUpdatedChannelAsync(LeadData updatedLead, CancellationToken cancellationToken = default)
         => _messageDispatcher.SendToTopicAsync(
             _messageChannelSettings.UpdatedLeadChannel.TopicName,
             _messageChannelSettings.UpdatedLeadChannel.RoutingKey,
             updatedLead,
             cancellationToken);
 
-    public Task SendToNewlyCreatedLeadsChannelAsync(List<LeadDto> newlyCreatedLeads, CancellationToken cancellationToken = default)
+    public ValueTask SendToNewlyCreatedLeadsChannelAsync(List<LeadData> newlyCreatedLeads, CancellationToken cancellationToken = default)
         =>_messageDispatcher.SendToTopicAsync(
             _messageChannelSettings.NewlyRegisteredLeadsChannel.TopicName,
             _messageChannelSettings.NewlyRegisteredLeadsChannel.RoutingKey,

@@ -1,6 +1,7 @@
 ﻿using Application.Contracts.Persistence;
 using Application.Features.Leads.Shared;
 using CrossCutting.Caching;
+using CrossCutting.MessageContracts;
 using CrossCutting.Messaging;
 using CrossCutting.Messaging.RabbitMq;
 using Infrastructure.Persistence;
@@ -190,10 +191,10 @@ public class LeadManagerWebApplicationFactory : WebApplicationFactory<Program>, 
                 services.TryAddScoped(services =>
                 {
                     var cacheProviderMock = Substitute.For<ICacheProvider>();
-                    cacheProviderMock.GetAsync<IEnumerable<LeadDto>>(
+                    cacheProviderMock.GetAsync<IEnumerable<LeadData>>(
                                         Arg.Any<string>(),
                                         Arg.Any<CancellationToken>())
-                                    .Returns(LeadMother.Leads().ToDtoList());
+                                    .Returns(LeadMother.Leads().AsMessageContractList());
 
                     return cacheProviderMock;
                 });

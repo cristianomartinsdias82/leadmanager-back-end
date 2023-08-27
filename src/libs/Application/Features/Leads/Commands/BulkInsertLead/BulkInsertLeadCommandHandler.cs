@@ -2,11 +2,10 @@
 using Application.Contracts.Persistence;
 using Application.Features.Leads.Commands.RegisterLead;
 using Application.Features.Leads.IntegrationEvents.LeadBulkInserted;
-using Application.Features.Leads.Shared;
-using Core.DomainEvents.LeadBulkInserted;
 using Core.Entities;
 using CrossCutting.Csv;
 using CrossCutting.FileStorage;
+using CrossCutting.MessageContracts;
 using FluentValidation;
 using FluentValidation.Results;
 using MediatR;
@@ -114,12 +113,11 @@ internal sealed class BulkInsertLeadCommandHandler : ApplicationRequestHandler<B
 
         await _dbContext.SaveChangesAsync(cancellationToken);
 
-        var leadDtos = newLeads.ToDtoList();
+        var leadDtos = newLeads.AsMessageContractList();
         await _cachingManager.AddLeadEntriesAsync(leadDtos, cancellationToken);
 
         var cachedLeads = await _cachingManager.GetLeadsAsync(cancellationToken);
 
-        AddEvent(new LeadBulkInsertedDomainEvent(newLeads));
         AddEvent(new LeadBulkInsertedIntegrationEvent(leadDtos));
 
         return ApplicationResponse<BulkInsertLeadCommandResponse>.Create(new());

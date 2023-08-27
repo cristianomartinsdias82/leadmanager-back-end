@@ -1,5 +1,6 @@
+using CrossCutting.MessageContracts;
 using CrossCutting.Messaging;
-using System.Text;
+using CrossCutting.Serialization.ProtoBuf;
 
 namespace LeadManagerNewlyCreatedLeads.Consumer;
 
@@ -26,7 +27,7 @@ public class NewlyCreatedLeadsConsumerWorker : BackgroundService
 
     public override async Task StartAsync(CancellationToken stoppingToken)
     {
-        await Task.Delay(1, stoppingToken);
+        await Task.Delay(0, stoppingToken);
         _logger.LogInformation("Starting Lead(s) registration listener consumer worker...");
 
         _messageConsumer.Subscribe(
@@ -39,9 +40,10 @@ public class NewlyCreatedLeadsConsumerWorker : BackgroundService
     private bool ProcessIncomingData(byte[] messageBytes)
     {
         Console.ForegroundColor = ConsoleColor.Blue;
-        var data = Encoding.UTF8.GetString(messageBytes);
+        var incomingLeads = ProtoBufSerializer.Deserialize<IEnumerable<LeadData>>(messageBytes);
 
         Console.WriteLine("New leads have been registered!");
+        incomingLeads.ToList().ForEach(ld => Console.WriteLine(ld));
 
         return true;
     }
