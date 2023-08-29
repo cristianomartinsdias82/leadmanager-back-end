@@ -2,6 +2,7 @@
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
+using Polly;
 using RabbitMQ.Client;
 
 namespace CrossCutting.Messaging.RabbitMq.Configuration;
@@ -22,69 +23,69 @@ public static class RabbitMqHostExtensions
             messageChannelSettings.RemovedLeadChannel
         };
 
-        /*
-        //Resiliency logic
-        return await Policy.Handle()
-                .WaitAndRetryAsync(_settings.UploadAttemptsMaxCount, count => TimeSpan.FromSeconds(Math.Pow(2, count) + Random.Shared.Next(2, 4)))
-                .ExecuteAsync(async () =>
-        {
-            
-        });
-        */
-
-        //TODO: Wrap this code into a Policy.Execute block (from Polly library)
-        //TODO: Log every step of the code below
-        try
-        {
-            using var channel = channelFactory.CreateChannel();
-
-            foreach (var channelSettings in channelSettingsCollection)
+        Policy
+            .Handle<Exception>(ex =>
             {
-                // Declare the exchange
-                channel.ExchangeDeclare(
-                    channelSettings.TopicName,
-                    ExchangeType.Topic,
-                    durable: true);
+                logger?.LogError(ex, "Core messaging infrastructure initialization error!");
 
-                // Declare the queue
-                channel.QueueDeclare(
-                    queue: channelSettings.QueueName,
-                    durable: channelSettings.Durable,
-                    exclusive: channelSettings.Exclusive,
-                    autoDelete: channelSettings.AutoDelete,
-                    arguments: new Dictionary<string, object>
-                    {
-                        {"x-dead-letter-exchange", channelSettings.DeadLetterExchange},
-                        {"x-dead-letter-routing-key", channelSettings.DeadLetterRoutingKey}
-                    });
+                return true;
+            })
+            .WaitAndRetry(5, count => TimeSpan.FromSeconds(Math.Pow(2, count) + Random.Shared.Next(2, 4)))
+            .Execute(() =>
+            {
+                using var channel = channelFactory.CreateChannel();
 
-                // Declare the dead-letter exchange
-                channel.ExchangeDeclare(
-                    channelSettings.DeadLetterExchange,
-                    ExchangeType.Direct,
-                    durable: true);
+                foreach (var channelSettings in channelSettingsCollection)
+                {
+                    logger!.LogInformation("Declaring topic {TopicName}...", channelSettings.TopicName);
+                    channel.ExchangeDeclare(
+                        channelSettings.TopicName,
+                        ExchangeType.Topic,
+                        durable: true);
+                    logger!.LogInformation("Topic {TopicName} declared successfully!", channelSettings.TopicName);
 
-                // Declare the dead-letter queue
-                channel.QueueDeclare(
-                    queue: channelSettings.DeadLetterQueueName,
-                    durable: true,
-                    exclusive: false,
-                    autoDelete: false,
-                    arguments: null);
+                    logger!.LogInformation("Declaring queue {QueueName}...", channelSettings.QueueName);
+                    
+                    channel.QueueDeclare(
+                        queue: channelSettings.QueueName,
+                        durable: channelSettings.Durable,
+                        exclusive: channelSettings.Exclusive,
+                        autoDelete: channelSettings.AutoDelete,
+                        arguments: new Dictionary<string, object>
+                        {
+                            {"x-dead-letter-exchange", channelSettings.DeadLetterExchange},
+                            {"x-dead-letter-routing-key", channelSettings.DeadLetterRoutingKey}
+                        });
+                    logger!.LogInformation("Queue {QueueName} declared successfully!", channelSettings.QueueName);
 
-                // Bind the main queue to the exchange
-                channel.QueueBind(
-                    channelSettings.QueueName,
-                    channelSettings.TopicName,
-                    routingKey: channelSettings.RoutingKey);
-            }
 
-            logger?.LogInformation("Core messaging infrastructure initialized successfully.");
-        }
-        catch (Exception exc)
-        {
-            logger?.LogError(exc, "Core messaging infrastructure initialization error!");
-        }
+                    logger!.LogInformation("Declaring dead letter topic {DeadLetterExchange}...", channelSettings.DeadLetterExchange);
+                    channel.ExchangeDeclare(
+                        channelSettings.DeadLetterExchange,
+                        ExchangeType.Direct,
+                        durable: true);
+                    logger!.LogInformation("Dead letter topic {DeadLetterExchange} declared successfully!", channelSettings.DeadLetterExchange);
+
+                    logger!.LogInformation("Declaring dead letter queue {DeadLetterQueueName}...", channelSettings.DeadLetterQueueName);
+                    channel.QueueDeclare(
+                        queue: channelSettings.DeadLetterQueueName,
+                        durable: true,
+                        exclusive: false,
+                        autoDelete: false,
+                        arguments: null);
+                    logger!.LogInformation("Dead letter queue {DeadLetterQueueName} declared successfully!", channelSettings.DeadLetterQueueName);
+
+                    // Bind the main queue to the exchange
+                    logger!.LogInformation("Binding queue {QueueName} to topic {TopicName}...", channelSettings.QueueName, channelSettings.TopicName);
+                    channel.QueueBind(
+                        channelSettings.QueueName,
+                        channelSettings.TopicName,
+                        routingKey: channelSettings.RoutingKey);
+                    logger!.LogInformation("Queue {QueueName} to topic {TopicName} bound successfully!", channelSettings.QueueName, channelSettings.TopicName);
+                }
+
+                logger!.LogInformation("Core messaging infrastructure initialized successfully.");
+            });
 
         return app;
     }
