@@ -496,3 +496,15 @@ $RECYCLE.BIN/
 /tests/integration-tests/LeadManagerApi.Tests/obj/Debug/net7.0/LeadManagerApi.Tests.assets.cache
 /tests/unit-tests/Application.Tests/obj/Debug/net7.0/Application.Tests.assets.cache
 /tests/unit-tests/Core.Tests/obj/Debug/net7.0/Core.Tests.assets.cache
+/src/hosts/LeadManagerApi/obj/Debug/net7.0/LeadManagerApi.assets.cache
+/src/hosts/LeadManagerApi/obj/project.nuget.cache
+/src/libs/Application/obj/project.nuget.cache
+/src/libs/Infrastructure/obj/project.nuget.cache
+/tests/integration-tests/LeadManagerApi.Tests/obj/project.nuget.cache
+/tests/unit-tests/Core.Tests/obj/project.nuget.cache
+/src/libs/Infrastructure/obj/Debug/net7.0/Infrastructure.assets.cache
+/tests/common/Tests.Common/obj/project.nuget.cache
+/tests/unit-tests/Shared.Tests/obj/project.nuget.cache
+/tests/unit-tests/Shared.Tests/obj/Debug/net7.0/Shared.Tests.assets.cache
+/tests/unit-tests/Application.Tests/obj/project.nuget.cache
+/src/libs/Application/obj/Debug/net7.0/Application.assets.cache
