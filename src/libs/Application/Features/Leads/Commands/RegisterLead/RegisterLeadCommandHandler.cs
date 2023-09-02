@@ -1,8 +1,8 @@
 ﻿using Application.Contracts.Caching;
 using Application.Contracts.Persistence;
 using Application.Features.Leads.IntegrationEvents.LeadRegistered;
+using Application.Features.Leads.Shared;
 using Core.Entities;
-using CrossCutting.MessageContracts;
 using MediatR;
 using Shared.Events.EventDispatching;
 using Shared.RequestHandling;
@@ -42,7 +42,7 @@ internal sealed class RegisterLeadCommandHandler : ApplicationRequestHandler<Reg
         await _dbContext.Leads.AddAsync(lead);
         await _dbContext.SaveChangesAsync(cancellationToken);
 
-        var leadDto = lead.AsMessageContract();
+        var leadDto = lead.AsDto();
         await _cachingManager.AddLeadEntryAsync(leadDto, cancellationToken);
 
         AddEvent(new LeadRegisteredIntegrationEvent(leadDto));

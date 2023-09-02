@@ -1,10 +1,10 @@
 ﻿using Application.Contracts.Caching;
 using Application.Features.Leads.Queries.GetLeads;
 using Application.Features.Leads.Shared;
-using CrossCutting.MessageContracts;
 using FluentAssertions;
 using MediatR;
 using NSubstitute;
+using Shared.DataPagination;
 using Shared.Results;
 using Tests.Common.ObjectMothers.Core;
 using Xunit;
@@ -29,41 +29,48 @@ public sealed class GetLeadsQueryHandlerTests : IDisposable
     [Fact]
     public async void Handle_DoesNotContainLeads_ReturnsEmptyData()
     {
-        //Arrange && Act
-        var result = await _handler.Handle(new(default!), _cts.Token);
-        _cachingManagerMock.GetLeadsAsync(_cts.Token)
-                          .Returns(Enumerable.Empty<LeadData>());
+        //Arrange
+        var paginationOptions = new PaginationOptions();
+        _cachingManagerMock
+            .GetLeadsAsync(paginationOptions, _cts.Token)
+            .Returns(PagedList<LeadDto>.Empty());
+
+        //Act
+        var result = await _handler.Handle(new(paginationOptions), _cts.Token);
 
         //Assert
         result.Should().NotBeNull();
-        result.Should().BeOfType<ApplicationResponse<IEnumerable<LeadDto>>>();
+        result.Should().BeOfType<ApplicationResponse<PagedList<LeadDto>>>();
         result.Success.Should().BeTrue();
         result.Exception.Should().BeNull();
         result.Inconsistencies.Should().BeNullOrEmpty();
-        result.Data.Should().NotBeNull().And.HaveCount(0);
+        result.Data.Should().NotBeNull();
+        result.Data.Items.Should().NotBeNull().And.HaveCount(0);
     }
 
     [Fact]
     public async void Handle_ContainsLeads_ReturnsData()
     {
         //Arrange
+        var paginationOptions = new PaginationOptions();
         var leads = LeadMother.Leads();
-        _cachingManagerMock.GetLeadsAsync(_cts.Token)
-                          .Returns(leads.AsMessageContractList());
+        _cachingManagerMock.GetLeadsAsync(new(), _cts.Token)
+                          .Returns(PagedList<LeadDto>.Paginate(leads.AsDtoList(), paginationOptions));
 
         //Act
-        var result = await _handler.Handle(new(default!), _cts.Token);
+        var result = await _handler.Handle(new(paginationOptions), _cts.Token);
 
         //Assert
         result.Should().NotBeNull();
-        result.Should().BeOfType<ApplicationResponse<IEnumerable<LeadDto>>>();
+        result.Should().BeOfType<ApplicationResponse<PagedList<LeadDto>>>();
         result.Success.Should().BeTrue();
         result.Exception.Should().BeNull();
         result.Inconsistencies.Should().BeNullOrEmpty();
-        result.Data.Should().NotBeNull().And.HaveCount(leads.Count);
-        result.Data.Any(x => x.RazaoSocial == leads[0].RazaoSocial).Should().BeTrue();
-        result.Data.Any(x => x.RazaoSocial == leads[1].RazaoSocial).Should().BeTrue();
-        await _cachingManagerMock.Received(1).GetLeadsAsync(_cts.Token);
+        result.Data.Should().NotBeNull();
+        result.Data.Items.Should().NotBeNull().And.HaveCount(leads.Count);
+        result.Data.Items.Any(x => x.RazaoSocial == leads[0].RazaoSocial).Should().BeTrue();
+        result.Data.Items.Any(x => x.RazaoSocial == leads[1].RazaoSocial).Should().BeTrue();
+        await _cachingManagerMock.Received(1).GetLeadsAsync(Arg.Any<PaginationOptions>(), _cts.Token);
     }
 
     public void Dispose()

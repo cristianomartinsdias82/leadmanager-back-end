@@ -1,5 +1,6 @@
 ﻿using Core.Entities;
 using CrossCutting.MessageContracts;
+using System.Linq;
 
 namespace Application.Features.Leads.Shared;
 
@@ -38,6 +39,26 @@ public static class LeadExtensions
             RazaoSocial = lead.RazaoSocial,
             Cep = lead.Cep,
             Endereco = lead.Logradouro,
+            Bairro = lead.Bairro,
+            Cidade = lead.Cidade,
+            Estado = lead.Estado,
+            Numero = lead.Numero,
+            Complemento = lead.Complemento
+        };
+
+    public static List<LeadData> AsMessageContractList(this IEnumerable<LeadDto> leads)
+        => leads?
+        .Select(AsMessageContract)
+        .ToList() ?? new List<LeadData>();
+
+    public static LeadData AsMessageContract(this LeadDto lead)
+        => new()
+        {
+            Id = lead.Id,
+            Cnpj = lead.Cnpj,
+            RazaoSocial = lead.RazaoSocial,
+            Cep = lead.Cep,
+            Endereco = lead.Endereco,
             Bairro = lead.Bairro,
             Cidade = lead.Cidade,
             Estado = lead.Estado,

@@ -1,4 +1,5 @@
 ﻿using Application.Contracts.Messaging;
+using Application.Features.Leads.Shared;
 using MediatR;
 using Shared.Events.IntegrationEvents;
 
@@ -17,6 +18,6 @@ internal sealed class LeadRemovedIntegrationEventHandler : ApplicationIntegratio
 
     public override async Task Handle(LeadRemovedIntegrationEvent notification, CancellationToken cancellationToken)
     => await _messageBusHelper.SendToLeadRemovedChannelAsync(
-                    notification.Lead,
+                    notification.Lead.AsMessageContract(),
                     cancellationToken: cancellationToken);
 }

@@ -1,9 +1,9 @@
 ﻿using Application.Features.Leads.Shared;
 using FluentAssertions;
 using LeadManagerApi.Tests.Common.Factories;
+using Shared.DataPagination;
 using Shared.Results;
 using System.Net;
-using Tests.Common.ObjectMothers.Core;
 using Xunit;
 using static LeadManagerApi.Tests.Common.Factories.LeadManagerWebApplicationFactory;
 
@@ -57,16 +57,16 @@ public class GetLeadsControllerTests : IClassFixture<LeadManagerWebApplicationFa
     public async Task Get_RequestWithValidApiKeyHeader_ShouldSucceed()
     {
         // Arrange
-        await _factory.UsingContextAsync(dbContext =>
-        {
-            dbContext.Leads.AddRangeAsync(
-                LeadMother.XptoLLC()
-            );
+        //await _factory.UsingContextAsync(dbContext =>
+        //{
+        //    dbContext.Leads.AddRangeAsync(
+        //        LeadMother.Leads()
+        //    );
 
-            dbContext.SaveChangesAsync();
+        //    dbContext.SaveChangesAsync();
 
-            return Task.CompletedTask;
-        });
+        //    return Task.CompletedTask;
+        //});
 
         var httpClient = _factory.CreateHttpClient();
 
@@ -78,12 +78,16 @@ public class GetLeadsControllerTests : IClassFixture<LeadManagerWebApplicationFa
         response.StatusCode.Should().Be(HttpStatusCode.OK);
         var responseContent = await response.Content.ReadAsStringAsync();
 
-        ApplicationResponse<IEnumerable<LeadDto>> apiResponse = default!;
-        Action action = () => { apiResponse = _factory.DeserializeFromJson<ApplicationResponse<IEnumerable<LeadDto>>>(responseContent)!; };
+        ApplicationResponse<PagedList<LeadDto>> apiResponse = default!;
+        Action action = () =>
+        {
+            apiResponse = _factory.DeserializeFromJson<ApplicationResponse<PagedList<LeadDto>>>(responseContent)!;
+        };
         action.Should().NotThrow<Exception>();
         apiResponse.Exception.Should().BeNull();
         apiResponse.Success.Should().BeTrue();
         apiResponse.OperationCode.Should().Be(OperationCodes.Successful);
-        apiResponse.Data.Should().NotBeNull().And.NotBeEmpty();
+        apiResponse.Data.Should().NotBeNull();
+        apiResponse.Data.Items.Should().NotBeNull().And.HaveCountGreaterThan(0);
     }
 }

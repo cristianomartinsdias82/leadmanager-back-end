@@ -66,6 +66,6 @@ public sealed class RegisterLeadCommandHandlerTests : IAsyncDisposable, IDisposa
         newlyCreatedLead.Should().NotBeNull();
         newlyCreatedLead!.Cnpj.Should().BeEquivalentTo(request.Cnpj);
         _eventDispatcher.Received(1).AddEvent(Arg.Any<IEvent>());
-        await _cachingManager.Received(1).AddLeadEntryAsync(Arg.Any<LeadData>(), _cts.Token);
+        await _cachingManager.Received(1).AddLeadEntryAsync(Arg.Any<LeadDto>(), _cts.Token);
     }
 }

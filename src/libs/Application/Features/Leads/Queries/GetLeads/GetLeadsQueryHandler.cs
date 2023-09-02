@@ -1,12 +1,13 @@
 ﻿using Application.Contracts.Caching;
 using Application.Features.Leads.Shared;
 using MediatR;
+using Shared.DataPagination;
 using Shared.RequestHandling;
 using Shared.Results;
 
 namespace Application.Features.Leads.Queries.GetLeads;
 
-internal sealed class GetLeadsQueryHandler : ApplicationRequestHandler<GetLeadsQueryRequest, IEnumerable<LeadDto>>
+internal sealed class GetLeadsQueryHandler : ApplicationRequestHandler<GetLeadsQueryRequest, PagedList<LeadDto>>
 {
     private readonly ICachingManagement _cachingManager;
 
@@ -17,10 +18,14 @@ internal sealed class GetLeadsQueryHandler : ApplicationRequestHandler<GetLeadsQ
         _cachingManager = cachingManager;
     }
 
-    public async override Task<ApplicationResponse<IEnumerable<LeadDto>>> Handle(GetLeadsQueryRequest request, CancellationToken cancellationToken)
+    public async override Task<ApplicationResponse<PagedList<LeadDto>>> Handle(
+        GetLeadsQueryRequest request,
+        CancellationToken cancellationToken)
     {
-        var cachedLeads = await _cachingManager.GetLeadsAsync(cancellationToken);
+        var cachedLeads = await _cachingManager.GetLeadsAsync(
+            request.PaginationOptions,
+            cancellationToken);
 
-        return ApplicationResponse<IEnumerable<LeadDto>>.Create(cachedLeads.AsDtoList());
+        return ApplicationResponse<PagedList<LeadDto>>.Create(cachedLeads);
     }
 }
