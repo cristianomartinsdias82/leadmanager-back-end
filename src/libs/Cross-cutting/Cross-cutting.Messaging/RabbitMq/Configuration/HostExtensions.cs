@@ -75,7 +75,6 @@ public static class RabbitMqHostExtensions
                         arguments: null);
                     logger!.LogInformation("Dead letter queue {DeadLetterQueueName} declared successfully!", channelSettings.DeadLetterQueueName);
 
-                    // Bind the main queue to the exchange
                     logger!.LogInformation("Binding queue {QueueName} to topic {TopicName}...", channelSettings.QueueName, channelSettings.TopicName);
                     channel.QueueBind(
                         channelSettings.QueueName,
