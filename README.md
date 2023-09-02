@@ -4,7 +4,7 @@ O que é o Lead Manager?<br/>
 É um projeto que tem como objetivo permitir gerenciar de maneira simples e intuitiva - através de operações de listagem, adiçāo, atualizaçāo e remoção - dados de leads.
 A parte de front-end do projeto consiste atualmente em duas telas.
 Uma para listagem de leads a partir da qual os usuários são capazes de:
-- Visualizar uma lista contendo os dados principais de leads existentes
+- Visualizar uma lista contendo os dados principais de leads existentes de maneira paginada
 - Ir para a tela de adicionar novos leads
   - Via cadastro manual
   - Via arquivos em lote no formato CSV
