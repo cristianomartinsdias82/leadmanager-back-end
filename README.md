@@ -43,42 +43,21 @@ O projeto está em constante evolução e utiliza a seguinte plataforma e lingua
 - Integração com RabbitMQ para mensageria de dados, ajudando na composição da implementação de arquittura dirigida a eventos / event-driven architecture / EDA
 - EM BREVE: Confirmação de remoção de lead mediante informação de token recebido (fake) via SMS/ WhatsApp
 
-Pré-requisitos para execução do 'back-end' da aplicação<br/>
-É necessário possuir os seguintes componentes instalados na máquina:
-- SDK do .Net Core 7 (que pode ser obtido através da url: https://nodejs.org/en](https://dotnet.microsoft.com/en-us/download/dotnet/7.0)
-- Docker<br/>
-  Caso a máquina seja Mac, siga os passos conforme a url: https://docs.docker.com/desktop/install/mac-install/<br/>
-  Caso a máquina seja Linux, siga os passos conforme a url: https://docs.docker.com/desktop/install/linux-install/#generic-installation-steps<br/>
-  Caso a máquina seja Windows, siga os passos conforme a url: https://docs.docker.com/desktop/install/windows-install/<br/>
-- Azurite<br/>
-  Siga os passos conforme a url https://learn.microsoft.com/en-us/azure/storage/common/storage-use-azurite?tabs=visual-studio<br/>
-
-Como executar o projeto localmente?
-- Garanta que a máquina esteja devidamente configurada, conforme a seção "Pré-requisitos para execução do Front-End da aplicação"
-- Execute o Docker
-- Acesse o Terminal, Command Prompt ou Powershell
-- Execute o seguinte comando para subir um servidor de banco de dados Sql Server:<br/>
-  docker run -e "MSSQL_PID=Express" -e "ACCEPT_EULA=Y" -e "SA_PASSWORD=Y0urStr0nGP@sswoRD_2023" -p 1433:1433 --name leadmanager-db -d mcr.microsoft.com/mssql/server<br/>
-- Execute o seguinte comando para subit um servidor de caching Redis:<br/>
-  docker run --name leadmanager-redis -p 6379:6379 -d redis:7.0.12-alpine<br/>
-  OU<br/>
-  docker run --name leadmanager-redis -p 6379:6379 -d redis/redis-stack-server:latest
-- Execute o seguinte comando para subir um servidor de mensageria RabbitMQ:<br/>
-  docker run -d --hostname leadmanager-rabbit-management --name leadmanager-messagebus -p 8080:15672 -p 5672:5672 rabbitmq:3-management
-- Acesse outro Terminal, Command Prompt ou Powershell
-- Execute o Azurite através do seguinte comando:<br/>
-  azurite-blob -l X:\Path\to\blobs
-- Navegue até a pasta raíz do projeto (mesma pasta que contém o arquivo LeadManager.sln, por exemplo)
-- Execute os seguintes comandos:<br/>
-  dotnet build<br/>
-  dotnet run<br/>
-  (O comando irá compilar a solução, subirá um servidor Kestrel e automaticamente abrirá o navegador web padrão apontado para o Swagger da API)<br/>
-NOTA: Em breve, essas etapas para execução da aplicação na máquina local serão simplificadas a uma única linha de comando através do uso de Docker-Compose.<br/>
+Pré-requisitos para execução do 'back-end' da aplicação<br />
+É necessário possuir o(s) seguinte(s) componente(s) instalado(s) na máquina:<br/>
+- Docker
+  - Caso a máquina seja Mac, siga os passos conforme a url: https://docs.docker.com/desktop/install/mac-install/
+  - Caso a máquina seja Linux, siga os passos conforme a url: https://docs.docker.com/desktop/install/linux-install/#generic-installation-steps
+  - Caso a máquina seja Windows, siga os passos conforme a url: https://docs.docker.com/desktop/install/windows-install/
+  
+Como executar o projeto localmente?<br />
+Após a configuração da máquina, conforme a seção "Pré-requisitos para execução do Front-End da aplicação", faça o seguinte:<br />
+- Navegue até a pasta raiz da aplicação aonde o projeto foi baixado e digite o seguinte comando:<br />
+  docker-compose up -d<br/>
+- Para interromper a execução do projeto, ainda na mesma pasta do mesmo, digite o seguinte comando:<br />
+  docker-compose down<br/>
 
 Backlog:
-- (Technical debt) Criar Dockerfile do projeto
-- (Technical debt) Criar Docker-compose no projeto
-- (Technical debt) Adicionar a aplicação ao Docker-Compose para simplificar a configuração da máquina e permitir automatizar a execução da mesma em uma única linha de comando
 - (Technical debt) Proteger a API contra acesso indevido, de maneira que somente usuários autenticados possam invocar os endpoints
   - Possibilidade 1: a aplicação deverá ser capaz de encaminhar a solicitação de autenticação para um servidor de identidade a fim de obter o Token de autenticação
   - Possibilidade 2: a aplicação deverá ser capaz de validar tokens de autenticação/autorização - incluindo Claims - que possibilitem ou recusem executar os endpoints da API
