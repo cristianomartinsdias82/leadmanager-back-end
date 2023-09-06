@@ -4,7 +4,7 @@ O que é o Lead Manager?<br/>
 É um projeto que tem como objetivo permitir gerenciar de maneira simples e intuitiva - através de operações de listagem, adiçāo, atualizaçāo e remoção - dados de leads.
 A parte de front-end do projeto consiste atualmente em duas telas.
 Uma para listagem de leads a partir da qual os usuários são capazes de:
-- Visualizar uma lista contendo os dados principais de leads existentes
+- Visualizar uma lista contendo os dados principais de leads existentes de maneira paginada
 - Ir para a tela de adicionar novos leads
   - Via cadastro manual
   - Via arquivos em lote no formato CSV
@@ -41,6 +41,7 @@ O projeto está em constante evolução e utiliza a seguinte plataforma e lingua
 - Gravação de log com múltiplos 'Sinks' com Serilog (Console, Arquivo e banco de dados)
 - Integração com Redis para armazenamento de dados em cache para ganho de performance em geral
 - Integração com RabbitMQ para mensageria de dados, ajudando na composição da implementação de arquittura dirigida a eventos / event-driven architecture / EDA
+- EM BREVE: Confirmação de remoção de lead mediante informação de token recebido (fake) via SMS/ WhatsApp
 
 Pré-requisitos para execução do 'back-end' da aplicação<br/>
 É necessário possuir os seguintes componentes instalados na máquina:
@@ -75,17 +76,16 @@ Como executar o projeto localmente?
 NOTA: Em breve, essas etapas para execução da aplicação na máquina local serão simplificadas a uma única linha de comando através do uso de Docker-Compose.<br/>
 
 Backlog:
-- (Technical debt) Implementar lógica de paginação no lado do servidor. Anotações:
-  - A estrutura PaginationOptions precisar complementada com as propriedades SortColumn e SortDirection(ASC,DESC)
-  - Apenas como sugestão, implementar um método de extension ToSortedPagedList que aceita um PaginationOptions como argumento
-    - Utilizar o overload que aceita um range do tipo X..Y do método Take (LINQ) ao invés de utilizar Skip com Take
-  - A outra possibilidade é criar uma classe PagedList<T> que herda de uma List<T>
-- (Technical debt) Proteger a API contra acesso indevido, de maneira que somente usuários autenticados possam invocar os endpoints
-  - Possibilidade 1: a aplicação deverá ser capaz de encaminhar a solicitação de autenticação para um servidor de identidade a fim de obter o Token de autenticação
-  - Possibilidade 2: a aplicação deverá ser capaz de validar tokens de autenticação/autorização - incluindo Claims - que possibilitem ou recusem executar os endpoints da API
 - (Technical debt) Criar Dockerfile do projeto
 - (Technical debt) Criar Docker-compose no projeto
 - (Technical debt) Adicionar a aplicação ao Docker-Compose para simplificar a configuração da máquina e permitir automatizar a execução da mesma em uma única linha de comando
+- (Technical debt) Proteger a API contra acesso indevido, de maneira que somente usuários autenticados possam invocar os endpoints
+  - Possibilidade 1: a aplicação deverá ser capaz de encaminhar a solicitação de autenticação para um servidor de identidade a fim de obter o Token de autenticação
+  - Possibilidade 2: a aplicação deverá ser capaz de validar tokens de autenticação/autorização - incluindo Claims - que possibilitem ou recusem executar os endpoints da API
+- (Technical debt) Implementar um filtro de ação que envia um SMS / mensagem no WhatsApp (de maneira Fake) ao usuário contendo um token de 4 dígitos numéricos para realizar a operação de Remoção de Leads
+  - A ideia: na solicitação de remoção, deverá ser informado no cabeçalho HTTP um header X-Confirmation-Number com um código válido.
+    - Se na solicitação não veio este cabeçalho, a aplicação deverá gerar e armazenar um token com tempo de expiração de 1 minuto.
+    - Se na solicitação veio o cabeçalho, a aplicação deverá validar se o token ainda é válido (informou o token certo + token não está expirado), podendo gerar como resultado ao usuário as informações: 'Token incorreto' ou 'Token expirado'
 - (Technical debt) Implementar os testes unitários das classes contidas em libs/Shared; especificamente, das classes ApplicationResponse, PaginationOptions, Inconsistency e CnpjValidator
 - (Technical debt) Implementar os testes unitários dos service client de integração com o serviço ViaCep
 - (Technical debt) Implementar os testes de integração dos endpoints:<br/>
@@ -98,8 +98,6 @@ Backlog:
 - (Technical debt) Utilizar StronglyTypedIds na camada de Entidades
 - (Technical debt) Adicionar HealthChecks, incluindo endpoint na API
 - (Technical debt) Adicionar um endpoint de métricas, pronto para o Prometheus realizar 'scrapings'
-- (Technical debt) Adicionar infraestrutura necessária para comunicação com o serviço de filas; preferência pelo uso do Azure Service Bus
-- (Technical debt) Adicionar um serviço do tipo 'Worker service' que será capaz de consumir dados da fila de mensagens emitidas pelo Lead Manager
 - (Technical debt) Integrar a aplicação com alguma ferramenta de telemetria; preferência pelo uso do Data Dog e/ou Jaeger
 
 Em termos de implementação, o que tem de reaproveitável no código-fonte deste projeto e/ou que de repente pode servir como ponto de partida para outros projetos?
@@ -112,6 +110,8 @@ Em termos de implementação, o que tem de reaproveitável no código-fonte dest
 - Classe de extensão de validação de Cep integrada ao FluentValidations
 - Classe de extensão de validação de Cnpj integrada ao FluentValidations
 - Classe de com lógica de validação de Cnpj utilizando o algoritmo Módulo 1
+- Classes, estruturas e métodos de extensão LINQ para realização de paginação de dados - inclusive com ordenação (PaginationOptions, PagedList, EnumerableExtensions - ToPagedList, ToSortedList, ToSortedPagedList)
+  - Com o método ToSortedList é possível passar o nome da coluna (passada como string) com a qual se deseja realizar a ordenação. Internamente, o método Lambda.Expression(...).Compile() é utilizado para a realização da 'mágica'.
 - Implementação de um service client de integração com o serviço de localização de endereços ViaCep
 - Abstrações para manipulação de eventos:
   - IEvent
