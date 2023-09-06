@@ -44,7 +44,7 @@ O projeto está em constante evolução e utiliza a seguinte plataforma e lingua
 - EM BREVE: Confirmação de remoção de lead mediante informação de token recebido (fake) via SMS/ WhatsApp
 
 Pré-requisitos para execução do 'back-end' da aplicação<br />
-É necessário possuir os seguints componente instalado na máquina:<br/>
+É necessário possuir o(s) seguinte(s) componente(s) instalado(s) na máquina:<br/>
 - Docker
   - Caso a máquina seja Mac, siga os passos conforme a url: https://docs.docker.com/desktop/install/mac-install/
   - Caso a máquina seja Linux, siga os passos conforme a url: https://docs.docker.com/desktop/install/linux-install/#generic-installation-steps
