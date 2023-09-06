@@ -508,3 +508,5 @@ $RECYCLE.BIN/
 /tests/unit-tests/Shared.Tests/obj/Debug/net7.0/Shared.Tests.assets.cache
 /tests/unit-tests/Application.Tests/obj/project.nuget.cache
 /src/libs/Application/obj/Debug/net7.0/Application.assets.cache
+/src/hosts/LeadManagerApi/obj/Debug/net7.0/LeadManagerApi.AssemblyInfo.cs
+/src/hosts/LeadManagerApi/obj/Debug/net7.0/LeadManagerApi.AssemblyInfoInputs.cache
