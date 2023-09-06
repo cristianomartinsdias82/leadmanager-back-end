@@ -54,7 +54,7 @@ Como executar o projeto localmente?<br />
 Após a configuração da máquina, conforme a seção "Pré-requisitos para execução do Front-End da aplicação", faça o seguinte:<br />
 - Navegue até a pasta raiz da aplicação aonde o projeto foi baixado e digite o seguinte comando:<br />
   docker-compose up -d<br/>
-- Para interromper a execução do projeto, ainda na mesma pasta do projeto, digite o seguinte comando:<br />
+- Para interromper a execução do projeto, ainda na mesma pasta do mesmo, digite o seguinte comando:<br />
   docker-compose down<br/>
 
 Backlog:
