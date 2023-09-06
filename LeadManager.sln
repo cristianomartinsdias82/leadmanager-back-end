@@ -69,7 +69,9 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "background-services", "back
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "CrossCutting.Serialization.ProtoBuf", "src\libs\Cross-cutting\Cross-cutting.Serialization.ProtoBuf\CrossCutting.Serialization.ProtoBuf.csproj", "{F12DEEE7-141C-4302-9F89-2A6EC73667DE}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CrossCutting.MessageContracts", "src\libs\Cross-cutting\Cross-cutting.MessageContracts\CrossCutting.MessageContracts.csproj", "{1CEE476B-A40D-44F2-876B-9BA25EBCCA3D}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "CrossCutting.MessageContracts", "src\libs\Cross-cutting\Cross-cutting.MessageContracts\CrossCutting.MessageContracts.csproj", "{1CEE476B-A40D-44F2-876B-9BA25EBCCA3D}"
+EndProject
+Project("{E53339B2-1760-4266-BCC7-CA923CBCF16C}") = "docker-compose", "docker-compose.dcproj", "{5B9D956E-E842-4AD4-9A1C-3A80F347F1AF}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -169,6 +171,10 @@ Global
 		{1CEE476B-A40D-44F2-876B-9BA25EBCCA3D}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{1CEE476B-A40D-44F2-876B-9BA25EBCCA3D}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{1CEE476B-A40D-44F2-876B-9BA25EBCCA3D}.Release|Any CPU.Build.0 = Release|Any CPU
+		{5B9D956E-E842-4AD4-9A1C-3A80F347F1AF}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{5B9D956E-E842-4AD4-9A1C-3A80F347F1AF}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{5B9D956E-E842-4AD4-9A1C-3A80F347F1AF}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{5B9D956E-E842-4AD4-9A1C-3A80F347F1AF}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

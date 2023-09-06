@@ -1,0 +1,35 @@
+version: '3.4'
+
+services:
+
+  portainer:
+    image: portainer/portainer-ce
+
+  leadmanager.db:
+    image: mcr.microsoft.com/mssql/server
+
+  leadmanager.blob:
+    image: mcr.microsoft.com/azure-storage/azurite
+
+  leadmanager.caching:
+    image: redis:7.0.12-alpine
+
+  leadmanager.messagebus:
+    image: rabbitmq:3-management
+
+  leadmanager.client:
+    image: cristianomartinsdiasspbr1982/leadmanagerweb:v1
+    
+  leadmanager.api:
+    container_name: leadmanagerapi
+    image: ${DOCKER_REGISTRY-}leadmanagerapi
+    build:
+      context: .
+      dockerfile: src/hosts/LeadManagerApi/Dockerfile
+
+volumes:
+  db_data:
+  messagebus_data:
+  blob_data:
+  caching_data:
+  portainer_data:

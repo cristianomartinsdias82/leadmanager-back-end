@@ -1,0 +1,89 @@
+version: '3.4'
+
+services:
+
+  portainer:
+    container_name: portainer
+    restart: always
+    ports:
+      - "8000:8000"
+      - "9000:9000"
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
+      - portainer_data:/data/portainer
+
+  leadmanager.db:
+    container_name: leadmanagerdb
+    restart: always
+    environment:
+      - ACCEPT_EULA=Y
+      - SA_PASSWORD=Y0urStr0nGP@sswoRD_2023
+      - MSSQL_PID=Express
+    ports:
+      - "1433:1433"
+    volumes:
+      - db_data:/var/opt/mssql
+
+  leadmanager.messagebus:
+    container_name: leadmanagermessagebus
+    restart: always
+    environment:
+      - RABBITMQ_DEFAULT_USER=guest
+      - RABBITMQ_DEFAULT_PASS=guest
+    ports:
+      - "5672:5672"
+      - "15672:15672"
+    volumes:
+      - messagebus_data:/var/opt/rabbitmq
+
+  leadmanager.blob:
+    container_name: leadmanagerblob
+    restart: always
+    environment:
+      - BLOBHOST=0.0.0.0
+    ports:
+      - "10000:10000"
+    volumes:
+      - blob_data:/data/blob
+
+  leadmanager.caching:
+    container_name: leadmanagercache
+    restart: always
+    ports:
+      - "6379:6379"
+    volumes:
+      - caching_data:/data/caching
+
+  leadmanager.client:
+    container_name: leadmanagerweb
+    ports:
+      - "8002:80"
+
+  leadmanager.api:
+    container_name: leadmanagerapi
+    depends_on:
+      - leadmanager.db
+      - leadmanager.messagebus
+      - leadmanager.blob
+      - leadmanager.caching
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Development
+      - "LeadManagerApiSettings:Cors_AllowedOrigins=http://localhost:8002, http://leadmanagerweb"
+      - "LeadManagerApiSettings:ApiKeyRequestHeaderValue=74ynfkjy487yue47j"
+      - "Logging:FileSink:LogFilePath=/data/app/logs/applogs.log"
+      - "DataSourceSettings:ConnectionString=Server=leadmanagerdb;Database=LeadManager;User id=sa;Password=Y0urStr0nGP@sswoRD_2023;MultipleActiveResultSets=true;Connect timeout=30;TrustServerCertificate=True"
+      - "AzureStorageProviderSettings:ConnectionString=UseDevelopmentStorage=true;DevelopmentStorageProxyUri=http://leadmanagerblob"
+      - "AzureStorageProviderSettings:ContainerName=lead-manager"
+      - "AzureStorageProviderSettings:StorageFolderPath=/data/blob/content"
+      - "RedisCacheProviderSettings:Server=leadmanagercache"
+      - "RabbitMqConnectionSettings:HostName=leadmanagermessagebus"
+      - "RabbitMqConnectionSettings:PortNumber=5672"
+      - "RabbitMqConnectionSettings:UserName=guest"
+      - "RabbitMqConnectionSettings:Password=guest"
+      - "RabbitMqConnectionSettings:VirtualHost=/"
+      - "RabbitMqConnectionSettings:ClientProvidedName=lead-manager"
+    ports:
+      - "8001:80"
+    volumes:
+      - ${APPDATA}/Microsoft/UserSecrets:/root/.microsoft/usersecrets:ro
+      - ${APPDATA}/ASP.NET/Https:/root/.aspnet/https:ro
