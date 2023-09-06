@@ -58,9 +58,6 @@ Após a configuração da máquina, conforme a seção "Pré-requisitos para exe
   docker-compose down<br/>
 
 Backlog:
-- (Technical debt) Criar Dockerfile do projeto
-- (Technical debt) Criar Docker-compose no projeto
-- (Technical debt) Adicionar a aplicação ao Docker-Compose para simplificar a configuração da máquina e permitir automatizar a execução da mesma em uma única linha de comando
 - (Technical debt) Proteger a API contra acesso indevido, de maneira que somente usuários autenticados possam invocar os endpoints
   - Possibilidade 1: a aplicação deverá ser capaz de encaminhar a solicitação de autenticação para um servidor de identidade a fim de obter o Token de autenticação
   - Possibilidade 2: a aplicação deverá ser capaz de validar tokens de autenticação/autorização - incluindo Claims - que possibilitem ou recusem executar os endpoints da API
