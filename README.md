@@ -43,18 +43,18 @@ O projeto está em constante evolução e utiliza a seguinte plataforma e lingua
 - Integração com RabbitMQ para mensageria de dados, ajudando na composição da implementação de arquittura dirigida a eventos / event-driven architecture / EDA
 - EM BREVE: Confirmação de remoção de lead mediante informação de token recebido (fake) via SMS/ WhatsApp
 
-Pré-requisitos para execução do 'back-end' da aplicação
+Pré-requisitos para execução do 'back-end' da aplicação<br />
 É necessário possuir os seguints componente instalado na máquina:<br/>
 - Docker
   - Caso a máquina seja Mac, siga os passos conforme a url: https://docs.docker.com/desktop/install/mac-install/
   - Caso a máquina seja Linux, siga os passos conforme a url: https://docs.docker.com/desktop/install/linux-install/#generic-installation-steps
   - Caso a máquina seja Windows, siga os passos conforme a url: https://docs.docker.com/desktop/install/windows-install/
   
-Como executar o projeto localmente?
-Após a configuração da máquina, conforme a seção "Pré-requisitos para execução do Front-End da aplicação":
-- Navegue até a pasta raiz da aplicação aonde o projeto foi baixado e digite o seguinte comando:
+Como executar o projeto localmente?<br />
+Após a configuração da máquina, conforme a seção "Pré-requisitos para execução do Front-End da aplicação", faça o seguinte:<br />
+- Navegue até a pasta raiz da aplicação aonde o projeto foi baixado e digite o seguinte comando:<br />
   docker-compose up -d<br/>
-- Para interromper a execução do projeto, ainda na mesma pasta do projeto, digite o seguinte comando:
+- Para interromper a execução do projeto, ainda na mesma pasta do projeto, digite o seguinte comando:<br />
   docker-compose down<br/>
 
 Backlog:
