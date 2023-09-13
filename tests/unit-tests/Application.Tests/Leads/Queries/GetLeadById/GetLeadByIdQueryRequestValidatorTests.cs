@@ -4,7 +4,7 @@ using Xunit;
 
 namespace Application.Tests.Leads.Queries.GetLeadById;
 
-public sealed class GetLeadByIdRequestValidatorTests
+public sealed class GetLeadByIdQueryRequestValidatorTests
 {
     private readonly GetLeadByIdQueryRequestValidator _validator = new();
 

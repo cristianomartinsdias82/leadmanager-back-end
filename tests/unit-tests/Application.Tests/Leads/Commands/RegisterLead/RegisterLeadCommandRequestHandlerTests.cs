@@ -2,7 +2,6 @@
 using Application.Contracts.Persistence;
 using Application.Features.Leads.Commands.RegisterLead;
 using Application.Features.Leads.Shared;
-using CrossCutting.MessageContracts;
 using FluentAssertions;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
@@ -16,22 +15,22 @@ using Xunit;
 
 namespace Application.Tests.Leads.Commands.RegisterLead;
 
-public sealed class RegisterLeadCommandHandlerTests : IAsyncDisposable, IDisposable
+public sealed class RegisterLeadCommandRequestHandlerTests : IAsyncDisposable, IDisposable
 {
-    private readonly RegisterLeadCommandHandler _handler;
+    private readonly RegisterLeadCommandRequestHandler _handler;
     private readonly ILeadManagerDbContext _dbContext;
     private readonly ICachingManagement _cachingManager;
     private readonly IMediator _mediator;
     private readonly IEventDispatching _eventDispatcher;
     private readonly CancellationTokenSource _cts;
 
-    public RegisterLeadCommandHandlerTests()
+    public RegisterLeadCommandRequestHandlerTests()
     {
         _dbContext = InMemoryLeadManagerDbContextFactory.Create();
         _mediator = Substitute.For<IMediator>();
         _eventDispatcher = Substitute.For<IEventDispatching>();
         _cachingManager = Substitute.For<ICachingManagement>();
-        _handler = new RegisterLeadCommandHandler(_mediator, _eventDispatcher, _dbContext, _cachingManager);
+        _handler = new RegisterLeadCommandRequestHandler(_mediator, _eventDispatcher, _dbContext, _cachingManager);
         _cts = new();
     }
 

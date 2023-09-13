@@ -6,7 +6,6 @@ using Application.Features.Leads.Shared;
 using Core.Entities;
 using CrossCutting.Csv;
 using CrossCutting.FileStorage;
-using CrossCutting.MessageContracts;
 using FluentValidation;
 using FluentValidation.Results;
 using MediatR;
@@ -19,7 +18,7 @@ using System.Text;
 
 namespace Application.Features.Leads.Commands.BulkInsertLead;
 
-internal sealed class BulkInsertLeadCommandHandler : ApplicationRequestHandler<BulkInsertLeadCommandRequest, BulkInsertLeadCommandResponse>
+internal sealed class BulkInsertLeadCommandRequestHandler : ApplicationRequestHandler<BulkInsertLeadCommandRequest, BulkInsertLeadCommandResponse>
 {
     private readonly ILeadManagerDbContext _dbContext;
     private readonly ICsvHelper _csvHelper;
@@ -27,7 +26,7 @@ internal sealed class BulkInsertLeadCommandHandler : ApplicationRequestHandler<B
     private readonly IFileStorageProvider _fileStorageProvider;
     private readonly ICachingManagement _cachingManager;
 
-    public BulkInsertLeadCommandHandler(
+    public BulkInsertLeadCommandRequestHandler(
         IMediator mediator,
         IEventDispatching eventDispatcher,
         ILeadManagerDbContext dbContext,
@@ -47,7 +46,7 @@ internal sealed class BulkInsertLeadCommandHandler : ApplicationRequestHandler<B
     {
         await _fileStorageProvider.UploadAsync(
             request.InputStream,
-            Guid.NewGuid().ToString(), //TODO: Replace this code with UserId from UserService dependency when it's available
+            Guid.NewGuid().ToString(), //TODO: iamService.GetUserId();
             cancellationToken: cancellationToken);
 
         var upcomingLeads = new List<RegisterLeadCommandRequest>();
@@ -99,7 +98,7 @@ internal sealed class BulkInsertLeadCommandHandler : ApplicationRequestHandler<B
             );
 
         var newLeads = upcomingLeads
-                        .Select(lead => new Lead(lead.Cnpj!,
+                        .Select(lead => Lead.Criar(lead.Cnpj!,
                                                  lead.RazaoSocial!,
                                                  lead.Cep!,
                                                  lead.Endereco!,
@@ -114,7 +113,7 @@ internal sealed class BulkInsertLeadCommandHandler : ApplicationRequestHandler<B
 
         await _dbContext.SaveChangesAsync(cancellationToken);
 
-        var leads = newLeads.AsDtoList();
+        var leads = newLeads.MapToDtoList();
         await _cachingManager.AddLeadEntriesAsync(leads, cancellationToken);
 
         var cachedLeads = await _cachingManager.GetLeadsAsync(new(), cancellationToken);

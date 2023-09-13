@@ -1,6 +1,9 @@
 ﻿namespace Core.Entities;
 
-public interface IEntity<TKey> // where TKey : IComparable, IComparable<TKey>, IConvertible, IEquatable<TKey>, IFormattable
+public interface IEntity
 {
-    TKey Id { get; set; }
+    Guid Id { get; set; }
+
+    //DateTimeOffset RevisionNumber { get; set; }
+    byte[] RowVersion { get; set; }
 }

@@ -67,6 +67,12 @@ public class UpdateLeadCommandRequestMother
         return this;
     }
 
+    public UpdateLeadCommandRequestMother WithRowVersion(byte[] rowVersion)
+    {
+        _request.Revision = rowVersion;
+        return this;
+    }
+
     public UpdateLeadCommandRequest Build()
         => _request;
 

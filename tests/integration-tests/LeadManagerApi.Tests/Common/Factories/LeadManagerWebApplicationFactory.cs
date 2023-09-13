@@ -194,7 +194,7 @@ public class LeadManagerWebApplicationFactory : WebApplicationFactory<Program>, 
                     cacheProviderMock.GetAsync<IEnumerable<LeadData>>(
                                         Arg.Any<string>(),
                                         Arg.Any<CancellationToken>())
-                                    .Returns(LeadMother.Leads().AsMessageContractList());
+                                    .Returns(LeadMother.Leads().MapToMessageContractList());
 
                     return cacheProviderMock;
                 });

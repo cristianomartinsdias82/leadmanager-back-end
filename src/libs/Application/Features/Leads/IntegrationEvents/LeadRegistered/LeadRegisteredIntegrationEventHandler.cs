@@ -19,6 +19,6 @@ internal sealed class LeadRegisteredIntegrationEventHandler : ApplicationIntegra
 
     public override async Task Handle(LeadRegisteredIntegrationEvent notification, CancellationToken cancellationToken)
         => await _messageBusHelper.SendToNewlyCreatedLeadsChannelAsync(
-                    new List<LeadData> { notification.Lead.AsMessageContract() },
+                    new List<LeadData> { notification.Lead.MapToMessageContract() },
                     cancellationToken: cancellationToken);
 }

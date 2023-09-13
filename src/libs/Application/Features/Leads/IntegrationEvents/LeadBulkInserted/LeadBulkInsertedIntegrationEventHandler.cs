@@ -18,6 +18,6 @@ internal sealed class LeadBulkInsertedIntegrationEventHandler : ApplicationInteg
 
     public override async Task Handle(LeadBulkInsertedIntegrationEvent notification, CancellationToken cancellationToken)
         => await _messageBusHelper.SendToNewlyCreatedLeadsChannelAsync(
-                    notification.Leads.AsMessageContractList(),
+                    notification.Leads.MapToMessageContractList(),
                     cancellationToken: cancellationToken);
 }

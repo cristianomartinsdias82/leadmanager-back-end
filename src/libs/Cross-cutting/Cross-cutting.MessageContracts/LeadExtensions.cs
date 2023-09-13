@@ -4,12 +4,12 @@ namespace CrossCutting.MessageContracts;
 
 public static class LeadExtensions
 {
-    public static List<LeadData> AsMessageContractList(this IEnumerable<Lead> leads)
+    public static List<LeadData> MapToMessageContractList(this IEnumerable<Lead> leads)
             => leads?
-            .Select(AsMessageContract)
+            .Select(MapToMessageContract)
             .ToList() ?? new List<LeadData>();
 
-    public static LeadData AsMessageContract(this Lead lead)
+    public static LeadData MapToMessageContract(this Lead lead)
         => new()
         {
             Id = lead.Id,
@@ -21,6 +21,7 @@ public static class LeadExtensions
             Cidade = lead.Cidade,
             Estado = lead.Estado,
             Numero = lead.Numero,
-            Complemento = lead.Complemento
+            Complemento = lead.Complemento,
+            Revision = lead.RowVersion
         };
 }

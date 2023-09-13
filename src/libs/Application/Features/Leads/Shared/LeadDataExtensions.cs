@@ -1,17 +1,16 @@
 ﻿using Core.Entities;
 using CrossCutting.MessageContracts;
-using System.Linq;
 
 namespace Application.Features.Leads.Shared;
 
 public static class LeadExtensions
 {
-    public static List<LeadDto> AsDtoList(this IEnumerable<LeadData> leads)
+    public static List<LeadDto> MapToDtoList(this IEnumerable<LeadData> leads)
         => leads?
-        .Select(AsDto)
+        .Select(MapToDto)
         .ToList() ?? new List<LeadDto>();
 
-    public static LeadDto AsDto(this LeadData lead)
+    public static LeadDto MapToDto(this LeadData lead)
         => new()
         {
             Id = lead.Id,
@@ -23,15 +22,16 @@ public static class LeadExtensions
             Cidade = lead.Cidade,
             Estado = lead.Estado,
             Numero = lead.Numero,
-            Complemento = lead.Complemento
+            Complemento = lead.Complemento,
+            Revision = lead.Revision
         };
 
-    public static List<LeadDto> AsDtoList(this IEnumerable<Lead> leads)
+    public static List<LeadDto> MapToDtoList(this IEnumerable<Lead> leads)
         => leads?
-        .Select(AsDto)
+        .Select(MapToDto)
         .ToList() ?? new List<LeadDto>();
 
-    public static LeadDto AsDto(this Lead lead)
+    public static LeadDto MapToDto(this Lead lead)
         => new()
         {
             Id = lead.Id,
@@ -43,15 +43,16 @@ public static class LeadExtensions
             Cidade = lead.Cidade,
             Estado = lead.Estado,
             Numero = lead.Numero,
-            Complemento = lead.Complemento
+            Complemento = lead.Complemento,
+            Revision = lead.RowVersion
         };
 
-    public static List<LeadData> AsMessageContractList(this IEnumerable<LeadDto> leads)
+    public static List<LeadData> MapToMessageContractList(this IEnumerable<LeadDto> leads)
         => leads?
-        .Select(AsMessageContract)
+        .Select(MapToMessageContract)
         .ToList() ?? new List<LeadData>();
 
-    public static LeadData AsMessageContract(this LeadDto lead)
+    public static LeadData MapToMessageContract(this LeadDto lead)
         => new()
         {
             Id = lead.Id,
@@ -63,6 +64,7 @@ public static class LeadExtensions
             Cidade = lead.Cidade,
             Estado = lead.Estado,
             Numero = lead.Numero,
-            Complemento = lead.Complemento
+            Complemento = lead.Complemento,
+            Revision = lead.Revision
         };
 }

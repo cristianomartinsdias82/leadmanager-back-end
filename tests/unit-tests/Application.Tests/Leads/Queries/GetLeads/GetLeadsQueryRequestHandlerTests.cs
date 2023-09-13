@@ -11,14 +11,14 @@ using Xunit;
 
 namespace Application.Tests.Leads.Queries.GetLeads;
 
-public sealed class GetLeadsQueryHandlerTests : IDisposable
+public sealed class GetLeadsQueryRequestHandlerTests : IDisposable
 {
-    private readonly GetLeadsQueryHandler _handler;
+    private readonly GetLeadsQueryRequestHandler _handler;
     private readonly ICachingManagement _cachingManagerMock;
     private readonly IMediator _mediator;
     private readonly CancellationTokenSource _cts;
 
-    public GetLeadsQueryHandlerTests()
+    public GetLeadsQueryRequestHandlerTests()
     {
         _mediator = Substitute.For<IMediator>();
         _cachingManagerMock = Substitute.For<ICachingManagement>();
@@ -55,7 +55,7 @@ public sealed class GetLeadsQueryHandlerTests : IDisposable
         var paginationOptions = new PaginationOptions();
         var leads = LeadMother.Leads();
         _cachingManagerMock.GetLeadsAsync(new(), _cts.Token)
-                          .Returns(PagedList<LeadDto>.Paginate(leads.AsDtoList(), paginationOptions));
+                          .Returns(PagedList<LeadDto>.Paginate(leads.MapToDtoList(), paginationOptions));
 
         //Act
         var result = await _handler.Handle(new(paginationOptions), _cts.Token);

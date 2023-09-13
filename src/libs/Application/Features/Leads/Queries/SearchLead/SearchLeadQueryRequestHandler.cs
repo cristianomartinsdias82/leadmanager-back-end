@@ -6,11 +6,11 @@ using Shared.Results;
 
 namespace Application.Features.Leads.Queries.SearchLead;
 
-internal sealed class SearchLeadQueryHandler : ApplicationRequestHandler<SearchLeadQueryRequest, bool>
+internal sealed class SearchLeadQueryRequestHandler : ApplicationRequestHandler<SearchLeadQueryRequest, bool>
 {
     private readonly ILeadManagerDbContext _leadManagerDbContext;
 
-    public SearchLeadQueryHandler(
+    public SearchLeadQueryRequestHandler(
         IMediator mediator,
         ILeadManagerDbContext leadManagerDbContext) : base(mediator, default!)
     {

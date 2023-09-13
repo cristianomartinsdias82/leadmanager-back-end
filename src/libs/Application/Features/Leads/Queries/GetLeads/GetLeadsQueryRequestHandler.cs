@@ -7,11 +7,11 @@ using Shared.Results;
 
 namespace Application.Features.Leads.Queries.GetLeads;
 
-internal sealed class GetLeadsQueryHandler : ApplicationRequestHandler<GetLeadsQueryRequest, PagedList<LeadDto>>
+internal sealed class GetLeadsQueryRequestHandler : ApplicationRequestHandler<GetLeadsQueryRequest, PagedList<LeadDto>>
 {
     private readonly ICachingManagement _cachingManager;
 
-    public GetLeadsQueryHandler(
+    public GetLeadsQueryRequestHandler(
         IMediator mediator,
         ICachingManagement cachingManager) : base(mediator, default!)
     {

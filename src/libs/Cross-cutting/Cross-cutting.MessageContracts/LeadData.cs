@@ -37,8 +37,8 @@ public struct LeadData
     [ProtoMember(10)]
     public string? Complemento { get; set; }
 
-    public bool IsNull => string.IsNullOrWhiteSpace(Cnpj);
+    [ProtoMember(11)]
+    public byte[] Revision { get; set; } = default!;
 
-    public override string ToString()
-        => $"({Cnpj}) - {RazaoSocial}. {Endereco}, {(!string.IsNullOrWhiteSpace(Numero) ? Numero : "s/n")}{(!string.IsNullOrWhiteSpace(Complemento) ? ", " + Complemento : string.Empty)}, {Bairro}, {Cep}, {Cidade} - {Estado}";
+    public bool IsNull => string.IsNullOrWhiteSpace(Cnpj);
 }

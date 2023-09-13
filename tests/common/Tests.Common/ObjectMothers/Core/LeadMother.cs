@@ -7,7 +7,7 @@ public class LeadMother
     private LeadMother() { }
 
     public static Lead XptoLLC()
-        => new Lead(
+        => Lead.Criar(
                 CnpjMother.MaskedWellformedValidOne(),
                 "Xpto LLC",
                 "04858-040",
@@ -19,7 +19,7 @@ public class LeadMother
                 default);
 
     public static Lead GumperInc()
-        => new Lead(
+        => Lead.Criar(
                 CnpjMother.MaskedWellformedValidOne(),
                 "Gumper Inc.",
                 "04661-100",

@@ -14,4 +14,5 @@ public sealed class UpdateLeadCommandRequest : IRequest<ApplicationResponse<Upda
     public string? Estado { get; set; }
     public string? Complemento { get; set; }
     public string? Numero { get; set; }
+    public byte[]? Revision { get; set; }
 }

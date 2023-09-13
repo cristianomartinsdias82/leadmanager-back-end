@@ -41,7 +41,7 @@ internal sealed class CacheManager : ICachingManagement
                 paginationOptions.SortColumn ?? nameof(Lead.RazaoSocial),
                 paginationOptions.SortDirection,
                 paginationOptions,
-                ld => ld.AsDtoList());
+                ld => ld.MapToDtoList());
 
         var leads = await _dbContext.Leads.ToListAsync(cancellationToken);
 
@@ -50,7 +50,7 @@ internal sealed class CacheManager : ICachingManagement
 
         await _cacheProvider.SetAsync(
             _leadsCachingPolicy.CacheKey,
-            cachedLeads = leads.Select(ld => ld.AsMessageContract()),
+            cachedLeads = leads.Select(ld => ld.MapToMessageContract()),
             ttlInSeconds: _leadsCachingPolicy.TtlInSeconds,
             cancellationToken: cancellationToken);
 
@@ -58,7 +58,7 @@ internal sealed class CacheManager : ICachingManagement
             paginationOptions.SortColumn ?? nameof(Lead.RazaoSocial),
             paginationOptions.SortDirection,
             paginationOptions,
-            ld => ld.AsDtoList());
+            ld => ld.MapToDtoList());
     }
 
     public async Task AddLeadEntryAsync(LeadDto lead, CancellationToken cancellationToken = default)
@@ -70,7 +70,7 @@ internal sealed class CacheManager : ICachingManagement
                                         _leadsCachingPolicy.CacheKey,
                                         cancellationToken);
         var leads = cachedLeads?.ToList() ?? new();
-        leads.Add(lead.AsMessageContract());
+        leads.Add(lead.MapToMessageContract());
 
         await _cacheProvider.SetAsync<IEnumerable<LeadData>>(
                 _leadsCachingPolicy.CacheKey,
@@ -88,7 +88,7 @@ internal sealed class CacheManager : ICachingManagement
                                         _leadsCachingPolicy.CacheKey,
                                         cancellationToken);
         var existingLeads = cachedLeads?.ToList() ?? new();
-        existingLeads.AddRange(leads.AsMessageContractList());
+        existingLeads.AddRange(leads.MapToMessageContractList());
 
         await _cacheProvider.SetAsync<IEnumerable<LeadData>>(
                 _leadsCachingPolicy.CacheKey,
@@ -141,7 +141,7 @@ internal sealed class CacheManager : ICachingManagement
             return;
 
         leads.Remove(outdatedLead);
-        leads.Add(lead.AsMessageContract());
+        leads.Add(lead.MapToMessageContract());
 
         await _cacheProvider.SetAsync<IEnumerable<LeadData>>(
                 _leadsCachingPolicy.CacheKey,

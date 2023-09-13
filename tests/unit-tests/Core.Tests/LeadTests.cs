@@ -29,7 +29,7 @@ public sealed class LeadTests
         //Act
         var createLead = () =>
         {
-            newlyCreatedLead = new(
+            newlyCreatedLead = Lead.Criar(
                 leadDraft.Cnpj,
                 leadDraft.RazaoSocial,
                 leadDraft.Cep,
@@ -81,7 +81,7 @@ public sealed class LeadTests
         //Act
         var createLead = () =>
         {
-            newlyCreatedLead = new(
+            newlyCreatedLead = Lead.Criar(
                 leadDraft.Cnpj,
                 leadDraft.RazaoSocial,
                 leadDraft.Cep,
@@ -120,7 +120,7 @@ public sealed class LeadTests
         //Act
         var createLead = () =>
         {
-            newlyCreatedLead = new(
+            newlyCreatedLead = Lead.Criar(
                 leadDraft.Cnpj,
                 leadDraft.RazaoSocial,
                 leadDraft.Cep,
@@ -161,9 +161,9 @@ public sealed class LeadTests
                 leadUpdateDraft.RazaoSocial,
                 leadUpdateDraft.Cep,
                 leadUpdateDraft.Endereco,
+                leadUpdateDraft.Bairro,
                 leadUpdateDraft.Cidade,
                 leadUpdateDraft.Estado,
-                leadUpdateDraft.Bairro,
                 leadUpdateDraft.Numero,
                 leadUpdateDraft.Complemento);
         };

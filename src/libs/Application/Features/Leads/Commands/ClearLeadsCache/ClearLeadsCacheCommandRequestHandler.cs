@@ -5,11 +5,11 @@ using Shared.Results;
 
 namespace Application.Features.Leads.Commands.ClearLeadsCache;
 
-internal sealed class ClearLeadsCacheCommandHandler : ApplicationRequestHandler<ClearLeadsCacheCommandRequest, ClearLeadsCacheCommandResponse>
+internal sealed class ClearLeadsCacheCommandRequestHandler : ApplicationRequestHandler<ClearLeadsCacheCommandRequest, ClearLeadsCacheCommandResponse>
 {
     private readonly ICachingManagement _cachingManager;
 
-    public ClearLeadsCacheCommandHandler(
+    public ClearLeadsCacheCommandRequestHandler(
         IMediator mediator,
         ICachingManagement cachingManager
         ) : base(mediator, default!)

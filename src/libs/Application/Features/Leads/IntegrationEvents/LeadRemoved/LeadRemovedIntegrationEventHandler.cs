@@ -18,6 +18,6 @@ internal sealed class LeadRemovedIntegrationEventHandler : ApplicationIntegratio
 
     public override async Task Handle(LeadRemovedIntegrationEvent notification, CancellationToken cancellationToken)
     => await _messageBusHelper.SendToLeadRemovedChannelAsync(
-                    notification.Lead.AsMessageContract(),
+                    notification.Lead.MapToMessageContract(),
                     cancellationToken: cancellationToken);
 }

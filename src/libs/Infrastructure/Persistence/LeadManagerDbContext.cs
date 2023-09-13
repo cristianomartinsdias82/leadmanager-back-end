@@ -7,9 +7,7 @@ namespace Infrastructure.Persistence;
 
 public sealed class LeadManagerDbContext : DbContext, ILeadManagerDbContext
 {
-    public LeadManagerDbContext(DbContextOptions options) : base(options)
-    {
-    }
+    public LeadManagerDbContext(DbContextOptions options) : base(options) { }
 
     public DbSet<Lead> Leads { get; set; }
 
@@ -33,19 +31,19 @@ public sealed class LeadManagerDbContext : DbContext, ILeadManagerDbContext
 
     public override async Task<int> SaveChangesAsync(CancellationToken cancellationToken = default)
     {
-        var currentUserId = Guid.NewGuid();//identityService.GetUserId();
+        var currentUserId = Guid.NewGuid();//TODO: iamService.GetUserId();
         var now = DateTimeOffset.UtcNow;
 
         //https://codewithmukesh.com/blog/audit-trail-implementation-in-aspnet-core/
         foreach (var entry in ChangeTracker
                                 .Entries()
-                                .Where(e => e.Entity is IAuditableEntity<Guid, Guid?>))
+                                .Where(e => e.Entity is IAuditableEntity))
         {
             switch (entry.State)
             {
                 case EntityState.Added:
                     {
-                        var auditableEntity = (IAuditableEntity<Guid, Guid?>)entry.Entity;
+                        var auditableEntity = (IAuditableEntity)entry.Entity;
                         auditableEntity.CreatedAt = now;
                         auditableEntity.CreatedUserId = currentUserId;
 
@@ -53,7 +51,7 @@ public sealed class LeadManagerDbContext : DbContext, ILeadManagerDbContext
                     }
                 case EntityState.Modified:
                     {
-                        var auditableEntity = (IAuditableEntity<Guid, Guid?>)entry.Entity;
+                        var auditableEntity = (IAuditableEntity)entry.Entity;
                         auditableEntity.UpdatedAt = now;
                         auditableEntity.UpdatedUserId = currentUserId;
 
@@ -63,5 +61,10 @@ public sealed class LeadManagerDbContext : DbContext, ILeadManagerDbContext
         }
 
         return await base.SaveChangesAsync(cancellationToken);
+    }
+
+    public void SetConcurrencyToken<T>(T entity, string propertyName, byte[] rowVersion) where T : IEntity
+    {
+        Entry(entity).Property(propertyName).OriginalValue = rowVersion;
     }
 }

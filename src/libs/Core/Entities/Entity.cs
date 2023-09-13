@@ -1,6 +1,6 @@
 ﻿namespace Core.Entities;
 
-public abstract class Entity : IAuditableEntity<Guid, Guid?>
+public abstract class Entity : IAuditableEntity
 {
     public virtual Guid Id { get; set; }
 
@@ -9,4 +9,8 @@ public abstract class Entity : IAuditableEntity<Guid, Guid?>
 
     public DateTimeOffset? UpdatedAt { get; set; }
     public Guid? UpdatedUserId { get; set; }
+
+    //https://learn.microsoft.com/en-us/aspnet/core/data/ef-mvc/concurrency?view=aspnetcore-7.0
+    //https://www.learnentityframeworkcore5.com/handling-concurrency-in-ef-core
+    public byte[] RowVersion { get; set; } = default!;
 }

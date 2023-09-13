@@ -1,28 +1,29 @@
 ﻿using Core.Entities;
-using Core.ValueObjects;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
 namespace Infrastructure.Persistence.Mappings;
-
-public static class LeadEntityMetadata
-{
-    public static string CnpjColumnIndexName = "IX_Leads_Cnpj";
-    public static string RazaoSocialColumnIndexName = "IX_Leads_RazaoSocial";
-}
 
 internal sealed class LeadEntityTypeConfiguration : IEntityTypeConfiguration<Lead>
 {
     public void Configure(EntityTypeBuilder<Lead> builder)
     {
         builder.HasKey(x => x.Id)
-                .HasName($"PK_{nameof(Lead)}_{nameof(Lead.Id)}");
+                .HasName(LeadEntityMetadata.LeadIdColumnPkId);
 
-        builder.Property(x => x.Id).ValueGeneratedNever();
+        builder.Property(x => x.Id)
+                .ValueGeneratedNever();
+
+        //https://learn.microsoft.com/en-us/aspnet/core/data/ef-mvc/concurrency?view=aspnetcore-7.0
+        //https://www.learnentityframeworkcore5.com/handling-concurrency-in-ef-core
+        builder.Property(x => x.RowVersion)
+                .IsRowVersion() //Concurrency checking purposes
+                .ValueGeneratedOnAddOrUpdate(); 
 
         builder.Property(x => x.Cnpj)
                .IsRequired()
-               .HasColumnType("VARCHAR(18)");
+               .HasColumnType("VARCHAR")
+               .HasMaxLength(18);
 
         builder.Property(x => x.RazaoSocial)
                .IsRequired()
@@ -30,7 +31,7 @@ internal sealed class LeadEntityTypeConfiguration : IEntityTypeConfiguration<Lea
                .HasMaxLength(100);
 
         builder.Property(x => x.Logradouro)
-               .HasColumnName(nameof(Endereco))
+               .HasColumnName("Endereco")
                .IsRequired()
                .HasColumnType("VARCHAR")
                .HasMaxLength(100);

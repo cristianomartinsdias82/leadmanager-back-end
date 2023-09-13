@@ -12,15 +12,15 @@ using Xunit;
 
 namespace Application.Tests.Leads.Queries.SearchLead;
 
-public sealed class SearchLeadQueryHandlerTests : IAsyncDisposable, IDisposable
+public sealed class SearchLeadQueryRequestHandlerTests : IAsyncDisposable, IDisposable
 {
-    private readonly SearchLeadQueryHandler _handler;
+    private readonly SearchLeadQueryRequestHandler _handler;
     private readonly ILeadManagerDbContext _dbContext;
     private readonly IMediator _mediator;
     private static readonly Lead _xptoIncLead = LeadMother.XptoLLC();
     private readonly CancellationTokenSource _cts;
     
-    public SearchLeadQueryHandlerTests()
+    public SearchLeadQueryRequestHandlerTests()
     {
         _mediator = Substitute.For<IMediator>();
         _dbContext = InMemoryLeadManagerDbContextFactory.Create();

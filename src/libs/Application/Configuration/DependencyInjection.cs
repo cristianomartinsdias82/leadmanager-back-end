@@ -29,7 +29,7 @@ public static class DependencyInjection
     public static IServiceCollection AddApplicationServices(this IServiceCollection services, IConfiguration configuration)
     {
         var applicationAssemblyRef = typeof(DependencyInjection).Assembly;
-        var coreAssemblyRef = typeof(IEntity<>).Assembly;
+        var coreAssemblyRef = typeof(IEntity).Assembly;
 
         services.AddValidatorsFromAssembly(applicationAssemblyRef)
                 .AddMediatR(config =>

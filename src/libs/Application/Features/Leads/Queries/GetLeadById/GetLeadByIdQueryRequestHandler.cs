@@ -6,11 +6,11 @@ using Shared.Results;
 
 namespace Application.Features.Leads.Queries.GetLeadById;
 
-internal sealed class GetLeadByIdQueryHandler : ApplicationRequestHandler<GetLeadByIdQueryRequest, LeadDto>
+internal sealed class GetLeadByIdQueryRequestHandler : ApplicationRequestHandler<GetLeadByIdQueryRequest, LeadDto>
 {
     private readonly ILeadManagerDbContext _dbContext;
 
-    public GetLeadByIdQueryHandler(
+    public GetLeadByIdQueryRequestHandler(
         IMediator mediator,
         ILeadManagerDbContext dbContext) : base(mediator, default!)
     {
@@ -26,6 +26,6 @@ internal sealed class GetLeadByIdQueryHandler : ApplicationRequestHandler<GetLea
                             message: "Lead não encontrado.",
                             operationCode: OperationCodes.NotFound);
 
-        return ApplicationResponse<LeadDto>.Create(lead.AsDto());
+        return ApplicationResponse<LeadDto>.Create(lead.MapToDto());
     }
 }

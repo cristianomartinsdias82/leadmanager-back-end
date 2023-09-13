@@ -13,15 +13,15 @@ using Xunit;
 
 namespace Application.Tests.Leads.Queries.GetLeadById;
 
-public sealed class GetLeadByIdQueryHandlerTests : IAsyncDisposable, IDisposable
+public sealed class GetLeadByIdQueryRequestHandlerTests : IAsyncDisposable, IDisposable
 {
-    private readonly GetLeadByIdQueryHandler _handler;
+    private readonly GetLeadByIdQueryRequestHandler _handler;
     private readonly IMediator _mediator;
     private readonly ILeadManagerDbContext _dbContext;
     private readonly Lead _xptoIncLead;
     private readonly CancellationTokenSource _cts;
 
-    public GetLeadByIdQueryHandlerTests()
+    public GetLeadByIdQueryRequestHandlerTests()
     {
         _xptoIncLead = LeadMother.XptoLLC();
         _dbContext = InMemoryLeadManagerDbContextFactory.Create();

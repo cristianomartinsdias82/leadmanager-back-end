@@ -1,3 +1,10 @@
-﻿namespace Application.Features.Leads.Commands.UpdateLead;
+﻿using Application.Contracts.Persistence;
+using Application.Features.Leads.Shared;
+using Core.Entities;
 
-public sealed record UpdateLeadCommandResponse();
+namespace Application.Features.Leads.Commands.UpdateLead;
+
+public sealed record UpdateLeadCommandResponse(
+    RecordStates? RecordState,
+    RevisionUpdate? RevisionUpdate,
+    LeadDto? LeadData);

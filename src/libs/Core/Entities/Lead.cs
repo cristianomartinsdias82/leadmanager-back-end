@@ -1,13 +1,11 @@
 ﻿using Core.ValueObjects;
 using LanguageExt.Common;
+using Shared.Generators;
 
 namespace Core.Entities;
 
 public class Lead : Entity
 {
-    private Result<Cnpj> Documento { get; set; }
-    private Result<Endereco> Endereco { get; set; }
-
     public string RazaoSocial { get; private set; } = default!;
     public string Cnpj { get; private set; } = default!;
 
@@ -21,7 +19,7 @@ public class Lead : Entity
 
     private Lead() { }
 
-    public Lead(
+    public static Lead Criar(
         string cnpj,
         string razaoSocial,
         string cep,
@@ -32,33 +30,33 @@ public class Lead : Entity
         string? numero,
         string? complemento)
     {
-        Id = Guid.NewGuid(); //TODO: Make use of Chris Patterson's NewId Nuget Package in order to generate sequential Guids
-        Documento = ValidarCnpj(cnpj);
-        Endereco = ValidarEndereco(cep, endereco, bairro, cidade, estado, numero, complemento);
-        
-        Documento.IfSucc(cnpj => Cnpj = cnpj.Value!);
-        Endereco.IfSucc(endereco =>
+        ValidarCnpj(cnpj);
+        ValidarEndereco(cep, endereco, bairro, cidade, estado, numero, complemento);
+
+        var newId = IdGenerator.NextId();
+        return new()
         {
-            endereco.Cep.IfSucc(cep => Cep = cep);
-
-            Logradouro = endereco.Descricao;
-            Cidade = endereco.Cidade;
-            Bairro = endereco.Bairro;
-            Estado = endereco.Estado;
-            Numero = endereco.Numero;
-            Complemento = endereco.Complemento;
-        });
-
-        RazaoSocial = razaoSocial;
+            Id = IdGenerator.NextId(),
+            Cnpj = cnpj,
+            RazaoSocial = razaoSocial,
+            Cep = cep,
+            Logradouro = endereco,
+            Bairro = bairro,
+            Cidade = cidade,
+            Estado = estado,
+            Numero = numero,
+            Complemento = complemento,
+            RowVersion = newId.ToByteArray()
+        };
     }
 
     public void Atualizar(
         string razaoSocial,
         string cep,
         string endereco,
+        string bairro,
         string cidade,
         string estado,
-        string bairro,
         string? numero,
         string? complemento)
     {
@@ -68,25 +66,19 @@ public class Lead : Entity
         Cep = cep;
         Logradouro = endereco;
         Cidade = cidade;
-        Estado = estado;
         Bairro = bairro;
+        Estado = estado;
         Numero = numero;
         Complemento = complemento;
     }
 
-    private Result<Cnpj> ValidarCnpj(string cnpj)
-    {
-        Documento = ValueObjects.Cnpj.New(cnpj);
-        Documento.IfFail(exc => throw exc);
+    private static Result<Cnpj> ValidarCnpj(string cnpj)
+        => ValueObjects.Cnpj
+            .New(cnpj)
+            .IfFail(exc => throw exc);
 
-        return Documento;
-    }
-
-    private Result<Endereco> ValidarEndereco(string cep, string endereco, string bairro, string cidade, string estado, string? numero, string? complemento)
-    {
-        Endereco = ValueObjects.Endereco.New(cep, endereco, bairro, cidade, estado, numero, complemento);
-        Endereco.IfFail(exc => throw exc);
-
-        return Endereco;
-    }
+    private static Result<Endereco> ValidarEndereco(string cep, string endereco, string bairro, string cidade, string estado, string? numero, string? complemento)
+        => Endereco
+            .New(cep, endereco, bairro, cidade, estado, numero, complemento)
+            .IfFail(exc => throw exc);
 }

@@ -32,7 +32,7 @@ public sealed class CacheManagerTests : IDisposable, IAsyncDisposable
             _dbContext,
             _cacheProviderMock,
             _cachingPoliciesSettings);
-        _leadDtos = LeadMother.Leads().AsDtoList();
+        _leadDtos = LeadMother.Leads().MapToDtoList();
     }
 
     [Fact]
@@ -51,7 +51,7 @@ public sealed class CacheManagerTests : IDisposable, IAsyncDisposable
     public async Task AddLeadEntry_ValidArgument_ShouldRunSuccessfully()
     {
         //Arrange
-        var leadDto = LeadMother.XptoLLC().AsDto();
+        var leadDto = LeadMother.XptoLLC().MapToDto();
        
         //Act
         await _cacheManager.AddLeadEntryAsync(leadDto, _cts.Token);
@@ -138,7 +138,7 @@ public sealed class CacheManagerTests : IDisposable, IAsyncDisposable
         //Arrange
         _cacheProviderMock
             .GetAsync<IEnumerable<LeadData>>(Arg.Any<string>(), _cts.Token)
-            .Returns(_leadDtos.AsMessageContractList());
+            .Returns(_leadDtos.MapToMessageContractList());
 
         var updatedLead = _leadDtos.First();     
 
@@ -170,7 +170,7 @@ public sealed class CacheManagerTests : IDisposable, IAsyncDisposable
             .Returns(Enumerable.Empty<LeadData>());
 
         //Act
-        await _cacheManager.UpdateLeadEntryAsync(LeadMother.GumperInc().AsDto(), _cts.Token);
+        await _cacheManager.UpdateLeadEntryAsync(LeadMother.GumperInc().MapToDto(), _cts.Token);
 
         //Assert
         await _cacheProviderMock
@@ -212,7 +212,7 @@ public sealed class CacheManagerTests : IDisposable, IAsyncDisposable
         //Arrange
         _cacheProviderMock
             .GetAsync<IEnumerable<LeadData>>(Arg.Any<string>(), _cts.Token)
-            .Returns(_leadDtos.AsMessageContractList());
+            .Returns(_leadDtos.MapToMessageContractList());
 
         var leadToRemove = _leadDtos.First();
 
@@ -243,7 +243,7 @@ public sealed class CacheManagerTests : IDisposable, IAsyncDisposable
             .Returns(Enumerable.Empty<LeadData>());
 
         //Act
-        await _cacheManager.RemoveLeadEntryAsync(LeadMother.XptoLLC().AsDto(), _cts.Token);
+        await _cacheManager.RemoveLeadEntryAsync(LeadMother.XptoLLC().MapToDto(), _cts.Token);
 
         //Assert
         await _cacheProviderMock
@@ -278,7 +278,7 @@ public sealed class CacheManagerTests : IDisposable, IAsyncDisposable
     {
         //Arrange
         _cacheProviderMock.GetAsync<IEnumerable<LeadData>>(Arg.Any<string>(), _cts.Token)
-                          .Returns(_leadDtos.AsMessageContractList());
+                          .Returns(_leadDtos.MapToMessageContractList());
         
         //Act
         var cachedLeads = await _cacheManager.GetLeadsAsync(new(), _cts.Token);

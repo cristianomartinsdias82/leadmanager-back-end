@@ -10,12 +10,12 @@ using Shared.Results;
 
 namespace Application.Features.Leads.Commands.RegisterLead;
 
-internal sealed class RegisterLeadCommandHandler : ApplicationRequestHandler<RegisterLeadCommandRequest, RegisterLeadCommandResponse>
+internal sealed class RegisterLeadCommandRequestHandler : ApplicationRequestHandler<RegisterLeadCommandRequest, RegisterLeadCommandResponse>
 {
     private readonly ILeadManagerDbContext _dbContext;
     private readonly ICachingManagement _cachingManager;
 
-    public RegisterLeadCommandHandler(
+    public RegisterLeadCommandRequestHandler(
         IMediator mediator,
         IEventDispatching eventDispatcher,
         ILeadManagerDbContext dbContext,
@@ -27,7 +27,7 @@ internal sealed class RegisterLeadCommandHandler : ApplicationRequestHandler<Reg
 
     public async override Task<ApplicationResponse<RegisterLeadCommandResponse>> Handle(RegisterLeadCommandRequest request, CancellationToken cancellationToken)
     {
-        var lead = new Lead(
+        var lead = Lead.Criar(
             request.Cnpj!,
             request.RazaoSocial!,
             request.Cep!,
@@ -42,7 +42,7 @@ internal sealed class RegisterLeadCommandHandler : ApplicationRequestHandler<Reg
         await _dbContext.Leads.AddAsync(lead);
         await _dbContext.SaveChangesAsync(cancellationToken);
 
-        var leadDto = lead.AsDto();
+        var leadDto = lead.MapToDto();
         await _cachingManager.AddLeadEntryAsync(leadDto, cancellationToken);
 
         AddEvent(new LeadRegisteredIntegrationEvent(leadDto));
