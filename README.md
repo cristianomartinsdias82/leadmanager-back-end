@@ -11,6 +11,8 @@ Uma para listagem de leads a partir da qual os usuários são capazes de:
 - Selecionar um lead a fim de removê-lo ou
 - Selecionar um lead e acionar o botão para atualizar os respectivos dados<br/>
 E outra tela para as operações de adicionar ou atualizar um lead previamente selecionado
+- Em situações de conflito de atualização e remoção de dados, o usuário tem a possibilidade de tomar uma decisão sobre como proceder neste tipo de cenário (sobrescrever, carregar os novos dados, cancelar...)
+de maneira fácil e intuitiva
 
 O projeto está em constante evolução e utiliza a seguinte plataforma e linguagens, tecnologias, funcionalidades e ferramentas:
 - .Net Core 7
@@ -62,11 +64,11 @@ Backlog:
   - Possibilidade 1: a aplicação deverá ser capaz de encaminhar a solicitação de autenticação para um servidor de identidade a fim de obter o Token de autenticação
   - Possibilidade 2: a aplicação deverá ser capaz de validar tokens de autenticação/autorização - incluindo Claims - que possibilitem ou recusem executar os endpoints da API
 - (Technical debt) Implementar um filtro de ação que envia um SMS / mensagem no WhatsApp (de maneira Fake) ao usuário contendo um token de 4 dígitos numéricos para realizar a operação de Remoção de Leads
-  - A ideia: na solicitação de remoção, deverá ser informado no cabeçalho HTTP um header X-Confirmation-Number com um código válido.
+  - A ideia: na solicitação de remoção, deverá ser informado no cabeçalho HTTP um header LeadManager-Confirmation-Number com um código válido.
     - Se na solicitação não veio este cabeçalho, a aplicação deverá gerar e armazenar um token com tempo de expiração de 1 minuto.
     - Se na solicitação veio o cabeçalho, a aplicação deverá validar se o token ainda é válido (informou o token certo + token não está expirado), podendo gerar como resultado ao usuário as informações: 'Token incorreto' ou 'Token expirado'
 - (Technical debt) Implementar os testes unitários das classes contidas em libs/Shared; especificamente, das classes ApplicationResponse, PaginationOptions, Inconsistency e CnpjValidator
-- (Technical debt) Implementar os testes unitários dos service client de integração com o serviço ViaCep
+- (Technical debt) Implementar os testes unitários do service client de integração com o serviço ViaCep
 - (Technical debt) Implementar os testes de integração dos endpoints:<br/>
   GetLeadById<br/>
   RegisterLead<br/>
@@ -74,7 +76,8 @@ Backlog:
   UpdateLead<br/>
   SearchLead<br/>
   BulkInsertLead<br/>
-- (Technical debt) Utilizar StronglyTypedIds na camada de Entidades
+- (Technical debt) Utlizar TestContainers nos testes unitários utilizando o Sql Server 
+- (Technical debt) Implementar testes unitários de concorrência de operações de atualização e remoção de leads (depende do item '(Technical debt) Utlizar TestContainers nos testes unitários utilizando o Sql Server)
 - (Technical debt) Adicionar HealthChecks, incluindo endpoint na API
 - (Technical debt) Adicionar um endpoint de métricas, pronto para o Prometheus realizar 'scrapings'
 - (Technical debt) Integrar a aplicação com alguma ferramenta de telemetria; preferência pelo uso do Data Dog e/ou Jaeger
@@ -129,6 +132,7 @@ Em termos de implementação, o que tem de reaproveitável no código-fonte dest
     - Classe que implementa integração com StackExchange Redis, serializando e deserializando inclusive utilizando Protobuf para velocidade e economia de espaço em memória com estes processos
   - ICachingManagement (que no final das contas é um repositório de dados preenchido com dados da fonte de dados)
 - Abstrações para integração com serviço de mensageria RabbitMQ
+- Lógica de controle de concorrência utilizando Entity Framework Core e Sql Server (vide os as classes UpdateLeadCommandRequestHandler e RemoveLeadCommandRequestHandler)
 
 Lista com os principais pacotes Nuget que foram utilizados neste projeto:<br/>
 - LanguageExt.Core
