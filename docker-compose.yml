@@ -18,7 +18,7 @@ services:
     image: rabbitmq:3-management
 
   leadmanager.client:
-    image: cristianomartinsdiasspbr1982/leadmanagerweb:v1
+    image: cristianomartinsdiasspbr1982/leadmanagerweb:v1.0.1
     
   leadmanager.api:
     container_name: leadmanagerapi
