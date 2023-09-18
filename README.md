@@ -58,8 +58,8 @@ Após a configuração da máquina - conforme a seção "Pré-requisitos para ex
 - Navegue até a pasta raiz da aplicação aonde o projeto foi baixado e digite o seguinte comando:<br/>
 docker-compose up -d<br/>
 (Para interromper a execução do projeto, ainda na mesma pasta do mesmo, digite o seguinte comando:<br/>
-docker-compose down)<br/>
-Abra o navegador e digite a seguinte URL na barra de endereço:<br/>
+docker-compose down)
+- Abra o navegador e digite a seguinte URL na barra de endereço:<br/>
 http://localhost:8002<br/>
 
 Backlog:
