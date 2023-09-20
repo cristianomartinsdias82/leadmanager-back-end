@@ -1,8 +1,0 @@
-﻿<?xml version="1.0" encoding="utf-8" standalone="no"?>
-<Project ToolsVersion="14.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
-  <ImportGroup Condition=" '$(ExcludeRestorePackageImports)' != 'true' ">
-    <Import Project="$(NuGetPackageRoot)stronglytypedid.generator\0.2.1\build\StronglyTypedId.Generator.targets" Condition="Exists('$(NuGetPackageRoot)stronglytypedid.generator\0.2.1\build\StronglyTypedId.Generator.targets')" />
-    <Import Project="$(NuGetPackageRoot)codegeneration.roslyn.tool\0.7.63\build\CodeGeneration.Roslyn.Tool.targets" Condition="Exists('$(NuGetPackageRoot)codegeneration.roslyn.tool\0.7.63\build\CodeGeneration.Roslyn.Tool.targets')" />
-    <Import Project="$(NuGetPackageRoot)microsoft.extensions.logging.abstractions\7.0.0\buildTransitive\net6.0\Microsoft.Extensions.Logging.Abstractions.targets" Condition="Exists('$(NuGetPackageRoot)microsoft.extensions.logging.abstractions\7.0.0\buildTransitive\net6.0\Microsoft.Extensions.Logging.Abstractions.targets')" />
-  </ImportGroup>
-</Project>
