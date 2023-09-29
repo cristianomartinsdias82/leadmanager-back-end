@@ -529,3 +529,6 @@ $RECYCLE.BIN/
 /src/libs/Shared/obj/project.assets.json
 /src/libs/Shared/obj/project.nuget.cache
 /src/libs/Shared/obj/Shared.csproj.nuget.dgspec.json
+/src/hosts/LeadManagerApi/obj/Debug/net7.0/LeadManagerApi.GeneratedMSBuildEditorConfig.editorconfig
+/src/libs/Application/obj/Debug/net7.0/Application.GeneratedMSBuildEditorConfig.editorconfig
+/src/libs/Infrastructure/obj/Debug/net7.0/Infrastructure.GeneratedMSBuildEditorConfig.editorconfig
