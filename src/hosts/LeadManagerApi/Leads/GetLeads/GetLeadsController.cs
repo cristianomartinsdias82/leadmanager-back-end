@@ -1,13 +1,16 @@
 ﻿using Application.Features.Leads.Queries.GetLeads;
 using Application.Features.Leads.Shared;
 using LeadManagerApi.ApiFeatures;
+using LeadManagerApi.Configuration.Security;
 using MediatR;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Shared.DataPagination;
 
 namespace LeadManagerApi.Leads.GetLeads;
 
 [LeadsRoute]
+[Authorize(Policy = LeadManagerApiSecurityConfiguration.Policies.LeadManagerDefaultPolicy)]
 public sealed class GetLeadsController : LeadManagerController
 {
     public GetLeadsController(ISender sender) : base(sender) { }

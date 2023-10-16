@@ -1,12 +1,15 @@
 ﻿using Application.Features.Leads.Commands.UpdateLead;
 using LeadManagerApi.ApiFeatures;
+using LeadManagerApi.Configuration.Security;
 using MediatR;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Shared.Results;
 
 namespace LeadManagerApi.Leads.UpdateLead;
 
 [LeadsRoute]
+[Authorize(Policy = LeadManagerApiSecurityConfiguration.Policies.LeadManagerDefaultPolicy)]
 public sealed class UpdateLeadController : LeadManagerController
 {
     public UpdateLeadController(ISender mediator) : base(mediator) { }

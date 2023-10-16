@@ -1,12 +1,15 @@
 ﻿using Application.Features.Leads.Queries.SearchLead;
 using LeadManagerApi.ApiFeatures;
+using LeadManagerApi.Configuration.Security;
 using MediatR;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Shared.Results;
 
 namespace LeadManagerApi.Leads.SearchLead
 {
     [LeadsRoute]
+    [Authorize(Policy = LeadManagerApiSecurityConfiguration.Policies.LeadManagerDefaultPolicy)]
     public sealed class SearchLeadController : LeadManagerController
     {
         public SearchLeadController(ISender mediator) : base(mediator) { }

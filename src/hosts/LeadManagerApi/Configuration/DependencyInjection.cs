@@ -1,54 +1,52 @@
 ﻿using LeadManagerApi.ApiFeatures;
+using LeadManagerApi.Configuration.Security;
 using Microsoft.AspNetCore.Http.Features;
 using Microsoft.AspNetCore.Server.Kestrel.Core;
 
-namespace LeadManagerApi.Configuration
-{
-    public static class DependencyInjection
-    {
-        public const string LeadWebAppCorsPolicy = "LeadWebAppCorsPolicy";
+namespace LeadManagerApi.Configuration;
 
-        public static IServiceCollection AddApiServices(this IServiceCollection services, IConfiguration configuration)
+public static class DependencyInjection
+{
+    public static IServiceCollection AddApiServices(this IServiceCollection services, IConfiguration configuration)
+    {
+        var apiSettings = configuration.GetSection(nameof(LeadManagerApiSettings)).Get<LeadManagerApiSettings>()!;
+        services.AddSingleton(apiSettings);
+
+        services.AddControllers(config =>
+        {
+            config.Filters.Add<RequiresApiKeyActionFilter>();
+
+            //https://stackoverflow.com/questions/36413476/mvc-core-how-to-force-set-global-authorization-for-all-actions
+            //var policy = new AuthorizationPolicyBuilder()
+            //                    .RequireAuthenticatedUser()
+            //                    .Build();
+            //config.Filters.Add(new AuthorizeFilter(policy));
+        });
+
+        services.AddAuthorization(LeadManagerApiSecurityConfiguration.SetPermissionPolicies);
+
+        services.AddCors(options => LeadManagerApiSecurityConfiguration.SetCorsPolicy(options, apiSettings));
+
+        services.Configure<KestrelServerOptions>(options =>
         {
             var apiSettings = configuration.GetSection(nameof(LeadManagerApiSettings)).Get<LeadManagerApiSettings>()!;
-            services.AddSingleton(apiSettings);
 
-            services.AddControllers(config =>
-            {
-                config.Filters.Add<RequiresApiKeyActionFilter>();
-            });
+            options.Limits.MaxRequestBodySize = apiSettings.FileUpload_MaxSizeInBytes;
+        });
 
-            services.Configure<KestrelServerOptions>(options =>
-            {
-                var apiSettings = configuration.GetSection(nameof(LeadManagerApiSettings)).Get<LeadManagerApiSettings>()!;
+        services.Configure<FormOptions>(options =>
+        {
+            options.MultipartBodyLengthLimit = apiSettings.FileUpload_MaxSizeInBytes;
+        });
 
-                options.Limits.MaxRequestBodySize = apiSettings.FileUpload_MaxSizeInBytes;
-            });
+        services.AddEndpointsApiExplorer();
+        services.AddSwaggerGen(config =>
+        {
+            config.OperationFilter<ApiKeyHeaderOperationFilter>();
 
-            services.Configure<FormOptions>(options =>
-            {
-                options.MultipartBodyLengthLimit = apiSettings.FileUpload_MaxSizeInBytes;
-            });
+            LeadManagerApiSecurityConfiguration.SetAuthorizationForSwagger(config);
+        });        
 
-            services.AddEndpointsApiExplorer();
-            services.AddSwaggerGen(config =>
-            {
-                //config.OperationFilter<ApiKeyHeaderOperationFilter>(); //It is causing error in Swagger view page
-            });
-            services.AddCors(options =>
-            {
-                options.AddPolicy(LeadWebAppCorsPolicy,
-                    builder =>
-                    {
-                        builder.WithOrigins(apiSettings.Cors_AllowedOrigins.Split(','))
-                               .WithMethods("POST", "GET", "PUT", "DELETE", "HEAD", "OPTIONS")
-                               .AllowAnyHeader()
-                               .AllowCredentials()
-                               .Build();
-                    });
-            });
-
-            return services;
-        }
+        return services;
     }
 }

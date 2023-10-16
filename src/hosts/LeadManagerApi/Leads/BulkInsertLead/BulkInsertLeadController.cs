@@ -1,13 +1,16 @@
 ﻿using Application.Features.Leads.Commands.BulkInsertLead;
 using LeadManagerApi.ApiFeatures;
 using LeadManagerApi.Configuration;
+using LeadManagerApi.Configuration.Security;
 using MediatR;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Shared.Results;
 
 namespace LeadManagerApi.Leads.RegisterLead;
 
 [LeadsRoute]
+[Authorize(Policy = LeadManagerApiSecurityConfiguration.Policies.LeadManagerDefaultPolicy)]
 public sealed class BulkInsertLeadController : LeadManagerController
 {
     public BulkInsertLeadController(ISender mediator) : base(mediator) { }

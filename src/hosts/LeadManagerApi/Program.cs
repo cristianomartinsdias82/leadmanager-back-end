@@ -1,8 +1,9 @@
 using Application.Configuration;
+using CrossCutting.Messaging.RabbitMq.Configuration;
 using Infrastructure.Configuration;
 using LeadManagerApi.ApiFeatures;
 using LeadManagerApi.Configuration;
-using CrossCutting.Messaging.RabbitMq.Configuration;
+using LeadManagerApi.Configuration.Security;
 
 namespace LeadManagerApi;
 
@@ -22,7 +23,7 @@ public class Program
         var app = builder.Build();
 
         //Request pipeline configuration
-        app.UseCors(Configuration.DependencyInjection.LeadWebAppCorsPolicy);
+        app.UseCors(LeadManagerApiSecurityConfiguration.Policies.LeadManagerCorsPolicy);
 
         if (app.Environment.IsDevelopment())
         {
@@ -31,6 +32,8 @@ public class Program
         }
 
         app.UseHttpsRedirection();
+
+        app.UseAuthentication();
 
         app.UseAuthorization();
 

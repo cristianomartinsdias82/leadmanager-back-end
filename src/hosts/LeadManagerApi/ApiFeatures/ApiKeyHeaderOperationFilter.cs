@@ -1,5 +1,4 @@
 ﻿using LeadManagerApi.Configuration;
-using Microsoft.Extensions.Options;
 using Microsoft.OpenApi.Models;
 using Swashbuckle.AspNetCore.SwaggerGen;
 
@@ -9,9 +8,9 @@ public class ApiKeyHeaderOperationFilter : IOperationFilter
 {
     private readonly LeadManagerApiSettings _apiSettings;
 
-    public ApiKeyHeaderOperationFilter(IOptions<LeadManagerApiSettings> apiSettings)
+    public ApiKeyHeaderOperationFilter(LeadManagerApiSettings apiSettings)
     {
-        _apiSettings = apiSettings.Value;
+        _apiSettings = apiSettings;
     }
 
     public void Apply(OpenApiOperation operation, OperationFilterContext context)
@@ -22,8 +21,7 @@ public class ApiKeyHeaderOperationFilter : IOperationFilter
             Name = _apiSettings.ApiKeyRequestHeaderName,
             In = ParameterLocation.Header,
             Description = "The Lead Manager Api Key",
-            Required = false,
-            Schema = new OpenApiSchema { Type = "String" }
+            Required = true
         });
     }
 }

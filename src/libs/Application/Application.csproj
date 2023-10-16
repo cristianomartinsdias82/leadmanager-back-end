@@ -24,6 +24,7 @@
     <ProjectReference Include="..\Cross-cutting\Cross-cutting.Logging\CrossCutting.Logging.csproj" />
     <ProjectReference Include="..\Cross-cutting\Cross-cutting.MessageContracts\CrossCutting.MessageContracts.csproj" />
     <ProjectReference Include="..\Cross-cutting\Cross-cutting.Messaging\CrossCutting.Messaging.csproj" />
+    <ProjectReference Include="..\Cross-cutting\Cross-cutting.Security\CrossCutting.Security.csproj" />
     <ProjectReference Include="..\Integrations\ViaCep.ServiceClient\ViaCep.ServiceClient.csproj" />
     <ProjectReference Include="..\Shared\Shared.csproj" />
   </ItemGroup>

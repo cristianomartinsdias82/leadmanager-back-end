@@ -14,6 +14,7 @@ using CrossCutting.Csv.Configuration;
 using CrossCutting.FileStorage.Configuration;
 using CrossCutting.Logging.Configuration;
 using CrossCutting.Messaging.Configuration;
+using CrossCutting.Security;
 using FluentValidation;
 using MediatR;
 using MediatR.Pipeline;
@@ -35,7 +36,6 @@ public static class DependencyInjection
                 .AddMediatR(config =>
                 {
                     config.RegisterServicesFromAssemblies(coreAssemblyRef, applicationAssemblyRef)
-                          .RegisterServicesFromAssembly(applicationAssemblyRef)
                           .RegisterBehaviors(services)
                           .RegisterProcessors(services);
                 })
@@ -57,7 +57,8 @@ public static class DependencyInjection
                    .AddFileStorage(configuration)
                    .AddMultiSinkLogging(configuration)
                    .AddCaching(configuration)
-                   .AddMessageBus(configuration);
+                   .AddMessageBus(configuration)
+                   .AddSecurity(configuration);
 
     private static MediatRServiceConfiguration RegisterBehaviors(this MediatRServiceConfiguration config, IServiceCollection services)
     {

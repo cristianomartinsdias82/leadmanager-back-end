@@ -1,12 +1,15 @@
 ﻿using Application.Features.Leads.Commands.RemoveLead;
 using LeadManagerApi.ApiFeatures;
+using LeadManagerApi.Configuration.Security;
 using MediatR;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Shared.Results;
 
 namespace LeadManagerApi.Leads.RemoveLead;
 
 [LeadsRoute]
+[Authorize(Policy = LeadManagerApiSecurityConfiguration.Policies.LeadManagerRemovePolicy)]
 public sealed class RemoveLeadController : LeadManagerController
 {
     public RemoveLeadController(ISender sender) : base(sender) { }
