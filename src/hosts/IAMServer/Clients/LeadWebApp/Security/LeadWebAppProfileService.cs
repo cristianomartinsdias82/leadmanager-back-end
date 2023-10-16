@@ -11,12 +11,12 @@ namespace IAMServer.Clients.LeadWebApp.Security;
 /// (Note that this is registered in Program.cs via .AddProfileService<LeadManagerProfileService>() command line
 /// </summary>
 //https://stackoverflow.com/questions/44761058/how-to-add-custom-claims-to-access-token-in-identityserver4
-public class LeadManagerProfileService : IProfileService
+public class LeadWebAppProfileService : IProfileService
 {
     private readonly UserManager<ApplicationUser> _userManager;
     private readonly RoleManager<ApplicationRole> _roleManager;
 
-    public LeadManagerProfileService(UserManager<ApplicationUser> userManager, RoleManager<ApplicationRole> roleManager)
+    public LeadWebAppProfileService(UserManager<ApplicationUser> userManager, RoleManager<ApplicationRole> roleManager)
     {
         _userManager = userManager;
         _roleManager = roleManager;

@@ -2,7 +2,7 @@
 
 namespace IAMServer.Settings;
 
-public class IAMSettings
+public class IAMServerSettings
 {
     public IReadOnlyCollection<ApiScope> ApiScopes { get; init; } = Array.Empty<ApiScope>();
     

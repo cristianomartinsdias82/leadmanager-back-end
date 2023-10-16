@@ -16,6 +16,7 @@ namespace IAMServer.Identity.Pages.Account
         private readonly SignInManager<ApplicationUser> _signInManager;
         private readonly UserManager<ApplicationUser> _userManager;
         private readonly ILogger<LoginModel> _logger;
+        private const string InvalidLoginAttempt = "Usuário e/ou senha incorretos.";
 
         public LoginModel(
             SignInManager<ApplicationUser> signInManager,
@@ -113,7 +114,7 @@ namespace IAMServer.Identity.Pages.Account
                 var user = await _userManager.FindByEmailAsync(Input.Email);
                 if (user is null)
                 {
-                    ModelState.AddModelError(string.Empty, "Invalid login attempt.");
+                    ModelState.AddModelError(string.Empty, InvalidLoginAttempt);
                     return Page();
                 }
 
@@ -134,7 +135,7 @@ namespace IAMServer.Identity.Pages.Account
                 }
                 else
                 {
-                    ModelState.AddModelError(string.Empty, "Invalid login attempt.");
+                    ModelState.AddModelError(string.Empty, InvalidLoginAttempt);
                     return Page();
                 }
             }
