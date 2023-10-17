@@ -20,7 +20,7 @@ internal static class LeadManagerApiSecurityConfiguration
         public const string Administrators = "Administrators";
     }
 
-    private static class Claims
+    public static class Claims
     {
         public const string LDM = "ldm";
         public const string Read = "leadmanager.read";

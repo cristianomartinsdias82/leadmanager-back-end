@@ -1,4 +1,5 @@
 ﻿using MediatR;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Shared.Results;
 using System.Net.Mime;
@@ -6,6 +7,7 @@ using System.Net.Mime;
 namespace LeadManagerApi.ApiFeatures;
 
 [Produces(MediaTypeNames.Application.Json)]
+[Authorize]
 public abstract class LeadManagerController : ControllerBase
 {
     protected readonly ISender Mediator;

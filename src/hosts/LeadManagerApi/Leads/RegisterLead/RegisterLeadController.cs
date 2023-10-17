@@ -1,15 +1,16 @@
 ﻿using Application.Features.Leads.Commands.RegisterLead;
+using CrossCutting.Security.Authorization;
 using LeadManagerApi.ApiFeatures;
 using LeadManagerApi.Configuration.Security;
 using MediatR;
-using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Shared.Results;
 
 namespace LeadManagerApi.Leads.RegisterLead;
 
 [LeadsRoute]
-[Authorize(Policy = LeadManagerApiSecurityConfiguration.Policies.LeadManagerDefaultPolicy)]
+//[Authorize(Policy = LeadManagerApiSecurityConfiguration.Policies.LeadManagerDefaultPolicy)]
+[RequiredAllPermissions(requiredPermissions: LeadManagerApiSecurityConfiguration.Claims.Insert)]
 public sealed class RegisterLeadController : LeadManagerController
 {
     public RegisterLeadController(ISender mediator) : base(mediator) { }

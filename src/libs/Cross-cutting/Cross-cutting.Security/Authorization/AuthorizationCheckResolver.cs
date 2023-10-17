@@ -1,0 +1,3 @@
+﻿namespace CrossCutting.Security.Authorization;
+
+public delegate IAuthorizationChecker AuthorizationCheckResolver(AuthorizationCheckStrategy checkStrategy);

@@ -1,16 +1,17 @@
 ﻿using Application.Features.Leads.Queries.GetLeadById;
 using Application.Features.Leads.Shared;
+using CrossCutting.Security.Authorization;
 using LeadManagerApi.ApiFeatures;
 using LeadManagerApi.Configuration.Security;
 using MediatR;
-using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Shared.Results;
 
 namespace LeadManagerApi.Leads.GetLeadById;
 
 [LeadsRoute]
-[Authorize(Policy = LeadManagerApiSecurityConfiguration.Policies.LeadManagerDefaultPolicy)]
+//[Authorize(Policy = LeadManagerApiSecurityConfiguration.Policies.LeadManagerDefaultPolicy)]
+[RequiredAllPermissions(requiredPermissions: LeadManagerApiSecurityConfiguration.Claims.Read)]
 public sealed class GetLeadByIdController : LeadManagerController
 {
     public GetLeadByIdController(ISender sender) : base(sender) { }
