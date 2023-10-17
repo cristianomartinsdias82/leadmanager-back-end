@@ -1,6 +1,5 @@
 ﻿using Application.Features.Leads.Queries.SearchLead;
 using CrossCutting.Security.Authorization;
-using LeadManagerApi.ApiFeatures;
 using LeadManagerApi.Core.ApiFeatures;
 using LeadManagerApi.Core.Configuration.Security;
 using MediatR;
