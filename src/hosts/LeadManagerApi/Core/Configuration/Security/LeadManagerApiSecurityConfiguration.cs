@@ -4,7 +4,7 @@ using Microsoft.AspNetCore.Cors.Infrastructure;
 using Microsoft.OpenApi.Models;
 using Swashbuckle.AspNetCore.SwaggerGen;
 
-namespace LeadManagerApi.Configuration.Security;
+namespace LeadManagerApi.Core.Configuration.Security;
 
 internal static class LeadManagerApiSecurityConfiguration
 {

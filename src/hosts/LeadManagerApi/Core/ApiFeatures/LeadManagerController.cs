@@ -4,7 +4,7 @@ using Microsoft.AspNetCore.Mvc;
 using Shared.Results;
 using System.Net.Mime;
 
-namespace LeadManagerApi.ApiFeatures;
+namespace LeadManagerApi.Core.ApiFeatures;
 
 [Produces(MediaTypeNames.Application.Json)]
 [Authorize]

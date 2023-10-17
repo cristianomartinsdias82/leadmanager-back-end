@@ -1,6 +1,6 @@
 ﻿using Application.Features.Addresses.Queries.SearchAddressByZipCode;
-using LeadManagerApi.ApiFeatures;
-using LeadManagerApi.Configuration.Security;
+using LeadManagerApi.Core.ApiFeatures;
+using LeadManagerApi.Core.Configuration.Security;
 using MediatR;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;

@@ -1,8 +1,8 @@
-﻿using LeadManagerApi.Configuration;
+﻿using LeadManagerApi.Core.Configuration;
 using Microsoft.OpenApi.Models;
 using Swashbuckle.AspNetCore.SwaggerGen;
 
-namespace LeadManagerApi.ApiFeatures;
+namespace LeadManagerApi.Core.ApiFeatures;
 
 public class ApiKeyHeaderOperationFilter : IOperationFilter
 {

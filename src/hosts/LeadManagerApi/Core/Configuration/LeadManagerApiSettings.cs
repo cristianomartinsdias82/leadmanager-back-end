@@ -1,4 +1,4 @@
-﻿namespace LeadManagerApi.Configuration;
+﻿namespace LeadManagerApi.Core.Configuration;
 
 public sealed record LeadManagerApiSettings
 (

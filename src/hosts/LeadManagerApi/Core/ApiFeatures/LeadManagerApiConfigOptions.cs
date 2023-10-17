@@ -1,7 +1,7 @@
-﻿using LeadManagerApi.Configuration;
+﻿using LeadManagerApi.Core.Configuration;
 using Microsoft.Extensions.Options;
 
-namespace LeadManagerApi.ApiFeatures
+namespace LeadManagerApi.Core.ApiFeatures
 {
     public class LeadManagerApiConfigOptions : IConfigureOptions<LeadManagerApiSettings>
     {

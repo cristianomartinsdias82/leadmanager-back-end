@@ -5,7 +5,7 @@ using CrossCutting.MessageContracts;
 using CrossCutting.Messaging;
 using CrossCutting.Messaging.RabbitMq;
 using Infrastructure.Persistence;
-using LeadManagerApi.Configuration;
+using LeadManagerApi.Core.Configuration;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;

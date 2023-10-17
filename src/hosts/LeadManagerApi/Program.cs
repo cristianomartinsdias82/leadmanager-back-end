@@ -1,9 +1,9 @@
 using Application.Configuration;
 using CrossCutting.Messaging.RabbitMq.Configuration;
 using Infrastructure.Configuration;
-using LeadManagerApi.ApiFeatures;
-using LeadManagerApi.Configuration;
-using LeadManagerApi.Configuration.Security;
+using LeadManagerApi.Core.ApiFeatures;
+using LeadManagerApi.Core.Configuration;
+using LeadManagerApi.Core.Configuration.Security;
 
 namespace LeadManagerApi;
 

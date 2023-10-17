@@ -1,6 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 
-namespace LeadManagerApi.ApiFeatures;
+namespace LeadManagerApi.Core.ApiFeatures;
 
 public class LeadManagerApiRouteAttribute : RouteAttribute
 {

@@ -2,7 +2,8 @@
 using Application.Features.Leads.Shared;
 using CrossCutting.Security.Authorization;
 using LeadManagerApi.ApiFeatures;
-using LeadManagerApi.Configuration.Security;
+using LeadManagerApi.Core.ApiFeatures;
+using LeadManagerApi.Core.Configuration.Security;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
 using Shared.Results;

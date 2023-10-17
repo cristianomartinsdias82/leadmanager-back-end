@@ -1,8 +1,8 @@
-﻿using LeadManagerApi.Configuration;
+﻿using LeadManagerApi.Core.Configuration;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Filters;
 
-namespace LeadManagerApi.ApiFeatures;
+namespace LeadManagerApi.Core.ApiFeatures;
 
 public sealed class RequiresApiKeyActionFilter : ActionFilterAttribute
 {

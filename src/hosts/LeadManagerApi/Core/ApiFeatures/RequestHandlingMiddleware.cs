@@ -3,7 +3,7 @@ using Infrastructure.Persistence.Mappings;
 using Microsoft.EntityFrameworkCore;
 using Shared.Results;
 
-namespace LeadManagerApi.ApiFeatures;
+namespace LeadManagerApi.Core.ApiFeatures;
 
 public sealed class RequestHandlingMiddleware
 {
@@ -29,7 +29,7 @@ public sealed class RequestHandlingMiddleware
             var inconsistencies = default(List<Inconsistency>);
 
             HandleError(exc, ref inconsistencies);
-            
+
             context.Response.StatusCode = StatusCodes.Status500InternalServerError;
             await context.Response.WriteAsJsonAsync(
                                     ApplicationResponse<object>.Create(
@@ -65,7 +65,7 @@ public sealed class RequestHandlingMiddleware
 
             return;
         }
-        
+
         _logger.LogError(exc, "An error occurred while attempting to process the request.");
     }
 }

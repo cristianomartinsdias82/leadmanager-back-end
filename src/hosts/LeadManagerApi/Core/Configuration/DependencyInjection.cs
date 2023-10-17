@@ -1,9 +1,9 @@
-﻿using LeadManagerApi.ApiFeatures;
-using LeadManagerApi.Configuration.Security;
+﻿using LeadManagerApi.Core.ApiFeatures;
+using LeadManagerApi.Core.Configuration.Security;
 using Microsoft.AspNetCore.Http.Features;
 using Microsoft.AspNetCore.Server.Kestrel.Core;
 
-namespace LeadManagerApi.Configuration;
+namespace LeadManagerApi.Core.Configuration;
 
 public static class DependencyInjection
 {
@@ -45,7 +45,7 @@ public static class DependencyInjection
             config.OperationFilter<ApiKeyHeaderOperationFilter>();
 
             LeadManagerApiSecurityConfiguration.SetAuthorizationForSwagger(config);
-        });        
+        });
 
         return services;
     }
