@@ -24,6 +24,18 @@ services:
     volumes:
       - db_data:/var/opt/mssql
 
+  iamserver.db:
+    container_name: iamdb
+    restart: always
+    environment:
+      - ACCEPT_EULA=Y
+      - SA_PASSWORD=Y0urStr0nGP@sswoRD_2023
+      - MSSQL_PID=Express
+    ports:
+      - "27020:27017"
+    volumes:
+      - iam_db_data:/var/opt/mongo
+
   leadmanager.messagebus:
     container_name: leadmanagermessagebus
     restart: always
@@ -53,6 +65,23 @@ services:
       - "6379:6379"
     volumes:
       - caching_data:/data/caching
+      
+  iamserver:
+    container_name: iamserver
+    depends_on:
+      - iamserver.db
+    ports:
+      - "8003:80"
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Development
+      - "DataSourceSettings:ConnectionString=mongodb://iamdb"
+      - "DataSourceSettings:DatabaseName=IamDb"
+      - "DataSourceSettings:RetryOperationMaxCount=3"
+      - "LeadWebAppClientSettings:BaseUrl=http://localhost:8002"
+      - "IAMServerSettings__Clients__1__RedirectUris=http://localhost:8002/auth-callback"
+      - "IAMServerSettings__Clients__1__PostLogoutRedirectUris=http://localhost:8002/user-logged-out"
+      - "IAMServerSettings__Clients__1__AllowedCorsOrigins__0=http://localhost:8002"
+      - "IAMServerSettings__Clients__1__AllowedCorsOrigins__0=http://leadmanagerweb"
 
   leadmanager.client:
     container_name: leadmanagerweb

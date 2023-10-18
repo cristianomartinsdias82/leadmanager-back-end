@@ -17,8 +17,18 @@ services:
   leadmanager.messagebus:
     image: rabbitmq:3-management
 
+  iamserver.db:
+    image: mongo:6.0
+
+  iamserver:
+    container_name: iamserver
+    image: ${DOCKER_REGISTRY-}iamserver
+    build:
+      context: .
+      dockerfile: src/hosts/IAMServer/Dockerfile
+
   leadmanager.client:
-    image: cristianomartinsdiasspbr1982/leadmanagerweb:v1.0.1
+    image: cristianomartinsdiasspbr1982/leadmanagerweb:v1.0.3
     
   leadmanager.api:
     container_name: leadmanagerapi
@@ -29,6 +39,7 @@ services:
 
 volumes:
   db_data:
+  iam_db_data:
   messagebus_data:
   blob_data:
   caching_data:
