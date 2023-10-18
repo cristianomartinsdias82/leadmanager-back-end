@@ -12,15 +12,3 @@ public abstract class RequiredPermissionsAttribute : TypeFilterAttribute
         Arguments = new object[] { requiredPermissions, checkStrategy };
     }
 }
-
-public sealed class RequiredAllPermissionsAttribute : RequiredPermissionsAttribute
-{
-    public RequiredAllPermissionsAttribute(params string[] requiredPermissions)
-        : base(AuthorizationCheckStrategy.All, requiredPermissions) { }
-}
-
-public sealed class RequiredAnyPermissionAttribute : RequiredPermissionsAttribute
-{
-    public RequiredAnyPermissionAttribute(params string[] requiredPermissions)
-        : base(AuthorizationCheckStrategy.Any, requiredPermissions) { }
-}

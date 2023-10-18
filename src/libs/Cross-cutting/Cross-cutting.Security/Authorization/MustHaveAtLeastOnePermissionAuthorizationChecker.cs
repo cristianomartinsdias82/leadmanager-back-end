@@ -2,7 +2,7 @@
 
 namespace CrossCutting.Security.Authorization;
 
-public sealed class MustHaveAtLeastOnePermissionAuthorizationChecker : AuthorizationChecker
+internal sealed class MustHaveAtLeastOnePermissionAuthorizationChecker : AuthorizationChecker
 {
     public override bool IsAuthorized(HttpContext httpContext, string[] permissions)
     {
