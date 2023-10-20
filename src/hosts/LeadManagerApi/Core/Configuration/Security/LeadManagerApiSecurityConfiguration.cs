@@ -20,14 +20,27 @@ internal static class LeadManagerApiSecurityConfiguration
         public const string Administrators = "Administrators";
     }
 
-    public static class Claims
+    public static class ClaimTypes
     {
         public const string LDM = "ldm";
+    }
+
+    public static class Claims
+    {
         public const string Read = "leadmanager.read";
         public const string Insert = "leadmanager.insert";
         public const string BulkInsert = "leadmanager.bulk_insert";
         public const string Update = "leadmanager.update";
         public const string Delete = "leadmanager.delete";
+    }
+
+    public static class Permissions
+    {
+        public const string Read = Claims.Read;
+        public const string Insert = Claims.Insert;
+        public const string BulkInsert = Claims.BulkInsert;
+        public const string Update = Claims.Update;
+        public const string Delete = Claims.Delete;
     }
 
     public static void SetPermissionPolicies(AuthorizationOptions policyOptions)
@@ -37,12 +50,12 @@ internal static class LeadManagerApiSecurityConfiguration
             policy.AddAuthenticationSchemes(JwtBearerDefaults.AuthenticationScheme);
             policy.RequireAuthenticatedUser();
             policy.RequireClaim(
-                Claims.LDM,
-                Claims.Read,
-                Claims.BulkInsert,
-                Claims.Insert,
-                Claims.Update,
-                Claims.Delete);
+                ClaimTypes.LDM,
+                Permissions.Read,
+                Permissions.BulkInsert,
+                Permissions.Insert,
+                Permissions.Update,
+                Permissions.Delete);
         });
 
         policyOptions.AddPolicy(Policies.LeadManagerRemovePolicy, policy =>
@@ -50,7 +63,7 @@ internal static class LeadManagerApiSecurityConfiguration
             policy.AddAuthenticationSchemes(JwtBearerDefaults.AuthenticationScheme);
             policy.RequireAuthenticatedUser();
             policy.RequireRole(Roles.Administrators);
-            policy.RequireClaim(Claims.LDM, Claims.Delete);
+            policy.RequireClaim(ClaimTypes.LDM, Permissions.Delete);
         });
     }
 

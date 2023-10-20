@@ -1,6 +1,7 @@
 ﻿using AspNetCore.Identity.MongoDbCore.Models;
 using IAMServer.Clients.LeadWebApp.Security;
 using IAMServer.Entities;
+using IdentityModel;
 using Microsoft.AspNetCore.Identity;
 
 namespace IAMServer.Core.HostingServices;
@@ -32,6 +33,7 @@ public sealed class IdentitySeedHostedService : IHostedService
 
         if (!userManager.Users.Any())
         {
+            const string FulanoEmail = "fulano.silva@leadmanager.com.br";
             var fulano = new ApplicationUser
             {
                 Claims = new List<MongoClaim>
@@ -39,10 +41,11 @@ public sealed class IdentitySeedHostedService : IHostedService
                     new MongoClaim() { Type = LeadManagerAppConstants.Claims.LDM, Value = LeadManagerAppConstants.Claims.Read },
                     new MongoClaim() { Type = LeadManagerAppConstants.Claims.LDM, Value = LeadManagerAppConstants.Claims.Insert },
                     new MongoClaim() { Type = LeadManagerAppConstants.Claims.LDM, Value = LeadManagerAppConstants.Claims.BulkInsert },
-                    new MongoClaim() { Type = LeadManagerAppConstants.Claims.LDM, Value = LeadManagerAppConstants.Claims.Update }
+                    new MongoClaim() { Type = LeadManagerAppConstants.Claims.LDM, Value = LeadManagerAppConstants.Claims.Update },
+                    new MongoClaim() { Type = JwtClaimTypes.Email, Value = FulanoEmail }
                 },
                 UserName = "fulano.silva",
-                Email = "fulano.silva@leadmanager.com.br",
+                Email = FulanoEmail,
                 PhoneNumber = "932459987",
                 PhoneNumberConfirmed = true,
                 EmailConfirmed = true,
@@ -50,14 +53,16 @@ public sealed class IdentitySeedHostedService : IHostedService
                 ConcurrencyStamp = Guid.NewGuid().ToString()
             };
 
+            const string BeltranoEmail = "beltrano.silva@leadmanager.com.br";
             var beltrano = new ApplicationUser
             {
                 Claims = new List<MongoClaim>
                 {
-                    new MongoClaim() { Type = LeadManagerAppConstants.Claims.LDM, Value = LeadManagerAppConstants.Claims.Read }
+                    new MongoClaim() { Type = LeadManagerAppConstants.Claims.LDM, Value = LeadManagerAppConstants.Claims.Read },
+                    new MongoClaim() { Type = JwtClaimTypes.Email, Value = BeltranoEmail }
                 },
                 UserName = "beltrano.silva",
-                Email = "beltrano.silva@leadmanager.com.br",
+                Email = BeltranoEmail,
                 PhoneNumber = "921654987",
                 PhoneNumberConfirmed = true,
                 EmailConfirmed = true,
@@ -65,15 +70,17 @@ public sealed class IdentitySeedHostedService : IHostedService
                 ConcurrencyStamp = Guid.NewGuid().ToString()
             };
 
+            const string AdministradorEmail = "admin.sistema@leadmanager.com.br";
             var administrador = new ApplicationUser
             {
                 Claims = new List<MongoClaim>
                 {
                     new MongoClaim() { Type = LeadManagerAppConstants.Claims.LDM, Value = LeadManagerAppConstants.Claims.Delete },
-                    new MongoClaim() { Type = LeadManagerAppConstants.Claims.LDM, Value = LeadManagerAppConstants.Claims.Read }
+                    new MongoClaim() { Type = LeadManagerAppConstants.Claims.LDM, Value = LeadManagerAppConstants.Claims.Read },
+                    new MongoClaim() { Type = JwtClaimTypes.Email, Value = AdministradorEmail }
                 },
                 UserName = "admin.sistema",
-                Email = "admin.sistema@leadmanager.com.br",
+                Email = AdministradorEmail,
                 PhoneNumber = "954876522",
                 PhoneNumberConfirmed = true,
                 EmailConfirmed = true,

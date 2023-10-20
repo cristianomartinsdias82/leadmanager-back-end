@@ -22,11 +22,11 @@ internal class TestingAuthenticationHandler : AuthenticationHandler<Authenticati
         var identity = new ClaimsIdentity(
             new Claim[]
             {
-                new Claim (LeadManagerApiSecurityConfiguration.Claims.LDM, LeadManagerApiSecurityConfiguration.Claims.Read),
-                new Claim (LeadManagerApiSecurityConfiguration.Claims.LDM, LeadManagerApiSecurityConfiguration.Claims.Insert),
-                new Claim (LeadManagerApiSecurityConfiguration.Claims.LDM, LeadManagerApiSecurityConfiguration.Claims.BulkInsert),
-                new Claim (LeadManagerApiSecurityConfiguration.Claims.LDM, LeadManagerApiSecurityConfiguration.Claims.Update),
-                new Claim (LeadManagerApiSecurityConfiguration.Claims.LDM, LeadManagerApiSecurityConfiguration.Claims.Delete)
+                new Claim (LeadManagerApiSecurityConfiguration.ClaimTypes.LDM, LeadManagerApiSecurityConfiguration.Claims.Read),
+                new Claim (LeadManagerApiSecurityConfiguration.ClaimTypes.LDM, LeadManagerApiSecurityConfiguration.Claims.Insert),
+                new Claim (LeadManagerApiSecurityConfiguration.ClaimTypes.LDM, LeadManagerApiSecurityConfiguration.Claims.BulkInsert),
+                new Claim (LeadManagerApiSecurityConfiguration.ClaimTypes.LDM, LeadManagerApiSecurityConfiguration.Claims.Update),
+                new Claim (LeadManagerApiSecurityConfiguration.ClaimTypes.LDM, LeadManagerApiSecurityConfiguration.Claims.Delete)
             },
             "Testing");
         var principal = new ClaimsPrincipal(identity);

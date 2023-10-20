@@ -2,16 +2,16 @@
 using CrossCutting.Security.Authorization;
 using LeadManagerApi.Core.ApiFeatures;
 using LeadManagerApi.Core.Configuration;
-using LeadManagerApi.Core.Configuration.Security;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
 using Shared.Results;
+using static LeadManagerApi.Core.Configuration.Security.LeadManagerApiSecurityConfiguration;
 
 namespace LeadManagerApi.Leads.RegisterLead;
 
 [LeadsRoute]
 //[Authorize(Policy = LeadManagerApiSecurityConfiguration.Policies.LeadManagerDefaultPolicy)]
-[RequiredAllPermissions(LeadManagerApiSecurityConfiguration.Claims.BulkInsert)]
+[RequiredAllPermissions(Permissions.BulkInsert)]
 public sealed class BulkInsertLeadController : LeadManagerController
 {
     public BulkInsertLeadController(ISender mediator) : base(mediator) { }

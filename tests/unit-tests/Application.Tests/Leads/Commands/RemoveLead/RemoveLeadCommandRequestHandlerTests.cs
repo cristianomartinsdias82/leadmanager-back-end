@@ -2,9 +2,9 @@
 using Application.Contracts.Persistence;
 using Application.Features.Leads.Commands.RemoveLead;
 using Application.Features.Leads.Shared;
+using CrossCutting.Security.IAM;
 using FluentAssertions;
 using MediatR;
-using Microsoft.EntityFrameworkCore;
 using NSubstitute;
 using Shared.Events;
 using Shared.Events.EventDispatching;
@@ -15,9 +15,10 @@ using Xunit;
 
 namespace Application.Tests.Leads.Commands.RemoveLead;
 
-public sealed class RemoveLeadCommandRequestHandlerTests : IAsyncDisposable, IDisposable
+public sealed class RemoveLeadCommandRequestHandlerTests : IAsyncDisposable
 {
     private readonly RemoveLeadCommandRequestHandler _handler;
+    private readonly IUserService _userService;
     private readonly ILeadManagerDbContext _dbContext;
     private readonly ICachingManagement _cachingManager;
     private readonly IMediator _mediator;
@@ -26,7 +27,9 @@ public sealed class RemoveLeadCommandRequestHandlerTests : IAsyncDisposable, IDi
 
     public RemoveLeadCommandRequestHandlerTests()
     {
-        _dbContext = InMemoryLeadManagerDbContextFactory.Create();
+        _userService = Substitute.For<IUserService>();
+        _userService.GetUserId().Returns(Guid.NewGuid());
+        _dbContext = InMemoryLeadManagerDbContextFactory.Create(_userService);
         _mediator = Substitute.For<IMediator>();
         _eventDispatcher = Substitute.For<IEventDispatching>();
         _cachingManager = Substitute.For<ICachingManagement>();
@@ -36,12 +39,8 @@ public sealed class RemoveLeadCommandRequestHandlerTests : IAsyncDisposable, IDi
 
     public async ValueTask DisposeAsync()
     {
-        await _dbContext.Leads.ExecuteDeleteAsync();
-    }
-
-    public void Dispose()
-    {
         _cts.Dispose();
+        await _dbContext.DisposeAsync();
     }
 
     [Fact]

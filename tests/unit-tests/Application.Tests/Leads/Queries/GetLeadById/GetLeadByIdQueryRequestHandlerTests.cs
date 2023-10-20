@@ -2,9 +2,9 @@
 using Application.Features.Leads.Queries.GetLeadById;
 using Application.Features.Leads.Shared;
 using Core.Entities;
+using CrossCutting.Security.IAM;
 using FluentAssertions;
 using MediatR;
-using Microsoft.EntityFrameworkCore;
 using NSubstitute;
 using Shared.Results;
 using Shared.Tests;
@@ -13,9 +13,10 @@ using Xunit;
 
 namespace Application.Tests.Leads.Queries.GetLeadById;
 
-public sealed class GetLeadByIdQueryRequestHandlerTests : IAsyncDisposable, IDisposable
+public sealed class GetLeadByIdQueryRequestHandlerTests : IAsyncDisposable
 {
     private readonly GetLeadByIdQueryRequestHandler _handler;
+    private readonly IUserService _userService;
     private readonly IMediator _mediator;
     private readonly ILeadManagerDbContext _dbContext;
     private readonly Lead _xptoIncLead;
@@ -23,13 +24,22 @@ public sealed class GetLeadByIdQueryRequestHandlerTests : IAsyncDisposable, IDis
 
     public GetLeadByIdQueryRequestHandlerTests()
     {
+        _userService = Substitute.For<IUserService>();
+        _userService.GetUserId().Returns(Guid.NewGuid());
+        _dbContext = InMemoryLeadManagerDbContextFactory.Create(_userService);
         _xptoIncLead = LeadMother.XptoLLC();
-        _dbContext = InMemoryLeadManagerDbContextFactory.Create();
         _dbContext.Leads.Add(_xptoIncLead);
-        _dbContext.SaveChangesAsync().GetAwaiter().GetResult();
+        _dbContext.SaveChangesAsync().GetAwaiter().GetResult();        
         _mediator = Substitute.For<IMediator>();
         _handler = new(_mediator, _dbContext);
         _cts = new();
+    }
+
+    public async ValueTask DisposeAsync()
+    {
+        _cts.Dispose();
+        //await _dbContext.Leads.ExecuteDeleteAsync();
+        await _dbContext.DisposeAsync();
     }
 
     [Fact]
@@ -65,16 +75,5 @@ public sealed class GetLeadByIdQueryRequestHandlerTests : IAsyncDisposable, IDis
         result.Data.Id.Should().Be(_xptoIncLead.Id);
         result.OperationCode.Should().Be(OperationCodes.Successful);
         result.Exception.Should().BeNull();
-    }
-
-    public async ValueTask DisposeAsync()
-    {
-        await _dbContext.Leads.ExecuteDeleteAsync();
-        await _dbContext.DisposeAsync();
-    }
-
-    public void Dispose()
-    {
-        _cts.Dispose();
     }
 }

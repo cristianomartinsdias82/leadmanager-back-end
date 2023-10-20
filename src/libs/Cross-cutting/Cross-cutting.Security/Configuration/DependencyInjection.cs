@@ -1,7 +1,8 @@
-﻿using Microsoft.Extensions.Configuration;
-using Microsoft.Extensions.DependencyInjection;
-using CrossCutting.Security.Authentication.JsonWebTokens.Configuration;
+﻿using CrossCutting.Security.Authentication.JsonWebTokens.Configuration;
 using CrossCutting.Security.Authorization;
+using CrossCutting.Security.IAM.Configuration;
+using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.DependencyInjection;
 
 namespace CrossCutting.Security;
 
@@ -11,6 +12,7 @@ public static class DependencyInjection
     {
         services.AddJwtAuthentication(configuration);
         services.AddAuthorizationCheckers(configuration);
+        services.AddUserServices(configuration);
 
         return services;
     }

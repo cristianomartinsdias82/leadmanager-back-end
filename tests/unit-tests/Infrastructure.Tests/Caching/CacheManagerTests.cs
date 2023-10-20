@@ -3,10 +3,10 @@ using Application.Contracts.Persistence;
 using Application.Features.Leads.Shared;
 using CrossCutting.Caching;
 using CrossCutting.MessageContracts;
+using CrossCutting.Security.IAM;
 using FluentAssertions;
 using Infrastructure.Caching;
 using NSubstitute;
-using Shared.DataPagination;
 using Shared.Tests;
 using Tests.Common.ObjectMothers.Core;
 using Xunit;
@@ -16,6 +16,7 @@ namespace Infrastructure.Tests.Caching;
 public sealed class CacheManagerTests : IDisposable, IAsyncDisposable
 {
     private readonly CacheManager _cacheManager;
+    private readonly IUserService _userService;
     private readonly ILeadManagerDbContext _dbContext;
     private readonly CancellationTokenSource _cts;
     private readonly ICacheProvider _cacheProviderMock;
@@ -24,8 +25,9 @@ public sealed class CacheManagerTests : IDisposable, IAsyncDisposable
 
     public CacheManagerTests()
     {
-        _cts = new CancellationTokenSource();
-        _dbContext = InMemoryLeadManagerDbContextFactory.Create();
+        _userService = Substitute.For<IUserService>();
+        _userService.GetUserId().Returns(Guid.NewGuid());
+        _dbContext = InMemoryLeadManagerDbContextFactory.Create(_userService);
         _cacheProviderMock = Substitute.For<ICacheProvider>();
         _cachingPoliciesSettings = new() { LeadsPolicy = new(default!, default) };
         _cacheManager = new CacheManager(
@@ -33,6 +35,7 @@ public sealed class CacheManagerTests : IDisposable, IAsyncDisposable
             _cacheProviderMock,
             _cachingPoliciesSettings);
         _leadDtos = LeadMother.Leads().MapToDtoList();
+        _cts = new CancellationTokenSource();
     }
 
     [Fact]

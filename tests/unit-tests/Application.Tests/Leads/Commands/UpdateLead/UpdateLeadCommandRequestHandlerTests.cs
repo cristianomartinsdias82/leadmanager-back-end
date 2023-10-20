@@ -2,25 +2,24 @@
 using Application.Contracts.Persistence;
 using Application.Features.Leads.Commands.UpdateLead;
 using Application.Features.Leads.Shared;
-using CrossCutting.MessageContracts;
+using CrossCutting.Security.IAM;
 using FluentAssertions;
 using MediatR;
-using Microsoft.EntityFrameworkCore;
 using NSubstitute;
 using Shared.Events;
 using Shared.Events.EventDispatching;
 using Shared.Results;
 using Shared.Tests;
-using System.Threading;
 using Tests.Common.ObjectMothers.Application;
 using Tests.Common.ObjectMothers.Core;
 using Xunit;
 
 namespace Application.Tests.Leads.Commands.UpdateLead;
 
-public sealed class UpdateLeadCommandRequestHandlerTests : IAsyncDisposable, IDisposable
+public sealed class UpdateLeadCommandRequestHandlerTests : IAsyncDisposable
 {
     private readonly UpdateLeadCommandRequestHandler _handler;
+    private readonly IUserService _userService;
     private readonly ILeadManagerDbContext _dbContext;
     private readonly ICachingManagement _cachingManager;
     private readonly IMediator _mediator;
@@ -29,7 +28,9 @@ public sealed class UpdateLeadCommandRequestHandlerTests : IAsyncDisposable, IDi
 
     public UpdateLeadCommandRequestHandlerTests()
     {
-        _dbContext = InMemoryLeadManagerDbContextFactory.Create();
+        _userService = Substitute.For<IUserService>();
+        _userService.GetUserId().Returns(Guid.NewGuid());
+        _dbContext = InMemoryLeadManagerDbContextFactory.Create(_userService);
         _mediator = Substitute.For<IMediator>();
         _eventDispatcher = Substitute.For<IEventDispatching>();
         _cachingManager = Substitute.For<ICachingManagement>();
@@ -37,14 +38,10 @@ public sealed class UpdateLeadCommandRequestHandlerTests : IAsyncDisposable, IDi
         _cts = new();
     }
 
-    public void Dispose()
-    {
-        _cts.Dispose();
-    }
-
     public async ValueTask DisposeAsync()
     {
-        await _dbContext.Leads.ExecuteDeleteAsync();
+        _cts.Dispose();
+        await _dbContext.DisposeAsync();
     }
 
     [Fact]

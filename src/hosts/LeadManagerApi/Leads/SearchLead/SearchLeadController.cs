@@ -1,16 +1,16 @@
 ﻿using Application.Features.Leads.Queries.SearchLead;
 using CrossCutting.Security.Authorization;
 using LeadManagerApi.Core.ApiFeatures;
-using LeadManagerApi.Core.Configuration.Security;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
 using Shared.Results;
+using static LeadManagerApi.Core.Configuration.Security.LeadManagerApiSecurityConfiguration;
 
 namespace LeadManagerApi.Leads.SearchLead;
 
 [LeadsRoute]
 //[Authorize(Policy = LeadManagerApiSecurityConfiguration.Policies.LeadManagerDefaultPolicy)]
-[RequiredAllPermissions(requiredPermissions: LeadManagerApiSecurityConfiguration.Claims.Read)]
+[RequiredAllPermissions(Permissions.Read)]
 public sealed class SearchLeadController : LeadManagerController
 {
     public SearchLeadController(ISender mediator) : base(mediator) { }

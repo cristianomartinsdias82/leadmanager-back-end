@@ -2,9 +2,9 @@
 using Application.Contracts.Persistence;
 using Application.Features.Leads.Commands.RegisterLead;
 using Application.Features.Leads.Shared;
+using CrossCutting.Security.IAM;
 using FluentAssertions;
 using MediatR;
-using Microsoft.EntityFrameworkCore;
 using NSubstitute;
 using Shared.Events;
 using Shared.Events.EventDispatching;
@@ -15,9 +15,10 @@ using Xunit;
 
 namespace Application.Tests.Leads.Commands.RegisterLead;
 
-public sealed class RegisterLeadCommandRequestHandlerTests : IAsyncDisposable, IDisposable
+public sealed class RegisterLeadCommandRequestHandlerTests : IAsyncDisposable
 {
     private readonly RegisterLeadCommandRequestHandler _handler;
+    private readonly IUserService _userService;
     private readonly ILeadManagerDbContext _dbContext;
     private readonly ICachingManagement _cachingManager;
     private readonly IMediator _mediator;
@@ -26,7 +27,9 @@ public sealed class RegisterLeadCommandRequestHandlerTests : IAsyncDisposable, I
 
     public RegisterLeadCommandRequestHandlerTests()
     {
-        _dbContext = InMemoryLeadManagerDbContextFactory.Create();
+        _userService = Substitute.For<IUserService>();
+        _userService.GetUserId().Returns(Guid.NewGuid());
+        _dbContext = InMemoryLeadManagerDbContextFactory.Create(_userService);
         _mediator = Substitute.For<IMediator>();
         _eventDispatcher = Substitute.For<IEventDispatching>();
         _cachingManager = Substitute.For<ICachingManagement>();
@@ -34,14 +37,10 @@ public sealed class RegisterLeadCommandRequestHandlerTests : IAsyncDisposable, I
         _cts = new();
     }
 
-    public void Dispose()
-    {
-        _cts.Dispose();
-    }
-
     public async ValueTask DisposeAsync()
     {
-        await _dbContext.Leads.ExecuteDeleteAsync();
+        _cts.Dispose();
+        await _dbContext.DisposeAsync();
     }
 
     [Fact]

@@ -1,9 +1,9 @@
 ﻿using Application.Contracts.Persistence;
 using Application.Features.Leads.Queries.SearchLead;
 using Core.Entities;
+using CrossCutting.Security.IAM;
 using FluentAssertions;
 using MediatR;
-using Microsoft.EntityFrameworkCore;
 using NSubstitute;
 using Shared.Results;
 using Shared.Tests;
@@ -12,9 +12,10 @@ using Xunit;
 
 namespace Application.Tests.Leads.Queries.SearchLead;
 
-public sealed class SearchLeadQueryRequestHandlerTests : IAsyncDisposable, IDisposable
+public sealed class SearchLeadQueryRequestHandlerTests : IAsyncDisposable
 {
     private readonly SearchLeadQueryRequestHandler _handler;
+    private readonly IUserService _userService;
     private readonly ILeadManagerDbContext _dbContext;
     private readonly IMediator _mediator;
     private static readonly Lead _xptoIncLead = LeadMother.XptoLLC();
@@ -23,9 +24,17 @@ public sealed class SearchLeadQueryRequestHandlerTests : IAsyncDisposable, IDisp
     public SearchLeadQueryRequestHandlerTests()
     {
         _mediator = Substitute.For<IMediator>();
-        _dbContext = InMemoryLeadManagerDbContextFactory.Create();
+        _userService = Substitute.For<IUserService>();
+        _userService.GetUserId().Returns(Guid.NewGuid());
+        _dbContext = InMemoryLeadManagerDbContextFactory.Create(_userService);
         _handler = new(_mediator, _dbContext);
         _cts = new();
+    }
+
+    public async ValueTask DisposeAsync()
+    {
+        _cts.Dispose();
+        await _dbContext.DisposeAsync();
     }
 
     [Theory]
@@ -79,17 +88,6 @@ public sealed class SearchLeadQueryRequestHandlerTests : IAsyncDisposable, IDisp
         result.Success.Should().BeTrue();
         result.OperationCode.Should().Be(OperationCodes.Successful);
         result.Data.Should().BeTrue();
-    }
-
-    public async ValueTask DisposeAsync()
-    {
-        await _dbContext.Leads.ExecuteDeleteAsync();
-        await _dbContext.DisposeAsync();
-    }
-
-    public void Dispose()
-    {
-        _cts.Dispose();
     }
 
     public static IEnumerable<object[]> SearchTermsWithMatchesSimulations()
