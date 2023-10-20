@@ -16,8 +16,4 @@
   <ImportGroup Condition=" '$(ExcludeRestorePackageImports)' != 'true' ">
     <Import Project="$(NuGetPackageRoot)microsoft.entityframeworkcore\7.0.7\buildTransitive\net6.0\Microsoft.EntityFrameworkCore.props" Condition="Exists('$(NuGetPackageRoot)microsoft.entityframeworkcore\7.0.7\buildTransitive\net6.0\Microsoft.EntityFrameworkCore.props')" />
   </ImportGroup>
-  <PropertyGroup Condition=" '$(ExcludeRestorePackageImports)' != 'true' ">
-    <PkgStronglyTypedId_Generator Condition=" '$(PkgStronglyTypedId_Generator)' == '' ">C:\Users\rblac\.nuget\packages\stronglytypedid.generator\0.2.1</PkgStronglyTypedId_Generator>
-    <PkgCodeGeneration_Roslyn_Tool Condition=" '$(PkgCodeGeneration_Roslyn_Tool)' == '' ">C:\Users\rblac\.nuget\packages\codegeneration.roslyn.tool\0.7.63</PkgCodeGeneration_Roslyn_Tool>
-  </PropertyGroup>
 </Project>
