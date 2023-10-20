@@ -1,15 +1,16 @@
 ﻿using Application.Features.Addresses.Queries.SearchAddressByZipCode;
+using CrossCutting.Security.Authorization;
 using LeadManagerApi.Core.ApiFeatures;
 using LeadManagerApi.Core.Configuration.Security;
 using MediatR;
-using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Shared.Results;
 
 namespace LeadManagerApi.Addresses;
 
 [LeadManagerApiRoute("addresses")]
-[Authorize(Policy = LeadManagerApiSecurityConfiguration.Policies.LeadManagerDefaultPolicy)]
+//[Authorize(Policy = LeadManagerApiSecurityConfiguration.Policies.LeadManagerDefaultPolicy)]
+[RequiredAllPermissions(LeadManagerApiSecurityConfiguration.Claims.Read)]
 public sealed class SearchAddressByZipCodeController : LeadManagerController
 {
     public SearchAddressByZipCodeController(ISender sender) : base(sender) { }

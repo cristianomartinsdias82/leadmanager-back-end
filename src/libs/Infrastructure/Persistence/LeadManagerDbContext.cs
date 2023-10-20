@@ -7,7 +7,7 @@ namespace Infrastructure.Persistence;
 
 public sealed class LeadManagerDbContext : DbContext, ILeadManagerDbContext
 {
-    public LeadManagerDbContext(DbContextOptions options) : base(options) { }
+    public LeadManagerDbContext(DbContextOptions<LeadManagerDbContext> options) : base(options) { }
 
     public DbSet<Lead> Leads { get; set; }
 

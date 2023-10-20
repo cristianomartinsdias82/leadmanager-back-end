@@ -2,10 +2,11 @@
 using Application.Features.Leads.Shared;
 using CrossCutting.Caching;
 using CrossCutting.MessageContracts;
-using CrossCutting.Messaging;
 using CrossCutting.Messaging.RabbitMq;
 using Infrastructure.Persistence;
 using LeadManagerApi.Core.Configuration;
+using LeadManagerApi.Tests.Common.Security.Authentication;
+using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -130,6 +131,12 @@ public class LeadManagerWebApplicationFactory : WebApplicationFactory<Program>, 
                     return connection;
                 });
 
+                services.AddAuthentication(defaultScheme: TestingAuthenticationHandler.TestingScheme)
+                            .AddScheme<AuthenticationSchemeOptions, TestingAuthenticationHandler>(
+                                            TestingAuthenticationHandler.TestingScheme,
+                                            options => { });
+
+                services.RemoveAll(typeof(DbContextOptions<LeadManagerDbContext>));
                 services.RemoveAll<ILeadManagerDbContext>();
                 services.AddScoped<ILeadManagerDbContext>(provider =>
                 {

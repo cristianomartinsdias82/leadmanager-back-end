@@ -2,7 +2,7 @@
 
 namespace CrossCutting.Security.Authorization;
 
-public abstract class AuthorizationChecker : IAuthorizationChecker
+internal abstract class AuthorizationChecker : IAuthorizationChecker
 {
     public virtual bool IsAuthorized(HttpContext httpContext, string[] permissions)
     {

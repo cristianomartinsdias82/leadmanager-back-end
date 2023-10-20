@@ -4,7 +4,7 @@ using Microsoft.Extensions.DependencyInjection;
 
 namespace CrossCutting.Security.Authorization;
 
-public class PermissionCheckAuthorizationFilter : IAuthorizationFilter
+internal class PermissionCheckAuthorizationFilter : IAuthorizationFilter
 {
     private readonly string[] _requiredPermissions;
     private readonly AuthorizationCheckStrategy _checkStrategy;

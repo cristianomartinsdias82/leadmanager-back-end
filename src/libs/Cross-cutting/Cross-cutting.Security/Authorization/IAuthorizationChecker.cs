@@ -2,7 +2,7 @@
 
 namespace CrossCutting.Security.Authorization;
 
-public interface IAuthorizationChecker
+internal interface IAuthorizationChecker
 {
     bool IsAuthorized(HttpContext httpContext, string[] permissions);
 }
