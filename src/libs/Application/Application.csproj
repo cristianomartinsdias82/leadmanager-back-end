@@ -17,7 +17,6 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\Core\Core.csproj" />
     <ProjectReference Include="..\Cross-cutting\Cross-cutting.Caching\CrossCutting.Caching.csproj" />
     <ProjectReference Include="..\Cross-cutting\Cross-cutting.Csv\CrossCutting.Csv.csproj" />
     <ProjectReference Include="..\Cross-cutting\Cross-cutting.FileStorage\CrossCutting.FileStorage.csproj" />
@@ -26,6 +25,7 @@
     <ProjectReference Include="..\Cross-cutting\Cross-cutting.Messaging\CrossCutting.Messaging.csproj" />
     <ProjectReference Include="..\Cross-cutting\Cross-cutting.Monitoring\CrossCutting.Monitoring.csproj" />
     <ProjectReference Include="..\Cross-cutting\Cross-cutting.Security\CrossCutting.Security.csproj" />
+    <ProjectReference Include="..\Domain\Domain.csproj" />
     <ProjectReference Include="..\Integrations\ViaCep.ServiceClient\ViaCep.ServiceClient.csproj" />
     <ProjectReference Include="..\Shared\Shared.csproj" />
   </ItemGroup>

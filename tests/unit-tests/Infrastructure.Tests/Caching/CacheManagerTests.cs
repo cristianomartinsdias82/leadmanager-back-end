@@ -1,14 +1,14 @@
-﻿using Application.Contracts.Caching.Policies;
-using Application.Contracts.Persistence;
-using Application.Features.Leads.Shared;
+﻿using Application.Core.Contracts.Caching.Policies;
+using Application.Core.Contracts.Persistence;
+using Application.Prospecting.Leads.Shared;
 using CrossCutting.Caching;
 using CrossCutting.MessageContracts;
 using CrossCutting.Security.IAM;
 using FluentAssertions;
 using Infrastructure.Caching;
 using NSubstitute;
-using Shared.Tests;
-using Tests.Common.ObjectMothers.Core;
+using Tests.Common.Factories;
+using Tests.Common.ObjectMothers.Domain;
 using Xunit;
 
 namespace Infrastructure.Tests.Caching;

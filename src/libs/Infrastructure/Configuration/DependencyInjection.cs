@@ -1,7 +1,7 @@
-﻿using Application.Contracts.Caching;
-using Application.Contracts.Caching.Policies;
-using Application.Contracts.Messaging;
-using Application.Contracts.Persistence;
+﻿using Application.Core.Contracts.Caching;
+using Application.Core.Contracts.Caching.Policies;
+using Application.Core.Contracts.Messaging;
+using Application.Core.Contracts.Persistence;
 using Infrastructure.Caching;
 using Infrastructure.EventDispatching;
 using Infrastructure.Messaging;

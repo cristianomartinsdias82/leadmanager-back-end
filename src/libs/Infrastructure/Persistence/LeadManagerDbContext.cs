@@ -1,8 +1,9 @@
-﻿using Application.Contracts.Persistence;
-using Core.Entities;
+﻿using Domain.Prospecting.Entities;
 using CrossCutting.Security.IAM;
 using Infrastructure.Persistence.Mappings;
 using Microsoft.EntityFrameworkCore;
+using Domain.Core;
+using Application.Core.Contracts.Persistence;
 
 namespace Infrastructure.Persistence;
 

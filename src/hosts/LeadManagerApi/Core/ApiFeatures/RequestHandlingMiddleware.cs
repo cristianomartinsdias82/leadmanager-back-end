@@ -1,4 +1,4 @@
-﻿using Core.BusinessExceptions;
+﻿using Domain.Prospecting.Exceptions;
 using Infrastructure.Persistence.Mappings;
 using Microsoft.EntityFrameworkCore;
 using Shared.Results;

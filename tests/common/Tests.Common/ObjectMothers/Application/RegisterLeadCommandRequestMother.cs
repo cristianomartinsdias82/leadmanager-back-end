@@ -1,4 +1,4 @@
-﻿using Application.Features.Leads.Commands.RegisterLead;
+﻿using Application.Prospecting.Leads.Commands.RegisterLead;
 
 namespace Tests.Common.ObjectMothers.Application;
 

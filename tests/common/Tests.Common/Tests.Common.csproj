@@ -8,8 +8,13 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <PackageReference Include="Microsoft.EntityFrameworkCore.InMemory" Version="7.0.13" />
+  </ItemGroup>
+
+  <ItemGroup>
     <ProjectReference Include="..\..\..\src\libs\Application\Application.csproj" />
-    <ProjectReference Include="..\..\..\src\libs\Core\Core.csproj" />
+    <ProjectReference Include="..\..\..\src\libs\Domain\Domain.csproj" />
+    <ProjectReference Include="..\..\..\src\libs\Infrastructure\Infrastructure.csproj" />
     <ProjectReference Include="..\..\..\src\libs\Integrations\ViaCep.ServiceClient\ViaCep.ServiceClient.csproj" />
   </ItemGroup>
 

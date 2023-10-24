@@ -1,14 +1,14 @@
-﻿using Application.Contracts.Caching;
-using Application.Contracts.Caching.Policies;
-using Application.Contracts.Persistence;
-using Application.Features.Leads.Shared;
-using Core.Entities;
+﻿using Application.Prospecting.Leads.Shared;
+using Domain.Prospecting.Entities;
 using CrossCutting.Caching;
 using CrossCutting.MessageContracts;
 using LanguageExt;
 using Microsoft.EntityFrameworkCore;
 using Shared.DataPagination;
 using Shared.FrameworkExtensions;
+using Application.Core.Contracts.Caching;
+using Application.Core.Contracts.Persistence;
+using Application.Core.Contracts.Caching.Policies;
 
 namespace Infrastructure.Caching;
 
