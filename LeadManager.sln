@@ -79,6 +79,8 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "IAMServer", "src\hosts\IAMS
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "authorization-server", "authorization-server", "{58B4156D-AC77-4489-8C76-911E2C2F32E3}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CrossCutting.Monitoring", "src\libs\Cross-cutting\Cross-cutting.Monitoring\CrossCutting.Monitoring.csproj", "{DA755A6A-8B27-4DD4-8D8A-BD3800B31030}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -189,6 +191,10 @@ Global
 		{C4ABF432-C55F-4F30-ABD8-AC7F0F3D7BB7}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{C4ABF432-C55F-4F30-ABD8-AC7F0F3D7BB7}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{C4ABF432-C55F-4F30-ABD8-AC7F0F3D7BB7}.Release|Any CPU.Build.0 = Release|Any CPU
+		{DA755A6A-8B27-4DD4-8D8A-BD3800B31030}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{DA755A6A-8B27-4DD4-8D8A-BD3800B31030}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{DA755A6A-8B27-4DD4-8D8A-BD3800B31030}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{DA755A6A-8B27-4DD4-8D8A-BD3800B31030}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -229,6 +235,7 @@ Global
 		{47E988F4-689D-48B3-9E76-94745218E7FE} = {0E78EACF-F14D-4BA2-94A3-37B64AAE5277}
 		{C4ABF432-C55F-4F30-ABD8-AC7F0F3D7BB7} = {58B4156D-AC77-4489-8C76-911E2C2F32E3}
 		{58B4156D-AC77-4489-8C76-911E2C2F32E3} = {B297EC06-E0FF-4D6F-88ED-54F72C02F429}
+		{DA755A6A-8B27-4DD4-8D8A-BD3800B31030} = {0E78EACF-F14D-4BA2-94A3-37B64AAE5277}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {F5C96730-41C5-4999-9784-B64A284FE630}

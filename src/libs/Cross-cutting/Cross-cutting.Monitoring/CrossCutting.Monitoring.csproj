@@ -1,0 +1,26 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>net7.0</TargetFramework>
+    <RootNamespace>CrossCutting.Monitoring</RootNamespace>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <Nullable>enable</Nullable>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="AspNetCore.HealthChecks.AzureStorage" Version="7.0.0" />
+    <PackageReference Include="AspNetCore.HealthChecks.Rabbitmq" Version="7.0.0" />
+    <PackageReference Include="AspNetCore.HealthChecks.Redis" Version="7.0.1" />
+    <PackageReference Include="AspNetCore.HealthChecks.SqlServer" Version="7.0.0" />
+    <PackageReference Include="Microsoft.Extensions.Diagnostics.HealthChecks" Version="7.0.12" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\..\Integrations\ViaCep.ServiceClient\ViaCep.ServiceClient.csproj" />
+    <ProjectReference Include="..\..\Shared\Shared.csproj" />
+    <ProjectReference Include="..\Cross-cutting.Caching\CrossCutting.Caching.csproj" />
+    <ProjectReference Include="..\Cross-cutting.FileStorage\CrossCutting.FileStorage.csproj" />
+    <ProjectReference Include="..\Cross-cutting.Messaging\CrossCutting.Messaging.csproj" />
+  </ItemGroup>
+
+</Project>
