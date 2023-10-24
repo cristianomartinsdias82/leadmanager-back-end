@@ -1,4 +1,4 @@
-﻿using Core.Entities;
+﻿using Domain.Prospecting.Entities;
 
 namespace CrossCutting.MessageContracts;
 

@@ -1,4 +1,4 @@
-using Application.Configuration;
+using Application.Core.Configuration;
 using CrossCutting.Messaging.RabbitMq.Configuration;
 using HealthChecks.UI.Client;
 using Infrastructure.Configuration;

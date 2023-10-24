@@ -1,4 +1,4 @@
-﻿using Application.Features.Leads.Commands.UpdateLead;
+﻿using Application.Prospecting.Leads.Commands.UpdateLead;
 
 namespace Tests.Common.ObjectMothers.Application;
 
