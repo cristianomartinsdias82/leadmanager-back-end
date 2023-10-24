@@ -60,7 +60,7 @@ public static class DependencyInjection
                    .AddCaching(configuration)
                    .AddMessageBus(configuration)
                    .AddSecurity(configuration)
-                   .AddMonitoring(configuration);
+                   .AddLeadManagerApiMonitoring(configuration);
 
     private static MediatRServiceConfiguration RegisterBehaviors(this MediatRServiceConfiguration config, IServiceCollection services)
     {
