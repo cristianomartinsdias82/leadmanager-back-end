@@ -14,6 +14,7 @@ using CrossCutting.Csv.Configuration;
 using CrossCutting.FileStorage.Configuration;
 using CrossCutting.Logging.Configuration;
 using CrossCutting.Messaging.Configuration;
+using CrossCutting.Monitoring.Configuration;
 using CrossCutting.Security;
 using FluentValidation;
 using MediatR;
@@ -58,7 +59,8 @@ public static class DependencyInjection
                    .AddMultiSinkLogging(configuration)
                    .AddCaching(configuration)
                    .AddMessageBus(configuration)
-                   .AddSecurity(configuration);
+                   .AddSecurity(configuration)
+                   .AddLeadManagerApiMonitoring(configuration);
 
     private static MediatRServiceConfiguration RegisterBehaviors(this MediatRServiceConfiguration config, IServiceCollection services)
     {
