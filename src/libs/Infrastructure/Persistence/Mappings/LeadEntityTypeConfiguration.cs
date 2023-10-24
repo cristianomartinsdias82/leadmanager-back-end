@@ -8,6 +8,8 @@ internal sealed class LeadEntityTypeConfiguration : IEntityTypeConfiguration<Lea
 {
     public void Configure(EntityTypeBuilder<Lead> builder)
     {
+        builder.ToTable(LeadEntityMetadata.TableName);
+
         builder.HasKey(x => x.Id)
                 .HasName(LeadEntityMetadata.LeadIdColumnPkId);
 

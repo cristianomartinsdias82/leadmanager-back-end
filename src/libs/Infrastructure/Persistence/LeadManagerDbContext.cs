@@ -1,9 +1,9 @@
-﻿using Domain.Prospecting.Entities;
+﻿using Application.Core.Contracts.Persistence;
 using CrossCutting.Security.IAM;
+using Domain.Core;
+using Domain.Prospecting.Entities;
 using Infrastructure.Persistence.Mappings;
 using Microsoft.EntityFrameworkCore;
-using Domain.Core;
-using Application.Core.Contracts.Persistence;
 
 namespace Infrastructure.Persistence;
 
@@ -22,6 +22,8 @@ public sealed class LeadManagerDbContext : DbContext, ILeadManagerDbContext
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
+        modelBuilder.HasDefaultSchema(LeadEntityMetadata.DatabaseSchemaName);
+
         modelBuilder.ApplyConfigurationsFromAssembly(typeof(LeadManagerDbContext).Assembly);
 
         modelBuilder.Entity<Lead>()

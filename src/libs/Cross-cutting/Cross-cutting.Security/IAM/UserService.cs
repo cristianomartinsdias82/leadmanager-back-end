@@ -5,19 +5,16 @@ namespace CrossCutting.Security.IAM;
 
 internal sealed class UserService : IUserService
 {
-    private readonly HttpContext _httpContext;
+    private readonly HttpContext? _httpContext;
 
     public UserService(IHttpContextAccessor httpContextAccessor)
     {
-        if (httpContextAccessor.HttpContext is null)
-            throw new InvalidProgramException();
-
-        _httpContext = httpContextAccessor.HttpContext;
+        _httpContext = httpContextAccessor?.HttpContext;
     }
 
     public Guid? GetUserId()
-        => _httpContext.GetUserId();
+        => _httpContext?.GetUserId();
 
     public string? GetUserEmail()
-        => _httpContext.GetUserEmail();
+        => _httpContext?.GetUserEmail();
 }
