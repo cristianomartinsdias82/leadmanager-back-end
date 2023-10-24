@@ -9,10 +9,12 @@
 
   <ItemGroup>
     <PackageReference Include="AspNetCore.HealthChecks.AzureStorage" Version="7.0.0" />
+    <PackageReference Include="AspNetCore.HealthChecks.MongoDb" Version="7.0.0" />
+    <PackageReference Include="AspNetCore.HealthChecks.OpenIdConnectServer" Version="7.0.0" />
     <PackageReference Include="AspNetCore.HealthChecks.Rabbitmq" Version="7.0.0" />
     <PackageReference Include="AspNetCore.HealthChecks.Redis" Version="7.0.1" />
     <PackageReference Include="AspNetCore.HealthChecks.SqlServer" Version="7.0.0" />
-    <PackageReference Include="Microsoft.Extensions.Diagnostics.HealthChecks" Version="7.0.12" />
+    <PackageReference Include="Microsoft.Extensions.Diagnostics.HealthChecks" Version="7.0.13" />
   </ItemGroup>
 
   <ItemGroup>
@@ -21,6 +23,7 @@
     <ProjectReference Include="..\Cross-cutting.Caching\CrossCutting.Caching.csproj" />
     <ProjectReference Include="..\Cross-cutting.FileStorage\CrossCutting.FileStorage.csproj" />
     <ProjectReference Include="..\Cross-cutting.Messaging\CrossCutting.Messaging.csproj" />
+    <ProjectReference Include="..\Cross-cutting.Security\CrossCutting.Security.csproj" />
   </ItemGroup>
 
 </Project>

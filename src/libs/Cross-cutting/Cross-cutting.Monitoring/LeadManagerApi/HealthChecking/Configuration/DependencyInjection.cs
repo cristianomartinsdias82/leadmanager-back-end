@@ -1,14 +1,15 @@
 ﻿using CrossCutting.Caching.Redis.Configuration;
 using CrossCutting.FileStorage.Azure.Configuration;
 using CrossCutting.Messaging.RabbitMq.Configuration;
-using ViaCep.ServiceClient.HealthChecking.Configuration;
+using CrossCutting.Security.Authentication.JsonWebTokens.Configuration;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Shared.Settings;
+using ViaCep.ServiceClient.HealthChecking.Configuration;
 
 namespace CrossCutting.Monitoring.LeadManagerApi.HealthChecking.Configuration;
 
-public static class DependencyInjection
+internal static class DependencyInjection
 {
     public static IHealthChecksBuilder AddLeadManagerApiHealthChecks(this IHealthChecksBuilder healthChecksBuilder, IConfiguration configuration)
     {
@@ -24,7 +25,10 @@ public static class DependencyInjection
         var rabbitMqConnectionSettings = configuration.GetSection(nameof(RabbitMqConnectionSettings))
                                                       .Get<RabbitMqConnectionSettings>()!;
 
-        healthChecksBuilder
+        var authenticationProviderSettings = configuration.GetSection(nameof(JwtAuthenticationProviderSettings))
+                                                          .Get<JwtAuthenticationProviderSettings>()!;
+
+        return healthChecksBuilder
             .AddViaCepIntegration()
             .AddAzureBlobStorage
             (
@@ -32,13 +36,21 @@ public static class DependencyInjection
                 containerName: storageProviderSettings.ContainerName,
                 timeout: TimeSpan.FromSeconds(storageProviderSettings.HealthCheckingTimeoutInSecs)
             )
-            .AddRedis(redisConnectionString: $"{cachingProviderSettings.Server}:{cachingProviderSettings.PortNumber}",
-                      timeout: TimeSpan.FromSeconds(cachingProviderSettings.HealthCheckingTimeoutInSecs))
-            .AddSqlServer(connectionString: dataSourceSettings.ConnectionString,
-                      timeout: TimeSpan.FromSeconds(cachingProviderSettings.HealthCheckingTimeoutInSecs))
-            .AddRabbitMQ(rabbitConnectionString: rabbitMqConnectionSettings.ConnectionString,
-                      timeout: TimeSpan.FromSeconds(cachingProviderSettings.HealthCheckingTimeoutInSecs));
-
-        return healthChecksBuilder;
+            .AddRedis(
+                redisConnectionString: $"{cachingProviderSettings.Server}:{cachingProviderSettings.PortNumber}",
+                timeout: TimeSpan.FromSeconds(cachingProviderSettings.HealthCheckingTimeoutInSecs)
+            )
+            .AddSqlServer(
+                connectionString: dataSourceSettings.ConnectionString,
+                timeout: TimeSpan.FromSeconds(cachingProviderSettings.HealthCheckingTimeoutInSecs)
+            )
+            .AddRabbitMQ(
+                rabbitConnectionString: rabbitMqConnectionSettings.ConnectionString,
+                timeout: TimeSpan.FromSeconds(cachingProviderSettings.HealthCheckingTimeoutInSecs)
+            )
+            .AddIdentityServer(
+                new Uri(authenticationProviderSettings.AuthorityBaseUri),
+                timeout: TimeSpan.FromSeconds(cachingProviderSettings.HealthCheckingTimeoutInSecs)
+            );
     }
 }
