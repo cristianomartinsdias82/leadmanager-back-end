@@ -1,4 +1,4 @@
-﻿using Application.Prospecting.Leads.Shared;
+﻿using Domain.Prospecting.Entities;
 using MediatR;
 using Shared.Results;
 

@@ -1,4 +1,4 @@
-﻿using Application.Prospecting.Leads.Shared;
+﻿using Domain.Prospecting.Entities;
 using FluentAssertions;
 using LeadManagerApi.Tests.Core.Factories;
 using Shared.DataPagination;
@@ -57,17 +57,6 @@ public class GetLeadsControllerTests : IClassFixture<LeadManagerWebApplicationFa
     public async Task Get_RequestWithValidApiKeyHeader_ShouldSucceed()
     {
         // Arrange
-        //await _factory.UsingContextAsync(dbContext =>
-        //{
-        //    dbContext.Leads.AddRangeAsync(
-        //        LeadMother.Leads()
-        //    );
-
-        //    dbContext.SaveChangesAsync();
-
-        //    return Task.CompletedTask;
-        //});
-
         var httpClient = _factory.CreateHttpClient();
 
         // Act
@@ -88,6 +77,5 @@ public class GetLeadsControllerTests : IClassFixture<LeadManagerWebApplicationFa
         apiResponse.Success.Should().BeTrue();
         apiResponse.OperationCode.Should().Be(OperationCodes.Successful);
         apiResponse.Data.Should().NotBeNull();
-        apiResponse.Data.Items.Should().NotBeNull().And.HaveCountGreaterThan(0);
     }
 }

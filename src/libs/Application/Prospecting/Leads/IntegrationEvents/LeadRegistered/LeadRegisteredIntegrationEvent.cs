@@ -1,4 +1,4 @@
-﻿using Application.Prospecting.Leads.Shared;
+﻿using Domain.Prospecting.Entities;
 using Shared.Events.IntegrationEvents;
 
 namespace Application.Prospecting.Leads.IntegrationEvents.LeadRegistered;

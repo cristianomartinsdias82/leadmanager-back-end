@@ -72,6 +72,25 @@ public class Lead : Entity, ILead
         Complemento = complemento;
     }
 
+    public static Lead MapFromDto(LeadDto leads)
+        => new()
+        {
+            Id = leads.Id,
+            RazaoSocial = leads.RazaoSocial,
+            Cnpj = leads.Cnpj,
+            Logradouro = leads.Endereco,
+            Numero = leads.Numero,
+            Complemento = leads.Complemento,
+            Bairro = leads.Bairro,
+            Cep = leads.Cep,
+            Cidade = leads.Cidade,
+            Estado = leads.Estado,
+            RowVersion = leads.Revision
+        };
+
+    public LeadDto MapToDto()
+        => new(Id, RazaoSocial, Cnpj, Logradouro, Numero, Complemento, Cep, Cidade, Bairro, Estado, RowVersion);
+
     private static Result<Cnpj> ValidarCnpj(string cnpj)
         => ValueObjects.Cnpj
             .New(cnpj)

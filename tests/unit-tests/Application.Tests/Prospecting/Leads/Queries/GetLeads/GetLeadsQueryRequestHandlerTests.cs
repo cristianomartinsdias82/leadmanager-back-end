@@ -1,6 +1,6 @@
-﻿using Application.Core.Contracts.Caching;
+﻿using Application.Core.Contracts.Repository;
 using Application.Prospecting.Leads.Queries.GetLeads;
-using Application.Prospecting.Leads.Shared;
+using Domain.Prospecting.Entities;
 using FluentAssertions;
 using MediatR;
 using NSubstitute;
@@ -14,15 +14,15 @@ namespace Application.Tests.Prospecting.Leads.Queries.GetLeads;
 public sealed class GetLeadsQueryRequestHandlerTests : IDisposable
 {
     private readonly GetLeadsQueryRequestHandler _handler;
-    private readonly ICachingManagement _cachingManagerMock;
+    private readonly ILeadRepository _leadRepositoryMock;
     private readonly IMediator _mediator;
     private readonly CancellationTokenSource _cts;
 
     public GetLeadsQueryRequestHandlerTests()
     {
         _mediator = Substitute.For<IMediator>();
-        _cachingManagerMock = Substitute.For<ICachingManagement>();
-        _handler = new(_mediator, _cachingManagerMock);
+        _leadRepositoryMock = Substitute.For<ILeadRepository>();
+        _handler = new(_mediator, _leadRepositoryMock);
         _cts = new();
     }
 
@@ -31,9 +31,9 @@ public sealed class GetLeadsQueryRequestHandlerTests : IDisposable
     {
         //Arrange
         var paginationOptions = new PaginationOptions();
-        _cachingManagerMock
-            .GetLeadsAsync(paginationOptions, _cts.Token)
-            .Returns(PagedList<LeadDto>.Empty());
+        _leadRepositoryMock
+            .GetAsync(paginationOptions, _cts.Token)
+            .Returns(PagedList<Lead>.Empty());
 
         //Act
         var result = await _handler.Handle(new(paginationOptions), _cts.Token);
@@ -54,8 +54,8 @@ public sealed class GetLeadsQueryRequestHandlerTests : IDisposable
         //Arrange
         var paginationOptions = new PaginationOptions();
         var leads = LeadMother.Leads();
-        _cachingManagerMock.GetLeadsAsync(new(), _cts.Token)
-                          .Returns(PagedList<LeadDto>.Paginate(leads.MapToDtoList(), paginationOptions));
+        _leadRepositoryMock.GetAsync(new(), _cts.Token)
+                          .Returns(PagedList<Lead>.Paginate(leads, paginationOptions));
 
         //Act
         var result = await _handler.Handle(new(paginationOptions), _cts.Token);
@@ -70,7 +70,7 @@ public sealed class GetLeadsQueryRequestHandlerTests : IDisposable
         result.Data.Items.Should().NotBeNull().And.HaveCount(leads.Count);
         result.Data.Items.Any(x => x.RazaoSocial == leads[0].RazaoSocial).Should().BeTrue();
         result.Data.Items.Any(x => x.RazaoSocial == leads[1].RazaoSocial).Should().BeTrue();
-        await _cachingManagerMock.Received(1).GetLeadsAsync(Arg.Any<PaginationOptions>(), _cts.Token);
+        await _leadRepositoryMock.Received(1).GetAsync(Arg.Any<PaginationOptions>(), _cts.Token);
     }
 
     public void Dispose()

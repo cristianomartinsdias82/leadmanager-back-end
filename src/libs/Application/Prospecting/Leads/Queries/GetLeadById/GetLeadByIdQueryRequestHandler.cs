@@ -1,5 +1,5 @@
-﻿using Application.Core.Contracts.Persistence;
-using Application.Prospecting.Leads.Shared;
+﻿using Application.Core.Contracts.Repository;
+using Domain.Prospecting.Entities;
 using MediatR;
 using Shared.RequestHandling;
 using Shared.Results;
@@ -8,18 +8,18 @@ namespace Application.Prospecting.Leads.Queries.GetLeadById;
 
 internal sealed class GetLeadByIdQueryRequestHandler : ApplicationRequestHandler<GetLeadByIdQueryRequest, LeadDto>
 {
-    private readonly ILeadManagerDbContext _dbContext;
+    private readonly ILeadRepository _leadRepository;
 
     public GetLeadByIdQueryRequestHandler(
         IMediator mediator,
-        ILeadManagerDbContext dbContext) : base(mediator, default!)
+        ILeadRepository leadRepository) : base(mediator, default!)
     {
-        _dbContext = dbContext;
+        _leadRepository = leadRepository;
     }
 
     public override async Task<ApplicationResponse<LeadDto>> Handle(GetLeadByIdQueryRequest request, CancellationToken cancellationToken)
     {
-        var lead = await _dbContext.Leads.FindAsync(request.Id);
+        var lead = await _leadRepository.GetByIdAsync(request.Id, cancellationToken);
         if (lead is null)
             return ApplicationResponse<LeadDto>
                     .Create(default!,

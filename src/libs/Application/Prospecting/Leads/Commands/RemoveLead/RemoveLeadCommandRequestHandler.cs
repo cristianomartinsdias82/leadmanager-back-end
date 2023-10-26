@@ -1,7 +1,6 @@
-﻿using Application.Core.Contracts.Caching;
-using Application.Core.Contracts.Persistence;
+﻿using Application.Core.Contracts.Persistence;
+using Application.Core.Contracts.Repository;
 using Application.Prospecting.Leads.IntegrationEvents.LeadRemoved;
-using Application.Prospecting.Leads.Shared;
 using Domain.Prospecting.Entities;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
@@ -16,31 +15,25 @@ internal sealed class RemoveLeadCommandRequestHandler : ApplicationRequestHandle
     private const string Mensagem_FalhaAtualizacaoConcorrente = "Este registro foi atualizado por outro usuário antes desta operação.";
     private const string Mensagem_FalhaRemocaoConcorrente = "Este registro foi removido por outro usuário antes desta operação.";
     private const string Mensagem_LeadNaoEncontrado = "Lead não encontrado.";
-    private readonly ILeadManagerDbContext _dbContext;
-    private readonly ICachingManagement _cachingManager;
+    private readonly ILeadRepository _leadRepository;
 
     public RemoveLeadCommandRequestHandler(
         IMediator mediator,
-        IEventDispatching eventDispatcher,
-        ILeadManagerDbContext dbContext,
-        ICachingManagement cachingManager) : base(mediator, eventDispatcher)
+        ILeadRepository leadRepository,
+        IEventDispatching eventDispatcher) : base(mediator, eventDispatcher)
     {
-        _dbContext = dbContext;
-        _cachingManager = cachingManager;
+        _leadRepository = leadRepository;
     }
 
     public async override Task<ApplicationResponse<RemoveLeadCommandResponse>> Handle(RemoveLeadCommandRequest request, CancellationToken cancellationToken)
     {
-        var lead = await _dbContext.Leads.FindAsync(request.Id);
+        var lead = await _leadRepository.GetByIdAsync(request.Id);
         if (lead is null)
             return ApplicationResponse<RemoveLeadCommandResponse>.Create(default!, message: Mensagem_LeadNaoEncontrado);
 
-        _dbContext.Leads.Remove(lead);
-
         try
         {
-            _dbContext.SetConcurrencyToken(lead, nameof(Lead.RowVersion), request.Revision!);
-            await _dbContext.SaveChangesAsync(cancellationToken);
+            await _leadRepository.RemoveAsync(lead, request.Revision!, cancellationToken);
         }
         catch (DbUpdateConcurrencyException dbConcExc)
         {
@@ -67,11 +60,7 @@ internal sealed class RemoveLeadCommandRequestHandler : ApplicationRequestHandle
                 operationCode: OperationCodes.ConcurrencyIssue);
         }
 
-        var leadDto = lead.MapToDto();
-
-        await _cachingManager.RemoveLeadEntryAsync(leadDto, cancellationToken);
-
-        AddEvent(new LeadRemovedIntegrationEvent(leadDto));
+        AddEvent(new LeadRemovedIntegrationEvent(lead.MapToDto()));
 
         return ApplicationResponse<RemoveLeadCommandResponse>.Create(
             new RemoveLeadCommandResponse(

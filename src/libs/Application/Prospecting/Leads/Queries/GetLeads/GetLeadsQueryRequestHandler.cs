@@ -1,5 +1,5 @@
-﻿using Application.Core.Contracts.Caching;
-using Application.Prospecting.Leads.Shared;
+﻿using Application.Core.Contracts.Repository;
+using Domain.Prospecting.Entities;
 using MediatR;
 using Shared.DataPagination;
 using Shared.RequestHandling;
@@ -9,23 +9,23 @@ namespace Application.Prospecting.Leads.Queries.GetLeads;
 
 internal sealed class GetLeadsQueryRequestHandler : ApplicationRequestHandler<GetLeadsQueryRequest, PagedList<LeadDto>>
 {
-    private readonly ICachingManagement _cachingManager;
+    private readonly ILeadRepository _leadRepository;
 
     public GetLeadsQueryRequestHandler(
         IMediator mediator,
-        ICachingManagement cachingManager) : base(mediator, default!)
+        ILeadRepository leadRepository) : base(mediator, default!)
     {
-        _cachingManager = cachingManager;
+        _leadRepository = leadRepository;
     }
 
     public async override Task<ApplicationResponse<PagedList<LeadDto>>> Handle(
         GetLeadsQueryRequest request,
         CancellationToken cancellationToken)
     {
-        var cachedLeads = await _cachingManager.GetLeadsAsync(
+        var pagedLeads = await _leadRepository.GetAsync(
             request.PaginationOptions,
             cancellationToken);
 
-        return ApplicationResponse<PagedList<LeadDto>>.Create(cachedLeads);
+        return ApplicationResponse<PagedList<LeadDto>>.Create(pagedLeads.MapPage(ld => ld.MapToDto()));
     }
 }

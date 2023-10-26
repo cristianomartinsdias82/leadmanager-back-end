@@ -1,4 +1,4 @@
-﻿using Application.Core.Contracts.Caching;
+﻿using Application.Core.Contracts.Repository.Caching;
 using MediatR;
 using Shared.RequestHandling;
 using Shared.Results;
@@ -7,19 +7,19 @@ namespace Application.Prospecting.Leads.Commands.ClearLeadsCache;
 
 internal sealed class ClearLeadsCacheCommandRequestHandler : ApplicationRequestHandler<ClearLeadsCacheCommandRequest, ClearLeadsCacheCommandResponse>
 {
-    private readonly ICachingManagement _cachingManager;
+    private readonly ICachingLeadRepository _cachingLeadRepository;
 
     public ClearLeadsCacheCommandRequestHandler(
         IMediator mediator,
-        ICachingManagement cachingManager
+        ICachingLeadRepository cachingLeadRepository
         ) : base(mediator, default!)
     {
-        _cachingManager = cachingManager;
+        _cachingLeadRepository = cachingLeadRepository;
     }
 
     public async override Task<ApplicationResponse<ClearLeadsCacheCommandResponse>> Handle(ClearLeadsCacheCommandRequest request, CancellationToken cancellationToken)
     {
-        await _cachingManager.ClearLeadEntriesAsync(cancellationToken);
+        await _cachingLeadRepository.ClearAsync(cancellationToken);
 
         return ApplicationResponse<ClearLeadsCacheCommandResponse>.Create(new());
     }
