@@ -15,7 +15,7 @@ internal static class RedisCacheProviderServicesExtensions
         {
             options.Configuration = $"{cachingProviderSettings.Server}:{cachingProviderSettings.PortNumber}";
         });
-        services.TryAddSingleton<ICacheProvider, RedisCacheProvider>();
+        services.TryAddScoped<ICacheProvider, RedisCacheProvider>();
 
         return services;
     }

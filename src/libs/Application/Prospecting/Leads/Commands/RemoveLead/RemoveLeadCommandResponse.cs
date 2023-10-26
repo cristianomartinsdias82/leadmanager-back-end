@@ -1,5 +1,5 @@
 ﻿using Application.Core.Contracts.Persistence;
-using Application.Prospecting.Leads.Shared;
+using Domain.Prospecting.Entities;
 
 namespace Application.Prospecting.Leads.Commands.RemoveLead;
 

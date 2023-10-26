@@ -1,10 +1,16 @@
 ﻿using Application.Core.Contracts.Persistence;
-using Application.Prospecting.Leads.Shared;
+using Application.Core.Contracts.Repository;
+using Application.Core.Contracts.Repository.Caching;
+using Application.Core.Contracts.Repository.UnitOfWork;
 using CrossCutting.Caching;
-using CrossCutting.MessageContracts;
+using CrossCutting.Caching.Redis;
+using CrossCutting.Caching.Redis.Configuration;
 using CrossCutting.Messaging.RabbitMq;
 using CrossCutting.Security.IAM;
 using Infrastructure.Persistence;
+using Infrastructure.Repository;
+using Infrastructure.Repository.Caching;
+using Infrastructure.Repository.UnitOfWork;
 using LeadManagerApi.Core.Configuration;
 using LeadManagerApi.Tests.Core.Security.Authentication;
 using Microsoft.AspNetCore.Authentication;
@@ -13,7 +19,6 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Testing;
 using Microsoft.AspNetCore.TestHost;
-using Microsoft.Data.Sqlite;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -23,11 +28,10 @@ using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using NSubstitute;
 using RichardSzalay.MockHttp;
-using System.Data.Common;
+using Shared.Settings;
 using System.Net;
 using System.Net.Http.Json;
 using System.Text.Json;
-using Tests.Common.ObjectMothers.Domain;
 using Tests.Common.ObjectMothers.Integrations.ViaCep;
 using ViaCep.ServiceClient;
 using ViaCep.ServiceClient.Configuration;
@@ -123,36 +127,35 @@ public class LeadManagerWebApplicationFactory : WebApplicationFactory<Program>, 
             .UseEnvironment("IntegrationTests")
             .ConfigureTestServices(services =>
             {
+                services.AddSingleton(services => Configuration.GetSection(nameof(LeadManagerApiSettings)).Get<LeadManagerApiSettings>()!);
+
                 services.RemoveAll<IHttpContextAccessor>();
                 services.AddHttpContextAccessor();
 
                 services.RemoveAll<IUserService>();
                 services.AddScoped<IUserService, UserService>();
 
-                services.RemoveAll<DbConnection>();
-                services.AddSingleton<DbConnection>(_ =>
-                {
-                    var connection = new SqliteConnection(Configuration["DataSourceSettings:ConnectionString"]);
-                    connection.Open();
-
-                    return connection;
-                });
-
                 services.AddAuthentication(defaultScheme: TestingAuthenticationHandler.TestingScheme)
                             .AddScheme<AuthenticationSchemeOptions, TestingAuthenticationHandler>(
                                             TestingAuthenticationHandler.TestingScheme,
                                             options => { });
 
+                services.AddSingleton(services => Configuration.GetSection(nameof(DataSourceSettings)).Get<DataSourceSettings>()!);
+                
                 services.RemoveAll(typeof(DbContextOptions<LeadManagerDbContext>));
                 services.RemoveAll<ILeadManagerDbContext>();
                 services.AddScoped<ILeadManagerDbContext>(provider =>
                 {
-                    var connection = provider.GetRequiredService<DbConnection>();
-
+                    var dataSourceSettings = Services.GetRequiredService<DataSourceSettings>();
                     var optionsBuilder = new DbContextOptionsBuilder<LeadManagerDbContext>();
 
                     var options = optionsBuilder
-                        .UseSqlite(connection)
+                        .UseSqlServer(
+                            dataSourceSettings.ConnectionString,
+                            options =>
+                            {
+                                options.EnableRetryOnFailure(2);
+                            })
                         .EnableDetailedErrors()
                         .EnableSensitiveDataLogging()
                         .LogTo(
@@ -168,12 +171,34 @@ public class LeadManagerWebApplicationFactory : WebApplicationFactory<Program>, 
                     context.Database.EnsureCreated();
 
                     return context;
-                });                
+                });
 
-                services.AddSingleton(factory => Configuration.GetSection("ServiceIntegrations:ViaCep").Get<ViaCepIntegrationSettings>()!);
+                services.AddSingleton(services => Configuration.GetSection($"{nameof(CachingPoliciesSettings)}:{nameof(LeadsPolicy)}").Get<LeadsPolicy>()!);
+                services.AddSingleton(services => Configuration.GetSection($"{nameof(CachingPoliciesSettings)}:{nameof(AddressesPolicy)}").Get<AddressesPolicy>()!);
+                services.RemoveAll<ICacheProvider>();
+                services.AddSingleton(services => Configuration.GetSection(nameof(RedisCacheProviderSettings)).Get<RedisCacheProviderSettings>()!);
+                services.AddStackExchangeRedisCache(options =>
+                {
+                    var cacheProviderSettings = Services.GetRequiredService<RedisCacheProviderSettings>();
 
-                services.AddSingleton(factory => Configuration.GetSection(nameof(LeadManagerApiSettings)).Get<LeadManagerApiSettings>()!);
+                    options.Configuration = $"{cacheProviderSettings.Server}:{cacheProviderSettings.PortNumber}";
+                });
+                services.TryAddScoped<ICacheProvider, RedisCacheProvider>();
 
+                services.RemoveAll<IUnitOfWork>();
+                services.AddScoped<IUnitOfWork, UnitOfWork>();
+
+                services.RemoveAll<ILeadRepository>();
+                services.AddScoped<ILeadRepository, LeadRepository>();
+                services.Decorate<ILeadRepository, CachingLeadRepository>();
+
+                services.RemoveAll<ICachingLeadRepository>();
+                services.AddScoped<ICachingLeadRepository, CachingLeadRepository>();
+
+                services.RemoveAll<IRabbitMqChannelFactory>();
+                services.AddSingleton(services => Substitute.For<IRabbitMqChannelFactory>());
+
+                services.AddSingleton(services => Configuration.GetSection("ServiceIntegrations:ViaCep").Get<ViaCepIntegrationSettings>()!);
                 services.RemoveAll<IViaCepServiceClient>();
                 services.AddScoped<IViaCepServiceClient>(services =>
                 {
@@ -200,21 +225,6 @@ public class LeadManagerWebApplicationFactory : WebApplicationFactory<Program>, 
 
                     return new ViaCepServiceClient(httpClient, viaCepApiSettings, default!);
                 });
-
-                services.RemoveAll<ICacheProvider>();
-                services.AddScoped(services =>
-                {
-                    var cacheProviderMock = Substitute.For<ICacheProvider>();
-                    cacheProviderMock.GetAsync<IEnumerable<LeadData>>(
-                                        Arg.Any<string>(),
-                                        Arg.Any<CancellationToken>())
-                                    .Returns(LeadMother.Leads().MapToMessageContractList());
-
-                    return cacheProviderMock;
-                });
-
-                services.RemoveAll<IRabbitMqChannelFactory>();
-                services.AddSingleton(services => Substitute.For<IRabbitMqChannelFactory>());
             });
     }
 }

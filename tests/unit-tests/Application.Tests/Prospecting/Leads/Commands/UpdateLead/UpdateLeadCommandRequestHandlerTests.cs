@@ -1,70 +1,44 @@
-﻿using Application.Core.Contracts.Caching;
-using Application.Core.Contracts.Persistence;
+﻿using Application.Core.Contracts.Repository;
 using Application.Prospecting.Leads.Commands.UpdateLead;
-using Application.Prospecting.Leads.Shared;
-using CrossCutting.Security.IAM;
+using Domain.Prospecting.Entities;
 using FluentAssertions;
 using MediatR;
 using NSubstitute;
 using Shared.Events;
 using Shared.Events.EventDispatching;
 using Shared.Results;
-using Tests.Common.Factories;
 using Tests.Common.ObjectMothers.Application;
 using Tests.Common.ObjectMothers.Domain;
 using Xunit;
 
 namespace Application.Tests.Prospecting.Leads.Commands.UpdateLead;
 
-public sealed class UpdateLeadCommandRequestHandlerTests : IAsyncDisposable
+public sealed class UpdateLeadCommandRequestHandlerTests
 {
     private readonly UpdateLeadCommandRequestHandler _handler;
-    private readonly IUserService _userService;
-    private readonly ILeadManagerDbContext _dbContext;
-    private readonly ICachingManagement _cachingManager;
     private readonly IMediator _mediator;
+    private readonly ILeadRepository _leadRepository;
     private readonly IEventDispatching _eventDispatcher;
     private readonly CancellationTokenSource _cts;
 
     public UpdateLeadCommandRequestHandlerTests()
     {
-        _userService = Substitute.For<IUserService>();
-        _userService.GetUserId().Returns(Guid.NewGuid());
-        _dbContext = InMemoryLeadManagerDbContextFactory.Create(_userService);
         _mediator = Substitute.For<IMediator>();
+        _leadRepository = Substitute.For<ILeadRepository>();
         _eventDispatcher = Substitute.For<IEventDispatching>();
-        _cachingManager = Substitute.For<ICachingManagement>();
-        _handler = new UpdateLeadCommandRequestHandler(_mediator, _eventDispatcher, _dbContext, _cachingManager);
+        _handler = new UpdateLeadCommandRequestHandler(_mediator, _eventDispatcher, _leadRepository);
         _cts = new();
-    }
-
-    public async ValueTask DisposeAsync()
-    {
-        _cts.Dispose();
-        await _dbContext.DisposeAsync();
     }
 
     [Fact]
     public async Task Handle_ValidRequestParametersAndExistingLead_ShouldSucceed()
     {
         //Arrange
-        var leadId = Guid.NewGuid();
         var lead = LeadMother.XptoLLC();
-        var updateRequest = UpdateLeadCommandRequestMother
-                        .Instance
-                        .WithId(leadId)
-                        .WithRazaoSocial("XPTO Brasil LLC")
-                        .WithCep("11111-111")
-                        .WithEndereco("Avenida Carlos Ribeiro")
-                        .WithCidade("Aracaju")
-                        .WithEstado("SE")
-                        .WithRowVersion(lead.RowVersion)
-                        .Build();
+        var updateRequest = UpdateLeadCommandRequestMother.XptoIncLeadRequest();
 
-        lead.Id = leadId;
-
-        await _dbContext.Leads.AddAsync(lead, _cts.Token);
-        await _dbContext.SaveChangesAsync(_cts.Token);
+        _leadRepository.GetByIdAsync(Arg.Any<Guid>(), _cts.Token).Returns(lead);
+        _leadRepository.UpdateAsync(lead, lead.RowVersion, _cts.Token).Returns(Task.CompletedTask);
 
         //Act
         var result = await _handler.Handle(updateRequest, _cts.Token);
@@ -75,32 +49,18 @@ public sealed class UpdateLeadCommandRequestHandlerTests : IAsyncDisposable
         result.Success.Should().BeTrue();
         result.Inconsistencies.Should().BeNullOrEmpty();
         result.Should().BeOfType<ApplicationResponse<UpdateLeadCommandResponse>>();
-        var updatedLead = await _dbContext.Leads.FindAsync(updateRequest.Id, _cts.Token);
-        updatedLead.Should().NotBeNull();
-        updatedLead!.Cep.Should().Be(updateRequest.Cep);
-        updatedLead.Logradouro.Should().Be(updateRequest.Endereco);
-        updatedLead.Cidade.Should().Be(updateRequest.Cidade);
-        updatedLead.Estado.Should().Be(updateRequest.Estado);
+        await _leadRepository.Received(1).GetByIdAsync(Arg.Any<Guid>(), Arg.Any<CancellationToken>());
+        await _leadRepository.Received(1).UpdateAsync(Arg.Any<Lead>(), Arg.Any<byte[]>(), Arg.Any<CancellationToken>());
         _eventDispatcher.Received(1).AddEvent(Arg.Any<IEvent>());
-        await _cachingManager.Received(1).UpdateLeadEntryAsync(Arg.Any<LeadDto>(), _cts.Token);
     }
 
     [Fact]
     public async Task Handle_ValidRequestParametersWithNonExistingLead_ShouldReturnResultObjectWithNotFoundMessage()
     {
         //Arrange
-        var updateRequest = UpdateLeadCommandRequestMother
-                        .Instance
-                        .WithId(Guid.NewGuid())
-                        .WithRazaoSocial("XPTO Brasil LLC")
-                        .WithCep("11111-111")
-                        .WithEndereco("Avenida Carlos Ribeiro")
-                        .WithCidade("Salto")
-                        .WithEstado("SP")
-                        .Build();
+        var updateRequest = UpdateLeadCommandRequestMother.XptoIncLeadRequest();
 
-        await _dbContext.Leads.AddAsync(LeadMother.XptoLLC(), _cts.Token);
-        await _dbContext.SaveChangesAsync(_cts.Token);
+        _leadRepository.GetByIdAsync(Guid.NewGuid(), _cts.Token).Returns(default(Lead));
 
         //Act
         var result = await _handler.Handle(updateRequest, _cts.Token);
@@ -112,8 +72,9 @@ public sealed class UpdateLeadCommandRequestHandlerTests : IAsyncDisposable
         result.Inconsistencies.Should().BeNullOrEmpty();
         result.Should().BeOfType<ApplicationResponse<UpdateLeadCommandResponse>>();
         result.Message.Should().BeEquivalentTo("Lead não encontrado.");
+        await _leadRepository.Received(1).GetByIdAsync(Arg.Any<Guid>(), Arg.Any<CancellationToken>());
+        await _leadRepository.Received(0).UpdateAsync(Arg.Any<Lead>(), Arg.Any<byte[]>(), Arg.Any<CancellationToken>());
         _eventDispatcher.Received(0).AddEvent(Arg.Any<IEvent>());
-        await _cachingManager.Received(0).UpdateLeadEntryAsync(Arg.Any<LeadDto>(), _cts.Token);
     }
 
     //TODO: Implement Concurrency checking lead update operations

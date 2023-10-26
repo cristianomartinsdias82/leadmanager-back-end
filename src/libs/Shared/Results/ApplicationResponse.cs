@@ -51,7 +51,7 @@ public sealed class ApplicationResponse<T>
             Exception = exception
         };
 
-        inconsistencies?.ToList().ForEach(it => response.AddInconsistency(it));
+        inconsistencies?.ToList().ForEach(response.AddInconsistency);
 
         return response;
     }

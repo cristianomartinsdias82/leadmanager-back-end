@@ -1,6 +1,6 @@
 ﻿using Application.Prospecting.Leads.Queries.GetLeadById;
-using Application.Prospecting.Leads.Shared;
 using CrossCutting.Security.Authorization;
+using Domain.Prospecting.Entities;
 using LeadManagerApi.Core.ApiFeatures;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;

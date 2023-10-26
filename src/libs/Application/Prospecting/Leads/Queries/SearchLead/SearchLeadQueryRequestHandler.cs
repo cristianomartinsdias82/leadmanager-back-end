@@ -1,4 +1,5 @@
 ﻿using Application.Core.Contracts.Persistence;
+using Application.Core.Contracts.Repository;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
 using Shared.RequestHandling;
@@ -8,24 +9,44 @@ namespace Application.Prospecting.Leads.Queries.SearchLead;
 
 internal sealed class SearchLeadQueryRequestHandler : ApplicationRequestHandler<SearchLeadQueryRequest, bool>
 {
-    private readonly ILeadManagerDbContext _leadManagerDbContext;
+    //private readonly ILeadManagerDbContext _leadManagerDbContext;
+
+    //public SearchLeadQueryRequestHandler(
+    //    IMediator mediator,
+    //    ILeadManagerDbContext leadManagerDbContext) : base(mediator, default!)
+    //{
+    //    _leadManagerDbContext = leadManagerDbContext;
+    //}
+
+    //public override async Task<ApplicationResponse<bool>> Handle(SearchLeadQueryRequest request, CancellationToken cancellationToken)
+    //{
+    //    var searchTerm = request.SearchTerm!.Trim();
+
+    //    var leadExistsSearchResult = await _leadManagerDbContext
+    //                                        .Leads
+    //                                        .AnyAsync(ld => (!request.LeadId.HasValue || ld.Id != request.LeadId) &&
+    //                                                        (ld.Cnpj == searchTerm || ld.RazaoSocial == searchTerm), cancellationToken);
+
+    //    return ApplicationResponse<bool>.Create(leadExistsSearchResult);
+    //}
+
+    private readonly ILeadRepository _leadRepository;
 
     public SearchLeadQueryRequestHandler(
         IMediator mediator,
-        ILeadManagerDbContext leadManagerDbContext) : base(mediator, default!)
+        ILeadRepository leadRepository) : base(mediator, default!)
     {
-        _leadManagerDbContext = leadManagerDbContext;
+        _leadRepository = leadRepository;
     }
 
     public override async Task<ApplicationResponse<bool>> Handle(SearchLeadQueryRequest request, CancellationToken cancellationToken)
     {
         var searchTerm = request.SearchTerm!.Trim();
-        
-        var leadExistsSearchResult = await _leadManagerDbContext
-                                            .Leads
-                                            .AnyAsync(ld => (!request.LeadId.HasValue || ld.Id != request.LeadId) &&
-                                                            (ld.Cnpj == searchTerm || ld.RazaoSocial == searchTerm), cancellationToken);
-        
-        return ApplicationResponse<bool>.Create(leadExistsSearchResult);
+
+        var leadExists = await _leadRepository
+                                .ExistsAsync(ld => (!request.LeadId.HasValue || ld.Id != request.LeadId) &&
+                                                   (ld.Cnpj == searchTerm || ld.RazaoSocial == searchTerm), cancellationToken);
+
+        return ApplicationResponse<bool>.Create(leadExists);
     }
 }
