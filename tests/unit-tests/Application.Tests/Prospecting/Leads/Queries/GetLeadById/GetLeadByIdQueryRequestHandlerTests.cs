@@ -1,6 +1,6 @@
 ﻿using Application.Core.Contracts.Persistence;
+using Application.Core.Contracts.Repository;
 using Application.Prospecting.Leads.Queries.GetLeadById;
-using Application.Prospecting.Leads.Shared;
 using CrossCutting.Security.IAM;
 using Domain.Prospecting.Entities;
 using FluentAssertions;
@@ -13,33 +13,23 @@ using Xunit;
 
 namespace Application.Tests.Prospecting.Leads.Queries.GetLeadById;
 
-public sealed class GetLeadByIdQueryRequestHandlerTests : IAsyncDisposable
+public sealed class GetLeadByIdQueryRequestHandlerTests
 {
     private readonly GetLeadByIdQueryRequestHandler _handler;
     private readonly IUserService _userService;
     private readonly IMediator _mediator;
-    private readonly ILeadManagerDbContext _dbContext;
-    private readonly Lead _xptoIncLead;
+    private readonly ILeadRepository _leadRepositoryMock;
     private readonly CancellationTokenSource _cts;
 
     public GetLeadByIdQueryRequestHandlerTests()
     {
         _userService = Substitute.For<IUserService>();
         _userService.GetUserId().Returns(Guid.NewGuid());
-        _dbContext = InMemoryLeadManagerDbContextFactory.Create(_userService);
-        _xptoIncLead = LeadMother.XptoLLC();
-        _dbContext.Leads.Add(_xptoIncLead);
-        _dbContext.SaveChangesAsync().GetAwaiter().GetResult();
+        _leadRepositoryMock = Substitute.For<ILeadRepository>();
+        
         _mediator = Substitute.For<IMediator>();
-        _handler = new(_mediator, _dbContext);
+        _handler = new(_mediator, _leadRepositoryMock);
         _cts = new();
-    }
-
-    public async ValueTask DisposeAsync()
-    {
-        _cts.Dispose();
-        //await _dbContext.Leads.ExecuteDeleteAsync();
-        await _dbContext.DisposeAsync();
     }
 
     [Fact]
@@ -63,6 +53,8 @@ public sealed class GetLeadByIdQueryRequestHandlerTests : IAsyncDisposable
     public async void Handle_WhenExistingLeadInformed_ShouldReturnSuccessfulWithLeadData()
     {
         //Arrange
+        var _xptoIncLead = LeadMother.XptoLLC();
+        _leadRepositoryMock.GetByIdAsync(_xptoIncLead.Id, _cts.Token).Returns(_xptoIncLead);
         GetLeadByIdQueryRequest request = new() { Id = _xptoIncLead.Id };
 
         //Act
@@ -71,9 +63,11 @@ public sealed class GetLeadByIdQueryRequestHandlerTests : IAsyncDisposable
         //Assert
         result.Should().NotBeNull();
         result.Should().BeOfType<ApplicationResponse<LeadDto>>();
-        result.Data.Should().NotBeNull();
-        result.Data.Id.Should().Be(_xptoIncLead.Id);
         result.OperationCode.Should().Be(OperationCodes.Successful);
         result.Exception.Should().BeNull();
+        result.Data.Should().NotBeNull();
+        result.Data.Id.Should().Be(_xptoIncLead.Id);
+        result.Data.RazaoSocial.Should().Be(_xptoIncLead.RazaoSocial);
+        result.Data.Cnpj.Should().Be(_xptoIncLead.Cnpj);
     }
 }

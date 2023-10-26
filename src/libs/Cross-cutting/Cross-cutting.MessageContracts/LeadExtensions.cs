@@ -24,4 +24,19 @@ public static class LeadExtensions
             Complemento = lead.Complemento,
             Revision = lead.RowVersion
         };
+
+    public static LeadDto MapToDto(this LeadData lead)
+        => new(
+            lead.Id,
+            lead.RazaoSocial,
+            lead.Cnpj,
+            lead.Endereco,
+            lead.Numero,
+            lead.Complemento,
+            lead.Cep,
+            lead.Cidade,
+            lead.Bairro,
+            lead.Estado,            
+            lead.Revision
+        );
 }

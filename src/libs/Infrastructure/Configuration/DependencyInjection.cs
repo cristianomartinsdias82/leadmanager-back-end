@@ -1,11 +1,14 @@
-﻿using Application.Core.Contracts.Caching;
-using Application.Core.Contracts.Caching.Policies;
-using Application.Core.Contracts.Messaging;
+﻿using Application.Core.Contracts.Messaging;
 using Application.Core.Contracts.Persistence;
-using Infrastructure.Caching;
+using Application.Core.Contracts.Repository;
+using Application.Core.Contracts.Repository.Caching;
+using Application.Core.Contracts.Repository.UnitOfWork;
 using Infrastructure.EventDispatching;
 using Infrastructure.Messaging;
 using Infrastructure.Persistence;
+using Infrastructure.Repository;
+using Infrastructure.Repository.Caching;
+using Infrastructure.Repository.UnitOfWork;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -18,8 +21,8 @@ public static class DependencyInjection
 {
     public static IServiceCollection AddInfrastructureServices(this IServiceCollection services, IConfiguration configuration)
         => services.AddDataSource(configuration)
+                   .AddRepository(configuration)
                    .AddEventDispatcher(configuration)
-                   .AddCacheManager(configuration)
                    .AddMessageBusHelper(configuration);
 
     private static IServiceCollection AddDataSource(this IServiceCollection services, IConfiguration configuration)
@@ -37,23 +40,22 @@ public static class DependencyInjection
                 });
         });
 
-        services.AddScoped<ILeadManagerDbContext>(
-            services => services.GetRequiredService<LeadManagerDbContext>()
-        );
+        services.AddScoped<ILeadManagerDbContext, LeadManagerDbContext>();
 
         return services;
     }
 
+    private static IServiceCollection AddRepository(this IServiceCollection services, IConfiguration configuration)
+        => services
+            .AddSingleton(services => configuration.GetSection($"{nameof(CachingPoliciesSettings)}:{nameof(LeadsPolicy)}").Get<LeadsPolicy>()!)
+            .AddSingleton(services => configuration.GetSection($"{nameof(CachingPoliciesSettings)}:{nameof(AddressesPolicy)}").Get<AddressesPolicy>()!)
+            .AddScoped<IUnitOfWork, UnitOfWork>()
+            .AddScoped<ILeadRepository, LeadRepository>()
+            .Decorate<ILeadRepository, CachingLeadRepository>()
+            .AddScoped<ICachingLeadRepository, CachingLeadRepository>();
+
     private static IServiceCollection AddEventDispatcher(this IServiceCollection services, IConfiguration configuration)
         => services.AddScoped<IEventDispatching, EventDispatcher>();
-
-    private static IServiceCollection AddCacheManager(this IServiceCollection services, IConfiguration configuration)
-    {
-        var cachingPoliciesSettings = configuration.GetSection(nameof(CachingPoliciesSettings)).Get<CachingPoliciesSettings>()!;
-        services.AddSingleton(cachingPoliciesSettings);
-
-        return services.AddScoped<ICachingManagement, CacheManager>();
-    }
 
     private static IServiceCollection AddMessageBusHelper(this IServiceCollection services, IConfiguration configuration)
         => services.AddSingleton<IMessageBusHelper, MessageBusHelper>();

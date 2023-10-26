@@ -1,26 +1,23 @@
-﻿using Application.Core.Contracts.Caching;
-using Application.Core.Contracts.Persistence;
+﻿using Application.Core.Contracts.Repository;
 using Application.Prospecting.Leads.Commands.RegisterLead;
-using Application.Prospecting.Leads.Shared;
 using CrossCutting.Security.IAM;
+using Domain.Prospecting.Entities;
 using FluentAssertions;
 using MediatR;
 using NSubstitute;
 using Shared.Events;
 using Shared.Events.EventDispatching;
 using Shared.Results;
-using Tests.Common.Factories;
 using Tests.Common.ObjectMothers.Application;
 using Xunit;
 
 namespace Application.Tests.Prospecting.Leads.Commands.RegisterLead;
 
-public sealed class RegisterLeadCommandRequestHandlerTests : IAsyncDisposable
+public sealed class RegisterLeadCommandRequestHandlerTests
 {
     private readonly RegisterLeadCommandRequestHandler _handler;
     private readonly IUserService _userService;
-    private readonly ILeadManagerDbContext _dbContext;
-    private readonly ICachingManagement _cachingManager;
+    private readonly ILeadRepository _leadRepository;
     private readonly IMediator _mediator;
     private readonly IEventDispatching _eventDispatcher;
     private readonly CancellationTokenSource _cts;
@@ -29,18 +26,11 @@ public sealed class RegisterLeadCommandRequestHandlerTests : IAsyncDisposable
     {
         _userService = Substitute.For<IUserService>();
         _userService.GetUserId().Returns(Guid.NewGuid());
-        _dbContext = InMemoryLeadManagerDbContextFactory.Create(_userService);
         _mediator = Substitute.For<IMediator>();
+        _leadRepository = Substitute.For<ILeadRepository>();
         _eventDispatcher = Substitute.For<IEventDispatching>();
-        _cachingManager = Substitute.For<ICachingManagement>();
-        _handler = new RegisterLeadCommandRequestHandler(_mediator, _eventDispatcher, _dbContext, _cachingManager);
+        _handler = new RegisterLeadCommandRequestHandler(_mediator, _eventDispatcher, _leadRepository);
         _cts = new();
-    }
-
-    public async ValueTask DisposeAsync()
-    {
-        _cts.Dispose();
-        await _dbContext.DisposeAsync();
     }
 
     [Fact]
@@ -60,10 +50,7 @@ public sealed class RegisterLeadCommandRequestHandlerTests : IAsyncDisposable
         result.Inconsistencies.Should().BeNullOrEmpty();
         result.Should().BeOfType<ApplicationResponse<RegisterLeadCommandResponse>>();
         result.Data.Id.Should().NotBe(Guid.Empty);
-        var newlyCreatedLead = await _dbContext.Leads.FindAsync(result.Data.Id, _cts.Token);
-        newlyCreatedLead.Should().NotBeNull();
-        newlyCreatedLead!.Cnpj.Should().BeEquivalentTo(request.Cnpj);
+        await _leadRepository.Received(1).AddAsync(Arg.Any<Lead>(), Arg.Any<CancellationToken>());
         _eventDispatcher.Received(1).AddEvent(Arg.Any<IEvent>());
-        await _cachingManager.Received(1).AddLeadEntryAsync(Arg.Any<LeadDto>(), _cts.Token);
     }
 }
