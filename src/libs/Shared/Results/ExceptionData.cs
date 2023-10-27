@@ -1,12 +1,17 @@
-﻿namespace Shared.Results;
+﻿using FluentValidation.Internal;
+
+namespace Shared.Results;
 
 public static class ExceptionExtensions
 {
-    public static ExceptionData AsExceptionData(this Exception exc)
+    public static ExceptionData AsExceptionData(
+        this Exception exc,
+        bool includeStackTrace = false,
+        bool includeTargetSite = false)
         => new(exc.GetType()!.FullName!,
                exc.Message,
-               exc.StackTrace ?? string.Empty,
-               exc.TargetSite?.Name ?? string.Empty);
+               includeStackTrace ? exc.StackTrace ?? string.Empty : default!,
+               includeTargetSite ? exc.TargetSite?.Name ?? string.Empty : default!);
 }
 
 public class ExceptionData

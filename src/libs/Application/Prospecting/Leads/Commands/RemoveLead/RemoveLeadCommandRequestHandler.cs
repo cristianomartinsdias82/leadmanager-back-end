@@ -56,6 +56,7 @@ internal sealed class RemoveLeadCommandRequestHandler : ApplicationRequestHandle
                             RecordStates.Deleted,
                             default!,
                             default!),
+                exception: dbConcExc.AsExceptionData(),
                 message: Mensagem_FalhaRemocaoConcorrente,
                 operationCode: OperationCodes.ConcurrencyIssue);
         }
