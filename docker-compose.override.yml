@@ -12,6 +12,18 @@ services:
       - /var/run/docker.sock:/var/run/docker.sock
       - portainer_data:/data/portainer
 
+  leadmanager.logging-ingestion:
+    container_name: leadmanagerseq
+    restart: always
+    environment:
+      - ACCEPT_EULA=Y
+      - "Logging:SeqIngestionSink:ServerUrl=http://leadmanagerseq:5341"
+    ports:
+      - "5341:5341"
+      - "7999:80"
+    volumes:
+      - seq_data:/var/opt/seq
+
   leadmanager.db:
     container_name: leadmanagerdb
     restart: always
@@ -44,7 +56,7 @@ services:
     ports:
       - "10000:10000"
     volumes:
-      - blob_data:/data/blob
+      - blob_data:/var/data/blob
 
   leadmanager.caching:
     container_name: leadmanagercache
@@ -52,7 +64,7 @@ services:
     ports:
       - "6379:6379"
     volumes:
-      - caching_data:/data/caching
+      - caching_data:/var/data/caching
 
   leadmanager.client:
     container_name: leadmanagerweb
@@ -66,6 +78,7 @@ services:
       - leadmanager.messagebus
       - leadmanager.blob
       - leadmanager.caching
+      - leadmanager.logging-ingestion
     environment:
       - ASPNETCORE_ENVIRONMENT=Development
       - "LeadManagerApiSettings:Cors_AllowedOrigins=http://localhost:8002, http://leadmanagerweb"
