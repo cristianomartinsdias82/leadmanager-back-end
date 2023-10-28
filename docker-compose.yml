@@ -5,6 +5,9 @@ services:
   portainer:
     image: portainer/portainer-ce
 
+  leadmanager.logging-ingestion:
+    image: datalust/seq:2023.4
+
   leadmanager.db:
     image: mcr.microsoft.com/mssql/server
 
@@ -18,7 +21,7 @@ services:
     image: rabbitmq:3-management
 
   leadmanager.client:
-    image: cristianomartinsdiasspbr1982/leadmanagerweb:v1.0.1
+    image: cristianomartinsdiasspbr1982/leadmanagerweb:v1.0.3
     
   leadmanager.api:
     container_name: leadmanagerapi
@@ -33,3 +36,5 @@ volumes:
   blob_data:
   caching_data:
   portainer_data:
+  seq_data:
+  
