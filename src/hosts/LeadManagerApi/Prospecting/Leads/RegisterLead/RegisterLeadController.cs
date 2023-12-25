@@ -4,12 +4,11 @@ using LeadManagerApi.Core.ApiFeatures;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
 using Shared.Results;
-using static LeadManagerApi.Core.Configuration.Security.LeadManagerApiSecurityConfiguration;
+using static Application.Security.LeadManagerSecurityConfiguration;
 
 namespace LeadManagerApi.Prospecting.Leads.RegisterLead;
 
 [LeadsRoute]
-//[Authorize(Policy = LeadManagerApiSecurityConfiguration.Policies.LeadManagerDefaultPolicy)]
 [RequiredAllPermissions(Permissions.Insert)]
 public sealed class RegisterLeadController : LeadManagerController
 {

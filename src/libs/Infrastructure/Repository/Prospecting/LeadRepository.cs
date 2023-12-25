@@ -1,11 +1,11 @@
 ﻿using Application.Core.Contracts.Persistence;
-using Application.Core.Contracts.Repository;
+using Application.Core.Contracts.Repository.Prospecting;
 using Domain.Prospecting.Entities;
 using Microsoft.EntityFrameworkCore;
 using Shared.DataPagination;
 using System.Linq.Expressions;
 
-namespace Infrastructure.Repository;
+namespace Infrastructure.Repository.Prospecting;
 
 internal sealed class LeadRepository : RepositoryBase<Lead>, ILeadRepository
 {

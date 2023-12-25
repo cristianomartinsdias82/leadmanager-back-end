@@ -1,6 +1,6 @@
 ﻿using Application.Core.Contracts.Persistence;
-using Application.Core.Contracts.Repository;
 using Application.Core.Contracts.Repository.Caching;
+using Application.Core.Contracts.Repository.Prospecting;
 using Application.Core.Contracts.Repository.UnitOfWork;
 using CrossCutting.Caching;
 using CrossCutting.Caching.Redis;
@@ -8,8 +8,8 @@ using CrossCutting.Caching.Redis.Configuration;
 using CrossCutting.Messaging.RabbitMq;
 using CrossCutting.Security.IAM;
 using Infrastructure.Persistence;
-using Infrastructure.Repository;
 using Infrastructure.Repository.Caching;
+using Infrastructure.Repository.Prospecting;
 using Infrastructure.Repository.UnitOfWork;
 using LeadManagerApi.Core.Configuration;
 using LeadManagerApi.Tests.Core.Security.Authentication;
@@ -134,6 +134,7 @@ public class LeadManagerWebApplicationFactory : WebApplicationFactory<Program>, 
 
                 services.RemoveAll<IUserService>();
                 services.AddScoped<IUserService, UserService>();
+                //services.AddScoped<IUserService, FakeUserService>();
 
                 services.AddAuthentication(defaultScheme: TestingAuthenticationHandler.TestingScheme)
                             .AddScheme<AuthenticationSchemeOptions, TestingAuthenticationHandler>(
@@ -173,8 +174,8 @@ public class LeadManagerWebApplicationFactory : WebApplicationFactory<Program>, 
                     return context;
                 });
 
-                services.AddSingleton(services => Configuration.GetSection($"{nameof(CachingPoliciesSettings)}:{nameof(LeadsPolicy)}").Get<LeadsPolicy>()!);
-                services.AddSingleton(services => Configuration.GetSection($"{nameof(CachingPoliciesSettings)}:{nameof(AddressesPolicy)}").Get<AddressesPolicy>()!);
+                services.AddSingleton(services => Configuration.GetSection($"{nameof(CachingPoliciesSettings)}:{nameof(LeadsCachingPolicy)}").Get<LeadsCachingPolicy>()!);
+                services.AddSingleton(services => Configuration.GetSection($"{nameof(CachingPoliciesSettings)}:{nameof(AddressesCachingPolicy)}").Get<AddressesCachingPolicy>()!);
                 services.RemoveAll<ICacheProvider>();
                 services.AddSingleton(services => Configuration.GetSection(nameof(RedisCacheProviderSettings)).Get<RedisCacheProviderSettings>()!);
                 services.AddStackExchangeRedisCache(options =>

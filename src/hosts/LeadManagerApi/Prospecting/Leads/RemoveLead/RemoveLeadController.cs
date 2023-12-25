@@ -4,13 +4,13 @@ using LeadManagerApi.Core.ApiFeatures;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
 using Shared.Results;
-using static LeadManagerApi.Core.Configuration.Security.LeadManagerApiSecurityConfiguration;
+using static Application.Security.LeadManagerSecurityConfiguration;
 
 namespace LeadManagerApi.Prospecting.Leads.RemoveLead;
 
 [LeadsRoute]
-//[Authorize(Policy = LeadManagerApiSecurityConfiguration.Policies.LeadManagerRemovePolicy)]
-[RequiredAllPermissions(Permissions.Delete)]
+[RequiredAllPermissions(Permissions.Delete, Order = 1)]
+[RequiresOneTimePassword(Order = 2)]
 public sealed class RemoveLeadController : LeadManagerController
 {
     public RemoveLeadController(ISender sender) : base(sender) { }

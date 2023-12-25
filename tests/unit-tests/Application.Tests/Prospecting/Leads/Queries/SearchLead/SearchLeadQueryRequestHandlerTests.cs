@@ -1,4 +1,4 @@
-﻿using Application.Core.Contracts.Repository;
+﻿using Application.Core.Contracts.Repository.Prospecting;
 using Application.Prospecting.Leads.Queries.SearchLead;
 using CrossCutting.Security.IAM;
 using Domain.Prospecting.Entities;

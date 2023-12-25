@@ -4,8 +4,8 @@ using HealthChecks.UI.Client;
 using Infrastructure.Configuration;
 using LeadManagerApi.Core.ApiFeatures;
 using LeadManagerApi.Core.Configuration;
-using LeadManagerApi.Core.Configuration.Security;
 using Microsoft.AspNetCore.Diagnostics.HealthChecks;
+using static Application.Security.LeadManagerSecurityConfiguration;
 
 namespace LeadManagerApi;
 
@@ -23,7 +23,7 @@ public class Program
         var app = builder.Build();
 
         //Request pipeline configuration
-        app.UseCors(LeadManagerApiSecurityConfiguration.Policies.LeadManagerCorsPolicy);
+        app.UseCors(Policies.LeadManagerCorsPolicy);
 
         if (app.Environment.IsDevelopment())
         {

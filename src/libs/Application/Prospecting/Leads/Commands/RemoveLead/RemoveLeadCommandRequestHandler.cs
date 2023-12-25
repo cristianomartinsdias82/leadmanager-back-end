@@ -1,5 +1,5 @@
 ﻿using Application.Core.Contracts.Persistence;
-using Application.Core.Contracts.Repository;
+using Application.Core.Contracts.Repository.Prospecting;
 using Application.Prospecting.Leads.IntegrationEvents.LeadRemoved;
 using Domain.Prospecting.Entities;
 using MediatR;

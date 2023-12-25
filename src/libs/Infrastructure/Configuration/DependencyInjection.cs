@@ -1,13 +1,15 @@
 ﻿using Application.Core.Contracts.Messaging;
 using Application.Core.Contracts.Persistence;
-using Application.Core.Contracts.Repository;
 using Application.Core.Contracts.Repository.Caching;
+using Application.Core.Contracts.Repository.Prospecting;
+using Application.Core.Contracts.Repository.Security;
 using Application.Core.Contracts.Repository.UnitOfWork;
 using Infrastructure.EventDispatching;
 using Infrastructure.Messaging;
 using Infrastructure.Persistence;
-using Infrastructure.Repository;
 using Infrastructure.Repository.Caching;
+using Infrastructure.Repository.Prospecting;
+using Infrastructure.Repository.Security;
 using Infrastructure.Repository.UnitOfWork;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
@@ -47,12 +49,14 @@ public static class DependencyInjection
 
     private static IServiceCollection AddRepository(this IServiceCollection services, IConfiguration configuration)
         => services
-            .AddSingleton(services => configuration.GetSection($"{nameof(CachingPoliciesSettings)}:{nameof(LeadsPolicy)}").Get<LeadsPolicy>()!)
-            .AddSingleton(services => configuration.GetSection($"{nameof(CachingPoliciesSettings)}:{nameof(AddressesPolicy)}").Get<AddressesPolicy>()!)
+            .AddSingleton(services => configuration.GetSection($"{nameof(CachingPoliciesSettings)}:{nameof(LeadsCachingPolicy)}").Get<LeadsCachingPolicy>()!)
+            .AddSingleton(services => configuration.GetSection($"{nameof(CachingPoliciesSettings)}:{nameof(AddressesCachingPolicy)}").Get<AddressesCachingPolicy>()!)
+            .AddSingleton(services => configuration.GetSection($"{nameof(CachingPoliciesSettings)}:{nameof(OneTimePasswordCachingPolicy)}").Get<OneTimePasswordCachingPolicy>()!)
             .AddScoped<IUnitOfWork, UnitOfWork>()
             .AddScoped<ILeadRepository, LeadRepository>()
             .Decorate<ILeadRepository, CachingLeadRepository>()
-            .AddScoped<ICachingLeadRepository, CachingLeadRepository>();
+            .AddScoped<ICachingLeadRepository, CachingLeadRepository>()
+            .AddScoped<IOneTimePasswordRepository, OneTimePasswordRepository>();
 
     private static IServiceCollection AddEventDispatcher(this IServiceCollection services, IConfiguration configuration)
         => services.AddScoped<IEventDispatching, EventDispatcher>();
