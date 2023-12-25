@@ -4,7 +4,7 @@ using FluentAssertions;
 using Xunit;
 using static Application.Security.LeadManagerSecurityConfiguration;
 
-namespace Application.Tests.Prospecting.Security.OneTimePassword.Commands.HandleOneTimePassword;
+namespace Application.Tests.Security.OneTimePassword.Commands.HandleOneTimePassword;
 
 public sealed class HandleOneTimePasswordCommandRequestValidatorTests
 {

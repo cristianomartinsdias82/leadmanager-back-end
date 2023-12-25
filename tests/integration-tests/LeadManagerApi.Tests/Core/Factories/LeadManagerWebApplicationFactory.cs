@@ -14,6 +14,7 @@ using Infrastructure.Repository.UnitOfWork;
 using LeadManagerApi.Core.Configuration;
 using LeadManagerApi.Tests.Core.Security.Authentication;
 using Microsoft.AspNetCore.Authentication;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -134,7 +135,6 @@ public class LeadManagerWebApplicationFactory : WebApplicationFactory<Program>, 
 
                 services.RemoveAll<IUserService>();
                 services.AddScoped<IUserService, UserService>();
-                //services.AddScoped<IUserService, FakeUserService>();
 
                 services.AddAuthentication(defaultScheme: TestingAuthenticationHandler.TestingScheme)
                             .AddScheme<AuthenticationSchemeOptions, TestingAuthenticationHandler>(

@@ -9,7 +9,7 @@ using NSubstitute;
 using Shared.Results;
 using Xunit;
 
-namespace Application.Tests.Prospecting.Security.OneTimePassword.Commands.HandleOneTimePassword;
+namespace Application.Tests.Security.OneTimePassword.Commands.HandleOneTimePassword;
 
 public sealed class HandleOneTimePasswordCommandRequestHandlerTests
 {

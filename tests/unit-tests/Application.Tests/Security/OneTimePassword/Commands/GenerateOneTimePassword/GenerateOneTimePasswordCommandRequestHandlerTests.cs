@@ -9,7 +9,7 @@ using NSubstitute;
 using NSubstitute.ReceivedExtensions;
 using Xunit;
 
-namespace Application.Tests.Prospecting.Security.OneTimePassword.Commands.GenerateOneTimePassword;
+namespace Application.Tests.Security.OneTimePassword.Commands.GenerateOneTimePassword;
 
 public sealed class GenerateOneTimePasswordCommandRequestHandlerTests
 {

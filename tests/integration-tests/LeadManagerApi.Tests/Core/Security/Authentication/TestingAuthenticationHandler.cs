@@ -1,4 +1,4 @@
-﻿using LeadManagerApi.Core.Configuration.Security;
+﻿using Application.Security;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
@@ -22,11 +22,11 @@ internal class TestingAuthenticationHandler : AuthenticationHandler<Authenticati
         var identity = new ClaimsIdentity(
             new Claim[]
             {
-                new Claim (LeadManagerApiSecurityConfiguration.ClaimTypes.LDM, LeadManagerApiSecurityConfiguration.Claims.Read),
-                new Claim (LeadManagerApiSecurityConfiguration.ClaimTypes.LDM, LeadManagerApiSecurityConfiguration.Claims.Insert),
-                new Claim (LeadManagerApiSecurityConfiguration.ClaimTypes.LDM, LeadManagerApiSecurityConfiguration.Claims.BulkInsert),
-                new Claim (LeadManagerApiSecurityConfiguration.ClaimTypes.LDM, LeadManagerApiSecurityConfiguration.Claims.Update),
-                new Claim (LeadManagerApiSecurityConfiguration.ClaimTypes.LDM, LeadManagerApiSecurityConfiguration.Claims.Delete)
+                new Claim (LeadManagerSecurityConfiguration.ClaimTypes.LDM, LeadManagerSecurityConfiguration.Claims.Read),
+                new Claim (LeadManagerSecurityConfiguration.ClaimTypes.LDM, LeadManagerSecurityConfiguration.Claims.Insert),
+                new Claim (LeadManagerSecurityConfiguration.ClaimTypes.LDM, LeadManagerSecurityConfiguration.Claims.BulkInsert),
+                new Claim (LeadManagerSecurityConfiguration.ClaimTypes.LDM, LeadManagerSecurityConfiguration.Claims.Update),
+                new Claim (LeadManagerSecurityConfiguration.ClaimTypes.LDM, LeadManagerSecurityConfiguration.Claims.Delete)
             },
             "Testing");
         var principal = new ClaimsPrincipal(identity);

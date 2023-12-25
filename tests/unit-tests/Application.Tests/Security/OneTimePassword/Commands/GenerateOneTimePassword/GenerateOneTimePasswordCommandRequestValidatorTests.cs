@@ -3,7 +3,7 @@ using FluentAssertions;
 using Xunit;
 using static Application.Security.LeadManagerSecurityConfiguration;
 
-namespace Application.Tests.Prospecting.Security.OneTimePassword.Commands.GenerateOneTimePassword;
+namespace Application.Tests.Security.OneTimePassword.Commands.GenerateOneTimePassword;
 
 public sealed class GenerateOneTimePasswordCommandRequestValidatorTests
 {
