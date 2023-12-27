@@ -1,4 +1,4 @@
-﻿using Application.Core.Contracts.Repository;
+﻿using Application.Core.Contracts.Repository.Prospecting;
 using Application.Prospecting.Leads.Queries.GetLeads;
 using Domain.Prospecting.Entities;
 using FluentAssertions;

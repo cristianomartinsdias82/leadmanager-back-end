@@ -7,8 +7,11 @@ using Application.Prospecting.Leads.Commands.RemoveLead;
 using Application.Prospecting.Leads.Commands.UpdateLead;
 using Application.Prospecting.Leads.Queries.GetLeadById;
 using Application.Prospecting.Leads.Queries.SearchLead;
+using Application.Security.OneTimePassword.Commands.GenerateOneTimePassword;
+using Application.Security.OneTimePassword.Commands.HandleOneTimePassword;
 using CrossCutting.Caching.Configuration;
 using CrossCutting.Csv.Configuration;
+using CrossCutting.EndUserCommunication;
 using CrossCutting.FileStorage.Configuration;
 using CrossCutting.Logging.Configuration;
 using CrossCutting.Messaging.Configuration;
@@ -41,7 +44,8 @@ public static class DependencyInjection
                           .RegisterProcessors(services);
                 })
                 .AddIntegrationClientServices(configuration)
-                .AddCrossCuttingServices(configuration);
+                .AddCrossCuttingServices(configuration)
+                .AddEndUserCommunicationServices(configuration);
 
         return services;
     }
@@ -83,5 +87,7 @@ public static class DependencyInjection
                  .AddBehavior<IPipelineBehavior<UpdateLeadCommandRequest, ApplicationResponse<UpdateLeadCommandResponse>>, ValidationBehavior<UpdateLeadCommandRequest, UpdateLeadCommandResponse>>()
                  .AddBehavior<IPipelineBehavior<RemoveLeadCommandRequest, ApplicationResponse<RemoveLeadCommandResponse>>, ValidationBehavior<RemoveLeadCommandRequest, RemoveLeadCommandResponse>>()
                  .AddBehavior<IPipelineBehavior<SearchLeadQueryRequest, ApplicationResponse<bool>>, ValidationBehavior<SearchLeadQueryRequest, bool>>()
-                 .AddBehavior<IPipelineBehavior<BulkInsertLeadCommandRequest, ApplicationResponse<BulkInsertLeadCommandResponse>>, ValidationBehavior<BulkInsertLeadCommandRequest, BulkInsertLeadCommandResponse>>();
+                 .AddBehavior<IPipelineBehavior<BulkInsertLeadCommandRequest, ApplicationResponse<BulkInsertLeadCommandResponse>>, ValidationBehavior<BulkInsertLeadCommandRequest, BulkInsertLeadCommandResponse>>()
+                 .AddBehavior<IPipelineBehavior<GenerateOneTimePasswordCommandRequest, ApplicationResponse<GenerateOneTimePasswordCommandResponse>>, ValidationBehavior<GenerateOneTimePasswordCommandRequest, GenerateOneTimePasswordCommandResponse>>()
+                 .AddBehavior<IPipelineBehavior<HandleOneTimePasswordCommandRequest, ApplicationResponse<HandleOneTimePasswordCommandResponse>>, ValidationBehavior<HandleOneTimePasswordCommandRequest, HandleOneTimePasswordCommandResponse>>();
 }

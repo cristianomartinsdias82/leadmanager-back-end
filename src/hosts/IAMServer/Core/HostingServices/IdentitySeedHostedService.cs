@@ -22,7 +22,7 @@ public sealed class IdentitySeedHostedService : IHostedService
         var userManager = services.GetRequiredService<UserManager<ApplicationUser>>();
         var roleManager = services.GetRequiredService<RoleManager<ApplicationRole>>();
 
-        _logger.LogInformation("Initializing database users seeding...");
+        _logger.LogInformation("Seeding users database...");
 
         var adminRoleExists = await roleManager.RoleExistsAsync(LeadManagerAppConstants.Roles.Administrators);
         if (!adminRoleExists)
@@ -52,6 +52,7 @@ public sealed class IdentitySeedHostedService : IHostedService
                 SecurityStamp = Guid.NewGuid().ToString(),
                 ConcurrencyStamp = Guid.NewGuid().ToString()
             };
+            await userManager.CreateAsync(fulano, "FuL@n0!1991");
 
             const string BeltranoEmail = "beltrano.silva@leadmanager.com.br";
             var beltrano = new ApplicationUser
@@ -69,14 +70,15 @@ public sealed class IdentitySeedHostedService : IHostedService
                 SecurityStamp = Guid.NewGuid().ToString(),
                 ConcurrencyStamp = Guid.NewGuid().ToString()
             };
+            await userManager.CreateAsync(beltrano, "B3ltr@n01993");
 
             const string AdministradorEmail = "admin.sistema@leadmanager.com.br";
             var administrador = new ApplicationUser
             {
                 Claims = new List<MongoClaim>
                 {
-                    new MongoClaim() { Type = LeadManagerAppConstants.Claims.LDM, Value = LeadManagerAppConstants.Claims.Delete },
                     new MongoClaim() { Type = LeadManagerAppConstants.Claims.LDM, Value = LeadManagerAppConstants.Claims.Read },
+                    new MongoClaim() { Type = LeadManagerAppConstants.Claims.LDM, Value = LeadManagerAppConstants.Claims.Delete },
                     new MongoClaim() { Type = JwtClaimTypes.Email, Value = AdministradorEmail }
                 },
                 UserName = "admin.sistema",
@@ -87,14 +89,11 @@ public sealed class IdentitySeedHostedService : IHostedService
                 SecurityStamp = Guid.NewGuid().ToString(),
                 ConcurrencyStamp = Guid.NewGuid().ToString()
             };
-
-            await userManager.CreateAsync(fulano, "FuL@n0!1991");
-            await userManager.CreateAsync(beltrano, "B3ltr@n01993");
             await userManager.CreateAsync(administrador, "@Dm1n!01+=");
             await userManager.AddToRoleAsync(administrador, LeadManagerAppConstants.Roles.Administrators);
         }
 
-        _logger.LogInformation("Database users seeding finished.");
+        _logger.LogInformation("Users database seed has finished.");
     }
 
     public Task StopAsync(CancellationToken cancellationToken)

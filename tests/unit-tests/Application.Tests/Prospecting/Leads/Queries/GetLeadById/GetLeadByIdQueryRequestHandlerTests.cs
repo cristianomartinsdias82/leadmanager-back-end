@@ -1,5 +1,4 @@
-﻿using Application.Core.Contracts.Persistence;
-using Application.Core.Contracts.Repository;
+﻿using Application.Core.Contracts.Repository.Prospecting;
 using Application.Prospecting.Leads.Queries.GetLeadById;
 using CrossCutting.Security.IAM;
 using Domain.Prospecting.Entities;
@@ -7,7 +6,6 @@ using FluentAssertions;
 using MediatR;
 using NSubstitute;
 using Shared.Results;
-using Tests.Common.Factories;
 using Tests.Common.ObjectMothers.Domain;
 using Xunit;
 

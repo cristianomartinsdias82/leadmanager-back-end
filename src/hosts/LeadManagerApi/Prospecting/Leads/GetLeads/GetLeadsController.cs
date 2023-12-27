@@ -5,12 +5,11 @@ using LeadManagerApi.Core.ApiFeatures;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
 using Shared.DataPagination;
-using static LeadManagerApi.Core.Configuration.Security.LeadManagerApiSecurityConfiguration;
+using static Application.Security.LeadManagerSecurityConfiguration;
 
 namespace LeadManagerApi.Prospecting.Leads.GetLeads;
 
 [LeadsRoute]
-//[Authorize(Policy = LeadManagerApiSecurityConfiguration.Policies.LeadManagerDefaultPolicy)]
 [RequiredAllPermissions(Permissions.Read)]
 public sealed class GetLeadsController : LeadManagerController
 {
