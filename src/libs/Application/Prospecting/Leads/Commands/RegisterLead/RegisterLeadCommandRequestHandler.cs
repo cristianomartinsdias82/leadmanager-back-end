@@ -1,4 +1,4 @@
-﻿using Application.Core.Contracts.Repository;
+﻿using Application.Core.Contracts.Repository.Prospecting;
 using Application.Prospecting.Leads.IntegrationEvents.LeadRegistered;
 using Domain.Prospecting.Entities;
 using MediatR;

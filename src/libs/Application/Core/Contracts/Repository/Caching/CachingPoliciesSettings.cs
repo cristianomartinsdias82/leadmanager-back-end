@@ -2,18 +2,31 @@
 
 public sealed record CachingPoliciesSettings
 {
-    public LeadsPolicy LeadsPolicy { get; init; } = default!;
-    public AddressesPolicy AddressesPolicy { get; init; } = default!;
+    public LeadsCachingPolicy LeadsCachingPolicy { get; init; } = default!;
+    public AddressesCachingPolicy AddressesCachingPolicy { get; init; } = default!;
+    public OneTimePasswordCachingPolicy OneTimePasswordCachingPolicy { get; init; } = default!;
 }
 
 public record CachingPolicy(string CacheKey, int TtlInSeconds);
 
-public  record LeadsPolicy : CachingPolicy
+public sealed record LeadsCachingPolicy : CachingPolicy
 {
-    public LeadsPolicy(string CacheKey, int TtlInSeconds) : base(CacheKey, TtlInSeconds) { }
-};
+    public LeadsCachingPolicy(string CacheKey, int TtlInSeconds) : base(CacheKey, TtlInSeconds) { }
+}
 
-public sealed record AddressesPolicy : CachingPolicy
+public sealed record AddressesCachingPolicy : CachingPolicy
 {
-    public AddressesPolicy(string CacheKey, int TtlInSeconds) : base(CacheKey, TtlInSeconds) { }
-};
+    public AddressesCachingPolicy(string CacheKey, int TtlInSeconds) : base(CacheKey, TtlInSeconds) { }
+}
+
+public sealed record OneTimePasswordCachingPolicy : CachingPolicy
+{
+    public int ExpirationTimeInSeconds { get; init; }
+    public int ExpirationTimeOffsetInSeconds { get; init; }
+
+    public OneTimePasswordCachingPolicy(int ExpirationTimeInSeconds, int ExpirationTimeOffsetInSeconds, int TtlInSeconds) : base(default!, TtlInSeconds)
+    {
+        this.ExpirationTimeInSeconds = ExpirationTimeInSeconds;
+        this.ExpirationTimeOffsetInSeconds = ExpirationTimeOffsetInSeconds;
+    }
+}

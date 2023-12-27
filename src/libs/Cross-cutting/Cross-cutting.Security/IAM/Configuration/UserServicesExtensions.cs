@@ -9,6 +9,7 @@ internal static class UserServicesExtensions
     {
         services.AddHttpContextAccessor();
         services.AddScoped<IUserService, UserService>();
+        //services.AddScoped<IUserService, FakeUserService>();
 
         return services;
     }

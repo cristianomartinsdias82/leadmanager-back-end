@@ -1,4 +1,4 @@
-﻿using Application.Core.Contracts.Repository;
+﻿using Application.Core.Contracts.Repository.Prospecting;
 using Application.Prospecting.Leads.Commands.RegisterLead;
 using Application.Prospecting.Leads.IntegrationEvents.LeadBulkInserted;
 using Application.Prospecting.Leads.Shared;

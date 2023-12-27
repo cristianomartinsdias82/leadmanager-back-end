@@ -79,6 +79,8 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Domain", "src\libs\Domain\D
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Domain.Tests", "tests\unit-tests\Domain.Tests\Domain.Tests.csproj", "{093237FE-6479-42CC-9614-63257B8B532F}"
 EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "CrossCutting.EndUserCommunication", "src\libs\Cross-cutting\Cross-cutting.EndUserCommunication\CrossCutting.EndUserCommunication.csproj", "{390FC0F6-D208-433C-BCE6-0374B58AFA6D}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -189,6 +191,10 @@ Global
 		{093237FE-6479-42CC-9614-63257B8B532F}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{093237FE-6479-42CC-9614-63257B8B532F}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{093237FE-6479-42CC-9614-63257B8B532F}.Release|Any CPU.Build.0 = Release|Any CPU
+		{390FC0F6-D208-433C-BCE6-0374B58AFA6D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{390FC0F6-D208-433C-BCE6-0374B58AFA6D}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{390FC0F6-D208-433C-BCE6-0374B58AFA6D}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{390FC0F6-D208-433C-BCE6-0374B58AFA6D}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -229,6 +235,7 @@ Global
 		{DA755A6A-8B27-4DD4-8D8A-BD3800B31030} = {0E78EACF-F14D-4BA2-94A3-37B64AAE5277}
 		{2E4FAC1D-FC92-4ADF-9C4E-7F2711D0087D} = {7F65FF2B-CBA8-4E1D-93CD-8B6705B45FD2}
 		{093237FE-6479-42CC-9614-63257B8B532F} = {4DD5DB62-BEDF-44DB-B43C-4B99B185549F}
+		{390FC0F6-D208-433C-BCE6-0374B58AFA6D} = {0E78EACF-F14D-4BA2-94A3-37B64AAE5277}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {F5C96730-41C5-4999-9784-B64A284FE630}

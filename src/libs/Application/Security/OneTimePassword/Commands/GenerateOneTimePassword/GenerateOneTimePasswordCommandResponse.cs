@@ -1,0 +1,3 @@
+﻿namespace Application.Security.OneTimePassword.Commands.GenerateOneTimePassword;
+
+public sealed record GenerateOneTimePasswordCommandResponse(string OneTimePassword);

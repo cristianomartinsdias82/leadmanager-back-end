@@ -1,4 +1,4 @@
-﻿using Application.Core.Contracts.Repository;
+﻿using Application.Core.Contracts.Repository.Prospecting;
 using Application.Core.Contracts.Repository.Caching;
 using Application.Core.Contracts.Repository.UnitOfWork;
 using Application.Prospecting.Leads.Shared;
@@ -16,13 +16,13 @@ internal sealed class CachingLeadRepository : ILeadRepository, ICachingLeadRepos
     private readonly ILeadRepository _leadRepository;
     private readonly IUnitOfWork _unitOfWork;
     private readonly ICacheProvider _cacheProvider;
-    private readonly LeadsPolicy _leadsCachingPolicy;
+    private readonly LeadsCachingPolicy _leadsCachingPolicy;
 
     public CachingLeadRepository(
         ILeadRepository leadRepository,
         IUnitOfWork unitOfWork,
         ICacheProvider cacheProvider,
-        LeadsPolicy leadsCachingPolicy)
+        LeadsCachingPolicy leadsCachingPolicy)
     {
         _leadRepository = leadRepository;
         _unitOfWork = unitOfWork;

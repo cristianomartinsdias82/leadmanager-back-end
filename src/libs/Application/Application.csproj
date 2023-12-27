@@ -19,6 +19,7 @@
   <ItemGroup>
     <ProjectReference Include="..\Cross-cutting\Cross-cutting.Caching\CrossCutting.Caching.csproj" />
     <ProjectReference Include="..\Cross-cutting\Cross-cutting.Csv\CrossCutting.Csv.csproj" />
+    <ProjectReference Include="..\Cross-cutting\Cross-cutting.EndUserCommunication\CrossCutting.EndUserCommunication.csproj" />
     <ProjectReference Include="..\Cross-cutting\Cross-cutting.FileStorage\CrossCutting.FileStorage.csproj" />
     <ProjectReference Include="..\Cross-cutting\Cross-cutting.Logging\CrossCutting.Logging.csproj" />
     <ProjectReference Include="..\Cross-cutting\Cross-cutting.MessageContracts\CrossCutting.MessageContracts.csproj" />

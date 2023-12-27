@@ -1,7 +1,5 @@
-﻿using Application.Core.Contracts.Persistence;
-using Application.Core.Contracts.Repository;
+﻿using Application.Core.Contracts.Repository.Prospecting;
 using MediatR;
-using Microsoft.EntityFrameworkCore;
 using Shared.RequestHandling;
 using Shared.Results;
 

@@ -1,4 +1,4 @@
-﻿using Application.Core.Contracts.Repository;
+﻿using Application.Core.Contracts.Repository.Prospecting;
 using Domain.Prospecting.Entities;
 using MediatR;
 using Shared.DataPagination;
