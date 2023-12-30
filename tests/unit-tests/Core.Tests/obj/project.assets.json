@@ -80,28 +80,6 @@
           }
         }
       },
-      "CodeGeneration.Roslyn.Attributes/0.7.63": {
-        "type": "package",
-        "dependencies": {
-          "NETStandard.Library": "1.6.1"
-        },
-        "compile": {
-          "lib/netstandard1.0/CodeGeneration.Roslyn.Attributes.dll": {
-            "related": ".xml"
-          }
-        },
-        "runtime": {
-          "lib/netstandard1.0/CodeGeneration.Roslyn.Attributes.dll": {
-            "related": ".xml"
-          }
-        }
-      },
-      "CodeGeneration.Roslyn.Tool/0.7.63": {
-        "type": "package",
-        "build": {
-          "build/_._": {}
-        }
-      },
       "coverlet.collector/6.0.0": {
         "type": "package",
         "build": {
@@ -167,6 +145,23 @@
           }
         }
       },
+      "IdentityModel/4.4.0": {
+        "type": "package",
+        "dependencies": {
+          "Newtonsoft.Json": "11.0.2",
+          "System.Text.Encodings.Web": "4.7.0"
+        },
+        "compile": {
+          "lib/netstandard2.0/IdentityModel.dll": {
+            "related": ".pdb;.xml"
+          }
+        },
+        "runtime": {
+          "lib/netstandard2.0/IdentityModel.dll": {
+            "related": ".pdb;.xml"
+          }
+        }
+      },
       "LanguageExt.Core/4.4.3": {
         "type": "package",
         "dependencies": {
@@ -221,6 +216,25 @@
             "related": ".xml"
           }
         }
+      },
+      "Microsoft.AspNetCore.Authentication.JwtBearer/7.0.11": {
+        "type": "package",
+        "dependencies": {
+          "Microsoft.IdentityModel.Protocols.OpenIdConnect": "6.15.1"
+        },
+        "compile": {
+          "lib/net7.0/Microsoft.AspNetCore.Authentication.JwtBearer.dll": {
+            "related": ".xml"
+          }
+        },
+        "runtime": {
+          "lib/net7.0/Microsoft.AspNetCore.Authentication.JwtBearer.dll": {
+            "related": ".xml"
+          }
+        },
+        "frameworkReferences": [
+          "Microsoft.AspNetCore.App"
+        ]
       },
       "Microsoft.AspNetCore.Http.Abstractions/2.2.0": {
         "type": "package",
@@ -1281,6 +1295,19 @@
           "System.Xml.XDocument": "4.3.0"
         }
       },
+      "NewId/4.0.1": {
+        "type": "package",
+        "compile": {
+          "lib/net6.0/NewId.dll": {
+            "related": ".xml"
+          }
+        },
+        "runtime": {
+          "lib/net6.0/NewId.dll": {
+            "related": ".xml"
+          }
+        }
+      },
       "Newtonsoft.Json/13.0.1": {
         "type": "package",
         "compile": {
@@ -1779,32 +1806,6 @@
           "lib/net5.0/StackExchange.Redis.dll": {
             "related": ".xml"
           }
-        }
-      },
-      "StronglyTypedId/0.2.1": {
-        "type": "package",
-        "dependencies": {
-          "CodeGeneration.Roslyn.Tool": "0.7.63",
-          "StronglyTypedId.Attributes": "0.2.1",
-          "StronglyTypedId.Generator": "0.2.1"
-        }
-      },
-      "StronglyTypedId.Attributes/0.2.1": {
-        "type": "package",
-        "dependencies": {
-          "CodeGeneration.Roslyn.Attributes": "0.7.63"
-        },
-        "compile": {
-          "lib/netstandard2.0/StronglyTypedId.Attributes.dll": {}
-        },
-        "runtime": {
-          "lib/netstandard2.0/StronglyTypedId.Attributes.dll": {}
-        }
-      },
-      "StronglyTypedId.Generator/0.2.1": {
-        "type": "package",
-        "build": {
-          "build/_._": {}
         }
       },
       "System.AppContext/4.3.0": {
@@ -3352,7 +3353,9 @@
           "CrossCutting.Csv": "1.0.0",
           "CrossCutting.FileStorage": "1.0.0",
           "CrossCutting.Logging": "1.0.0",
+          "CrossCutting.MessageContracts": "1.0.0",
           "CrossCutting.Messaging": "1.0.0",
+          "CrossCutting.Security": "1.0.0",
           "FluentValidation": "11.5.2",
           "FluentValidation.DependencyInjectionExtensions": "11.5.2",
           "MediatR": "12.0.1",
@@ -3361,8 +3364,7 @@
           "Microsoft.Extensions.DependencyInjection.Abstractions": "7.0.0",
           "Microsoft.Extensions.Hosting.Abstractions": "7.0.0",
           "Shared": "1.0.0",
-          "ViaCep.ServiceClient": "1.0.0",
-          "protobuf-net": "3.2.26"
+          "ViaCep.ServiceClient": "1.0.0"
         },
         "compile": {
           "bin/placeholder/Application.dll": {}
@@ -3376,9 +3378,7 @@
         "framework": ".NETCoreApp,Version=v7.0",
         "dependencies": {
           "LanguageExt.Core": "4.4.3",
-          "Microsoft.Extensions.Logging.Abstractions": "7.0.0",
-          "Shared": "1.0.0",
-          "StronglyTypedId": "0.2.1"
+          "Shared": "1.0.0"
         },
         "compile": {
           "bin/placeholder/Core.dll": {}
@@ -3391,12 +3391,12 @@
         "type": "project",
         "framework": ".NETCoreApp,Version=v7.0",
         "dependencies": {
+          "CrossCutting.Serialization.ProtoBuf": "1.0.0",
           "Microsoft.Extensions.Caching.StackExchangeRedis": "7.0.10",
           "Microsoft.Extensions.Configuration.Abstractions": "7.0.0",
           "Microsoft.Extensions.Configuration.Binder": "7.0.4",
           "Microsoft.Extensions.DependencyInjection.Abstractions": "7.0.0",
-          "Polly": "7.2.4",
-          "protobuf-net": "3.2.26"
+          "Polly": "7.2.4"
         },
         "compile": {
           "bin/placeholder/CrossCutting.Caching.dll": {}
@@ -3454,15 +3454,31 @@
           "bin/placeholder/CrossCutting.Logging.dll": {}
         }
       },
+      "CrossCutting.MessageContracts/1.0.0": {
+        "type": "project",
+        "framework": ".NETCoreApp,Version=v7.0",
+        "dependencies": {
+          "Core": "1.0.0",
+          "protobuf-net.Core": "3.2.26"
+        },
+        "compile": {
+          "bin/placeholder/CrossCutting.MessageContracts.dll": {}
+        },
+        "runtime": {
+          "bin/placeholder/CrossCutting.MessageContracts.dll": {}
+        }
+      },
       "CrossCutting.Messaging/1.0.0": {
         "type": "project",
         "framework": ".NETCoreApp,Version=v7.0",
         "dependencies": {
+          "CrossCutting.Serialization.ProtoBuf": "1.0.0",
           "Microsoft.Extensions.Configuration.Abstractions": "7.0.0",
           "Microsoft.Extensions.Configuration.Binder": "7.0.4",
           "Microsoft.Extensions.DependencyInjection": "7.0.0",
           "Microsoft.Extensions.Hosting.Abstractions": "7.0.0",
           "Microsoft.Extensions.Logging.Abstractions": "7.0.1",
+          "Polly": "7.2.4",
           "RabbitMQ.Client": "6.5.0",
           "Shared": "1.0.0"
         },
@@ -3473,12 +3489,42 @@
           "bin/placeholder/CrossCutting.Messaging.dll": {}
         }
       },
+      "CrossCutting.Security/1.0.0": {
+        "type": "project",
+        "framework": ".NETCoreApp,Version=v7.0",
+        "dependencies": {
+          "IdentityModel": "4.4.0",
+          "Microsoft.AspNetCore.Authentication.JwtBearer": "7.0.11",
+          "Microsoft.Extensions.Configuration.Abstractions": "7.0.0",
+          "Microsoft.Extensions.DependencyInjection.Abstractions": "7.0.0"
+        },
+        "compile": {
+          "bin/placeholder/CrossCutting.Security.dll": {}
+        },
+        "runtime": {
+          "bin/placeholder/CrossCutting.Security.dll": {}
+        }
+      },
+      "CrossCutting.Serialization.ProtoBuf/1.0.0": {
+        "type": "project",
+        "framework": ".NETCoreApp,Version=v7.0",
+        "dependencies": {
+          "protobuf-net": "3.2.26"
+        },
+        "compile": {
+          "bin/placeholder/CrossCutting.Serialization.ProtoBuf.dll": {}
+        },
+        "runtime": {
+          "bin/placeholder/CrossCutting.Serialization.ProtoBuf.dll": {}
+        }
+      },
       "Shared/1.0.0": {
         "type": "project",
         "framework": ".NETCoreApp,Version=v7.0",
         "dependencies": {
           "FluentValidation": "11.5.2",
-          "MediatR": "12.0.1"
+          "MediatR": "12.0.1",
+          "NewId": "4.0.1"
         },
         "compile": {
           "bin/placeholder/Shared.dll": {}
@@ -3600,90 +3646,6 @@
         "lib/net6.0/Azure.Storage.Common.xml",
         "lib/netstandard2.0/Azure.Storage.Common.dll",
         "lib/netstandard2.0/Azure.Storage.Common.xml"
-      ]
-    },
-    "CodeGeneration.Roslyn.Attributes/0.7.63": {
-      "sha512": "0bJIHIUNVtJT7tih2oKJJ4GYL1+Btmk19vKZIyUHVEqyzT4eP7I6WtDJYqYhX4PhfNMXm2vXWta+y72rkioItg==",
-      "type": "package",
-      "path": "codegeneration.roslyn.attributes/0.7.63",
-      "files": [
-        ".nupkg.metadata",
-        ".signature.p7s",
-        "codegeneration.roslyn.attributes.0.7.63.nupkg.sha512",
-        "codegeneration.roslyn.attributes.nuspec",
-        "lib/net20/CodeGeneration.Roslyn.Attributes.dll",
-        "lib/net20/CodeGeneration.Roslyn.Attributes.xml",
-        "lib/net40/CodeGeneration.Roslyn.Attributes.dll",
-        "lib/net40/CodeGeneration.Roslyn.Attributes.xml",
-        "lib/netstandard1.0/CodeGeneration.Roslyn.Attributes.dll",
-        "lib/netstandard1.0/CodeGeneration.Roslyn.Attributes.xml"
-      ]
-    },
-    "CodeGeneration.Roslyn.Tool/0.7.63": {
-      "sha512": "vVDnx1LYkfU/idZqe76uUgEQD+yic3Kvft6gthwQaqKl66RnMvTTtuW0NxQ84RPrgpLvF+5rku43eVNZWuQ3aQ==",
-      "type": "package",
-      "path": "codegeneration.roslyn.tool/0.7.63",
-      "hasTools": true,
-      "files": [
-        ".nupkg.metadata",
-        ".signature.p7s",
-        "build/CodeGeneration.Roslyn.Tool.props",
-        "build/CodeGeneration.Roslyn.Tool.targets",
-        "build/ToolPath.props",
-        "codegeneration.roslyn.tool.0.7.63.nupkg.sha512",
-        "codegeneration.roslyn.tool.nuspec",
-        "tools/any/CodeGeneration.Roslyn.Attributes.dll",
-        "tools/any/CodeGeneration.Roslyn.Attributes.pdb",
-        "tools/any/CodeGeneration.Roslyn.Attributes.xml",
-        "tools/any/CodeGeneration.Roslyn.Engine.dll",
-        "tools/any/CodeGeneration.Roslyn.Engine.pdb",
-        "tools/any/CodeGeneration.Roslyn.Engine.xml",
-        "tools/any/CodeGeneration.Roslyn.Tool.deps.json",
-        "tools/any/CodeGeneration.Roslyn.Tool.dll",
-        "tools/any/CodeGeneration.Roslyn.Tool.pdb",
-        "tools/any/CodeGeneration.Roslyn.Tool.runtimeconfig.json",
-        "tools/any/CodeGeneration.Roslyn.Tool.xml",
-        "tools/any/CodeGeneration.Roslyn.dll",
-        "tools/any/CodeGeneration.Roslyn.pdb",
-        "tools/any/CodeGeneration.Roslyn.xml",
-        "tools/any/McMaster.NETCore.Plugins.dll",
-        "tools/any/Microsoft.Bcl.AsyncInterfaces.dll",
-        "tools/any/Microsoft.CodeAnalysis.CSharp.dll",
-        "tools/any/Microsoft.CodeAnalysis.dll",
-        "tools/any/Microsoft.DotNet.PlatformAbstractions.dll",
-        "tools/any/Microsoft.Extensions.DependencyModel.dll",
-        "tools/any/System.Runtime.CompilerServices.Unsafe.dll",
-        "tools/any/System.Text.Encoding.CodePages.dll",
-        "tools/any/System.Text.Encodings.Web.dll",
-        "tools/any/System.Text.Json.dll",
-        "tools/any/Validation.dll",
-        "tools/any/cs/Microsoft.CodeAnalysis.CSharp.resources.dll",
-        "tools/any/cs/Microsoft.CodeAnalysis.resources.dll",
-        "tools/any/de/Microsoft.CodeAnalysis.CSharp.resources.dll",
-        "tools/any/de/Microsoft.CodeAnalysis.resources.dll",
-        "tools/any/es/Microsoft.CodeAnalysis.CSharp.resources.dll",
-        "tools/any/es/Microsoft.CodeAnalysis.resources.dll",
-        "tools/any/fr/Microsoft.CodeAnalysis.CSharp.resources.dll",
-        "tools/any/fr/Microsoft.CodeAnalysis.resources.dll",
-        "tools/any/it/Microsoft.CodeAnalysis.CSharp.resources.dll",
-        "tools/any/it/Microsoft.CodeAnalysis.resources.dll",
-        "tools/any/ja/Microsoft.CodeAnalysis.CSharp.resources.dll",
-        "tools/any/ja/Microsoft.CodeAnalysis.resources.dll",
-        "tools/any/ko/Microsoft.CodeAnalysis.CSharp.resources.dll",
-        "tools/any/ko/Microsoft.CodeAnalysis.resources.dll",
-        "tools/any/pl/Microsoft.CodeAnalysis.CSharp.resources.dll",
-        "tools/any/pl/Microsoft.CodeAnalysis.resources.dll",
-        "tools/any/pt-BR/Microsoft.CodeAnalysis.CSharp.resources.dll",
-        "tools/any/pt-BR/Microsoft.CodeAnalysis.resources.dll",
-        "tools/any/ru/Microsoft.CodeAnalysis.CSharp.resources.dll",
-        "tools/any/ru/Microsoft.CodeAnalysis.resources.dll",
-        "tools/any/runtimes/win/lib/netcoreapp2.0/System.Text.Encoding.CodePages.dll",
-        "tools/any/tr/Microsoft.CodeAnalysis.CSharp.resources.dll",
-        "tools/any/tr/Microsoft.CodeAnalysis.resources.dll",
-        "tools/any/zh-Hans/Microsoft.CodeAnalysis.CSharp.resources.dll",
-        "tools/any/zh-Hans/Microsoft.CodeAnalysis.resources.dll",
-        "tools/any/zh-Hant/Microsoft.CodeAnalysis.CSharp.resources.dll",
-        "tools/any/zh-Hant/Microsoft.CodeAnalysis.resources.dll"
       ]
     },
     "coverlet.collector/6.0.0": {
@@ -3833,6 +3795,27 @@
         "lib/netstandard2.1/FluentValidation.DependencyInjectionExtensions.xml"
       ]
     },
+    "IdentityModel/4.4.0": {
+      "sha512": "b18wrIx5wnZlMxAX7oVsE+nDtAJ4hajYlH0xPlaRvo4r/fz08K6pPeZvbiqS9nfNbzfIgLFmNX+FL9qR9ZR5PA==",
+      "type": "package",
+      "path": "identitymodel/4.4.0",
+      "files": [
+        ".nupkg.metadata",
+        ".signature.p7s",
+        "icon.jpg",
+        "identitymodel.4.4.0.nupkg.sha512",
+        "identitymodel.nuspec",
+        "lib/net461/IdentityModel.dll",
+        "lib/net461/IdentityModel.pdb",
+        "lib/net461/IdentityModel.xml",
+        "lib/net472/IdentityModel.dll",
+        "lib/net472/IdentityModel.pdb",
+        "lib/net472/IdentityModel.xml",
+        "lib/netstandard2.0/IdentityModel.dll",
+        "lib/netstandard2.0/IdentityModel.pdb",
+        "lib/netstandard2.0/IdentityModel.xml"
+      ]
+    },
     "LanguageExt.Core/4.4.3": {
       "sha512": "N+txHYfiDi7+qRaVmZSO8YCdbhDvabm5CMiFn+qgW4QVx4vDcyysNI70DsuOlSeIgvhsodWY+9AcY86Zp7yIJQ==",
       "type": "package",
@@ -3875,6 +3858,21 @@
         "lib/netstandard2.0/MediatR.Contracts.xml",
         "mediatr.contracts.2.0.1.nupkg.sha512",
         "mediatr.contracts.nuspec"
+      ]
+    },
+    "Microsoft.AspNetCore.Authentication.JwtBearer/7.0.11": {
+      "sha512": "xFLgrIjh9DsfSpSRmfb8PWswYSLxkdU/3y2d3yrSA9v+sajnqYP2BARKrxZlO/RlKKMboosAIYP2MajPJilv5w==",
+      "type": "package",
+      "path": "microsoft.aspnetcore.authentication.jwtbearer/7.0.11",
+      "files": [
+        ".nupkg.metadata",
+        ".signature.p7s",
+        "Icon.png",
+        "THIRD-PARTY-NOTICES.TXT",
+        "lib/net7.0/Microsoft.AspNetCore.Authentication.JwtBearer.dll",
+        "lib/net7.0/Microsoft.AspNetCore.Authentication.JwtBearer.xml",
+        "microsoft.aspnetcore.authentication.jwtbearer.7.0.11.nupkg.sha512",
+        "microsoft.aspnetcore.authentication.jwtbearer.nuspec"
       ]
     },
     "Microsoft.AspNetCore.Http.Abstractions/2.2.0": {
@@ -5228,6 +5226,21 @@
         "netstandard.library.nuspec"
       ]
     },
+    "NewId/4.0.1": {
+      "sha512": "jegBasNndmG21G3BmT51suFDCIz/sLN81j+IxmkZ4iWoaDi8LygeHiyNnYbXz5OQh9nCRJFIx1+PJrlYi1Gc9Q==",
+      "type": "package",
+      "path": "newid/4.0.1",
+      "files": [
+        ".nupkg.metadata",
+        ".signature.p7s",
+        "lib/net6.0/NewId.dll",
+        "lib/net6.0/NewId.xml",
+        "lib/netstandard2.0/NewId.dll",
+        "lib/netstandard2.0/NewId.xml",
+        "newid.4.0.1.nupkg.sha512",
+        "newid.nuspec"
+      ]
+    },
     "Newtonsoft.Json/13.0.1": {
       "sha512": "ppPFpBcvxdsfUonNcvITKqLl3bqxWbDCZIzDWHzjpdAHRFfZe0Dw9HmA0+za13IdyrgJwpkDTDA9fHaxOrt20A==",
       "type": "package",
@@ -5877,48 +5890,6 @@
         "lib/netstandard2.0/StackExchange.Redis.xml",
         "stackexchange.redis.2.2.4.nupkg.sha512",
         "stackexchange.redis.nuspec"
-      ]
-    },
-    "StronglyTypedId/0.2.1": {
-      "sha512": "u4iIugBvaBiV1NXAS+jBkxDp+VyNFzgOzeRBgQx9QAtKmwFmOh6bOFt9Ac25XCcfhTvp8OT4eLCmCPAUPObIxg==",
-      "type": "package",
-      "path": "stronglytypedid/0.2.1",
-      "files": [
-        ".nupkg.metadata",
-        ".signature.p7s",
-        "stronglytypedid.0.2.1.nupkg.sha512",
-        "stronglytypedid.nuspec"
-      ]
-    },
-    "StronglyTypedId.Attributes/0.2.1": {
-      "sha512": "8fv1kZxwmFTf2oPaIG9XF1o3obOwa2ZaCFfYAE3u+stqWHtJ3ECsJdpzQh0ST661TnfG8/iDm+xS8ZO4C2rEeQ==",
-      "type": "package",
-      "path": "stronglytypedid.attributes/0.2.1",
-      "files": [
-        ".nupkg.metadata",
-        ".signature.p7s",
-        "lib/netstandard1.0/StronglyTypedId.Attributes.dll",
-        "lib/netstandard2.0/StronglyTypedId.Attributes.dll",
-        "stronglytypedid.attributes.0.2.1.nupkg.sha512",
-        "stronglytypedid.attributes.nuspec"
-      ]
-    },
-    "StronglyTypedId.Generator/0.2.1": {
-      "sha512": "3qJP96Paz7LqYyhwFGLHBlHfxZe9AHLvvHYGpxzWfKudgo7dJPgpOwQHclTW/lzefOTw81exXCAkA/tSFU5uAg==",
-      "type": "package",
-      "path": "stronglytypedid.generator/0.2.1",
-      "hasTools": true,
-      "files": [
-        ".nupkg.metadata",
-        ".signature.p7s",
-        "build/StronglyTypedId.Generator.props",
-        "build/StronglyTypedId.Generator.targets",
-        "stronglytypedid.generator.0.2.1.nupkg.sha512",
-        "stronglytypedid.generator.nuspec",
-        "tools/netcoreapp2.1/any/CodeGeneration.Roslyn.Attributes.dll",
-        "tools/netcoreapp2.1/any/StronglyTypedId.Attributes.dll",
-        "tools/netcoreapp2.1/any/StronglyTypedId.Generator.deps.json",
-        "tools/netcoreapp2.1/any/StronglyTypedId.Generator.dll"
       ]
     },
     "System.AppContext/4.3.0": {
@@ -10057,10 +10028,25 @@
       "path": "../../../src/libs/Cross-cutting/Cross-cutting.Logging/CrossCutting.Logging.csproj",
       "msbuildProject": "../../../src/libs/Cross-cutting/Cross-cutting.Logging/CrossCutting.Logging.csproj"
     },
+    "CrossCutting.MessageContracts/1.0.0": {
+      "type": "project",
+      "path": "../../../src/libs/Cross-cutting/Cross-cutting.MessageContracts/CrossCutting.MessageContracts.csproj",
+      "msbuildProject": "../../../src/libs/Cross-cutting/Cross-cutting.MessageContracts/CrossCutting.MessageContracts.csproj"
+    },
     "CrossCutting.Messaging/1.0.0": {
       "type": "project",
       "path": "../../../src/libs/Cross-cutting/Cross-cutting.Messaging/CrossCutting.Messaging.csproj",
       "msbuildProject": "../../../src/libs/Cross-cutting/Cross-cutting.Messaging/CrossCutting.Messaging.csproj"
+    },
+    "CrossCutting.Security/1.0.0": {
+      "type": "project",
+      "path": "../../../src/libs/Cross-cutting/Cross-cutting.Security/CrossCutting.Security.csproj",
+      "msbuildProject": "../../../src/libs/Cross-cutting/Cross-cutting.Security/CrossCutting.Security.csproj"
+    },
+    "CrossCutting.Serialization.ProtoBuf/1.0.0": {
+      "type": "project",
+      "path": "../../../src/libs/Cross-cutting/Cross-cutting.Serialization.ProtoBuf/CrossCutting.Serialization.ProtoBuf.csproj",
+      "msbuildProject": "../../../src/libs/Cross-cutting/Cross-cutting.Serialization.ProtoBuf/CrossCutting.Serialization.ProtoBuf.csproj"
     },
     "Shared/1.0.0": {
       "type": "project",
@@ -10096,11 +10082,11 @@
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "F:\\Codebase\\_.NET Solutions\\Core\\7.x\\LeadManager_PactoEnergiaExamTest\\backend\\src\\LeadManager\\tests\\unit-tests\\Core.Tests\\Core.Tests.csproj",
+      "projectUniqueName": "F:\\Codebase\\_.NET Solutions\\Core\\7.x\\LeadManager\\backend\\src\\LeadManager\\tests\\unit-tests\\Core.Tests\\Core.Tests.csproj",
       "projectName": "Core.Tests",
-      "projectPath": "F:\\Codebase\\_.NET Solutions\\Core\\7.x\\LeadManager_PactoEnergiaExamTest\\backend\\src\\LeadManager\\tests\\unit-tests\\Core.Tests\\Core.Tests.csproj",
+      "projectPath": "F:\\Codebase\\_.NET Solutions\\Core\\7.x\\LeadManager\\backend\\src\\LeadManager\\tests\\unit-tests\\Core.Tests\\Core.Tests.csproj",
       "packagesPath": "C:\\Users\\rblac\\.nuget\\packages\\",
-      "outputPath": "F:\\Codebase\\_.NET Solutions\\Core\\7.x\\LeadManager_PactoEnergiaExamTest\\backend\\src\\LeadManager\\tests\\unit-tests\\Core.Tests\\obj\\",
+      "outputPath": "F:\\Codebase\\_.NET Solutions\\Core\\7.x\\LeadManager\\backend\\src\\LeadManager\\tests\\unit-tests\\Core.Tests\\obj\\",
       "projectStyle": "PackageReference",
       "fallbackFolders": [
         "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages"
@@ -10123,11 +10109,11 @@
         "net7.0": {
           "targetAlias": "net7.0",
           "projectReferences": {
-            "F:\\Codebase\\_.NET Solutions\\Core\\7.x\\LeadManager_PactoEnergiaExamTest\\backend\\src\\LeadManager\\src\\libs\\Core\\Core.csproj": {
-              "projectPath": "F:\\Codebase\\_.NET Solutions\\Core\\7.x\\LeadManager_PactoEnergiaExamTest\\backend\\src\\LeadManager\\src\\libs\\Core\\Core.csproj"
+            "F:\\Codebase\\_.NET Solutions\\Core\\7.x\\LeadManager\\backend\\src\\LeadManager\\src\\libs\\Core\\Core.csproj": {
+              "projectPath": "F:\\Codebase\\_.NET Solutions\\Core\\7.x\\LeadManager\\backend\\src\\LeadManager\\src\\libs\\Core\\Core.csproj"
             },
-            "F:\\Codebase\\_.NET Solutions\\Core\\7.x\\LeadManager_PactoEnergiaExamTest\\backend\\src\\LeadManager\\tests\\common\\Tests.Common\\Tests.Common.csproj": {
-              "projectPath": "F:\\Codebase\\_.NET Solutions\\Core\\7.x\\LeadManager_PactoEnergiaExamTest\\backend\\src\\LeadManager\\tests\\common\\Tests.Common\\Tests.Common.csproj"
+            "F:\\Codebase\\_.NET Solutions\\Core\\7.x\\LeadManager\\backend\\src\\LeadManager\\tests\\common\\Tests.Common\\Tests.Common.csproj": {
+              "projectPath": "F:\\Codebase\\_.NET Solutions\\Core\\7.x\\LeadManager\\backend\\src\\LeadManager\\tests\\common\\Tests.Common\\Tests.Common.csproj"
             }
           }
         }
@@ -10183,7 +10169,7 @@
             "privateAssets": "all"
           }
         },
-        "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\7.0.400\\RuntimeIdentifierGraph.json"
+        "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\7.0.402\\RuntimeIdentifierGraph.json"
       }
     }
   }

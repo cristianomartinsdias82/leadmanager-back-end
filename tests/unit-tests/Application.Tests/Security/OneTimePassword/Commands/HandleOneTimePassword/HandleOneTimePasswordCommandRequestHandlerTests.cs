@@ -2,7 +2,6 @@
 using Application.Core.Contracts.Repository.Security;
 using Application.Security.OneTimePassword.Commands.GenerateOneTimePassword;
 using Application.Security.OneTimePassword.Commands.HandleOneTimePassword;
-using CrossCutting.EndUserCommunication.Sms;
 using FluentAssertions;
 using MediatR;
 using NSubstitute;
@@ -23,12 +22,11 @@ public sealed class HandleOneTimePasswordCommandRequestHandlerTests
     private readonly IMediator _mediator = Substitute.For<IMediator>();
     private readonly OneTimePasswordCachingPolicy _oneTimePasswordCachingPolicy = new(ExpirationTimeInSeconds, ExpirationTimeOffsetInSeconds, TtlInSeconds);
     private readonly IOneTimePasswordRepository _oneTimePasswordRepository = Substitute.For<IOneTimePasswordRepository>();
-    private readonly ISmsDeliveryService _smsDeliveryService = Substitute.For<ISmsDeliveryService>();
     private readonly CancellationTokenSource _cts = new();
 
     public HandleOneTimePasswordCommandRequestHandlerTests()
     {
-        _handler = new(_oneTimePasswordCachingPolicy, _mediator, _oneTimePasswordRepository, _smsDeliveryService);
+        _handler = new(_oneTimePasswordCachingPolicy, _mediator, _oneTimePasswordRepository);
     }
 
     ~HandleOneTimePasswordCommandRequestHandlerTests()
@@ -47,8 +45,6 @@ public sealed class HandleOneTimePasswordCommandRequestHandlerTests
         };
         _mediator.Send(Arg.Any<GenerateOneTimePasswordCommandRequest>(), _cts.Token)
                 .Returns(ApplicationResponse<GenerateOneTimePasswordCommandResponse>.Create(new(ExpectedGeneratedCode), operationCode: OperationCodes.Successful));
-        _smsDeliveryService.SendAsync(Arg.Any<string>(), _cts.Token)
-                           .Returns(Task.CompletedTask);
 
         //Act
         var result = await _handler.Handle(request, _cts.Token);
@@ -60,9 +56,6 @@ public sealed class HandleOneTimePasswordCommandRequestHandlerTests
         result.Data.Should().BeOfType<HandleOneTimePasswordCommandResponse>();
         result.Data.Result.Should().Be(OneTimePasswordHandlingOperationResult.CodeGeneratedSuccessfully);
         await _oneTimePasswordRepository.Received(1).SaveAsync(Arg.Any<OneTimePasswordDto>(), _cts.Token);
-        await _smsDeliveryService
-                .Received(1)
-                .SendAsync(Arg.Any<string>(), _cts.Token);
     }
 
     [Fact]
@@ -108,9 +101,6 @@ public sealed class HandleOneTimePasswordCommandRequestHandlerTests
         await _oneTimePasswordRepository
                 .Received(0)
                 .SaveAsync(Arg.Any<OneTimePasswordDto>(), _cts.Token);
-        await _smsDeliveryService
-                .Received(0)
-                .SendAsync(Arg.Any<string>(), _cts.Token);
     }
 
     [Theory]
@@ -158,9 +148,6 @@ public sealed class HandleOneTimePasswordCommandRequestHandlerTests
         await _oneTimePasswordRepository
                 .Received(0)
                 .SaveAsync(Arg.Any<OneTimePasswordDto>(), _cts.Token);
-        await _smsDeliveryService
-                .Received(0)
-                .SendAsync(Arg.Any<string>(), _cts.Token);
     }
 
     [Fact]
@@ -203,8 +190,5 @@ public sealed class HandleOneTimePasswordCommandRequestHandlerTests
         await _oneTimePasswordRepository
                 .Received(0)
                 .SaveAsync(Arg.Any<OneTimePasswordDto>(), _cts.Token);
-        await _smsDeliveryService
-                .Received(0)
-                .SendAsync(Arg.Any<string>(), _cts.Token);
     }
 }

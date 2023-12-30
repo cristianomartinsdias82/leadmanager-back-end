@@ -1,7 +1,10 @@
 ﻿using Application.Core.Contracts.Repository.Security;
+using Application.Security.OneTimePassword.IntegrationEvents.OneTimePasswordGenerated;
+using CrossCutting.EndUserCommunication.Sms;
 using CrossCutting.Security.IAM;
 using CrossCutting.Security.Secrecy;
 using MediatR;
+using Shared.Events.EventDispatching;
 using Shared.RequestHandling;
 using Shared.Results;
 
@@ -17,7 +20,8 @@ public sealed class GenerateOneTimePasswordCommandRequestHandler : ApplicationRe
         IMediator mediator,
         IUserService userService,
         ISecretGenerationService secretGeneratorService,
-        IOneTimePasswordRepository oneTimePasswordRepository) : base(mediator, default!)
+        IOneTimePasswordRepository oneTimePasswordRepository,
+        IEventDispatching eventDispatcher) : base(mediator, eventDispatcher)
     {
         _oneTimePasswordRepository = oneTimePasswordRepository;
         _userService = userService;
@@ -35,9 +39,13 @@ public sealed class GenerateOneTimePasswordCommandRequestHandler : ApplicationRe
             includeSpecialCharacters: false,
             cancellationToken);
 
+        var userId = _userService.GetUserId()!.Value;
+
         await _oneTimePasswordRepository.SaveAsync(
-            new(_userService.GetUserId()!.Value, request.Resource, DateTime.UtcNow, code),
+            new(userId, request.Resource, DateTime.UtcNow, code),
             cancellationToken);
+
+        AddEvent(new OneTimePasswordGeneratedIntegrationEvent(userId, request.Resource, code));
 
         return ApplicationResponse<GenerateOneTimePasswordCommandResponse>.Create(new(code));
     }
