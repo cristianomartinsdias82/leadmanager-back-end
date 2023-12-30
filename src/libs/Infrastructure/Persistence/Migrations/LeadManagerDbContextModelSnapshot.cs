@@ -17,12 +17,13 @@ namespace Infrastructure.Persistence.Migrations
         {
 #pragma warning disable 612, 618
             modelBuilder
+                .HasDefaultSchema("Prospecting")
                 .HasAnnotation("ProductVersion", "7.0.8")
                 .HasAnnotation("Relational:MaxIdentifierLength", 128);
 
             SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder);
 
-            modelBuilder.Entity("Core.Entities.Lead", b =>
+            modelBuilder.Entity("Domain.Prospecting.Entities.Lead", b =>
                 {
                     b.Property<Guid>("Id")
                         .HasColumnType("uniqueidentifier");
@@ -98,7 +99,7 @@ namespace Infrastructure.Persistence.Migrations
                     b.HasIndex(new[] { "RazaoSocial" }, "IX_Leads_RazaoSocial")
                         .IsUnique();
 
-                    b.ToTable("Leads", (string)null);
+                    b.ToTable("Leads", "Prospecting");
                 });
 #pragma warning restore 612, 618
         }

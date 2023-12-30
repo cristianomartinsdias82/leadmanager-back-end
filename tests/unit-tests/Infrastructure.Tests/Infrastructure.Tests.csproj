@@ -27,7 +27,6 @@
   <ItemGroup>
     <ProjectReference Include="..\..\..\src\libs\Infrastructure\Infrastructure.csproj" />
     <ProjectReference Include="..\..\common\Tests.Common\Tests.Common.csproj" />
-    <ProjectReference Include="..\Shared.Tests\Shared.Tests.csproj" />
   </ItemGroup>
 
 </Project>

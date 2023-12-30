@@ -1,4 +1,4 @@
-﻿using Core.BusinessExceptions;
+﻿using Domain.Prospecting.Exceptions;
 using Infrastructure.Persistence.Mappings;
 using Microsoft.EntityFrameworkCore;
 using Shared.Results;
@@ -56,6 +56,8 @@ public sealed class RequestHandlingMiddleware
             if (message.Contains(LeadEntityMetadata.RazaoSocialColumnIndexName))
                 inconsistencies.Add(new(string.Empty, "Razão Social existente."));
 
+            _logger.LogInformation(exc, "Db update exception: {Message}", message);
+
             return;
         }
 
@@ -63,9 +65,15 @@ public sealed class RequestHandlingMiddleware
         {
             inconsistencies.Add(new(string.Empty, exc.Message));
 
+            _logger.LogInformation(exc, "Business exception: {Message}", exc.Message);
+
             return;
         }
 
-        _logger.LogError(exc, "An error occurred while attempting to process the request.");
+        _logger.LogError(
+            exc,
+            "An error occurred while attempting to process the request: {Message} {@Exception}",
+            exc.Message,
+            exc);
     }
 }

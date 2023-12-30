@@ -1,4 +1,4 @@
-﻿using Application.Features.Leads.Commands.UpdateLead;
+﻿using Application.Prospecting.Leads.Commands.UpdateLead;
 
 namespace Tests.Common.ObjectMothers.Application;
 
@@ -78,17 +78,19 @@ public class UpdateLeadCommandRequestMother
 
     public static UpdateLeadCommandRequest XptoIncLeadRequest()
     {
-        var xptoInc = RegisterLeadCommandRequestMother.XptoIncLeadRequest();
+        var newId = Guid.NewGuid();
+
         return Instance
-            .WithId()
-            .WithRazaoSocial(xptoInc.RazaoSocial!)
-            .WithCep(xptoInc.Cep!)
-            .WithEndereco(xptoInc.Endereco!)
-            .WithBairro(xptoInc.Bairro!)
-            .WithCidade(xptoInc.Cidade!)
-            .WithEstado(xptoInc.Estado!)
-            .WithNumero(xptoInc.Numero!)
-            .WithComplemento(xptoInc.Complemento!)
+            .WithId(newId)
+            .WithRazaoSocial("Xpto Inc. LLC")
+            .WithCep("01234-567")
+            .WithEndereco("Rua das Pitombeiras")
+            .WithBairro("Vila Alexandria")
+            .WithCidade("São Paulo")
+            .WithEstado("SP")
+            .WithNumero("287")
+            .WithComplemento("Bloco C")
+            .WithRowVersion(newId.ToByteArray())
             .Build();
     }
 }

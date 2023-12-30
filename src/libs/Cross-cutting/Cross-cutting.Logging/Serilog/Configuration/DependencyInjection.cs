@@ -50,6 +50,12 @@ public static class DependencyInjection
                             new SqlColumn { AllowNull = true, DataType = SqlDbType.VarChar, ColumnName = "Payload", DataLength = -1 },
                         }
                     });
+
+            if (loggingSettings.SeqIngestionSink.Enabled)
+                loggerConfiguration.WriteTo.Seq(
+                    serverUrl: loggingSettings.SeqIngestionSink.ServerUrl,
+                    restrictedToMinimumLevel: ParseLogEvent(loggingSettings.SeqIngestionSink.LoggingLevel)
+                );
         });
 
     private static LogEventLevel ParseLogEvent(string logLevel)

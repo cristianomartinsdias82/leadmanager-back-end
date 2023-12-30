@@ -33,7 +33,7 @@ public static class EnumerableExtensions
     public static PagedList<TOutput> ToPagedList<T, TOutput>(
         this IEnumerable<T> items,
         PaginationOptions paginationOptions,
-        Func<IEnumerable<T>, IEnumerable<TOutput>> map)
+        Func<T, TOutput> map)
         => PagedList<T>.Paginate(items, paginationOptions, map);
 
     public static PagedList<T> ToSortedPagedList<T>(
@@ -50,7 +50,7 @@ public static class EnumerableExtensions
         string sortColumn,
         ListSortDirection sortDirection,
         PaginationOptions paginationOptions,
-        Func<IEnumerable<T>, IEnumerable<TOutput>> map)
+        Func<T, TOutput> map)
         => items
             .ToSortedList(sortColumn, sortDirection)
             .ToPagedList(paginationOptions, map);

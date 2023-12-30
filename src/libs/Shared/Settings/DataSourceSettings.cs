@@ -3,5 +3,7 @@
 public sealed record DataSourceSettings
 (
     string ConnectionString,
-    int RetryOperationMaxCount
+    int RetryOperationMaxCount,
+    int HealthCheckingTimeoutInSecs,
+    string? DatabaseName
 );

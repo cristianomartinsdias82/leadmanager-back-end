@@ -3,33 +3,12 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Cors.Infrastructure;
 using Microsoft.OpenApi.Models;
 using Swashbuckle.AspNetCore.SwaggerGen;
+using static Application.Security.LeadManagerSecurityConfiguration;
 
 namespace LeadManagerApi.Core.Configuration.Security;
 
 internal static class LeadManagerApiSecurityConfiguration
 {
-    public static class Policies
-    {
-        public const string LeadManagerDefaultPolicy = "LeadManagerDefaultPolicy";
-        public const string LeadManagerRemovePolicy = "LeadManagerRemovePolicy";
-        public const string LeadManagerCorsPolicy = "LeadWebAppCorsPolicy";
-    }
-
-    private static class Roles
-    {
-        public const string Administrators = "Administrators";
-    }
-
-    public static class Claims
-    {
-        public const string LDM = "ldm";
-        public const string Read = "leadmanager.read";
-        public const string Insert = "leadmanager.insert";
-        public const string BulkInsert = "leadmanager.bulk_insert";
-        public const string Update = "leadmanager.update";
-        public const string Delete = "leadmanager.delete";
-    }
-
     public static void SetPermissionPolicies(AuthorizationOptions policyOptions)
     {
         policyOptions.AddPolicy(Policies.LeadManagerDefaultPolicy, policy =>
@@ -37,12 +16,12 @@ internal static class LeadManagerApiSecurityConfiguration
             policy.AddAuthenticationSchemes(JwtBearerDefaults.AuthenticationScheme);
             policy.RequireAuthenticatedUser();
             policy.RequireClaim(
-                Claims.LDM,
-                Claims.Read,
-                Claims.BulkInsert,
-                Claims.Insert,
-                Claims.Update,
-                Claims.Delete);
+                ClaimTypes.LDM,
+                Permissions.Read,
+                Permissions.BulkInsert,
+                Permissions.Insert,
+                Permissions.Update,
+                Permissions.Delete);
         });
 
         policyOptions.AddPolicy(Policies.LeadManagerRemovePolicy, policy =>
@@ -50,7 +29,7 @@ internal static class LeadManagerApiSecurityConfiguration
             policy.AddAuthenticationSchemes(JwtBearerDefaults.AuthenticationScheme);
             policy.RequireAuthenticatedUser();
             policy.RequireRole(Roles.Administrators);
-            policy.RequireClaim(Claims.LDM, Claims.Delete);
+            policy.RequireClaim(ClaimTypes.LDM, Permissions.Delete);
         });
     }
 

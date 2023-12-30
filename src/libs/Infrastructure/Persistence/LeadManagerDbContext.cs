@@ -1,5 +1,7 @@
-﻿using Application.Contracts.Persistence;
-using Core.Entities;
+﻿using Application.Core.Contracts.Persistence;
+using CrossCutting.Security.IAM;
+using Domain.Core;
+using Domain.Prospecting.Entities;
 using Infrastructure.Persistence.Mappings;
 using Microsoft.EntityFrameworkCore;
 
@@ -7,12 +9,21 @@ namespace Infrastructure.Persistence;
 
 public sealed class LeadManagerDbContext : DbContext, ILeadManagerDbContext
 {
-    public LeadManagerDbContext(DbContextOptions<LeadManagerDbContext> options) : base(options) { }
+    private readonly IUserService _userService;
+
+    public LeadManagerDbContext(
+        DbContextOptions<LeadManagerDbContext> options,
+        IUserService userService) : base(options)
+    {
+        _userService = userService;
+    }
 
     public DbSet<Lead> Leads { get; set; }
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
+        modelBuilder.HasDefaultSchema(LeadEntityMetadata.DatabaseSchemaName);
+
         modelBuilder.ApplyConfigurationsFromAssembly(typeof(LeadManagerDbContext).Assembly);
 
         modelBuilder.Entity<Lead>()
@@ -31,7 +42,10 @@ public sealed class LeadManagerDbContext : DbContext, ILeadManagerDbContext
 
     public override async Task<int> SaveChangesAsync(CancellationToken cancellationToken = default)
     {
-        var currentUserId = Guid.NewGuid();//TODO: iamService.GetUserId();
+        var userId = _userService.GetUserId();
+        if (userId is null)
+            throw new InvalidProgramException();
+
         var now = DateTimeOffset.UtcNow;
 
         //https://codewithmukesh.com/blog/audit-trail-implementation-in-aspnet-core/
@@ -45,7 +59,7 @@ public sealed class LeadManagerDbContext : DbContext, ILeadManagerDbContext
                     {
                         var auditableEntity = (IAuditableEntity)entry.Entity;
                         auditableEntity.CreatedAt = now;
-                        auditableEntity.CreatedUserId = currentUserId;
+                        auditableEntity.CreatedUserId = userId.Value;
 
                         break;
                     }
@@ -53,7 +67,7 @@ public sealed class LeadManagerDbContext : DbContext, ILeadManagerDbContext
                     {
                         var auditableEntity = (IAuditableEntity)entry.Entity;
                         auditableEntity.UpdatedAt = now;
-                        auditableEntity.UpdatedUserId = currentUserId;
+                        auditableEntity.UpdatedUserId = userId;
 
                         break;
                     }

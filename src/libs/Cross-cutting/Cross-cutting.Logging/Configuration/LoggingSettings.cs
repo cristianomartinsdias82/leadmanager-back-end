@@ -10,4 +10,5 @@ public record LoggingSettings
     public DatabaseSinkLoggingSettings DatabaseSink { get; init; } = default!;
     public ConsoleSinkLoggingSettings ConsoleSink { get; init; } = default!;
     public FileSinkLoggingSettings FileSink { get; init; } = default!;
+    public SeqIngestionSinkLoggingSettings SeqIngestionSink { get; init; } = default!;
 }

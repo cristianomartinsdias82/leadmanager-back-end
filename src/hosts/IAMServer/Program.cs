@@ -1,5 +1,7 @@
+using HealthChecks.UI.Client;
 using IAMServer.Clients.LeadWebApp.Security;
 using IAMServer.Core.Configuration;
+using Microsoft.AspNetCore.Diagnostics.HealthChecks;
 
 namespace IAMServer;
 
@@ -15,11 +17,15 @@ public class Program
 
         var app = builder.Build();
 
-        // Configure the Authorization Server HTTP request pipeline.
-
+        // Configure the HTTP request pipeline.
         app.UseStaticFiles(); // <<< I had to add it manually
 
         app.UseHttpsRedirection();
+
+        app.MapHealthChecks("/_health", new HealthCheckOptions
+        {
+            ResponseWriter = UIResponseWriter.WriteHealthCheckUIResponse
+        });
 
         app.UseCors(LeadManagerAppConstants.CorsPolicyName); // <<< I had to add it manually
 

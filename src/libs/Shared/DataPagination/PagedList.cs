@@ -1,4 +1,6 @@
-﻿namespace Shared.DataPagination;
+﻿using System;
+
+namespace Shared.DataPagination;
 
 public struct PagedList<T>
 {
@@ -7,6 +9,19 @@ public struct PagedList<T>
     public int ItemCount { get; init; }
     public bool HasNextPage { get; init; }
     public bool HasPreviousPage { get; init; }
+
+    public PagedList<TOther> MapPage<TOther>(Func<T, TOther> map)
+        => new()
+        {
+            ItemCount = ItemCount,
+            PageCount = PageCount,
+            Items = Items.Select(map).ToList(),
+            HasPreviousPage = HasPreviousPage,
+            HasNextPage = HasNextPage
+        };
+
+    public static PagedList<TOutput> Paginate<TOutput>(IEnumerable<T> items, PaginationOptions paginationOptions, Func<T, TOutput> map)
+        => PagedList<TOutput>.Paginate(items.Select(map), paginationOptions);
 
     public static PagedList<T> Paginate(IEnumerable<T> items, PaginationOptions paginationOptions)
     {
@@ -24,9 +39,6 @@ public struct PagedList<T>
             HasNextPage = paginationOptions.Page < pageCount
         };
     }
-
-    public static PagedList<TOutput> Paginate<TOutput>(IEnumerable<T> items, PaginationOptions paginationOptions, Func<IEnumerable<T>, IEnumerable<TOutput>> map)
-        => PagedList<TOutput>.Paginate(map(items), paginationOptions);
 
     public static PagedList<T> Empty()
         => new() { Items = Enumerable.Empty<T>() };

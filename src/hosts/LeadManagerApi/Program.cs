@@ -1,9 +1,11 @@
-using Application.Configuration;
+using Application.Core.Configuration;
 using CrossCutting.Messaging.RabbitMq.Configuration;
+using HealthChecks.UI.Client;
 using Infrastructure.Configuration;
 using LeadManagerApi.Core.ApiFeatures;
 using LeadManagerApi.Core.Configuration;
-using LeadManagerApi.Core.Configuration.Security;
+using Microsoft.AspNetCore.Diagnostics.HealthChecks;
+using static Application.Security.LeadManagerSecurityConfiguration;
 
 namespace LeadManagerApi;
 
@@ -14,16 +16,14 @@ public class Program
         //Services configuration
         var builder = WebApplication.CreateBuilder(args);
 
-        builder.Services.AddApiServices(builder.Configuration);
-
-        builder.Services.AddApplicationServices(builder.Configuration);
-
-        builder.Services.AddInfrastructureServices(builder.Configuration);
+        builder.Services.AddApiServices(builder.Configuration)
+                        .AddApplicationServices(builder.Configuration)
+                        .AddInfrastructureServices(builder.Configuration);
 
         var app = builder.Build();
 
         //Request pipeline configuration
-        app.UseCors(LeadManagerApiSecurityConfiguration.Policies.LeadManagerCorsPolicy);
+        app.UseCors(Policies.LeadManagerCorsPolicy);
 
         if (app.Environment.IsDevelopment())
         {
@@ -32,6 +32,11 @@ public class Program
         }
 
         app.UseHttpsRedirection();
+
+        app.MapHealthChecks("/_health", new HealthCheckOptions
+        {
+            ResponseWriter = UIResponseWriter.WriteHealthCheckUIResponse
+        });
 
         app.UseAuthentication();
 

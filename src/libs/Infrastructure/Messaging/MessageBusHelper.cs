@@ -1,4 +1,4 @@
-﻿using Application.Contracts.Messaging;
+﻿using Application.Core.Contracts.Messaging;
 using CrossCutting.MessageContracts;
 using CrossCutting.Messaging;
 

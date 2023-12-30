@@ -1,7 +1,9 @@
-﻿using Microsoft.Extensions.Configuration;
-using Microsoft.Extensions.DependencyInjection;
-using CrossCutting.Security.Authentication.JsonWebTokens.Configuration;
+﻿using CrossCutting.Security.Authentication.JsonWebTokens.Configuration;
 using CrossCutting.Security.Authorization;
+using CrossCutting.Security.IAM.Configuration;
+using CrossCutting.Security.Secrecy.Configuration;
+using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.DependencyInjection;
 
 namespace CrossCutting.Security;
 
@@ -11,11 +13,13 @@ public static class DependencyInjection
     {
         services.AddJwtAuthentication(configuration);
         services.AddAuthorizationCheckers(configuration);
+        services.AddUserServices(configuration);
+        services.AddSecrecyServices(configuration);
 
         return services;
     }
 
-    public static IServiceCollection AddAuthorizationCheckers(this IServiceCollection services, IConfiguration configuration)
+    private static IServiceCollection AddAuthorizationCheckers(this IServiceCollection services, IConfiguration configuration)
     {
         services.AddTransient<MustHaveAtLeastOnePermissionAuthorizationChecker>();
         services.AddTransient<MustHaveAllPermissionsAuthorizationChecker>();

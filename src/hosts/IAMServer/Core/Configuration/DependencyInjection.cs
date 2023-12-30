@@ -1,4 +1,5 @@
-﻿using IAMServer.Clients.LeadWebApp.Configuration;
+﻿using CrossCutting.Monitoring.Configuration;
+using IAMServer.Clients.LeadWebApp.Configuration;
 using IAMServer.Clients.LeadWebApp.Security;
 using IAMServer.Core.HostingServices;
 using IAMServer.Entities;
@@ -83,6 +84,8 @@ public static class DependencyInjection
         //For sandboxed environments, a key with a password does the trick by using an auto-generated file
         if (builder.Environment.IsDevelopment())
             identityServerBuilder = identityServerBuilder.AddDeveloperSigningCredential(); // this can be attached to the code above, if you wanted
+
+        builder.Services.AddIAMServerMonitoring(builder.Configuration);
 
         return builder;
     }

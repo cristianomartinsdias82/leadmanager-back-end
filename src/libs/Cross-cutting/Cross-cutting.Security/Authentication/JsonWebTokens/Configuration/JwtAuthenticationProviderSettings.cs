@@ -3,5 +3,6 @@
 public sealed record JwtAuthenticationProviderSettings
 (
     string AuthorityBaseUri,
-    string Audience
+    string Audience,
+    int HealthCheckingTimeoutInSecs
 );

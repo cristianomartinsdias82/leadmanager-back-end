@@ -3,11 +3,12 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Shared.Results;
 using System.Net.Mime;
+using static Application.Security.LeadManagerSecurityConfiguration;
 
 namespace LeadManagerApi.Core.ApiFeatures;
 
 [Produces(MediaTypeNames.Application.Json)]
-[Authorize]
+[Authorize(Policy = Policies.LeadManagerDefaultPolicy)]
 public abstract class LeadManagerController : ControllerBase
 {
     protected readonly ISender Mediator;
