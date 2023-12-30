@@ -532,3 +532,5 @@ $RECYCLE.BIN/
 /src/hosts/LeadManagerApi/obj/Debug/net7.0/LeadManagerApi.GeneratedMSBuildEditorConfig.editorconfig
 /src/libs/Application/obj/Debug/net7.0/Application.GeneratedMSBuildEditorConfig.editorconfig
 /src/libs/Infrastructure/obj/Debug/net7.0/Infrastructure.GeneratedMSBuildEditorConfig.editorconfig
+/src/libs/Application/obj/Debug/net7.0/Application.AssemblyInfoInputs.cache
+/src/libs/Infrastructure/obj/Debug/net7.0/Infrastructure.AssemblyInfoInputs.cache
