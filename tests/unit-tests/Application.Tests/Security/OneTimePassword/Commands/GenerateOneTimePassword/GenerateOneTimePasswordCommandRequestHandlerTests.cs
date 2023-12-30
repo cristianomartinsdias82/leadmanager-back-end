@@ -7,6 +7,8 @@ using FluentAssertions;
 using MediatR;
 using NSubstitute;
 using NSubstitute.ReceivedExtensions;
+using Shared.Events;
+using Shared.Events.EventDispatching;
 using Xunit;
 
 namespace Application.Tests.Security.OneTimePassword.Commands.GenerateOneTimePassword;
@@ -25,6 +27,7 @@ public sealed class GenerateOneTimePasswordCommandRequestHandlerTests
         var userService = Substitute.For<IUserService>();
         userService.GetUserId().Returns(FakeUserId);
         userService.GetUserId()!.Value.Returns(FakeUserId);
+        var eventDispatcher = Substitute.For<IEventDispatching>();
         var secretGeneratorService = Substitute.For<ISecretGenerationService>();
         secretGeneratorService.GenerateAsync(
                                     Arg.Any<int>(),
@@ -43,7 +46,8 @@ public sealed class GenerateOneTimePasswordCommandRequestHandlerTests
                                                 mediator,
                                                 userService,
                                                 secretGeneratorService,
-                                                oneTimePasswordRepository)
+                                                oneTimePasswordRepository,
+                                                eventDispatcher)
                                             .Handle(new() { Resource = string.Empty }, cts.Token);
 
         //Assert
@@ -64,5 +68,6 @@ public sealed class GenerateOneTimePasswordCommandRequestHandlerTests
                     Arg.Any<bool>(),
                     cts.Token);
         await oneTimePasswordRepository.Received(1).SaveAsync(Arg.Any<OneTimePasswordDto>(), cts.Token);
+        eventDispatcher.Received(1).AddEvent(Arg.Any<IEvent>());
     }
 }

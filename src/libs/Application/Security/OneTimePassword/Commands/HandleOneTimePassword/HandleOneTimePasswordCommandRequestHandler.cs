@@ -1,7 +1,6 @@
 ﻿using Application.Core.Contracts.Repository.Caching;
 using Application.Core.Contracts.Repository.Security;
 using Application.Security.OneTimePassword.Commands.GenerateOneTimePassword;
-using CrossCutting.EndUserCommunication.Sms;
 using MediatR;
 using Shared.RequestHandling;
 using Shared.Results;
@@ -12,17 +11,14 @@ public sealed class HandleOneTimePasswordCommandRequestHandler : ApplicationRequ
 {
     private readonly IOneTimePasswordRepository _oneTimePasswordRepository;
     private readonly OneTimePasswordCachingPolicy _oneTimePasswordCachingPolicy;
-    private readonly ISmsDeliveryService _smsDeliveryService;
 
     public HandleOneTimePasswordCommandRequestHandler(
         OneTimePasswordCachingPolicy oneTimePasswordCachingPolicy,
         IMediator mediator,
-        IOneTimePasswordRepository oneTimePasswordRepository,
-        ISmsDeliveryService smsDeliveryService) : base(mediator, default!)
+        IOneTimePasswordRepository oneTimePasswordRepository) : base(mediator, default!)
     {
         _oneTimePasswordRepository = oneTimePasswordRepository;
         _oneTimePasswordCachingPolicy = oneTimePasswordCachingPolicy;
-        _smsDeliveryService = smsDeliveryService;
     }
 
     public async override Task<ApplicationResponse<HandleOneTimePasswordCommandResponse>> Handle(HandleOneTimePasswordCommandRequest request, CancellationToken cancellationToken)
@@ -31,9 +27,7 @@ public sealed class HandleOneTimePasswordCommandRequestHandler : ApplicationRequ
 
         async Task GenerateAndPersistCode()
         {
-            var passwordGenerationResult = await Mediator.Send(new GenerateOneTimePasswordCommandRequest { Resource = request.Resource });
-
-            await _smsDeliveryService.SendAsync(passwordGenerationResult.Data.OneTimePassword);
+            await Mediator.Send(new GenerateOneTimePasswordCommandRequest { Resource = request.Resource });
 
             result = OneTimePasswordHandlingOperationResult.CodeGeneratedSuccessfully;
         }
