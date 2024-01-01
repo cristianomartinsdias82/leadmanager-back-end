@@ -38,6 +38,7 @@ using ViaCep.ServiceClient;
 using ViaCep.ServiceClient.Configuration;
 using ViaCep.ServiceClient.Models;
 using Xunit;
+using static Application.Security.LeadManagerSecurityConfiguration;
 
 namespace LeadManagerApi.Tests.Core.Factories;
 
@@ -140,6 +141,29 @@ public class LeadManagerWebApplicationFactory : WebApplicationFactory<Program>, 
                             .AddScheme<AuthenticationSchemeOptions, TestingAuthenticationHandler>(
                                             TestingAuthenticationHandler.TestingScheme,
                                             options => { });
+                services.AddAuthorization(policyOptions =>
+                {
+                    policyOptions.AddPolicy(Policies.LeadManagerDefaultPolicy, policy =>
+                    {
+                        //policy.AddAuthenticationSchemes(TestingAuthenticationHandler.TestingScheme);
+                        //policy.RequireAuthenticatedUser();
+                        policy.RequireClaim(
+                            ClaimTypes.LDM,
+                            Permissions.Read,
+                            Permissions.BulkInsert,
+                            Permissions.Insert,
+                            Permissions.Update,
+                            Permissions.Delete);
+                    });
+
+                    policyOptions.AddPolicy(Policies.LeadManagerRemovePolicy, policy =>
+                    {
+                        //policy.AddAuthenticationSchemes(TestingAuthenticationHandler.TestingScheme);
+                        //policy.RequireAuthenticatedUser();
+                        policy.RequireRole(Roles.Administrators);
+                        policy.RequireClaim(ClaimTypes.LDM, Permissions.Delete);
+                    });
+                });
 
                 services.AddSingleton(services => Configuration.GetSection(nameof(DataSourceSettings)).Get<DataSourceSettings>()!);
                 
