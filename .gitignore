@@ -534,3 +534,6 @@ $RECYCLE.BIN/
 /src/libs/Infrastructure/obj/Debug/net7.0/Infrastructure.GeneratedMSBuildEditorConfig.editorconfig
 /src/libs/Application/obj/Debug/net7.0/Application.AssemblyInfoInputs.cache
 /src/libs/Infrastructure/obj/Debug/net7.0/Infrastructure.AssemblyInfoInputs.cache
+/src/libs/Integrations/ViaCep.ServiceClient/obj/Debug/net7.0/ViaCep.ServiceClient.AssemblyInfoInputs.cache
+/src/libs/Integrations/ViaCep.ServiceClient/obj/Debug/net7.0/ViaCep.ServiceClient.csproj.AssemblyReference.cache
+/src/libs/Shared/obj/Debug/net7.0/Shared.AssemblyInfoInputs.cache

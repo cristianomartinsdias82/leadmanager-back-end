@@ -11,7 +11,7 @@ namespace LeadManagerApi.Tests.Prospecting.Addresses.SearchAddressByZipCode;
 public class SearchAddressByZipCodeControllerTests : IClassFixture<LeadManagerWebApplicationFactory>
 {
     private readonly LeadManagerWebApplicationFactory _factory;
-    private readonly static string SearchAddressUri = $"{AddressesEndpoint}/search?cep=";
+    private const string SearchAddressUri = $"{AddressesEndpoint}/search?cep=";
 
     public SearchAddressByZipCodeControllerTests(LeadManagerWebApplicationFactory factory)
     {
