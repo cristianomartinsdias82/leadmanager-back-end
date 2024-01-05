@@ -8,7 +8,7 @@ public class LeadMother
 
     public static Lead XptoLLC()
         => Lead.Criar(
-                CnpjMother.MaskedWellformedValidOne(),
+                CnpjMother.WellformedCnpjs.ElementAt(0),
                 "Xpto LLC",
                 "04858-040",
                 "Rua das Pitombeiras",
@@ -20,7 +20,7 @@ public class LeadMother
 
     public static Lead GumperInc()
         => Lead.Criar(
-                CnpjMother.MaskedWellformedValidOne(),
+                CnpjMother.WellformedCnpjs.ElementAt(1),
                 "Gumper Inc.",
                 "04661-100",
                 "Rua das Palmeiras",
@@ -30,10 +30,9 @@ public class LeadMother
                 default,
                 default);
 
-    public static List<Lead> Leads()
-    =>  new List<Lead>()
-        {
-            GumperInc(),
-            XptoLLC()
-        };
+    public static IEnumerable<Lead> Leads()
+    {
+        yield return GumperInc();
+        yield return XptoLLC();
+    }
 }

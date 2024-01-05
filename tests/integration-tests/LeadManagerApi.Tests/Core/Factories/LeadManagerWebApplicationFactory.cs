@@ -7,6 +7,9 @@ using CrossCutting.Caching.Redis;
 using CrossCutting.Caching.Redis.Configuration;
 using CrossCutting.Messaging.RabbitMq;
 using CrossCutting.Security.IAM;
+using Domain.Prospecting.Entities;
+using DotNet.Testcontainers.Builders;
+using DotNet.Testcontainers.Containers;
 using Infrastructure.Persistence;
 using Infrastructure.Repository.Caching;
 using Infrastructure.Repository.Prospecting;
@@ -14,7 +17,6 @@ using Infrastructure.Repository.UnitOfWork;
 using LeadManagerApi.Core.Configuration;
 using LeadManagerApi.Tests.Core.Security.Authentication;
 using Microsoft.AspNetCore.Authentication;
-using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -28,11 +30,14 @@ using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using NSubstitute;
+using Org.BouncyCastle.Pqc.Crypto.Lms;
 using RichardSzalay.MockHttp;
 using Shared.Settings;
 using System.Net;
 using System.Net.Http.Json;
 using System.Text.Json;
+using Testcontainers.MsSql;
+using Tests.Common.ObjectMothers.Domain;
 using Tests.Common.ObjectMothers.Integrations.ViaCep;
 using ViaCep.ServiceClient;
 using ViaCep.ServiceClient.Configuration;
@@ -47,18 +52,23 @@ public class LeadManagerWebApplicationFactory : WebApplicationFactory<Program>, 
     public const string LeadsEndpoint = "/api/leads";
     public const string AddressesEndpoint = "/api/addresses";
 
+    public LeadManagerWebApplicationFactory()
+    {
+        _dbContainer = new MsSqlBuilder()
+                                    //.WithHostname("localhost") //These parameters are interesting in case you wish to inspect
+                                    //.WithPortBinding(1433, true) //the generated database in some debugging session
+                                    //.WithPassword("Y0urStr0nGP@sswoRD_2023") //so you can connect by using some db client tool
+                                    .WithWaitStrategy(Wait.ForUnixContainer().UntilPortIsAvailable(1433))
+                                    .Build();
+    }
+
+    private readonly MsSqlContainer _dbContainer = default!;
+
     public IConfiguration Configuration { get; private set; } = default!;
+
     private JsonSerializerOptions _jsonSerializerOptions = default!;
 
     private readonly MockHttpMessageHandler _httpHandlerMock = new MockHttpMessageHandler();
-
-    public Task InitializeAsync()
-    {
-        Configuration = Services.GetRequiredService<IConfiguration>();
-        _jsonSerializerOptions = Services.GetRequiredService<IOptions<JsonOptions>>().Value.JsonSerializerOptions;
-
-        return Task.CompletedTask;
-    }
 
     public virtual HttpClient CreateHttpClientMock(
         Func<MockHttpMessageHandler, MockHttpMessageHandler> factory,
@@ -120,9 +130,6 @@ public class LeadManagerWebApplicationFactory : WebApplicationFactory<Program>, 
     public T? DeserializeFromJson<T>(string json)
         => JsonSerializer.Deserialize<T>(json, _jsonSerializerOptions);
 
-    public new async Task DisposeAsync()
-        => await base.DisposeAsync();
-
     protected override void ConfigureWebHost(IWebHostBuilder builder)
     {
         builder
@@ -175,12 +182,7 @@ public class LeadManagerWebApplicationFactory : WebApplicationFactory<Program>, 
                     var optionsBuilder = new DbContextOptionsBuilder<LeadManagerDbContext>();
 
                     var options = optionsBuilder
-                        .UseSqlServer(
-                            dataSourceSettings.ConnectionString,
-                            options =>
-                            {
-                                options.EnableRetryOnFailure(2);
-                            })
+                        .UseSqlServer(_dbContainer.GetConnectionString())
                         .EnableDetailedErrors()
                         .EnableSensitiveDataLogging()
                         .LogTo(
@@ -195,8 +197,11 @@ public class LeadManagerWebApplicationFactory : WebApplicationFactory<Program>, 
 
                     context.Database.EnsureCreated();
 
+                    Seed(context);
+
                     return context;
                 });
+
 
                 services.AddSingleton(services => Configuration.GetSection($"{nameof(CachingPoliciesSettings)}:{nameof(LeadsCachingPolicy)}").Get<LeadsCachingPolicy>()!);
                 services.AddSingleton(services => Configuration.GetSection($"{nameof(CachingPoliciesSettings)}:{nameof(AddressesCachingPolicy)}").Get<AddressesCachingPolicy>()!);
@@ -251,5 +256,32 @@ public class LeadManagerWebApplicationFactory : WebApplicationFactory<Program>, 
                     return new ViaCepServiceClient(httpClient, viaCepApiSettings, default!);
                 });
             });
+
+        
+    }
+
+    private void Seed(LeadManagerDbContext context)
+    {
+        if (context.Leads.Any())
+            return;
+
+        context.Leads.AddRange(LeadMother.Leads());
+
+        context.SaveChanges();
+    }
+
+    public async Task InitializeAsync()
+    {
+        Configuration = Services.GetRequiredService<IConfiguration>();
+        _jsonSerializerOptions = Services.GetRequiredService<IOptions<JsonOptions>>().Value.JsonSerializerOptions;
+
+        await _dbContainer.StartAsync();
+    }
+
+    public new async Task DisposeAsync()
+    {
+        await _dbContainer.StopAsync();
+
+        await base.DisposeAsync();
     }
 }

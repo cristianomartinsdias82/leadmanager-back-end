@@ -53,7 +53,7 @@ public sealed class GetLeadsQueryRequestHandlerTests : IDisposable
     {
         //Arrange
         var paginationOptions = new PaginationOptions();
-        var leads = LeadMother.Leads();
+        var leads = LeadMother.Leads().ToList();
         _leadRepositoryMock.GetAsync(new(), _cts.Token)
                           .Returns(PagedList<Lead>.Paginate(leads, paginationOptions));
 

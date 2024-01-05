@@ -72,6 +72,7 @@ public class GetLeadsControllerTests : IClassFixture<LeadManagerWebApplicationFa
         {
             apiResponse = _factory.DeserializeFromJson<ApplicationResponse<PagedList<LeadDto>>>(responseContent)!;
         };
+
         action.Should().NotThrow<Exception>();
         apiResponse.Exception.Should().BeNull();
         apiResponse.Success.Should().BeTrue();

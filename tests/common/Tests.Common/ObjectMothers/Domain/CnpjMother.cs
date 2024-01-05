@@ -5,7 +5,13 @@ namespace Tests.Common.ObjectMothers.Domain
 {
     public static class CnpjMother
     {
-        private static string maskedValidCnpj = "75.396.039/0001-79";
+        public static IReadOnlyCollection<string> WellformedCnpjs = new string[]
+        {
+            "75.396.039/0001-79",
+            "07.265.109/0001-08"
+        };
+
+        private static string maskedValidCnpj = WellformedCnpjs.ElementAt(0);
         private static string maskedInvalidCnpj = "33.646.178/0001-12";
 
         private static SpanAction<char, string> messItUp = (span, cnpj) =>
