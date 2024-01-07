@@ -1,0 +1,20 @@
+﻿using LeadManagerApi.Tests.Core.Factories;
+using Xunit;
+
+namespace LeadManagerApi.Tests.Core;
+
+[Collection(SharedTestCollection.TestCollection)]
+public abstract class SharedResourcesTestsBase : IAsyncLifetime
+{
+    protected readonly LeadManagerWebApplicationFactory _factory;
+
+    public SharedResourcesTestsBase(LeadManagerWebApplicationFactory factory)
+    {
+        _factory = factory;
+    }
+    public virtual Task InitializeAsync()
+        => Task.CompletedTask;
+
+    public virtual async Task DisposeAsync()
+        => await _factory.ResetDatabaseAsync();
+}

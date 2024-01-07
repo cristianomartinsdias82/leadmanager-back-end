@@ -1,4 +1,5 @@
 ﻿using FluentAssertions;
+using LeadManagerApi.Tests.Core;
 using LeadManagerApi.Tests.Core.Factories;
 using Shared.Results;
 using System.Net;
@@ -8,14 +9,12 @@ using static LeadManagerApi.Tests.Core.Factories.LeadManagerWebApplicationFactor
 
 namespace LeadManagerApi.Tests.Prospecting.Addresses.SearchAddressByZipCode;
 
-public class SearchAddressByZipCodeControllerTests : IClassFixture<LeadManagerWebApplicationFactory>
+public class SearchAddressByZipCodeControllerTests : SharedResourcesTestsBase
 {
-    private readonly LeadManagerWebApplicationFactory _factory;
     private const string SearchAddressUri = $"{AddressesEndpoint}/search?cep=";
 
-    public SearchAddressByZipCodeControllerTests(LeadManagerWebApplicationFactory factory)
+    public SearchAddressByZipCodeControllerTests(LeadManagerWebApplicationFactory factory) : base(factory)
     {
-        _factory = factory;
     }
 
     [Fact]

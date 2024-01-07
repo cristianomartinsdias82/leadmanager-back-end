@@ -1,5 +1,6 @@
 ﻿using Domain.Prospecting.Entities;
 using FluentAssertions;
+using LeadManagerApi.Tests.Core;
 using LeadManagerApi.Tests.Core.Factories;
 using Shared.DataPagination;
 using Shared.Results;
@@ -9,13 +10,10 @@ using static LeadManagerApi.Tests.Core.Factories.LeadManagerWebApplicationFactor
 
 namespace LeadManagerApi.Tests.Prospecting.Leads.GetLeads;
 
-public class GetLeadsControllerTests : IClassFixture<LeadManagerWebApplicationFactory>
+public class GetLeadsControllerTests : SharedResourcesTestsBase
 {
-    private readonly LeadManagerWebApplicationFactory _factory;
-
-    public GetLeadsControllerTests(LeadManagerWebApplicationFactory factory)
+    public GetLeadsControllerTests(LeadManagerWebApplicationFactory factory) : base(factory)
     {
-        _factory = factory;
     }
 
     [Fact]
