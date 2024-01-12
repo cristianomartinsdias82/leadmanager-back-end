@@ -6,15 +6,13 @@ using Shared.DataPagination;
 using Shared.Results;
 using System.Net;
 using Xunit;
-using static LeadManagerApi.Tests.Core.Factories.LeadManagerWebApplicationFactory;
 
 namespace LeadManagerApi.Tests.Prospecting.Leads.GetLeads;
 
 public class GetLeadsControllerTests : SharedResourcesTestsBase
 {
-    public GetLeadsControllerTests(LeadManagerWebApplicationFactory factory) : base(factory)
-    {
-    }
+    public GetLeadsControllerTests(
+        LeadManagerWebApplicationFactory factory) : base(factory) {}
 
     [Fact]
     public async Task Get_RequestWithoutApiKeyHeader_ShouldFail()

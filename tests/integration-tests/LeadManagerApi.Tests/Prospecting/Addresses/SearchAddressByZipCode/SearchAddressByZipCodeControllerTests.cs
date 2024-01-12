@@ -5,7 +5,6 @@ using Shared.Results;
 using System.Net;
 using ViaCep.ServiceClient.Models;
 using Xunit;
-using static LeadManagerApi.Tests.Core.Factories.LeadManagerWebApplicationFactory;
 
 namespace LeadManagerApi.Tests.Prospecting.Addresses.SearchAddressByZipCode;
 
@@ -13,9 +12,8 @@ public class SearchAddressByZipCodeControllerTests : SharedResourcesTestsBase
 {
     private const string SearchAddressUri = $"{AddressesEndpoint}/search?cep=";
 
-    public SearchAddressByZipCodeControllerTests(LeadManagerWebApplicationFactory factory) : base(factory)
-    {
-    }
+    public SearchAddressByZipCodeControllerTests(
+        LeadManagerWebApplicationFactory factory) : base(factory) { }
 
     [Fact]
     public async Task Get_ApiKeyHeaderNotSet_ShouldFail()

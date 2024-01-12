@@ -49,20 +49,23 @@ namespace LeadManagerApi.Tests.Core.Factories;
 
 public class LeadManagerWebApplicationFactory : WebApplicationFactory<Program>, IAsyncLifetime
 {
-    public const string LeadsEndpoint = "/api/leads";
-    public const string AddressesEndpoint = "/api/addresses";
-
-    public IConfiguration Configuration { get; private set; } = default!;
-    private JsonSerializerOptions _jsonSerializerOptions = default!;
     private readonly MockHttpMessageHandler _httpHandlerMock = new MockHttpMessageHandler();
+    private readonly MsSqlContainer _dbContainer;
+    private JsonSerializerOptions _jsonSerializerOptions = default!;
     private DbConnection _dbConnection = default!;
     private Respawner _respawner = default!;
-    private readonly MsSqlContainer _dbContainer = new MsSqlBuilder()
+
+    public IConfiguration Configuration { get; private set; } = default!;
+
+    public LeadManagerWebApplicationFactory()
+    {
+        _dbContainer = new MsSqlBuilder()
                                     //.WithHostname("localhost") //These parameters are interesting in case you wish to inspect
                                     //.WithPortBinding(1433, true) //the generated database in some debugging session
                                     //.WithPassword("Y0urStr0nGP@sswoRD_2023") //so you can connect by using some db client tool
                                     .WithWaitStrategy(Wait.ForUnixContainer().UntilPortIsAvailable(1433))
                                     .Build();
+    }
     public async Task InitializeAsync()
     {
         Configuration = Services.GetRequiredService<IConfiguration>();
@@ -155,7 +158,7 @@ public class LeadManagerWebApplicationFactory : WebApplicationFactory<Program>, 
             new RespawnerOptions
             {
                 DbAdapter = DbAdapter.SqlServer,
-                //WithReseed = true ?? Test it!
+                //WithReseed = true
                 //SchemasToInclude = new[] { "LeadManager" }
             });
     }
