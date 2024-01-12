@@ -34,14 +34,14 @@
           "net7.0": {
             "targetAlias": "net7.0",
             "projectReferences": {
-              "F:\\Codebase\\_.NET Solutions\\Core\\7.x\\LeadManager\\backend\\src\\LeadManager\\src\\libs\\Core\\Core.csproj": {
-                "projectPath": "F:\\Codebase\\_.NET Solutions\\Core\\7.x\\LeadManager\\backend\\src\\LeadManager\\src\\libs\\Core\\Core.csproj"
-              },
               "F:\\Codebase\\_.NET Solutions\\Core\\7.x\\LeadManager\\backend\\src\\LeadManager\\src\\libs\\Cross-cutting\\Cross-cutting.Caching\\CrossCutting.Caching.csproj": {
                 "projectPath": "F:\\Codebase\\_.NET Solutions\\Core\\7.x\\LeadManager\\backend\\src\\LeadManager\\src\\libs\\Cross-cutting\\Cross-cutting.Caching\\CrossCutting.Caching.csproj"
               },
               "F:\\Codebase\\_.NET Solutions\\Core\\7.x\\LeadManager\\backend\\src\\LeadManager\\src\\libs\\Cross-cutting\\Cross-cutting.Csv\\CrossCutting.Csv.csproj": {
                 "projectPath": "F:\\Codebase\\_.NET Solutions\\Core\\7.x\\LeadManager\\backend\\src\\LeadManager\\src\\libs\\Cross-cutting\\Cross-cutting.Csv\\CrossCutting.Csv.csproj"
+              },
+              "F:\\Codebase\\_.NET Solutions\\Core\\7.x\\LeadManager\\backend\\src\\LeadManager\\src\\libs\\Cross-cutting\\Cross-cutting.EndUserCommunication\\CrossCutting.EndUserCommunication.csproj": {
+                "projectPath": "F:\\Codebase\\_.NET Solutions\\Core\\7.x\\LeadManager\\backend\\src\\LeadManager\\src\\libs\\Cross-cutting\\Cross-cutting.EndUserCommunication\\CrossCutting.EndUserCommunication.csproj"
               },
               "F:\\Codebase\\_.NET Solutions\\Core\\7.x\\LeadManager\\backend\\src\\LeadManager\\src\\libs\\Cross-cutting\\Cross-cutting.FileStorage\\CrossCutting.FileStorage.csproj": {
                 "projectPath": "F:\\Codebase\\_.NET Solutions\\Core\\7.x\\LeadManager\\backend\\src\\LeadManager\\src\\libs\\Cross-cutting\\Cross-cutting.FileStorage\\CrossCutting.FileStorage.csproj"
@@ -55,8 +55,14 @@
               "F:\\Codebase\\_.NET Solutions\\Core\\7.x\\LeadManager\\backend\\src\\LeadManager\\src\\libs\\Cross-cutting\\Cross-cutting.Messaging\\CrossCutting.Messaging.csproj": {
                 "projectPath": "F:\\Codebase\\_.NET Solutions\\Core\\7.x\\LeadManager\\backend\\src\\LeadManager\\src\\libs\\Cross-cutting\\Cross-cutting.Messaging\\CrossCutting.Messaging.csproj"
               },
+              "F:\\Codebase\\_.NET Solutions\\Core\\7.x\\LeadManager\\backend\\src\\LeadManager\\src\\libs\\Cross-cutting\\Cross-cutting.Monitoring\\CrossCutting.Monitoring.csproj": {
+                "projectPath": "F:\\Codebase\\_.NET Solutions\\Core\\7.x\\LeadManager\\backend\\src\\LeadManager\\src\\libs\\Cross-cutting\\Cross-cutting.Monitoring\\CrossCutting.Monitoring.csproj"
+              },
               "F:\\Codebase\\_.NET Solutions\\Core\\7.x\\LeadManager\\backend\\src\\LeadManager\\src\\libs\\Cross-cutting\\Cross-cutting.Security\\CrossCutting.Security.csproj": {
                 "projectPath": "F:\\Codebase\\_.NET Solutions\\Core\\7.x\\LeadManager\\backend\\src\\LeadManager\\src\\libs\\Cross-cutting\\Cross-cutting.Security\\CrossCutting.Security.csproj"
+              },
+              "F:\\Codebase\\_.NET Solutions\\Core\\7.x\\LeadManager\\backend\\src\\LeadManager\\src\\libs\\Domain\\Domain.csproj": {
+                "projectPath": "F:\\Codebase\\_.NET Solutions\\Core\\7.x\\LeadManager\\backend\\src\\LeadManager\\src\\libs\\Domain\\Domain.csproj"
               },
               "F:\\Codebase\\_.NET Solutions\\Core\\7.x\\LeadManager\\backend\\src\\LeadManager\\src\\libs\\Integrations\\ViaCep.ServiceClient\\ViaCep.ServiceClient.csproj": {
                 "projectPath": "F:\\Codebase\\_.NET Solutions\\Core\\7.x\\LeadManager\\backend\\src\\LeadManager\\src\\libs\\Integrations\\ViaCep.ServiceClient\\ViaCep.ServiceClient.csproj"
@@ -122,78 +128,7 @@
               "privateAssets": "all"
             }
           },
-          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\7.0.402\\RuntimeIdentifierGraph.json"
-        }
-      }
-    },
-    "F:\\Codebase\\_.NET Solutions\\Core\\7.x\\LeadManager\\backend\\src\\LeadManager\\src\\libs\\Core\\Core.csproj": {
-      "version": "1.0.0",
-      "restore": {
-        "projectUniqueName": "F:\\Codebase\\_.NET Solutions\\Core\\7.x\\LeadManager\\backend\\src\\LeadManager\\src\\libs\\Core\\Core.csproj",
-        "projectName": "Core",
-        "projectPath": "F:\\Codebase\\_.NET Solutions\\Core\\7.x\\LeadManager\\backend\\src\\LeadManager\\src\\libs\\Core\\Core.csproj",
-        "packagesPath": "C:\\Users\\rblac\\.nuget\\packages\\",
-        "outputPath": "F:\\Codebase\\_.NET Solutions\\Core\\7.x\\LeadManager\\backend\\src\\LeadManager\\src\\libs\\Core\\obj\\",
-        "projectStyle": "PackageReference",
-        "fallbackFolders": [
-          "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages"
-        ],
-        "configFilePaths": [
-          "C:\\Users\\rblac\\AppData\\Roaming\\NuGet\\NuGet.Config",
-          "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.FallbackLocation.config",
-          "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
-        ],
-        "originalTargetFrameworks": [
-          "net7.0"
-        ],
-        "sources": {
-          "C:\\Program Files (x86)\\Microsoft SDKs\\NuGetPackages\\": {},
-          "C:\\Program Files\\dotnet\\library-packs": {},
-          "https://api.nuget.org/v3/index.json": {},
-          "https://pkgs.dev.azure.com/dnceng/public/_packaging/dotnet7/nuget/v3/index.json": {}
-        },
-        "frameworks": {
-          "net7.0": {
-            "targetAlias": "net7.0",
-            "projectReferences": {
-              "F:\\Codebase\\_.NET Solutions\\Core\\7.x\\LeadManager\\backend\\src\\LeadManager\\src\\libs\\Shared\\Shared.csproj": {
-                "projectPath": "F:\\Codebase\\_.NET Solutions\\Core\\7.x\\LeadManager\\backend\\src\\LeadManager\\src\\libs\\Shared\\Shared.csproj"
-              }
-            }
-          }
-        },
-        "warningProperties": {
-          "warnAsError": [
-            "NU1605"
-          ]
-        }
-      },
-      "frameworks": {
-        "net7.0": {
-          "targetAlias": "net7.0",
-          "dependencies": {
-            "LanguageExt.Core": {
-              "target": "Package",
-              "version": "[4.4.3, )"
-            }
-          },
-          "imports": [
-            "net461",
-            "net462",
-            "net47",
-            "net471",
-            "net472",
-            "net48",
-            "net481"
-          ],
-          "assetTargetFallback": true,
-          "warn": true,
-          "frameworkReferences": {
-            "Microsoft.NETCore.App": {
-              "privateAssets": "all"
-            }
-          },
-          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\7.0.402\\RuntimeIdentifierGraph.json"
+          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\8.0.100\\RuntimeIdentifierGraph.json"
         }
       }
     },
@@ -280,7 +215,7 @@
               "privateAssets": "all"
             }
           },
-          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\7.0.402\\RuntimeIdentifierGraph.json"
+          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\8.0.100\\RuntimeIdentifierGraph.json"
         }
       }
     },
@@ -355,7 +290,78 @@
               "privateAssets": "all"
             }
           },
-          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\7.0.402\\RuntimeIdentifierGraph.json"
+          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\8.0.100\\RuntimeIdentifierGraph.json"
+        }
+      }
+    },
+    "F:\\Codebase\\_.NET Solutions\\Core\\7.x\\LeadManager\\backend\\src\\LeadManager\\src\\libs\\Cross-cutting\\Cross-cutting.EndUserCommunication\\CrossCutting.EndUserCommunication.csproj": {
+      "version": "1.0.0",
+      "restore": {
+        "projectUniqueName": "F:\\Codebase\\_.NET Solutions\\Core\\7.x\\LeadManager\\backend\\src\\LeadManager\\src\\libs\\Cross-cutting\\Cross-cutting.EndUserCommunication\\CrossCutting.EndUserCommunication.csproj",
+        "projectName": "CrossCutting.EndUserCommunication",
+        "projectPath": "F:\\Codebase\\_.NET Solutions\\Core\\7.x\\LeadManager\\backend\\src\\LeadManager\\src\\libs\\Cross-cutting\\Cross-cutting.EndUserCommunication\\CrossCutting.EndUserCommunication.csproj",
+        "packagesPath": "C:\\Users\\rblac\\.nuget\\packages\\",
+        "outputPath": "F:\\Codebase\\_.NET Solutions\\Core\\7.x\\LeadManager\\backend\\src\\LeadManager\\src\\libs\\Cross-cutting\\Cross-cutting.EndUserCommunication\\obj\\",
+        "projectStyle": "PackageReference",
+        "fallbackFolders": [
+          "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages"
+        ],
+        "configFilePaths": [
+          "C:\\Users\\rblac\\AppData\\Roaming\\NuGet\\NuGet.Config",
+          "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.FallbackLocation.config",
+          "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
+        ],
+        "originalTargetFrameworks": [
+          "net7.0"
+        ],
+        "sources": {
+          "C:\\Program Files (x86)\\Microsoft SDKs\\NuGetPackages\\": {},
+          "C:\\Program Files\\dotnet\\library-packs": {},
+          "https://api.nuget.org/v3/index.json": {},
+          "https://pkgs.dev.azure.com/dnceng/public/_packaging/dotnet7/nuget/v3/index.json": {}
+        },
+        "frameworks": {
+          "net7.0": {
+            "targetAlias": "net7.0",
+            "projectReferences": {}
+          }
+        },
+        "warningProperties": {
+          "warnAsError": [
+            "NU1605"
+          ]
+        }
+      },
+      "frameworks": {
+        "net7.0": {
+          "targetAlias": "net7.0",
+          "dependencies": {
+            "Microsoft.Extensions.Configuration.Abstractions": {
+              "target": "Package",
+              "version": "[7.0.0, )"
+            },
+            "Microsoft.Extensions.DependencyInjection.Abstractions": {
+              "target": "Package",
+              "version": "[7.0.0, )"
+            }
+          },
+          "imports": [
+            "net461",
+            "net462",
+            "net47",
+            "net471",
+            "net472",
+            "net48",
+            "net481"
+          ],
+          "assetTargetFallback": true,
+          "warn": true,
+          "frameworkReferences": {
+            "Microsoft.NETCore.App": {
+              "privateAssets": "all"
+            }
+          },
+          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\8.0.100\\RuntimeIdentifierGraph.json"
         }
       }
     },
@@ -442,7 +448,7 @@
               "privateAssets": "all"
             }
           },
-          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\7.0.402\\RuntimeIdentifierGraph.json"
+          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\8.0.100\\RuntimeIdentifierGraph.json"
         }
       }
     },
@@ -503,6 +509,10 @@
             "Serilog.Sinks.MSSqlServer": {
               "target": "Package",
               "version": "[6.3.0, )"
+            },
+            "Serilog.Sinks.Seq": {
+              "target": "Package",
+              "version": "[5.2.3, )"
             }
           },
           "imports": [
@@ -521,7 +531,7 @@
               "privateAssets": "all"
             }
           },
-          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\7.0.402\\RuntimeIdentifierGraph.json"
+          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\8.0.100\\RuntimeIdentifierGraph.json"
         }
       }
     },
@@ -555,8 +565,8 @@
           "net7.0": {
             "targetAlias": "net7.0",
             "projectReferences": {
-              "F:\\Codebase\\_.NET Solutions\\Core\\7.x\\LeadManager\\backend\\src\\LeadManager\\src\\libs\\Core\\Core.csproj": {
-                "projectPath": "F:\\Codebase\\_.NET Solutions\\Core\\7.x\\LeadManager\\backend\\src\\LeadManager\\src\\libs\\Core\\Core.csproj"
+              "F:\\Codebase\\_.NET Solutions\\Core\\7.x\\LeadManager\\backend\\src\\LeadManager\\src\\libs\\Domain\\Domain.csproj": {
+                "projectPath": "F:\\Codebase\\_.NET Solutions\\Core\\7.x\\LeadManager\\backend\\src\\LeadManager\\src\\libs\\Domain\\Domain.csproj"
               }
             }
           }
@@ -592,7 +602,7 @@
               "privateAssets": "all"
             }
           },
-          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\7.0.402\\RuntimeIdentifierGraph.json"
+          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\8.0.100\\RuntimeIdentifierGraph.json"
         }
       }
     },
@@ -690,7 +700,117 @@
               "privateAssets": "all"
             }
           },
-          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\7.0.402\\RuntimeIdentifierGraph.json"
+          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\8.0.100\\RuntimeIdentifierGraph.json"
+        }
+      }
+    },
+    "F:\\Codebase\\_.NET Solutions\\Core\\7.x\\LeadManager\\backend\\src\\LeadManager\\src\\libs\\Cross-cutting\\Cross-cutting.Monitoring\\CrossCutting.Monitoring.csproj": {
+      "version": "1.0.0",
+      "restore": {
+        "projectUniqueName": "F:\\Codebase\\_.NET Solutions\\Core\\7.x\\LeadManager\\backend\\src\\LeadManager\\src\\libs\\Cross-cutting\\Cross-cutting.Monitoring\\CrossCutting.Monitoring.csproj",
+        "projectName": "CrossCutting.Monitoring",
+        "projectPath": "F:\\Codebase\\_.NET Solutions\\Core\\7.x\\LeadManager\\backend\\src\\LeadManager\\src\\libs\\Cross-cutting\\Cross-cutting.Monitoring\\CrossCutting.Monitoring.csproj",
+        "packagesPath": "C:\\Users\\rblac\\.nuget\\packages\\",
+        "outputPath": "F:\\Codebase\\_.NET Solutions\\Core\\7.x\\LeadManager\\backend\\src\\LeadManager\\src\\libs\\Cross-cutting\\Cross-cutting.Monitoring\\obj\\",
+        "projectStyle": "PackageReference",
+        "fallbackFolders": [
+          "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages"
+        ],
+        "configFilePaths": [
+          "C:\\Users\\rblac\\AppData\\Roaming\\NuGet\\NuGet.Config",
+          "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.FallbackLocation.config",
+          "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
+        ],
+        "originalTargetFrameworks": [
+          "net7.0"
+        ],
+        "sources": {
+          "C:\\Program Files (x86)\\Microsoft SDKs\\NuGetPackages\\": {},
+          "C:\\Program Files\\dotnet\\library-packs": {},
+          "https://api.nuget.org/v3/index.json": {},
+          "https://pkgs.dev.azure.com/dnceng/public/_packaging/dotnet7/nuget/v3/index.json": {}
+        },
+        "frameworks": {
+          "net7.0": {
+            "targetAlias": "net7.0",
+            "projectReferences": {
+              "F:\\Codebase\\_.NET Solutions\\Core\\7.x\\LeadManager\\backend\\src\\LeadManager\\src\\libs\\Cross-cutting\\Cross-cutting.Caching\\CrossCutting.Caching.csproj": {
+                "projectPath": "F:\\Codebase\\_.NET Solutions\\Core\\7.x\\LeadManager\\backend\\src\\LeadManager\\src\\libs\\Cross-cutting\\Cross-cutting.Caching\\CrossCutting.Caching.csproj"
+              },
+              "F:\\Codebase\\_.NET Solutions\\Core\\7.x\\LeadManager\\backend\\src\\LeadManager\\src\\libs\\Cross-cutting\\Cross-cutting.FileStorage\\CrossCutting.FileStorage.csproj": {
+                "projectPath": "F:\\Codebase\\_.NET Solutions\\Core\\7.x\\LeadManager\\backend\\src\\LeadManager\\src\\libs\\Cross-cutting\\Cross-cutting.FileStorage\\CrossCutting.FileStorage.csproj"
+              },
+              "F:\\Codebase\\_.NET Solutions\\Core\\7.x\\LeadManager\\backend\\src\\LeadManager\\src\\libs\\Cross-cutting\\Cross-cutting.Messaging\\CrossCutting.Messaging.csproj": {
+                "projectPath": "F:\\Codebase\\_.NET Solutions\\Core\\7.x\\LeadManager\\backend\\src\\LeadManager\\src\\libs\\Cross-cutting\\Cross-cutting.Messaging\\CrossCutting.Messaging.csproj"
+              },
+              "F:\\Codebase\\_.NET Solutions\\Core\\7.x\\LeadManager\\backend\\src\\LeadManager\\src\\libs\\Cross-cutting\\Cross-cutting.Security\\CrossCutting.Security.csproj": {
+                "projectPath": "F:\\Codebase\\_.NET Solutions\\Core\\7.x\\LeadManager\\backend\\src\\LeadManager\\src\\libs\\Cross-cutting\\Cross-cutting.Security\\CrossCutting.Security.csproj"
+              },
+              "F:\\Codebase\\_.NET Solutions\\Core\\7.x\\LeadManager\\backend\\src\\LeadManager\\src\\libs\\Integrations\\ViaCep.ServiceClient\\ViaCep.ServiceClient.csproj": {
+                "projectPath": "F:\\Codebase\\_.NET Solutions\\Core\\7.x\\LeadManager\\backend\\src\\LeadManager\\src\\libs\\Integrations\\ViaCep.ServiceClient\\ViaCep.ServiceClient.csproj"
+              },
+              "F:\\Codebase\\_.NET Solutions\\Core\\7.x\\LeadManager\\backend\\src\\LeadManager\\src\\libs\\Shared\\Shared.csproj": {
+                "projectPath": "F:\\Codebase\\_.NET Solutions\\Core\\7.x\\LeadManager\\backend\\src\\LeadManager\\src\\libs\\Shared\\Shared.csproj"
+              }
+            }
+          }
+        },
+        "warningProperties": {
+          "warnAsError": [
+            "NU1605"
+          ]
+        }
+      },
+      "frameworks": {
+        "net7.0": {
+          "targetAlias": "net7.0",
+          "dependencies": {
+            "AspNetCore.HealthChecks.AzureStorage": {
+              "target": "Package",
+              "version": "[7.0.0, )"
+            },
+            "AspNetCore.HealthChecks.MongoDb": {
+              "target": "Package",
+              "version": "[7.0.0, )"
+            },
+            "AspNetCore.HealthChecks.OpenIdConnectServer": {
+              "target": "Package",
+              "version": "[7.0.0, )"
+            },
+            "AspNetCore.HealthChecks.Rabbitmq": {
+              "target": "Package",
+              "version": "[7.0.0, )"
+            },
+            "AspNetCore.HealthChecks.Redis": {
+              "target": "Package",
+              "version": "[7.0.1, )"
+            },
+            "AspNetCore.HealthChecks.SqlServer": {
+              "target": "Package",
+              "version": "[7.0.0, )"
+            },
+            "Microsoft.Extensions.Diagnostics.HealthChecks": {
+              "target": "Package",
+              "version": "[7.0.13, )"
+            }
+          },
+          "imports": [
+            "net461",
+            "net462",
+            "net47",
+            "net471",
+            "net472",
+            "net48",
+            "net481"
+          ],
+          "assetTargetFallback": true,
+          "warn": true,
+          "frameworkReferences": {
+            "Microsoft.NETCore.App": {
+              "privateAssets": "all"
+            }
+          },
+          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\8.0.100\\RuntimeIdentifierGraph.json"
         }
       }
     },
@@ -769,7 +889,7 @@
               "privateAssets": "all"
             }
           },
-          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\7.0.402\\RuntimeIdentifierGraph.json"
+          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\8.0.100\\RuntimeIdentifierGraph.json"
         }
       }
     },
@@ -836,7 +956,185 @@
               "privateAssets": "all"
             }
           },
-          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\7.0.402\\RuntimeIdentifierGraph.json"
+          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\8.0.100\\RuntimeIdentifierGraph.json"
+        }
+      }
+    },
+    "F:\\Codebase\\_.NET Solutions\\Core\\7.x\\LeadManager\\backend\\src\\LeadManager\\src\\libs\\Domain\\Domain.csproj": {
+      "version": "1.0.0",
+      "restore": {
+        "projectUniqueName": "F:\\Codebase\\_.NET Solutions\\Core\\7.x\\LeadManager\\backend\\src\\LeadManager\\src\\libs\\Domain\\Domain.csproj",
+        "projectName": "Domain",
+        "projectPath": "F:\\Codebase\\_.NET Solutions\\Core\\7.x\\LeadManager\\backend\\src\\LeadManager\\src\\libs\\Domain\\Domain.csproj",
+        "packagesPath": "C:\\Users\\rblac\\.nuget\\packages\\",
+        "outputPath": "F:\\Codebase\\_.NET Solutions\\Core\\7.x\\LeadManager\\backend\\src\\LeadManager\\src\\libs\\Domain\\obj\\",
+        "projectStyle": "PackageReference",
+        "fallbackFolders": [
+          "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages"
+        ],
+        "configFilePaths": [
+          "C:\\Users\\rblac\\AppData\\Roaming\\NuGet\\NuGet.Config",
+          "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.FallbackLocation.config",
+          "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
+        ],
+        "originalTargetFrameworks": [
+          "net7.0"
+        ],
+        "sources": {
+          "C:\\Program Files (x86)\\Microsoft SDKs\\NuGetPackages\\": {},
+          "C:\\Program Files\\dotnet\\library-packs": {},
+          "https://api.nuget.org/v3/index.json": {},
+          "https://pkgs.dev.azure.com/dnceng/public/_packaging/dotnet7/nuget/v3/index.json": {}
+        },
+        "frameworks": {
+          "net7.0": {
+            "targetAlias": "net7.0",
+            "projectReferences": {
+              "F:\\Codebase\\_.NET Solutions\\Core\\7.x\\LeadManager\\backend\\src\\LeadManager\\src\\libs\\Shared\\Shared.csproj": {
+                "projectPath": "F:\\Codebase\\_.NET Solutions\\Core\\7.x\\LeadManager\\backend\\src\\LeadManager\\src\\libs\\Shared\\Shared.csproj"
+              }
+            }
+          }
+        },
+        "warningProperties": {
+          "warnAsError": [
+            "NU1605"
+          ]
+        }
+      },
+      "frameworks": {
+        "net7.0": {
+          "targetAlias": "net7.0",
+          "dependencies": {
+            "LanguageExt.Core": {
+              "target": "Package",
+              "version": "[4.4.3, )"
+            }
+          },
+          "imports": [
+            "net461",
+            "net462",
+            "net47",
+            "net471",
+            "net472",
+            "net48",
+            "net481"
+          ],
+          "assetTargetFallback": true,
+          "warn": true,
+          "frameworkReferences": {
+            "Microsoft.NETCore.App": {
+              "privateAssets": "all"
+            }
+          },
+          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\8.0.100\\RuntimeIdentifierGraph.json"
+        }
+      }
+    },
+    "F:\\Codebase\\_.NET Solutions\\Core\\7.x\\LeadManager\\backend\\src\\LeadManager\\src\\libs\\Infrastructure\\Infrastructure.csproj": {
+      "version": "1.0.0",
+      "restore": {
+        "projectUniqueName": "F:\\Codebase\\_.NET Solutions\\Core\\7.x\\LeadManager\\backend\\src\\LeadManager\\src\\libs\\Infrastructure\\Infrastructure.csproj",
+        "projectName": "Infrastructure",
+        "projectPath": "F:\\Codebase\\_.NET Solutions\\Core\\7.x\\LeadManager\\backend\\src\\LeadManager\\src\\libs\\Infrastructure\\Infrastructure.csproj",
+        "packagesPath": "C:\\Users\\rblac\\.nuget\\packages\\",
+        "outputPath": "F:\\Codebase\\_.NET Solutions\\Core\\7.x\\LeadManager\\backend\\src\\LeadManager\\src\\libs\\Infrastructure\\obj\\",
+        "projectStyle": "PackageReference",
+        "fallbackFolders": [
+          "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages"
+        ],
+        "configFilePaths": [
+          "C:\\Users\\rblac\\AppData\\Roaming\\NuGet\\NuGet.Config",
+          "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.FallbackLocation.config",
+          "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
+        ],
+        "originalTargetFrameworks": [
+          "net7.0"
+        ],
+        "sources": {
+          "C:\\Program Files (x86)\\Microsoft SDKs\\NuGetPackages\\": {},
+          "C:\\Program Files\\dotnet\\library-packs": {},
+          "https://api.nuget.org/v3/index.json": {},
+          "https://pkgs.dev.azure.com/dnceng/public/_packaging/dotnet7/nuget/v3/index.json": {}
+        },
+        "frameworks": {
+          "net7.0": {
+            "targetAlias": "net7.0",
+            "projectReferences": {
+              "F:\\Codebase\\_.NET Solutions\\Core\\7.x\\LeadManager\\backend\\src\\LeadManager\\src\\libs\\Application\\Application.csproj": {
+                "projectPath": "F:\\Codebase\\_.NET Solutions\\Core\\7.x\\LeadManager\\backend\\src\\LeadManager\\src\\libs\\Application\\Application.csproj"
+              },
+              "F:\\Codebase\\_.NET Solutions\\Core\\7.x\\LeadManager\\backend\\src\\LeadManager\\src\\libs\\Cross-cutting\\Cross-cutting.Caching\\CrossCutting.Caching.csproj": {
+                "projectPath": "F:\\Codebase\\_.NET Solutions\\Core\\7.x\\LeadManager\\backend\\src\\LeadManager\\src\\libs\\Cross-cutting\\Cross-cutting.Caching\\CrossCutting.Caching.csproj"
+              },
+              "F:\\Codebase\\_.NET Solutions\\Core\\7.x\\LeadManager\\backend\\src\\LeadManager\\src\\libs\\Cross-cutting\\Cross-cutting.MessageContracts\\CrossCutting.MessageContracts.csproj": {
+                "projectPath": "F:\\Codebase\\_.NET Solutions\\Core\\7.x\\LeadManager\\backend\\src\\LeadManager\\src\\libs\\Cross-cutting\\Cross-cutting.MessageContracts\\CrossCutting.MessageContracts.csproj"
+              },
+              "F:\\Codebase\\_.NET Solutions\\Core\\7.x\\LeadManager\\backend\\src\\LeadManager\\src\\libs\\Cross-cutting\\Cross-cutting.Messaging\\CrossCutting.Messaging.csproj": {
+                "projectPath": "F:\\Codebase\\_.NET Solutions\\Core\\7.x\\LeadManager\\backend\\src\\LeadManager\\src\\libs\\Cross-cutting\\Cross-cutting.Messaging\\CrossCutting.Messaging.csproj"
+              },
+              "F:\\Codebase\\_.NET Solutions\\Core\\7.x\\LeadManager\\backend\\src\\LeadManager\\src\\libs\\Cross-cutting\\Cross-cutting.Security\\CrossCutting.Security.csproj": {
+                "projectPath": "F:\\Codebase\\_.NET Solutions\\Core\\7.x\\LeadManager\\backend\\src\\LeadManager\\src\\libs\\Cross-cutting\\Cross-cutting.Security\\CrossCutting.Security.csproj"
+              },
+              "F:\\Codebase\\_.NET Solutions\\Core\\7.x\\LeadManager\\backend\\src\\LeadManager\\src\\libs\\Domain\\Domain.csproj": {
+                "projectPath": "F:\\Codebase\\_.NET Solutions\\Core\\7.x\\LeadManager\\backend\\src\\LeadManager\\src\\libs\\Domain\\Domain.csproj"
+              },
+              "F:\\Codebase\\_.NET Solutions\\Core\\7.x\\LeadManager\\backend\\src\\LeadManager\\src\\libs\\Shared\\Shared.csproj": {
+                "projectPath": "F:\\Codebase\\_.NET Solutions\\Core\\7.x\\LeadManager\\backend\\src\\LeadManager\\src\\libs\\Shared\\Shared.csproj"
+              }
+            }
+          }
+        },
+        "warningProperties": {
+          "warnAsError": [
+            "NU1605"
+          ]
+        }
+      },
+      "frameworks": {
+        "net7.0": {
+          "targetAlias": "net7.0",
+          "dependencies": {
+            "Microsoft.EntityFrameworkCore": {
+              "target": "Package",
+              "version": "[7.0.8, )"
+            },
+            "Microsoft.EntityFrameworkCore.SqlServer": {
+              "target": "Package",
+              "version": "[7.0.8, )"
+            },
+            "Microsoft.EntityFrameworkCore.Tools": {
+              "include": "Runtime, Build, Native, ContentFiles, Analyzers, BuildTransitive",
+              "suppressParent": "All",
+              "target": "Package",
+              "version": "[7.0.8, )"
+            },
+            "Microsoft.Extensions.Hosting.Abstractions": {
+              "target": "Package",
+              "version": "[7.0.0, )"
+            },
+            "Scrutor": {
+              "target": "Package",
+              "version": "[4.2.2, )"
+            }
+          },
+          "imports": [
+            "net461",
+            "net462",
+            "net47",
+            "net471",
+            "net472",
+            "net48",
+            "net481"
+          ],
+          "assetTargetFallback": true,
+          "warn": true,
+          "frameworkReferences": {
+            "Microsoft.NETCore.App": {
+              "privateAssets": "all"
+            }
+          },
+          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\8.0.100\\RuntimeIdentifierGraph.json"
         }
       }
     },
@@ -898,6 +1196,10 @@
               "target": "Package",
               "version": "[7.0.0, )"
             },
+            "Microsoft.Extensions.Diagnostics.HealthChecks": {
+              "target": "Package",
+              "version": "[7.0.12, )"
+            },
             "Microsoft.Extensions.Http": {
               "target": "Package",
               "version": "[7.0.0, )"
@@ -927,7 +1229,7 @@
               "privateAssets": "all"
             }
           },
-          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\7.0.402\\RuntimeIdentifierGraph.json"
+          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\8.0.100\\RuntimeIdentifierGraph.json"
         }
       }
     },
@@ -1002,7 +1304,7 @@
               "privateAssets": "all"
             }
           },
-          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\7.0.402\\RuntimeIdentifierGraph.json"
+          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\8.0.100\\RuntimeIdentifierGraph.json"
         }
       }
     },
@@ -1039,8 +1341,11 @@
               "F:\\Codebase\\_.NET Solutions\\Core\\7.x\\LeadManager\\backend\\src\\LeadManager\\src\\libs\\Application\\Application.csproj": {
                 "projectPath": "F:\\Codebase\\_.NET Solutions\\Core\\7.x\\LeadManager\\backend\\src\\LeadManager\\src\\libs\\Application\\Application.csproj"
               },
-              "F:\\Codebase\\_.NET Solutions\\Core\\7.x\\LeadManager\\backend\\src\\LeadManager\\src\\libs\\Core\\Core.csproj": {
-                "projectPath": "F:\\Codebase\\_.NET Solutions\\Core\\7.x\\LeadManager\\backend\\src\\LeadManager\\src\\libs\\Core\\Core.csproj"
+              "F:\\Codebase\\_.NET Solutions\\Core\\7.x\\LeadManager\\backend\\src\\LeadManager\\src\\libs\\Domain\\Domain.csproj": {
+                "projectPath": "F:\\Codebase\\_.NET Solutions\\Core\\7.x\\LeadManager\\backend\\src\\LeadManager\\src\\libs\\Domain\\Domain.csproj"
+              },
+              "F:\\Codebase\\_.NET Solutions\\Core\\7.x\\LeadManager\\backend\\src\\LeadManager\\src\\libs\\Infrastructure\\Infrastructure.csproj": {
+                "projectPath": "F:\\Codebase\\_.NET Solutions\\Core\\7.x\\LeadManager\\backend\\src\\LeadManager\\src\\libs\\Infrastructure\\Infrastructure.csproj"
               },
               "F:\\Codebase\\_.NET Solutions\\Core\\7.x\\LeadManager\\backend\\src\\LeadManager\\src\\libs\\Integrations\\ViaCep.ServiceClient\\ViaCep.ServiceClient.csproj": {
                 "projectPath": "F:\\Codebase\\_.NET Solutions\\Core\\7.x\\LeadManager\\backend\\src\\LeadManager\\src\\libs\\Integrations\\ViaCep.ServiceClient\\ViaCep.ServiceClient.csproj"
@@ -1057,6 +1362,12 @@
       "frameworks": {
         "net7.0": {
           "targetAlias": "net7.0",
+          "dependencies": {
+            "Microsoft.EntityFrameworkCore.InMemory": {
+              "target": "Package",
+              "version": "[7.0.13, )"
+            }
+          },
           "imports": [
             "net461",
             "net462",
@@ -1073,7 +1384,7 @@
               "privateAssets": "all"
             }
           },
-          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\7.0.402\\RuntimeIdentifierGraph.json"
+          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\8.0.100\\RuntimeIdentifierGraph.json"
         }
       }
     }
