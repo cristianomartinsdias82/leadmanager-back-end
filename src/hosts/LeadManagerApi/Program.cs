@@ -5,6 +5,7 @@ using Infrastructure.Configuration;
 using LeadManagerApi.Core.ApiFeatures;
 using LeadManagerApi.Core.Configuration;
 using Microsoft.AspNetCore.Diagnostics.HealthChecks;
+using Serilog;
 using static Application.Security.LeadManagerSecurityConfiguration;
 
 namespace LeadManagerApi;
@@ -33,6 +34,9 @@ public class Program
 
         app.UseHttpsRedirection();
 
+        app.UseMiddleware<RequestLogContextMiddleware>();
+        app.UseSerilogRequestLogging();
+
         app.MapHealthChecks("/_health", new HealthCheckOptions
         {
             ResponseWriter = UIResponseWriter.WriteHealthCheckUIResponse
@@ -47,6 +51,7 @@ public class Program
         app.UseDataSourceInitialization();
         app.UseMessageBusInitialization();
 
+        
         app.UseMiddleware<RequestHandlingMiddleware>();
 
         app.Run();

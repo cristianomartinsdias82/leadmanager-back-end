@@ -6,6 +6,7 @@ using Application.Prospecting.Leads.Commands.RegisterLead;
 using Application.Prospecting.Leads.Commands.RemoveLead;
 using Application.Prospecting.Leads.Commands.UpdateLead;
 using Application.Prospecting.Leads.Queries.GetLeadById;
+using Application.Prospecting.Leads.Queries.GetLeads;
 using Application.Prospecting.Leads.Queries.SearchLead;
 using Application.Security.OneTimePassword.Commands.GenerateOneTimePassword;
 using Application.Security.OneTimePassword.Commands.HandleOneTimePassword;
@@ -24,6 +25,7 @@ using MediatR;
 using MediatR.Pipeline;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using Shared.DataPagination;
 using Shared.Results;
 using ViaCep.ServiceClient.Configuration;
 
@@ -70,7 +72,8 @@ public static class DependencyInjection
     {
         services.AddTransient(typeof(IPipelineBehavior<,>), typeof(RequestPostProcessorBehavior<,>));
 
-        return config.RegisterValidationBehaviors();
+        return config.RegisterLoggingBehaviors()
+                     .RegisterValidationBehaviors();
     }
 
     private static MediatRServiceConfiguration RegisterProcessors(this MediatRServiceConfiguration config, IServiceCollection services)
@@ -90,4 +93,15 @@ public static class DependencyInjection
                  .AddBehavior<IPipelineBehavior<BulkInsertLeadCommandRequest, ApplicationResponse<BulkInsertLeadCommandResponse>>, ValidationBehavior<BulkInsertLeadCommandRequest, BulkInsertLeadCommandResponse>>()
                  .AddBehavior<IPipelineBehavior<GenerateOneTimePasswordCommandRequest, ApplicationResponse<GenerateOneTimePasswordCommandResponse>>, ValidationBehavior<GenerateOneTimePasswordCommandRequest, GenerateOneTimePasswordCommandResponse>>()
                  .AddBehavior<IPipelineBehavior<HandleOneTimePasswordCommandRequest, ApplicationResponse<HandleOneTimePasswordCommandResponse>>, ValidationBehavior<HandleOneTimePasswordCommandRequest, HandleOneTimePasswordCommandResponse>>();
+
+    private static MediatRServiceConfiguration RegisterLoggingBehaviors(this MediatRServiceConfiguration config)
+        => config.AddBehavior<IPipelineBehavior<GetLeadByIdQueryRequest, ApplicationResponse<LeadDto>>, LoggingBehavior<GetLeadByIdQueryRequest, LeadDto>>()
+                 .AddBehavior<IPipelineBehavior<SearchAddressByZipCodeQueryRequest, ApplicationResponse<SearchAddressByZipCodeQueryResponse>>, LoggingBehavior<SearchAddressByZipCodeQueryRequest, SearchAddressByZipCodeQueryResponse>>()
+                 .AddBehavior<IPipelineBehavior<RegisterLeadCommandRequest, ApplicationResponse<RegisterLeadCommandResponse>>, LoggingBehavior<RegisterLeadCommandRequest, RegisterLeadCommandResponse>>()
+                 .AddBehavior<IPipelineBehavior<UpdateLeadCommandRequest, ApplicationResponse<UpdateLeadCommandResponse>>, LoggingBehavior<UpdateLeadCommandRequest, UpdateLeadCommandResponse>>()
+                 .AddBehavior<IPipelineBehavior<RemoveLeadCommandRequest, ApplicationResponse<RemoveLeadCommandResponse>>, LoggingBehavior<RemoveLeadCommandRequest, RemoveLeadCommandResponse>>()
+                 .AddBehavior<IPipelineBehavior<SearchLeadQueryRequest, ApplicationResponse<bool>>, LoggingBehavior<SearchLeadQueryRequest, bool>>()
+                 .AddBehavior<IPipelineBehavior<BulkInsertLeadCommandRequest, ApplicationResponse<BulkInsertLeadCommandResponse>>, LoggingBehavior<BulkInsertLeadCommandRequest, BulkInsertLeadCommandResponse>>()
+                 .AddBehavior<IPipelineBehavior<GenerateOneTimePasswordCommandRequest, ApplicationResponse<GenerateOneTimePasswordCommandResponse>>, LoggingBehavior<GenerateOneTimePasswordCommandRequest, GenerateOneTimePasswordCommandResponse>>()
+                 .AddBehavior<IPipelineBehavior<HandleOneTimePasswordCommandRequest, ApplicationResponse<HandleOneTimePasswordCommandResponse>>, LoggingBehavior<HandleOneTimePasswordCommandRequest, HandleOneTimePasswordCommandResponse>>();
 }
