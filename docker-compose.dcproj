@@ -9,10 +9,16 @@
     <DockerServiceName>leadmanagerapi</DockerServiceName>
   </PropertyGroup>
   <ItemGroup>
+    <None Include="alertmanager.yml" />
+    <None Include="grafana\provisioning\dashboards\dashboard.yml" />
     <None Include="docker-compose.override.yml">
       <DependentUpon>docker-compose.yml</DependentUpon>
     </None>
     <None Include="docker-compose.yml" />
     <None Include=".dockerignore" />
+    <None Include="grafana\provisioning\dashboards\GrafPromApiDashboard.json" />
+    <None Include="grafana\provisioning\datasources\prometheus_ds.yml" />
+    <None Include="prometheus.yml" />
+    <None Include="rules.yml" />
   </ItemGroup>
 </Project>

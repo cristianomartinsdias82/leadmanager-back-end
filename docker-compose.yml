@@ -8,6 +8,18 @@ services:
   leadmanager.logging-ingestion:
     image: datalust/seq:2023.4
 
+  leadmanager.telemetry:
+    image: prom/prometheus:v2.45.3
+
+  leadmanager.telemetry.node-exporter:
+    image: prom/node-exporter:v1.7.0
+
+  leadmanager.telemetry.alert-manager:
+    image: prom/alertmanager:v0.26.0
+
+  leadmanager.telemetry.dashboard:
+    image: grafana/grafana:10.3.1-ubuntu
+
   leadmanager.db:
     image: mcr.microsoft.com/mssql/server
 
@@ -37,4 +49,5 @@ volumes:
   caching_data:
   portainer_data:
   seq_data:
-  
+  telemetry_data:
+  telemetry_alertmanager_data:

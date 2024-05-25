@@ -4,6 +4,7 @@ using CrossCutting.Messaging.RabbitMq.Configuration;
 using CrossCutting.Security.Authentication.JsonWebTokens.Configuration;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using Prometheus;
 using Shared.Settings;
 using ViaCep.ServiceClient.HealthChecking.Configuration;
 
@@ -51,6 +52,13 @@ internal static class DependencyInjection
             .AddIdentityServer(
                 new Uri(authenticationProviderSettings.AuthorityBaseUri),
                 timeout: TimeSpan.FromSeconds(cachingProviderSettings.HealthCheckingTimeoutInSecs)
-            );
+            )
+            .ForwardToPrometheus();
+            //.AddSeqPublisher(seqOptions =>
+            //{
+                //TODO:
+                //1 - Add AspNetCore.HealthChecks.Publisher.Seq package
+                //2 - Configure its endpoint and everything else
+            //});
     }
 }

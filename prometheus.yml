@@ -1,0 +1,41 @@
+global:
+  scrape_interval: 30s
+  scrape_timeout: 10s
+rule_files:
+  - ./rules.yml
+alerting:
+  alertmanagers:
+   - static_configs:
+     - targets: ['alert-manager:9093']
+       labels:
+          group: 'Prometheus-Services'
+scrape_configs:
+  - job_name: Prometheus
+    static_configs:
+      - targets: ['localhost:9090']
+        labels:
+          group: 'Prometheus'
+
+  - job_name: NodeExporter
+    static_configs:
+      - targets:
+        - node-exporter:9100
+        labels:
+          group: 'Prometheus-Services'
+
+  - job_name: 'graform.api-read-prometheus'
+    scheme: http
+    metrics_path: /metrics
+    static_configs:
+    - targets:
+        - host.docker.internal:8082
+
+  - job_name: LeadManagerApi
+    scrape_interval: 60s
+    scrape_timeout: 10s  
+    scheme: http
+    metrics_path: /metrics
+    static_configs:
+      - targets: ['leadmanager.api']
+        labels:
+          group: 'WebApis'

@@ -13,7 +13,7 @@ services:
       - portainer_data:/data/portainer
 
   leadmanager.logging-ingestion:
-    container_name: leadmanagerseq
+    container_name: leadmanagerloggingingestion
     restart: always
     environment:
       - ACCEPT_EULA=Y
@@ -23,6 +23,52 @@ services:
       - "7999:80"
     volumes:
       - seq_data:/var/opt/seq
+
+  leadmanager.telemetry:
+    container_name: leadmanagertelemetry
+    restart: always
+    ports:
+      - "9090:9090"
+    volumes:
+      - "./prometheus.yml:/etc/prometheus/prometheus.yml"
+    healthcheck:
+      test: wget -q --tries=1 -O- http://localhost:9090/
+      interval: 3s
+      timeout: 3s
+      retries: 10
+      start_period: 10s
+
+  leadmanager.telemetry.node-exporter:
+    container_name: node-exporter
+    restart: always
+    ports:
+      - "9100:9100"
+
+  leadmanager.telemetry.alert-manager:
+    container_name: alert-manager
+    restart: always
+    ports:
+      - "9093:9093"
+    volumes:
+      - "./alertmanager.yml:/alertmanager/alertmanager.yml"
+
+  leadmanager.telemetry.dashboard:
+    container_name: leadmanagertelemetrydashboard
+    restart: always
+    ports:
+      - "3000:3000"
+    volumes:
+        - ./grafana/provisioning/datasources:/etc/grafana/provisioning/datasources
+        - ./grafana/provisioning/dashboards:/etc/grafana/provisioning/dashboards
+    depends_on:
+      leadmanager.telemetry:
+        condition: service_healthy
+    healthcheck:
+        test: wget -q --tries=1 -O- http://localhost:3000/
+        interval: 3s
+        timeout: 3s
+        retries: 10
+        start_period: 10s
 
   leadmanager.db:
     container_name: leadmanagerdb
@@ -79,6 +125,9 @@ services:
       - leadmanager.blob
       - leadmanager.caching
       - leadmanager.logging-ingestion
+      - leadmanager.telemetry
+      - leadmanager.telemetry.dashboard
+          
     environment:
       - ASPNETCORE_ENVIRONMENT=Development
       - "LeadManagerApiSettings:Cors_AllowedOrigins=http://localhost:8002, http://leadmanagerweb"

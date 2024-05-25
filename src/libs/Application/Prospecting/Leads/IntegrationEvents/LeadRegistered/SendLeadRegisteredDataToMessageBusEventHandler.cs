@@ -6,11 +6,11 @@ using Shared.Events.IntegrationEvents;
 
 namespace Application.Prospecting.Leads.IntegrationEvents.LeadRegistered;
 
-internal sealed class LeadRegisteredIntegrationEventHandler : ApplicationIntegrationEventHandler<LeadRegisteredIntegrationEvent>
+internal sealed class SendLeadRegisteredDataToMessageBusEventHandler : ApplicationIntegrationEventHandler<LeadRegisteredIntegrationEvent>
 {
     private readonly IMessageBusHelper _messageBusHelper;
 
-    public LeadRegisteredIntegrationEventHandler(
+    public SendLeadRegisteredDataToMessageBusEventHandler(
         IMediator mediator,
         IMessageBusHelper messageBusHelper) : base(mediator)
     {
