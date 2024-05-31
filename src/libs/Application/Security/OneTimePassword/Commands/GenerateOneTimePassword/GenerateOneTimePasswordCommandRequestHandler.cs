@@ -1,6 +1,5 @@
 ﻿using Application.Core.Contracts.Repository.Security;
 using Application.Security.OneTimePassword.IntegrationEvents.OneTimePasswordGenerated;
-using CrossCutting.EndUserCommunication.Sms;
 using CrossCutting.Security.IAM;
 using CrossCutting.Security.Secrecy;
 using MediatR;
