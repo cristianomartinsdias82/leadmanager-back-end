@@ -10,7 +10,7 @@ using Shared.Results;
 
 namespace Application.Security.OneTimePassword.Commands.GenerateOneTimePassword;
 
-public sealed class GenerateOneTimePasswordCommandRequestHandler : ApplicationRequestHandler<GenerateOneTimePasswordCommandRequest, GenerateOneTimePasswordCommandResponse>
+internal sealed class GenerateOneTimePasswordCommandRequestHandler : ApplicationRequestHandler<GenerateOneTimePasswordCommandRequest, GenerateOneTimePasswordCommandResponse>
 {
     private readonly IUserService _userService;
     private readonly ISecretGenerationService _secretGeneratorService;
