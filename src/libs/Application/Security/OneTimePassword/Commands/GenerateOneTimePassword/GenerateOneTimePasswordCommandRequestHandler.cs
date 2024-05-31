@@ -1,6 +1,5 @@
 ﻿using Application.Core.Contracts.Repository.Security;
 using Application.Security.OneTimePassword.IntegrationEvents.OneTimePasswordGenerated;
-using CrossCutting.EndUserCommunication.Sms;
 using CrossCutting.Security.IAM;
 using CrossCutting.Security.Secrecy;
 using MediatR;
@@ -10,7 +9,7 @@ using Shared.Results;
 
 namespace Application.Security.OneTimePassword.Commands.GenerateOneTimePassword;
 
-public sealed class GenerateOneTimePasswordCommandRequestHandler : ApplicationRequestHandler<GenerateOneTimePasswordCommandRequest, GenerateOneTimePasswordCommandResponse>
+internal sealed class GenerateOneTimePasswordCommandRequestHandler : ApplicationRequestHandler<GenerateOneTimePasswordCommandRequest, GenerateOneTimePasswordCommandResponse>
 {
     private readonly IUserService _userService;
     private readonly ISecretGenerationService _secretGeneratorService;

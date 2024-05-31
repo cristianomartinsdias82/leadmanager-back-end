@@ -7,7 +7,7 @@ using Shared.Results;
 
 namespace Application.Security.OneTimePassword.Commands.HandleOneTimePassword;
 
-public sealed class HandleOneTimePasswordCommandRequestHandler : ApplicationRequestHandler<HandleOneTimePasswordCommandRequest, HandleOneTimePasswordCommandResponse>
+internal sealed class HandleOneTimePasswordCommandRequestHandler : ApplicationRequestHandler<HandleOneTimePasswordCommandRequest, HandleOneTimePasswordCommandResponse>
 {
     private readonly IOneTimePasswordRepository _oneTimePasswordRepository;
     private readonly OneTimePasswordCachingPolicy _oneTimePasswordCachingPolicy;

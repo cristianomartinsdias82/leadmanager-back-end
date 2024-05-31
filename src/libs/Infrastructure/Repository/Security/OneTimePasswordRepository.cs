@@ -5,7 +5,7 @@ using CrossCutting.Caching;
 
 namespace Infrastructure.Repository.Security;
 
-public sealed class OneTimePasswordRepository : IOneTimePasswordRepository
+internal sealed class OneTimePasswordRepository : IOneTimePasswordRepository
 {
     private readonly ICacheProvider _cacheProvider;
     private readonly OneTimePasswordCachingPolicy _oneTimePasswordCachingPolicy;
