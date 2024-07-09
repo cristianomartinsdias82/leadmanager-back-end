@@ -9,7 +9,7 @@ FROM mcr.microsoft.com/dotnet/sdk:7.0 AS build
 WORKDIR /src
 COPY ["src/hosts/LeadManagerApi/LeadManagerApi.csproj", "src/hosts/LeadManagerApi/"]
 COPY ["src/libs/Application/Application.csproj", "src/libs/Application/"]
-COPY ["src/libs/Core/Core.csproj", "src/libs/Core/"]
+COPY ["src/libs/Domain/Domain.csproj", "src/libs/Domain/"]
 COPY ["src/libs/Shared/Shared.csproj", "src/libs/Shared/"]
 COPY ["src/libs/Cross-cutting/Cross-cutting.Caching/CrossCutting.Caching.csproj", "src/libs/Cross-cutting/Cross-cutting.Caching/"]
 COPY ["src/libs/Cross-cutting/Cross-cutting.Serialization.ProtoBuf/CrossCutting.Serialization.ProtoBuf.csproj", "src/libs/Cross-cutting/Cross-cutting.Serialization.ProtoBuf/"]
