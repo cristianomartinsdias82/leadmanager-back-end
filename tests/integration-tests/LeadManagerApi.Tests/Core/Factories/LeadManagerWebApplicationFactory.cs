@@ -37,6 +37,7 @@ using System.Net;
 using System.Net.Http.Json;
 using System.Text.Json;
 using Testcontainers.MsSql;
+using Testcontainers.Redis;
 using Tests.Common.ObjectMothers.Domain;
 using Tests.Common.ObjectMothers.Integrations.ViaCep;
 using ViaCep.ServiceClient;
@@ -51,6 +52,7 @@ public class LeadManagerWebApplicationFactory : WebApplicationFactory<Program>, 
 {
     private readonly MockHttpMessageHandler _httpHandlerMock = new MockHttpMessageHandler();
     private readonly MsSqlContainer _dbContainer;
+    private readonly RedisContainer _cacheContainer;
     private JsonSerializerOptions _jsonSerializerOptions = default!;
     private DbConnection _dbConnection = default!;
     private Respawner _respawner = default!;
@@ -59,20 +61,33 @@ public class LeadManagerWebApplicationFactory : WebApplicationFactory<Program>, 
 
     public LeadManagerWebApplicationFactory()
     {
+        Configuration = Services.GetRequiredService<IConfiguration>();
+
+        var dbResourcePortNumber = Configuration["DataSourceSettings:PortNumber"]!;
         _dbContainer = new MsSqlBuilder()
                                     //.WithHostname("localhost") //These parameters are interesting in case you wish to inspect
-                                    //.WithPortBinding(1433, true) //the generated database in some debugging session
+                                    //.WithPortBinding(dbResourcePortNumber, false) //the generated database in some debugging session
                                     //.WithPassword("Y0urStr0nGP@sswoRD_2023") //so you can connect by using some db client tool
-                                    .WithWaitStrategy(Wait.ForUnixContainer().UntilPortIsAvailable(1433))
+                                    .WithWaitStrategy(Wait.ForUnixContainer().UntilPortIsAvailable(int.Parse(dbResourcePortNumber)))
+                                    .Build();
+
+        var cacheResourcePortNumber = Configuration["RedisCacheProviderSettings:PortNumber"]!;
+        var cacheImageName = Configuration["RedisCacheProviderSettings:ImageName"]!;
+        _cacheContainer = new RedisBuilder()
+                                    .WithImage(cacheImageName)
+                                    .WithPortBinding(cacheResourcePortNumber, false) //the generated database in some debugging session
+                                    .WithWaitStrategy(Wait.ForUnixContainer().UntilPortIsAvailable(int.Parse(cacheResourcePortNumber)))
                                     .Build();
     }
+
     public async Task InitializeAsync()
     {
-        Configuration = Services.GetRequiredService<IConfiguration>();
         _jsonSerializerOptions = Services.GetRequiredService<IOptions<JsonOptions>>().Value.JsonSerializerOptions;
 
         await _dbContainer.StartAsync();
         _dbConnection = new SqlConnection(_dbContainer.GetConnectionString());
+
+        await _cacheContainer.StartAsync();
 
         await InitializeRespawnerAsync();
     }
@@ -85,30 +100,31 @@ public class LeadManagerWebApplicationFactory : WebApplicationFactory<Program>, 
     public new async Task DisposeAsync()
     {
         await _dbContainer.StopAsync();
+        await _cacheContainer.StopAsync();
 
         await base.DisposeAsync();
     }
 
-    public virtual HttpClient CreateHttpClientMock(
-        Func<MockHttpMessageHandler, MockHttpMessageHandler> factory,
-        bool includeApiKeyHeader = true)
-    {
-        var handler = factory(_httpHandlerMock);
+    //public virtual HttpClient CreateHttpClientMock(
+    //    Func<MockHttpMessageHandler, MockHttpMessageHandler> factory,
+    //    bool includeApiKeyHeader = true)
+    //{
+    //    var handler = factory(_httpHandlerMock);
 
-        var httpClient = handler.ToHttpClient();
+    //    var httpClient = handler.ToHttpClient();
 
-        if (includeApiKeyHeader)
-        {
-            var apiSettings = Configuration
-                                .GetSection(nameof(LeadManagerApiSettings))
-                                .Get<LeadManagerApiSettings>()!;
+    //    if (includeApiKeyHeader)
+    //    {
+    //        var apiSettings = Configuration
+    //                            .GetSection(nameof(LeadManagerApiSettings))
+    //                            .Get<LeadManagerApiSettings>()!;
 
-            httpClient.DefaultRequestHeaders.Add(apiSettings.ApiKeyRequestHeaderName,
-                                                 apiSettings.ApiKeyRequestHeaderValue);
-        }
+    //        httpClient.DefaultRequestHeaders.Add(apiSettings.ApiKeyRequestHeaderName,
+    //                                             apiSettings.ApiKeyRequestHeaderValue);
+    //    }
 
-        return httpClient;
-    }
+    //    return httpClient;
+    //}
 
     public virtual HttpClient CreateHttpClient(bool includeApiKeyHeader = true)
     {
@@ -130,21 +146,21 @@ public class LeadManagerWebApplicationFactory : WebApplicationFactory<Program>, 
         return httpClient;
     }
 
-    public async Task UsingContextAsync(Func<ILeadManagerDbContext, Task> action)
-    {
-        await using var scope = Services.CreateAsyncScope();
-        await using var context = scope.ServiceProvider.GetRequiredService<ILeadManagerDbContext>();
+    //public async Task UsingContextAsync(Func<ILeadManagerDbContext, Task> action)
+    //{
+    //    await using var scope = Services.CreateAsyncScope();
+    //    await using var context = scope.ServiceProvider.GetRequiredService<ILeadManagerDbContext>();
 
-        await action(context);
-    }
+    //    await action(context);
+    //}
 
-    public async Task<TResult> UsingContextAsync<TResult>(Func<ILeadManagerDbContext, Task<TResult>> action)
-    {
-        await using var scope = Services.CreateAsyncScope();
-        await using var context = scope.ServiceProvider.GetRequiredService<ILeadManagerDbContext>();
+    //public async Task<TResult> UsingContextAsync<TResult>(Func<ILeadManagerDbContext, Task<TResult>> action)
+    //{
+    //    await using var scope = Services.CreateAsyncScope();
+    //    await using var context = scope.ServiceProvider.GetRequiredService<ILeadManagerDbContext>();
 
-        return await action(context);
-    }
+    //    return await action(context);
+    //}
 
     public T? DeserializeFromJson<T>(string json)
         => JsonSerializer.Deserialize<T>(json, _jsonSerializerOptions);
@@ -171,6 +187,7 @@ public class LeadManagerWebApplicationFactory : WebApplicationFactory<Program>, 
             await context.SaveChangesAsync();
         }
     }
+
     protected override void ConfigureWebHost(IWebHostBuilder builder)
     {
         builder
