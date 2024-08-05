@@ -170,4 +170,4 @@ Lista com os principais utilitários de linha de comando que foram utilizados ne
 - docker
 - git
  
-O projeto está em constante evolução e sempre pode ser melhorado, tanto em termos de organização (estrutura de pastas, separações de responsabilidades) quanto de algoritmos dentre outras coisas! Portanto, opiniões são sempre muito bem-vindas! :)
+O projeto está em constante evolução e sempre pode ser melhorado, tanto em termos de organização (estrutura de pastas, separações de responsabilidades) quanto de algoritmos dentre outras coisas! Então, opiniões são sempre muito bem-vindas! :)

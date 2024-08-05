@@ -85,6 +85,17 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "architecture-validation", "
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ArchitectureValidation.Tests", "tests\architecture-validation\ArchitectureValidation.Tests\ArchitectureValidation.Tests.csproj", "{68D1E35D-A92E-48A6-930C-7B32F39C37A7}"
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "k8s", "k8s", "{BF2B1DB0-BBEE-4AB6-B6F0-61DEC1E871CB}"
+	ProjectSection(SolutionItems) = preProject
+		k8s\leadmanager.api-deployment.yaml = k8s\leadmanager.api-deployment.yaml
+		k8s\leadmanager.api-ingress.yaml = k8s\leadmanager.api-ingress.yaml
+		k8s\leadmanager.api-namespace.yaml = k8s\leadmanager.api-namespace.yaml
+		k8s\leadmanager.api-secret.yaml = k8s\leadmanager.api-secret.yaml
+		k8s\leadmanager.database-deployment.yaml = k8s\leadmanager.database-deployment.yaml
+		k8s\leadmanager.messagebus-deployment.yaml = k8s\leadmanager.messagebus-deployment.yaml
+		k8s\leadmanager.nginx-ingress.yaml = k8s\leadmanager.nginx-ingress.yaml
+	EndProjectSection
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU

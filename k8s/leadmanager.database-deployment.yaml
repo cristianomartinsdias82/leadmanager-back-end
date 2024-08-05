@@ -1,0 +1,52 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name:  leadmanager-db
+  namespace: leadmanager
+  labels:
+    app:  leadmanager-db
+spec:
+  selector:
+    matchLabels:
+      app: leadmanager-db
+  replicas: 1
+  template:
+    metadata:
+      labels:
+        app: leadmanager-db
+    spec:
+      containers:
+      - name: leadmanager-db
+        image: mcr.microsoft.com/mssql/server
+        # resources:
+        #   requests:
+        #     cpu: 100m
+        #     memory: 100Mi
+        #   limits:
+        #     cpu: 100m
+        #     memory: 100Mi
+        env:
+        - name: ACCEPT_EULA
+          value: 'Y'
+        - name: SA_PASSWORD
+          value: Y0urStr0nGP@sswoRD_2023
+        - name: MSSQL_PID
+          value: Express
+        ports:
+        - containerPort: 1433
+          name:  leadmanager-db
+      restartPolicy: Always
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: leadmanager-db
+  namespace: leadmanager
+spec:
+  selector:
+    app: leadmanager-db
+  ports:
+    - port: 1433
+  #     targetPort: 8080
+  #     nodePort: 30000
+  # type: NodePort
