@@ -1,0 +1,48 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name:  leadmanager-bus
+  namespace: leadmanager
+  labels:
+    app:  leadmanager-bus
+spec:
+  selector:
+    matchLabels:
+      app: leadmanager-bus
+  replicas: 1
+  template:
+    metadata:
+      labels:
+        app: leadmanager-bus
+    spec:
+      containers:
+      - name: leadmanager-bus
+        image: rabbitmq
+        # resources:
+        #   requests:
+        #     cpu: 100m
+        #     memory: 100Mi
+        #   limits:
+        #     cpu: 100m
+        #     memory: 100Mi
+        env:
+          - name: RABBITMQ_DEFAULT_USER
+            value: guest
+          - name: RABBITMQ_DEFAULT_PASS
+            value: guest
+          
+        ports:
+          - containerPort: 5672
+            name:  leadmanager-bus
+      restartPolicy: Always
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: leadmanager-bus
+  namespace: leadmanager
+spec:
+  selector:
+    app: leadmanager-bus
+  ports:
+    - port: 5672

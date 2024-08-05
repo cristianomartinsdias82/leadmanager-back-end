@@ -1,0 +1,60 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name:  leadmanager-api
+  namespace: leadmanager
+  labels:
+    app:  leadmanager-api
+spec:
+  selector:
+    matchLabels:
+      app: leadmanager-api
+  replicas: 1
+  template:
+    metadata:
+      labels:
+        app: leadmanager-api
+    spec:
+      containers:
+      - name: leadmanager-api
+        image: cristianomartinsdiasspbr1982/leadmanager:v1.0.8
+        #imagePullPolicy: Never
+        resources:
+          requests:
+            cpu: 100m
+            memory: 256Mi
+          limits:
+            cpu: 100m
+            memory: 256Mi
+        env:
+          - name: ASPNETCORE_ENVIRONMENT
+            value: Development
+          - name: ASPNETCORE_URLS #Try with this new entry
+            value: https://+:443;https://+:80
+          - name: DataSourceSettings__ConnectionString
+            value: Data source=leadmanager-db;Initial Catalog=LeadManager;User Id=sa;Password=Y0urStr0nGP@sswoRD_2023;MultipleActiveResultSets=true;Connect timeout=30;TrustServerCertificate=True
+          - name: RabbitMqConnectionSettings__HostName
+            value: leadmanager-bus
+        # - name: DataSourceSettings__ConnectionString
+        #   valueFrom:
+        #     configMapKeyRef:
+        #       name: leadmanagerapi-secret
+        #       key: DatabaseConnectionString
+        ports:
+        - containerPort: 80
+        #- containerPort: 8080
+      #restartPolicy: Always
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: leadmanager-api-service
+  namespace: leadmanager
+spec:
+  selector:
+    app: leadmanager-api
+  ports:
+    - protocol: TCP
+      port: 8081
+      targetPort: 80
+  type: NodePort
