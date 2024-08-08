@@ -1,10 +1,10 @@
-﻿using Domain.Core;
+﻿//using Domain.Core;
 using Shared.DataPagination;
 using System.Linq.Expressions;
 
 namespace Application.Core.Contracts.Repository;
 
-public interface IRepository<T> where T : class, IEntity
+public interface IRepository<T> where T : class//, IEntity
 {
     Task AddAsync(
         T entity,

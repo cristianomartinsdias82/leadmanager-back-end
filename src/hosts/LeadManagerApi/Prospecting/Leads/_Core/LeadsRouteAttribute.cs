@@ -1,6 +1,6 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using LeadManagerApi.Core.ApiFeatures;
 
-namespace LeadManagerApi.Core.ApiFeatures;
+namespace LeadManagerApi.Prospecting.Leads.Core;
 
 public sealed class LeadsRouteAttribute : LeadManagerApiRouteAttribute
 {

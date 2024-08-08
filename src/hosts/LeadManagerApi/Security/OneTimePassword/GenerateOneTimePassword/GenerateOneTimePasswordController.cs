@@ -14,9 +14,9 @@ public sealed class GenerateOneTimePasswordController : LeadManagerController
     }
 
     [HttpPost]
-    [ProducesResponseType(typeof(ApplicationResponse<bool>), StatusCodes.Status200OK)]
-    [ProducesResponseType(typeof(ApplicationResponse<bool>), StatusCodes.Status400BadRequest)]
-    [ProducesResponseType(StatusCodes.Status500InternalServerError)]
+    [ProducesResponseType(typeof(ApplicationResponse<GenerateOneTimePasswordCommandResponse>), StatusCodes.Status200OK)]
+    [ProducesResponseType(typeof(ApplicationResponse<object>), StatusCodes.Status400BadRequest)]
+    [ProducesResponseType(typeof(ApplicationResponse<object>), StatusCodes.Status500InternalServerError)]
     public async Task<IActionResult> GenerateNewOneTimePasswordAsync([FromBody] GenerateOneTimePasswordCommandRequest request, CancellationToken cancellationToken)
     {
         var response = await Mediator.Send(request, cancellationToken);

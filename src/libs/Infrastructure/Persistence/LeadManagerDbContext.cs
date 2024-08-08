@@ -1,4 +1,5 @@
-﻿using Application.Core.Contracts.Persistence;
+﻿using Application.Core;
+using Application.Core.Contracts.Persistence;
 using CrossCutting.Security.IAM;
 using Domain.Core;
 using Domain.Prospecting.Entities;
@@ -19,6 +20,7 @@ public sealed class LeadManagerDbContext : DbContext, ILeadManagerDbContext
     }
 
     public DbSet<Lead> Leads { get; set; }
+    public DbSet<AuditEntry> AuditEntries { get; set; }
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {

@@ -1,6 +1,6 @@
 ﻿using Application.Security.OneTimePassword.Commands.HandleOneTimePassword;
 
-namespace Application.Core.Contracts.Repository.Security;
+namespace Application.Core.Contracts.Repository.Security.OneTimePassword;
 
 public interface IOneTimePasswordRepository
 {
