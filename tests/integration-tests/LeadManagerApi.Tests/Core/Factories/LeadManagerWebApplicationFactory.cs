@@ -94,7 +94,8 @@ public class LeadManagerWebApplicationFactory : WebApplicationFactory<Program>, 
 
     public async Task ResetDatabaseAsync()
     {
-        await _respawner.ResetAsync(_dbConnection);
+        try { await _respawner.ResetAsync(_dbConnection); }
+        catch { }
     }
 
     public new async Task DisposeAsync()

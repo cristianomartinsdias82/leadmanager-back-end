@@ -1,4 +1,5 @@
 ﻿using Application.Core.Contracts.Repository.Security;
+using Application.Core.Contracts.Repository.Security.OneTimePassword;
 using Application.Security.OneTimePassword.Commands.GenerateOneTimePassword;
 using Application.Security.OneTimePassword.Commands.HandleOneTimePassword;
 using CrossCutting.Security.IAM;

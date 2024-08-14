@@ -1,11 +1,11 @@
 ﻿using Application.Core.Contracts.Repository;
-using Domain.Core;
+//using Domain.Core;
 using Shared.DataPagination;
 using System.Linq.Expressions;
 
 namespace Infrastructure.Repository;
 
-internal abstract class RepositoryBase<T> : IRepository<T> where T : class, IEntity
+internal abstract class RepositoryBase<T> : IRepository<T> where T : class//, IEntity
 {
     public abstract Task AddAsync(
         T entity,

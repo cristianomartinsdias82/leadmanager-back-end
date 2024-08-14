@@ -1,4 +1,5 @@
 ﻿using Application.Security;
+using IdentityModel;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
@@ -26,7 +27,9 @@ internal class TestingAuthenticationHandler : AuthenticationHandler<Authenticati
                 new Claim (LeadManagerSecurityConfiguration.ClaimTypes.LDM, LeadManagerSecurityConfiguration.Claims.Insert),
                 new Claim (LeadManagerSecurityConfiguration.ClaimTypes.LDM, LeadManagerSecurityConfiguration.Claims.BulkInsert),
                 new Claim (LeadManagerSecurityConfiguration.ClaimTypes.LDM, LeadManagerSecurityConfiguration.Claims.Update),
-                new Claim (LeadManagerSecurityConfiguration.ClaimTypes.LDM, LeadManagerSecurityConfiguration.Claims.Delete)
+                new Claim (LeadManagerSecurityConfiguration.ClaimTypes.LDM, LeadManagerSecurityConfiguration.Claims.Delete),
+                new Claim (JwtClaimTypes.Subject, "955FBD5F-7479-440F-B581-799119060AED"),
+                new Claim (JwtClaimTypes.Email, "test-user@leadmanager.com.br")
             },
             "Testing");
         var principal = new ClaimsPrincipal(identity);
