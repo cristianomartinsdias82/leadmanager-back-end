@@ -30,6 +30,8 @@ public sealed class RemoveLeadController : LeadManagerController
     {
         var response = await Mediator.Send(new RemoveLeadCommandRequest { Id = id, Revision = revision }, cancellationToken);
 
-        return Result(response);
+        return Result(
+            response,
+            onSuccessStatusCodeFactory: (_, _) => StatusCodes.Status204NoContent);
     }
 }

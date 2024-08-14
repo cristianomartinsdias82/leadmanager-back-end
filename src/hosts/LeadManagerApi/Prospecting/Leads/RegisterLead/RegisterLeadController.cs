@@ -26,6 +26,7 @@ public sealed class RegisterLeadController : LeadManagerController
 
         return Result(
             response,
-            onSuccessStatusCodeFactory: (_, response) => StatusCodes.Status201Created);
+            onSuccessStatusCodeFactory: (_, _) => StatusCodes.Status201Created,
+            routeData: ("leads", response.Data.Id));
     }
 }

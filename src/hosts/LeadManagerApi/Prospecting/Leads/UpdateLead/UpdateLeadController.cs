@@ -27,6 +27,8 @@ public sealed class UpdateLeadController : LeadManagerController
 
         var response = await Mediator.Send(request, cancellationToken);
 
-        return Result(response);
+        return Result(
+            response,
+            onSuccessStatusCodeFactory: (_, _) => StatusCodes.Status204NoContent);
     }
 }
