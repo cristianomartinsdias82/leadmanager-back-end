@@ -13,12 +13,14 @@ public sealed class LogUserLoggedInEntryController : LeadManagerController
     public LogUserLoggedInEntryController(ISender sender) : base(sender) { }
 
     [HttpPost("logins/log")]
-    [ProducesResponseType(typeof(ApplicationResponse<LogUserLoggedInEntryCommandResponse>), StatusCodes.Status200OK)]
+    [ProducesResponseType(typeof(ApplicationResponse<LogUserLoggedInEntryCommandResponse>), StatusCodes.Status204NoContent)]
     [ProducesResponseType(typeof(ApplicationResponse<object>), StatusCodes.Status500InternalServerError)]
     public async Task<IActionResult> LogUserLoggedInEntryAsync(CancellationToken cancellationToken)
     {
         var response = await Mediator.Send(new LogUserLoggedInEntryCommandRequest(), cancellationToken);
 
-        return Result(response);
+        return Result(
+            response,
+            onSuccessStatusCodeFactory: (_, _) => StatusCodes.Status204NoContent);
     }
 }

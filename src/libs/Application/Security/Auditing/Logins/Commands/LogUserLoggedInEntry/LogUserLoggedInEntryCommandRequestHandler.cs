@@ -30,17 +30,20 @@ internal sealed class LogUserLoggedInEntryCommandRequestHandler : ApplicationReq
 
     public async override Task<ApplicationResponse<LogUserLoggedInEntryCommandResponse>> Handle(LogUserLoggedInEntryCommandRequest request, CancellationToken cancellationToken)
     {
-        await _auditingRepository.AddAsync(AuditEntry.Create(
-                                                        DateTime.UtcNow,
-                                                        _userService.GetUserEmail()!,
-                                                        SystemActions.Login,
-                                                        null,
-                                                        null,
-                                                        EnumExtensions.GetEnumDescription(SystemActions.Login),
-                                                        null),
-                                            cancellationToken);
+        await Task.Factory.StartNew(async () =>
+        {
+            await _auditingRepository.AddAsync(AuditEntry.Create(
+                                                            DateTime.UtcNow,
+                                                            _userService.GetUserEmail()!,
+                                                            SystemActions.Login,
+                                                            null,
+                                                            null,
+                                                            EnumExtensions.GetEnumDescription(SystemActions.Login),
+                                                            null),
+                                                cancellationToken);
 
-        await _unitOfWork.CommitAsync(cancellationToken);
+            await _unitOfWork.CommitAsync(cancellationToken);
+        }, TaskCreationOptions.LongRunning);
 
         //AddEvent(new UserLoggedInIntegrationEvent(_userService.GetUserEmail()!));
 
