@@ -10,5 +10,20 @@ internal static class JwtAuthenticationServicesExtensions
     public static AuthenticationBuilder AddJwtAuthentication(this IServiceCollection services, IConfiguration configuration)
         => services.ConfigureOptions<JwtAuthenticationConfigureOptions>()
                 .AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
-                .AddJwtBearer();
+                .AddJwtBearer(options =>
+                {
+                    options.Events = new JwtBearerEvents
+                    {
+                        //This event is raised everytime an authenticated request is sent
+                        //OnTokenValidated = context =>
+                        //{
+                        //    var sp = context.HttpContext.RequestServices;
+                        //    var logger = sp.GetService<ILogger<AuthenticationBuilder>>();
+
+                        //    logger?.LogInformation("Token validated.");
+
+                        //    return Task.CompletedTask;
+                        //}
+                    };
+                });
 }

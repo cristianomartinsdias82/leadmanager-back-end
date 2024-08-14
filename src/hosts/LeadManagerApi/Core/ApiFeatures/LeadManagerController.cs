@@ -31,10 +31,30 @@ public abstract class LeadManagerController : ControllerBase
     protected virtual IActionResult Result<TReturn>(
         ApplicationResponse<TReturn> response,
         Func<HttpContext, ApplicationResponse<TReturn>, int>? onSuccessStatusCodeFactory = default,
-        Func<HttpContext, ApplicationResponse<TReturn>, int>? onFailureStatusCodeFactory = default)
-            => StatusCode(
-                    response.Success
-                        ? onSuccessStatusCodeFactory?.Invoke(HttpContext, response) ?? OperationCode_StatusCode_Map[response.OperationCode ?? OperationCodes.Successful]
-                        : onFailureStatusCodeFactory?.Invoke(HttpContext, response) ?? OperationCode_StatusCode_Map[response.OperationCode ?? OperationCodes.Error],
-                    response);
+        Func<HttpContext, ApplicationResponse<TReturn>, int>? onFailureStatusCodeFactory = default,
+        (string Endpoint, Guid DataId)? routeData = default)
+    {
+        if (response.Success)
+        {
+            if (onSuccessStatusCodeFactory is not null)
+            {
+                var statusCode = onSuccessStatusCodeFactory(HttpContext, response);
+                return statusCode switch
+                {
+                    StatusCodes.Status201Created => routeData is not null ?
+                                                    Created(new Uri($"{HttpContext.GetBaseUrl()}{LeadManagerApiRouteAttribute.ApiRoutePrefix}/{routeData.Value.Endpoint}/{routeData.Value.DataId}"), new { id = routeData.Value.DataId })
+                                                    :
+                                                    Ok(response),
+                    StatusCodes.Status204NoContent => NoContent(),
+                    _ => Ok(response)
+                };
+            }
+
+            return Ok(response);
+        }
+
+        return StatusCode(
+                onFailureStatusCodeFactory?.Invoke(HttpContext, response) ?? OperationCode_StatusCode_Map[response.OperationCode ?? OperationCodes.Error],
+                response);
+    }
 }

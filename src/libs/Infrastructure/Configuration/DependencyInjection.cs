@@ -3,6 +3,8 @@ using Application.Core.Contracts.Persistence;
 using Application.Core.Contracts.Repository.Caching;
 using Application.Core.Contracts.Repository.Prospecting;
 using Application.Core.Contracts.Repository.Security;
+using Application.Core.Contracts.Repository.Security.Auditing;
+using Application.Core.Contracts.Repository.Security.OneTimePassword;
 using Application.Core.Contracts.Repository.UnitOfWork;
 using Infrastructure.EventDispatching;
 using Infrastructure.Messaging;
@@ -10,6 +12,8 @@ using Infrastructure.Persistence;
 using Infrastructure.Repository.Caching;
 using Infrastructure.Repository.Prospecting;
 using Infrastructure.Repository.Security;
+using Infrastructure.Repository.Security.Auditing;
+using Infrastructure.Repository.Security.OneTimePassword;
 using Infrastructure.Repository.UnitOfWork;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
@@ -31,15 +35,18 @@ public static class DependencyInjection
     {
         var dataSourceSettings = configuration.GetSection(nameof(DataSourceSettings)).Get<DataSourceSettings>()!;
         services.AddSingleton(dataSourceSettings);
+        services.AddTransient<AppendAuditEntryInterceptor>();
 
-        services.AddDbContext<LeadManagerDbContext>(config =>
+        services.AddDbContext<LeadManagerDbContext>((serviceProvider, config) =>
         {
             config.UseSqlServer(
-                dataSourceSettings.ConnectionString,
-                sqlOptions =>
-                {
-                    sqlOptions.EnableRetryOnFailure(dataSourceSettings.RetryOperationMaxCount);
-                });
+                    dataSourceSettings.ConnectionString,
+                    sqlOptions =>
+                    {
+                        sqlOptions.EnableRetryOnFailure(dataSourceSettings.RetryOperationMaxCount);
+                    })
+                 .AddInterceptors(serviceProvider.GetRequiredService<AppendAuditEntryInterceptor>());
+                
         });
 
         services.AddScoped<ILeadManagerDbContext, LeadManagerDbContext>();
@@ -56,7 +63,8 @@ public static class DependencyInjection
             .AddScoped<ILeadRepository, LeadRepository>()
             .Decorate<ILeadRepository, CachingLeadRepository>()
             .AddScoped<ICachingLeadRepository, CachingLeadRepository>()
-            .AddScoped<IOneTimePasswordRepository, OneTimePasswordRepository>();
+            .AddScoped<IOneTimePasswordRepository, OneTimePasswordRepository>()
+            .AddScoped<IAuditingRepository, AuditingRepository>();
 
     private static IServiceCollection AddEventDispatcher(this IServiceCollection services, IConfiguration configuration)
         => services.AddScoped<IEventDispatching, EventDispatcher>();
