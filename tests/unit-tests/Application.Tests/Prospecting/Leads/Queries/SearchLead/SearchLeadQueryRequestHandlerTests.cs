@@ -33,7 +33,7 @@ public sealed class SearchLeadQueryRequestHandlerTests
 
     [Theory]
     [MemberData(nameof(SearchTermsWithMatchesSimulations))]
-    public async void Handle_WhenDoesNotContainLeads_ShouldReturnFalse(SearchLeadQueryRequest request)
+    public async Task Handle_WhenDoesNotContainLeads_ShouldReturnFalse(SearchLeadQueryRequest request)
     {
         //Arrange && Act
         var result = await _handler.Handle(request, _cts.Token);
@@ -48,7 +48,7 @@ public sealed class SearchLeadQueryRequestHandlerTests
 
     [Theory]
     [MemberData(nameof(SearchTermsWithNoMatchesSimulations))]
-    public async void Handle_WhenContainsLeads_And_NoLeadSearchMatches_ShouldReturnFalse(SearchLeadQueryRequest request)
+    public async Task Handle_WhenContainsLeads_And_NoLeadSearchMatches_ShouldReturnFalse(SearchLeadQueryRequest request)
     {
         //Arrange
         _leadRepository
@@ -69,7 +69,7 @@ public sealed class SearchLeadQueryRequestHandlerTests
     //[Theory]
     //[MemberData(nameof(SearchTermsWithMatchesSimulations))]
     [Fact]
-    public async void Handle_WhenContainsLeads_And_LeadSearchMatches_ShouldReturnTrue()//(SearchLeadQueryRequest request)
+    public async Task Handle_WhenContainsLeads_And_LeadSearchMatches_ShouldReturnTrue()//(SearchLeadQueryRequest request)
     {
         //Arrange
         _leadRepository
