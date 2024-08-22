@@ -1,12 +1,18 @@
-#See https://aka.ms/customizecontainer to learn how to customize your debug container and how Visual Studio uses this Dockerfile to build your images for faster debugging.
-
 FROM mcr.microsoft.com/dotnet/aspnet:8.0 AS base
+USER app
 WORKDIR /app
+
+ENV ASPNETCORE_URLS=https://+:443;http://+:80
+ENV ASPNETCORE_Kestrel__Certificates__Default__Password=goodluck
+ENV ASPNETCORE_Kestrel__Certificates__Default__Path=goodluck
+
 EXPOSE 80
 EXPOSE 443
 
 FROM mcr.microsoft.com/dotnet/sdk:8.0 AS build
 WORKDIR /src
+# Copy the HTTPS certificate
+COPY ["src/hosts/LeadManagerApi/certs/aspnetapp.pfx", "/https/aspnetapp.pfx"]
 COPY ["src/hosts/LeadManagerApi/LeadManagerApi.csproj", "src/hosts/LeadManagerApi/"]
 COPY ["src/libs/Application/Application.csproj", "src/libs/Application/"]
 COPY ["src/libs/Domain/Domain.csproj", "src/libs/Domain/"]

@@ -537,3 +537,5 @@ $RECYCLE.BIN/
 /src/libs/Integrations/ViaCep.ServiceClient/obj/Debug/net7.0/ViaCep.ServiceClient.AssemblyInfoInputs.cache
 /src/libs/Integrations/ViaCep.ServiceClient/obj/Debug/net7.0/ViaCep.ServiceClient.csproj.AssemblyReference.cache
 /src/libs/Shared/obj/Debug/net7.0/Shared.AssemblyInfoInputs.cache
+/src/hosts/LeadManagerApi/certs
+/src/hosts/IAMServer/certs/aspnetapp.pfx-passw-is-q1w2e3r4t5.txt

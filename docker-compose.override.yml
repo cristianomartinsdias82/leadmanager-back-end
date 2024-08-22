@@ -1,5 +1,3 @@
-#version: '3.4'
-
 services:
 
   portainer:
@@ -36,6 +34,18 @@ services:
     volumes:
       - db_data:/var/opt/mssql
 
+  iamserver.db:
+    container_name: iamserverdb
+    restart: always
+    environment:
+      - ACCEPT_EULA=Y
+      - SA_PASSWORD=Y0urStr0nGP@sswoRD_2023
+      - MSSQL_PID=Express
+    ports:
+      - "27017:27017"
+    volumes:
+      - iamdb_data:/var/opt/mongo
+
   leadmanager.messagebus:
     container_name: leadmanagermessagebus
     restart: always
@@ -66,10 +76,19 @@ services:
     volumes:
       - caching_data:/var/data/caching
 
-  leadmanager.client:
+  iamserver:
+    container_name: iamserver
+    depends_on:
+      - iamserver.db
+    ports:
+      - "8002:80"
+      - "8543:443"
+
+  leadmanager.web:
     container_name: leadmanagerweb
     ports:
       - "8002:80"
+      - "8543:443"
 
   leadmanager.api:
     container_name: leadmanagerapi
@@ -81,6 +100,8 @@ services:
       - leadmanager.logging-ingestion
     environment:
       - ASPNETCORE_ENVIRONMENT=Development
+      - ASPNETCORE_Kestrel__Certificates__Default__Password=q1w2e3r4t5
+      - ASPNETCORE_Kestrel__Certificates__Default__Path=/https/aspnetapp.pfx
       - "LeadManagerApiSettings:Cors_AllowedOrigins=http://localhost:8002, http://leadmanagerweb"
       - "LeadManagerApiSettings:ApiKeyRequestHeaderValue=74ynfkjy487yue47j"
       - "Logging:FileSink:LogFilePath=/data/app/logs/applogs.log"
@@ -97,6 +118,18 @@ services:
       - "RabbitMqConnectionSettings:ClientProvidedName=lead-manager"
     ports:
       - "8001:80"
+      - "8443:443"
     volumes:
       - ${APPDATA}/Microsoft/UserSecrets:/root/.microsoft/usersecrets:ro
       - ${APPDATA}/ASP.NET/Https:/root/.aspnet/https:ro
+      - ~/.aspnet/https:/https:ro
+  # iamserver:
+  #   environment:
+  #     - ASPNETCORE_ENVIRONMENT=Development
+  #     - ASPNETCORE_HTTP_PORTS=8080
+  #     - ASPNETCORE_HTTPS_PORTS=8081
+  #   ports:
+  #     - "8080"
+  #     - "8081"
+  #   volumes:
+  #     - ${APPDATA}/ASP.NET/Https:/home/app/.aspnet/https:ro
