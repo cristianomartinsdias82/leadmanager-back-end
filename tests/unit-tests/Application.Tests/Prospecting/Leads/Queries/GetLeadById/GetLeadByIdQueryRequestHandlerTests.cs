@@ -31,7 +31,7 @@ public sealed class GetLeadByIdQueryRequestHandlerTests
     }
 
     [Fact]
-    public async void Handle_WhenNonExistingLeadInformed_ShouldReturnNotFound()
+    public async Task Handle_WhenNonExistingLeadInformed_ShouldReturnNotFound()
     {
         //Arrange
         GetLeadByIdQueryRequest request = new() { Id = Guid.NewGuid() };
@@ -48,7 +48,7 @@ public sealed class GetLeadByIdQueryRequestHandlerTests
     }
 
     [Fact]
-    public async void Handle_WhenExistingLeadInformed_ShouldReturnSuccessfulWithLeadData()
+    public async Task Handle_WhenExistingLeadInformed_ShouldReturnSuccessfulWithLeadData()
     {
         //Arrange
         var _xptoIncLead = LeadMother.XptoLLC();
