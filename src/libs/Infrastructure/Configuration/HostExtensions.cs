@@ -1,4 +1,5 @@
-﻿using Infrastructure.Persistence;
+﻿using Domain.Prospecting.Entities;
+using Infrastructure.Persistence;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -22,7 +23,12 @@ public static class HostExtensions
                 db.Database.Migrate();
 
                 logger?.LogInformation("Database migration executed successfully.");
-            }
+
+				logger?.LogInformation("Adding Lead sample data...");
+                AddLeadSampleData(db);
+
+				logger?.LogInformation("Lead sample data registration successful.");
+			}
             catch (Exception exc)
             {
                 logger?.LogError(exc, "Database migration error!");
@@ -31,4 +37,23 @@ public static class HostExtensions
 
         return app;
     }
+
+    private static void AddLeadSampleData(LeadManagerDbContext dbContext)
+    {
+        if (dbContext.Leads.Any())
+            return;
+
+        dbContext.Leads.Add(Lead.Criar(
+			"20.321.123/0001-54",
+			"Lead 1",
+			"04858-040",
+			"Rua do Escorpião Louco",
+			"Vila Parí",
+            "São Paulo",
+            "SP",
+            "2609",
+            null));
+
+        dbContext.SaveChanges();
+	}
 }

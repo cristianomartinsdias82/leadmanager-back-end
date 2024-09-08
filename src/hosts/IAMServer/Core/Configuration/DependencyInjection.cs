@@ -27,14 +27,16 @@ public static class DependencyInjection
             corsOptions.AddPolicy(LeadManagerAppConstants.CorsPolicyName,
                 policyBuilder =>
                 {
-                    if (builder.Environment.IsDevelopment())
-                        policyBuilder.AllowAnyOrigin();
+                    //if (builder.Environment.IsDevelopment())
+                    //    policyBuilder.AllowAnyOrigin();
 
                     policyBuilder
-                           .WithOrigins(leadManagerWebAppClientSettings.BaseUrl)
+                           //.WithOrigins(leadManagerWebAppClientSettings.BaseUrl)
+                           .AllowAnyOrigin()
                            .AllowAnyHeader()
-                           .WithMethods(leadManagerWebAppClientSettings.Methods.Split(','))
-                           .AllowCredentials()
+                           //.WithMethods(leadManagerWebAppClientSettings.Methods.Split(','))
+                           .AllowAnyMethod()
+                           //.AllowCredentials()
                            .Build();
                 }
             );

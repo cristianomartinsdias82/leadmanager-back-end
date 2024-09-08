@@ -37,14 +37,14 @@ services:
   iamserver.db:
     container_name: iamserverdb
     restart: always
-    environment:
-      - ACCEPT_EULA=Y
-      - SA_PASSWORD=Y0urStr0nGP@sswoRD_2023
-      - MSSQL_PID=Express
     ports:
-      - "27017:27017"
+      - "27020:27017"
+    environment:
+      - MONGO_INITDB_ROOT_USERNAME=root
+      - MONGO_INITDB_ROOT_PASSWORD=pointOfN0_Return
+      - MONGO_INITDB_DATABASE=IamDb
     volumes:
-      - iamdb_data:/var/opt/mongo
+      - iamdb_data:/data/db
 
   leadmanager.messagebus:
     container_name: leadmanagermessagebus
@@ -80,12 +80,29 @@ services:
     container_name: iamserver
     depends_on:
       - iamserver.db
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Development
+      - ASPNETCORE_Kestrel__Certificates__Default__Password=q1w2e3r4t5
+      - ASPNETCORE_Kestrel__Certificates__Default__Path=/https/aspnetapp.pfx
+      - "DataSourceSettings:ConnectionString=mongodb://root:pointOfN0_Return@iamserverdb/IamDb?authSource=admin"
+      - "IAMServerSettings__Clients__1__RedirectUris__0=https://localhost:8543/auth-callback"
+      - "IAMServerSettings__Clients__1__PostLogoutRedirectUris__0=https://localhost:8543/user-logged-out"
+      - "IAMServerSettings__Clients__1__AllowedCorsOrigins__0=https://localhost:8543"
+      - "LeadWebAppClientSettings__BaseUrl=https://localhost:8543"
     ports:
-      - "8002:80"
-      - "8543:443"
+      - "8003:80"
+      - "8643:443"
+    volumes:
+      - ${APPDATA}/ASP.NET/Https:/home/app/.aspnet/https:ro
 
   leadmanager.web:
     container_name: leadmanagerweb
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Development
+      - ASPNETCORE_Kestrel__Certificates__Default__Password=q1w2e3r4t5
+      - ASPNETCORE_Kestrel__Certificates__Default__Path=/https/aspnetapp.pfx
+  #   - ASPNETCORE_HTTP_PORTS=8002
+  #   - ASPNETCORE_HTTPS_PORTS=8543
     ports:
       - "8002:80"
       - "8543:443"
@@ -95,14 +112,14 @@ services:
     depends_on:
       - leadmanager.db
       - leadmanager.messagebus
+      - leadmanager.logging-ingestion
       - leadmanager.blob
       - leadmanager.caching
-      - leadmanager.logging-ingestion
     environment:
       - ASPNETCORE_ENVIRONMENT=Development
       - ASPNETCORE_Kestrel__Certificates__Default__Password=q1w2e3r4t5
       - ASPNETCORE_Kestrel__Certificates__Default__Path=/https/aspnetapp.pfx
-      - "LeadManagerApiSettings:Cors_AllowedOrigins=http://localhost:8002, http://leadmanagerweb"
+      - "LeadManagerApiSettings:Cors_AllowedOrigins=https://localhost:8543/api/auditing/logins/log,https://localhost:8543,http://localhost:8002"
       - "LeadManagerApiSettings:ApiKeyRequestHeaderValue=74ynfkjy487yue47j"
       - "Logging:FileSink:LogFilePath=/data/app/logs/applogs.log"
       - "DataSourceSettings:ConnectionString=Server=leadmanagerdb;Database=LeadManager;User id=sa;Password=Y0urStr0nGP@sswoRD_2023;MultipleActiveResultSets=true;Connect timeout=30;TrustServerCertificate=True"
@@ -116,6 +133,7 @@ services:
       - "RabbitMqConnectionSettings:Password=guest"
       - "RabbitMqConnectionSettings:VirtualHost=/"
       - "RabbitMqConnectionSettings:ClientProvidedName=lead-manager"
+      - "JwtAuthenticationProviderSettings:AuthorityBaseUrl=https://localhost:8643"
     ports:
       - "8001:80"
       - "8443:443"
@@ -123,13 +141,3 @@ services:
       - ${APPDATA}/Microsoft/UserSecrets:/root/.microsoft/usersecrets:ro
       - ${APPDATA}/ASP.NET/Https:/root/.aspnet/https:ro
       - ~/.aspnet/https:/https:ro
-  # iamserver:
-  #   environment:
-  #     - ASPNETCORE_ENVIRONMENT=Development
-  #     - ASPNETCORE_HTTP_PORTS=8080
-  #     - ASPNETCORE_HTTPS_PORTS=8081
-  #   ports:
-  #     - "8080"
-  #     - "8081"
-  #   volumes:
-  #     - ${APPDATA}/ASP.NET/Https:/home/app/.aspnet/https:ro

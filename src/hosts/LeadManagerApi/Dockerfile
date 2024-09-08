@@ -11,7 +11,7 @@ EXPOSE 443
 
 FROM mcr.microsoft.com/dotnet/sdk:8.0 AS build
 WORKDIR /src
-# Copy the HTTPS certificate
+
 COPY ["src/hosts/LeadManagerApi/certs/aspnetapp.pfx", "/https/aspnetapp.pfx"]
 COPY ["src/hosts/LeadManagerApi/LeadManagerApi.csproj", "src/hosts/LeadManagerApi/"]
 COPY ["src/libs/Application/Application.csproj", "src/libs/Application/"]

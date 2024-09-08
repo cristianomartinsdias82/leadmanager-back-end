@@ -7,10 +7,10 @@ services:
     image: datalust/seq:2023.4
 
   leadmanager.db:
-    image: mcr.microsoft.com/mssql/server
+    image: mcr.microsoft.com/mssql/server:latest
 
   iamserver.db:
-    image: mongo
+    image: mongo:6.0
 
   leadmanager.blob:
     image: mcr.microsoft.com/azure-storage/azurite
@@ -28,10 +28,7 @@ services:
     image: cristianomartinsdiasspbr1982/leadmanagerweb:v1.0.4
     
   leadmanager.api:
-    image: ${DOCKER_REGISTRY-}leadmanagerapi:v1.0.10
-    build:
-      context: .
-      dockerfile: src/hosts/LeadManagerApi/Dockerfile
+    image: cristianomartinsdiasspbr1982/leadmanagerapi:v1.0.10
 
 volumes:
   db_data:
