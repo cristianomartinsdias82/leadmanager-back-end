@@ -17,7 +17,7 @@ spec:
     spec:
       containers:
       - name: leadmanager-db
-        image: mcr.microsoft.com/mssql/server
+        image: mcr.microsoft.com/mssql/server:2019-latest
         # resources:
         #   requests:
         #     cpu: 100m
@@ -47,6 +47,3 @@ spec:
     app: leadmanager-db
   ports:
     - port: 1433
-  #     targetPort: 8080
-  #     nodePort: 30000
-  # type: NodePort
