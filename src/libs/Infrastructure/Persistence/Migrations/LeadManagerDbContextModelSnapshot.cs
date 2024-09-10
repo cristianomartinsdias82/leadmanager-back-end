@@ -23,6 +23,44 @@ namespace Infrastructure.Persistence.Migrations
 
             SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder);
 
+            modelBuilder.Entity("Application.Core.AuditEntry", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<string>("Action")
+                        .IsRequired()
+                        .HasMaxLength(100)
+                        .HasColumnType("VARCHAR");
+
+                    b.Property<DateTimeOffset>("ActionDateTime")
+                        .HasColumnType("datetimeoffset");
+
+                    b.Property<string>("FullyQualifiedTypeName")
+                        .HasMaxLength(255)
+                        .HasColumnType("VARCHAR");
+
+                    b.Property<string>("NewData")
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("OldData")
+                        .IsRequired()
+                        .HasColumnType("TEXT");
+
+                    b.Property<Guid?>("SubjectId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<string>("UserId")
+                        .IsRequired()
+                        .HasMaxLength(255)
+                        .HasColumnType("VARCHAR");
+
+                    b.HasKey("Id")
+                        .HasName("PK_AuditEntry_Id");
+
+                    b.ToTable("AuditEntries", "Auditing");
+                });
+
             modelBuilder.Entity("Domain.Prospecting.Entities.Lead", b =>
                 {
                     b.Property<Guid>("Id")

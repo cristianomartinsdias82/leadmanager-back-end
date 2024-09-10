@@ -8,6 +8,7 @@ public abstract class SharedResourcesTestsBase : IAsyncLifetime
 {
     protected const string LeadsEndpoint = "/api/leads";
     protected const string AddressesEndpoint = "/api/addresses";
+    protected const string UserLoginAuditingEndpoint = "/api/auditing/logins/log";
 
     protected readonly LeadManagerWebApplicationFactory _factory;
 

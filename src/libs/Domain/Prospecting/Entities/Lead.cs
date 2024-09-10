@@ -34,9 +34,10 @@ public class Lead : Entity, ILead
         ValidarEndereco(cep, endereco, bairro, cidade, estado, numero, complemento);
 
         var newId = IdGenerator.NextId();
+
         return new()
         {
-            Id = IdGenerator.NextId(),
+            Id = newId,
             Cnpj = cnpj,
             RazaoSocial = razaoSocial,
             Cep = cep,

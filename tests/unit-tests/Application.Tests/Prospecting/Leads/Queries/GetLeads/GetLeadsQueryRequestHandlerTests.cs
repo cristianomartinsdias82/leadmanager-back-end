@@ -27,7 +27,7 @@ public sealed class GetLeadsQueryRequestHandlerTests : IDisposable
     }
 
     [Fact]
-    public async void Handle_DoesNotContainLeads_ReturnsEmptyData()
+    public async Task Handle_DoesNotContainLeads_ReturnsEmptyData()
     {
         //Arrange
         var paginationOptions = new PaginationOptions();
@@ -49,7 +49,7 @@ public sealed class GetLeadsQueryRequestHandlerTests : IDisposable
     }
 
     [Fact]
-    public async void Handle_ContainsLeads_ReturnsData()
+    public async Task Handle_ContainsLeads_ReturnsData()
     {
         //Arrange
         var paginationOptions = new PaginationOptions();

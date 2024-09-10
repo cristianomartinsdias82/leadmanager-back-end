@@ -1,9 +1,9 @@
 ﻿using Application.Core.Contracts.Repository.Caching;
-using Application.Core.Contracts.Repository.Security;
+using Application.Core.Contracts.Repository.Security.OneTimePassword;
 using Application.Security.OneTimePassword.Commands.HandleOneTimePassword;
 using CrossCutting.Caching;
 
-namespace Infrastructure.Repository.Security;
+namespace Infrastructure.Repository.Security.OneTimePassword;
 
 internal sealed class OneTimePasswordRepository : IOneTimePasswordRepository
 {

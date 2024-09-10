@@ -4,7 +4,7 @@ namespace LeadManagerApi.Core.ApiFeatures;
 
 public class LeadManagerApiRouteAttribute : RouteAttribute
 {
-    protected const string _apiRoutePrefix = "/api";
+    public const string ApiRoutePrefix = "/api";
 
-    public LeadManagerApiRouteAttribute(string template) : base($"{_apiRoutePrefix}/{template}") { }
+    public LeadManagerApiRouteAttribute(string template) : base($"{ApiRoutePrefix}/{template}") { }
 }
