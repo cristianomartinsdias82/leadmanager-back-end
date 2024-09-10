@@ -4,12 +4,12 @@ metadata:
   name:  leadmanager-api
   namespace: leadmanager
   labels:
-    app:  leadmanager-api
+    app: leadmanager-api
 spec:
   selector:
     matchLabels:
       app: leadmanager-api
-  replicas: 1
+  replicas: 2 # (Aqui controla-se a quantidade de instâncias desejadas no cluster)
   template:
     metadata:
       labels:
@@ -17,7 +17,7 @@ spec:
     spec:
       containers:
       - name: leadmanager-api
-        image: cristianomartinsdiasspbr1982/leadmanager:v1.0.8
+        image: cristianomartinsdiasspbr1982/leadmanagerapi:v1.0.10 # (Importante: a imagem deve estar como pública no hub.docker.com!)
         #imagePullPolicy: Never
         resources:
           requests:
@@ -28,9 +28,9 @@ spec:
             memory: 256Mi
         env:
           - name: ASPNETCORE_ENVIRONMENT
-            value: Development
-          - name: ASPNETCORE_URLS #Try with this new entry
-            value: https://+:443;https://+:80
+            value: Development # (Se não for preciso acessar o Swagger, coloque Production ao invés de Development)
+          - name: ASPNETCORE_HTTP_PORTS # (O nro da porta deve estar igual em: containerPort do deployment + var. de ambiente ASPNETCORE_HTTP_PORTS do deployment + ports:port do service + EXPOSE PORT do dockerfile)
+            value: "8080" 
           - name: DataSourceSettings__ConnectionString
             value: Data source=leadmanager-db;Initial Catalog=LeadManager;User Id=sa;Password=Y0urStr0nGP@sswoRD_2023;MultipleActiveResultSets=true;Connect timeout=30;TrustServerCertificate=True
           - name: RabbitMqConnectionSettings__HostName
@@ -41,8 +41,7 @@ spec:
         #       name: leadmanagerapi-secret
         #       key: DatabaseConnectionString
         ports:
-        - containerPort: 80
-        #- containerPort: 8080
+        - containerPort: 8080 # (O nro da porta deve estar igual em: containerPort do deployment + var. de ambiente ASPNETCORE_HTTP_PORTS do deployment + ports:port do service + EXPOSE PORT do dockerfile)
       #restartPolicy: Always
 ---
 apiVersion: v1
@@ -55,6 +54,6 @@ spec:
     app: leadmanager-api
   ports:
     - protocol: TCP
-      port: 8081
+      port: 8080 # (O nro da porta deve estar igual em: containerPort do deployment + var. de ambiente ASPNETCORE_HTTP_PORTS do deployment + ports:port do service + EXPOSE PORT do dockerfile)
       targetPort: 80
   type: NodePort
