@@ -88,6 +88,7 @@ EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "k8s", "k8s", "{BF2B1DB0-BBEE-4AB6-B6F0-61DEC1E871CB}"
 	ProjectSection(SolutionItems) = preProject
 		k8s\leadmanager.api-deployment.yaml = k8s\leadmanager.api-deployment.yaml
+		k8s\creating-running-local-k3d-based-k8s-cluster.txt = k8s\creating-running-local-k3d-based-k8s-cluster.txt
 		k8s\leadmanager.api-ingress.yaml = k8s\leadmanager.api-ingress.yaml
 		k8s\leadmanager.api-namespace.yaml = k8s\leadmanager.api-namespace.yaml
 		k8s\leadmanager.api-secret.yaml = k8s\leadmanager.api-secret.yaml

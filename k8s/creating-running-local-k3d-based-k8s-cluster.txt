@@ -1,0 +1,120 @@
+Beginning of document - v1
+
+This version of the document describes how to get database, messagebus and the lead manager API pu and running
+No database secrets, no IAM Server, no digital certificates are in this documentation scope
+
+1. DOCKER IMAGE CONSTRUCTION
+
+	IMPORTANTE: run these steps ONLY if you need to build either for the first time you build the images on your computer or
+		after some change in your codebase
+
+	1.1 - In Prompt, cd into the following path:
+		cd "F:\Codebase\_.NET Solutions\Core\7.x\LeadManager\backend\src\LeadManager"
+	
+		Q:WHY?
+		A:The dockerfile has copy instructions pointing to specific paths that are relative to this one. If anything changes, you must find the correct
+		path in order to this command work properly.
+	
+	1.2 - Next, type the following commands:
+		docker build -t cristianomartinsdiasspbr1982/leadmanagerapi:v1.0.10 -f src/hosts/LeadManagerApi/Dockerfile . [ENTER]
+		docker tag cristianomartinsdiasspbr1982/leadmanagerapi:v1.0.10 cristianomartinsdiasspbr1982/leadmanagerapi:latest [ENTER]
+	
+	1.3 - To confirm the image was created and tagged successfully, type the following and celebrate:
+		docker images [ENTER]
+
+		(Console output)
+		REPOSITORY									  TAG                      IMAGE ID       CREATED         SIZE
+		cristianomartinsdiasspbr1982/leadmanagerapi   latest                   f5aa0804b5f9   22 hours ago    279MB
+		cristianomartinsdiasspbr1982/leadmanagerapi   v1.0.10                  f5aa0804b5f9   22 hours ago    279MB
+
+	1.4 - To push the images to Docker Registry (HUB / ACR / ECR), type the following commands:
+		docker push cristianomartinsdiasspbr1982/leadmanagerapi:v1.0.10 [ENTER]
+		docker push cristianomartinsdiasspbr1982/leadmanagerapi:latest [ENTER]
+
+	1.5 - Head over to Docker Hub and set the published images to PUBLIC
+
+2. CLUSTER CREATION AND DEPLOYMENT
+
+	Prerequisites
+		Make sure Docker, Kubernetes and K3d are installed on your machine
+		Also, install kubens and kubectx:
+			choco install kubens kubectx
+
+	2.1 Creating a K3d Cluster
+	
+		2.1.1 k3d cluster create LeadManagerCluster --servers 3 --agents 3 -p "30000:8080@loadbalancer" -p "30001:443@loadbalancer" [ENTER]
+
+		2.1.2 Analyzing the container and cluster brief information
+			k3d cluster list [ENTER]
+			docker container ls [ENTER]			
+	
+			Locate an item in the list that looks like the following:
+			ghcr.io/k3d-io/k3d-proxy:5.7.3  ... 80/tcp, 0.0.0.0:30001->443/tcp, 0.0.0.0:49418->6443/tcp, 0.0.0.0:30000->8080/tcp   k3d-LeadManagerCluster-serverlb
+	
+	2.2 Creating the Lead Manager's k8s elements
+
+		2.2.0 Checkout branch 'tech-debt/create-k8s-deployment-manifests' in your solution
+
+		2.2.1 cd "F:\Codebase\_.NET Solutions\Core\7.x\LeadManager\backend\src\LeadManager\k8s"
+	
+		2.2.2 Execute the commands in the exact order as follows (do consider the commands on the left only):
+			kubectl apply -f ./leadmanager.api-namespace.yaml			|	kubectl delete -f ./leadmanager.api-namespace.yaml
+	NO NEED kubectl apply -f ./leadmanager.nginx-ingress.yaml			|	kubectl delete -f ./nginx-ingress.yaml
+	NO NEED kubectl apply -f ./leadmanager.api-secret.yaml				|	kubectl delete -f ./leadmanager.api-secret.yaml
+			kubectl apply -f ./leadmanager.database-deployment.yaml		|	kubectl delete -f ./leadmanager.database-deployment.yaml
+			kubectl apply -f ./leadmanager.messagebus-deployment.yaml	|	kubectl delete -f ./leadmanager.messagebus-deployment.yaml
+			kubectl apply -f ./leadmanager.api-deployment.yaml			|	kubectl delete -f ./leadmanager.api-deployment.yaml
+	NO NEED kubectl apply -f ./leadmanager.api-ingress.yaml				|	kubectl delete -f ./leadmanager.api-ingress.yaml
+		
+	2.3 Port-forwarding for acessing resources from the outside
+		
+		2.3.1 kubectl port-forward service/leadmanager-api-service 8180:8080 [ENTER]
+			NOTE: Regarding port number, please refer to ./k8s/leadmanager.api-deployment.yaml file and search for the annotations in this regard.
+	
+3. CLUSTER TESTS
+
+	Accessing the API from the outside
+
+		3.1 Head over to your web browser the type the following:
+			http://localhost:8081/swagger
+
+		IMPORTANT: after executing the apply commands, wait a couple of minutes until the elements are up and running inside the cluster
+	
+4. DISMOUNTING THE CLUSTER
+	
+	[Optional]
+	4.1 Remove all resources by namespace with the following command:
+		kubectl delete namespace leadmanager
+	
+	4.2 Destroy the k3d Cluster with the following command:
+		k3d cluster delete LeadManagerCluster
+
+Ending of document - v1
+
+EXTRA - Cluster elements info commands list
+
+k3d cluster list
+kubectl cluster-info
+kubectl api-resources
+kubectl get nodes
+kubectl get pod
+kubectl get pods -o wide
+kubectl describe pod [POD ID]
+kubectl get deployment
+kubectl describe deployment [DEP ID]
+kubectl get replicaset
+kubectl get svc
+kubectl get replicaset, pod
+kubectl get all
+kubectl logs [ELEMENT ID]
+
+docker container ls
+
+Cluster and other elements other commands
+kubectl delete pod [POD ID]
+kubectl delete pod -l app=meusegundopod
+kubectl delete pod meupod meusegundopod meuenesimopod
+kubectl apply -f 'path/to/my.k8s' && watch 'kubectl get pod'
+kubectl rollout history deployment [DEPL ID]
+kubectl rollout undo deployment [DEPL ID] && watch 'kubectl get replicaset, pod'
+kubectl config use-context [cluster name]
