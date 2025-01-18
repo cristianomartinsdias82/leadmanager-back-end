@@ -65,5 +65,22 @@ internal sealed class LeadEntityTypeConfiguration : IEntityTypeConfiguration<Lea
                .IsRequired()
                .HasColumnType("CHAR")
                .HasMaxLength(2);
-    }
+
+        Seed(builder);
+	}
+
+	private void Seed(EntityTypeBuilder<Lead> builder)
+	{
+		//Data seed
+		builder.HasData(Lead.Criar(
+			"80.732.377/0001-74",
+			"Lead Manager Brasil S.A.",
+			"04858-040",
+			"Constelação do Escorpião",
+			"Jardim Campinas",
+			"São Paulo",
+			"SP",
+			"43",
+			default));
+	}
 }
