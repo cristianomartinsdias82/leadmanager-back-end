@@ -1,4 +1,5 @@
 ﻿using Application.Core.Behaviors;
+using Application.Core.OperatingRules;
 using Application.Core.Processors;
 using Application.Prospecting.Addresses.Queries.SearchAddressByZipCode;
 using Application.Prospecting.Leads.Commands.BulkInsertLead;
@@ -24,6 +25,8 @@ using MediatR;
 using MediatR.Pipeline;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Hosting;
+using Shared.ApplicationOperationRules;
 using Shared.Results;
 using ViaCep.ServiceClient.Configuration;
 
@@ -31,7 +34,10 @@ namespace Application.Core.Configuration;
 
 public static class DependencyInjection
 {
-    public static IServiceCollection AddApplicationServices(this IServiceCollection services, IConfiguration configuration)
+    public static IServiceCollection AddApplicationServices(
+        this IServiceCollection services,
+        IConfiguration configuration,
+        IHostEnvironment hostingEnvironment)
     {
         var applicationAssemblyRef = typeof(DependencyInjection).Assembly;
         var coreAssemblyRef = typeof(IEntity).Assembly;
@@ -40,14 +46,15 @@ public static class DependencyInjection
                 .AddMediatR(config =>
                 {
                     config.RegisterServicesFromAssemblies(coreAssemblyRef, applicationAssemblyRef)
-                          .RegisterBehaviors(services)
-                          .RegisterProcessors(services);
+                          .RegisterProcessors(services)
+                          .RegisterBehaviors(services);
                 })
                 .AddIntegrationClientServices(configuration)
                 .AddCrossCuttingServices(configuration)
-                .AddEndUserCommunicationServices(configuration);
+                .AddEndUserCommunicationServices(configuration)
+                .AddAplicationOperatingRules(configuration);
 
-        return services;
+		return services;
     }
 
     private static IServiceCollection AddIntegrationClientServices(this IServiceCollection services, IConfiguration configuration)
@@ -57,7 +64,11 @@ public static class DependencyInjection
         return services;
     }
 
-    private static IServiceCollection AddCrossCuttingServices(this IServiceCollection services, IConfiguration configuration)
+	private static IServiceCollection AddAplicationOperatingRules(this IServiceCollection services, IConfiguration configuration)
+		=> services.AddSingleton<IApplicationOperatingRule, BusinessHoursOnlyOperatingRule>()
+				   .AddSingleton<IApplicationOperatingRule, WeekDaysOnlyOperatingRule>();
+
+	private static IServiceCollection AddCrossCuttingServices(this IServiceCollection services, IConfiguration configuration)
         => services.AddCsvHelper(configuration)
                    .AddFileStorage(configuration)
                    .AddMultiSinkLogging(configuration)
@@ -75,9 +86,10 @@ public static class DependencyInjection
 
     private static MediatRServiceConfiguration RegisterProcessors(this MediatRServiceConfiguration config, IServiceCollection services)
     {
-        services.AddTransient(typeof(IRequestPostProcessor<,>), typeof(EventHandlerDispatchingProcessor<,>));
+        config.AddOpenRequestPreProcessor(typeof(ApplicationOperatingRulesProcessor<>)); //O que me ajudou a fazer este PreProcessor funcionar: https://github.com/jbogard/MediatR/issues/868
+		services.AddTransient(typeof(IRequestPostProcessor<,>), typeof(EventHandlerDispatchingProcessor<,>));
 
-        return config;
+		return config;
     }
 
     private static MediatRServiceConfiguration RegisterValidationBehaviors(this MediatRServiceConfiguration config)

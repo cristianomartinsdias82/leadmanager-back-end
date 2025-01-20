@@ -1,6 +1,7 @@
 ﻿using Domain.Prospecting.Exceptions;
 using Infrastructure.Persistence.Mappings;
 using Microsoft.EntityFrameworkCore;
+using Shared.ApplicationOperationRules;
 using Shared.Results;
 
 namespace LeadManagerApi.Core.ApiFeatures;
@@ -43,7 +44,9 @@ public sealed class RequestHandlingMiddleware
         }
     }
 
-    private void HandleError(Exception exc, ref List<Inconsistency>? inconsistencies)
+    private void HandleError(
+        Exception exc,
+        ref List<Inconsistency>? inconsistencies)
     {
         inconsistencies = new List<Inconsistency>();
 
@@ -70,10 +73,14 @@ public sealed class RequestHandlingMiddleware
             return;
         }
 
-        _logger.LogError(
-            exc,
-            "An error occurred while attempting to process the request: {Message} {@Exception}",
-            exc.Message,
-            exc);
+        if (exc is ApplicationOperatingRuleException appOperRuleExc)
+        {
+            inconsistencies.AddRange([..appOperRuleExc.RuleViolations]);
+
+			_logger.LogInformation(
+                exc,
+                "One or more application operating rules have been violated while attempting to perform the request. {@violatedApplicationOperatingRules}",
+                appOperRuleExc.RuleViolations);
+        }
     }
 }
