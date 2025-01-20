@@ -17,7 +17,7 @@ public class Program
         var builder = WebApplication.CreateBuilder(args);
 
         builder.Services.AddApiServices(builder.Configuration)
-                        .AddApplicationServices(builder.Configuration)
+                        .AddApplicationServices(builder.Configuration, builder.Environment)
                         .AddInfrastructureServices(builder.Configuration);
 
         var app = builder.Build();

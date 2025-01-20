@@ -38,6 +38,7 @@ using System.Net.Http.Json;
 using System.Text.Json;
 using Testcontainers.MsSql;
 using Testcontainers.Redis;
+using Tests.Common.ObjectMothers.DateTimeHandling;
 using Tests.Common.ObjectMothers.Domain;
 using Tests.Common.ObjectMothers.Integrations.ViaCep;
 using ViaCep.ServiceClient;
@@ -261,6 +262,9 @@ public class LeadManagerWebApplicationFactory : WebApplicationFactory<Program>, 
 
                 return context;
             });
+
+            //Time provider
+            services.AddSingleton(services => TimeProviderMother.MondayInBusinessHoursTimeWindowMorning());
 
             services.AddSingleton(services => Configuration.GetSection($"{nameof(CachingPoliciesSettings)}:{nameof(LeadsCachingPolicy)}").Get<LeadsCachingPolicy>()!);
             services.AddSingleton(services => Configuration.GetSection($"{nameof(CachingPoliciesSettings)}:{nameof(AddressesCachingPolicy)}").Get<AddressesCachingPolicy>()!);
