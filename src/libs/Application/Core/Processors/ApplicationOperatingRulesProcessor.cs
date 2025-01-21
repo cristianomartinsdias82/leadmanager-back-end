@@ -47,7 +47,7 @@ public class ApplicationOperatingRulesProcessor<TRequest> : IRequestPreProcessor
 
 	private async Task ApplyRulesAsync(IEnumerable<IApplicationOperatingRule> operatingRules, CancellationToken cancellationToken)
 	{
-		ConcurrentBag<Inconsistency?> inconsistencies = new();
+		BlockingCollection<Inconsistency?> inconsistencies = new();
 
 		if (operatingRules?.Any() ?? false)
 			await Task.WhenAll(operatingRules.Select(async it => inconsistencies.Add(await it.ApplyAsync(cancellationToken))));

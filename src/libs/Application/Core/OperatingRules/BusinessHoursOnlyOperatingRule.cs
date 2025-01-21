@@ -14,12 +14,13 @@ internal sealed class BusinessHoursOnlyOperatingRule : ApplicationOperatingRule
 
 	public override Task<Inconsistency?> ApplyAsync(CancellationToken cancellationToken = default)
 	{
-		const int MinHour = 7;
-		const int MaxHour = 19;
+		//Ideas: parameterize these constants either in appsettings files, yaml files or even in a database with cached values
+		const int InitialBusinessTime = 7; 
+		const int EndingBusinessTime = 19;
 
-		var now = _timeProvider.GetUtcNow();
-		if (now.Hour < MinHour || now.Hour >= MaxHour)
-			return Task.FromResult<Inconsistency?>(new("Regras para funcionamento da aplicação", $"não é permitido utilizar a aplicação fora do horário comercial (entre {MinHour} e {MaxHour} horas)."));
+		var localNow = _timeProvider.GetLocalNow();
+		if (localNow.Hour < InitialBusinessTime || localNow.Hour >= EndingBusinessTime)
+			return Task.FromResult<Inconsistency?>(new("Regras para funcionamento da aplicação", $"não é permitido utilizar a aplicação fora do horário comercial (entre {InitialBusinessTime} e {EndingBusinessTime} horas)."));
 
 		return Task.FromResult<Inconsistency?>(default);
 	}

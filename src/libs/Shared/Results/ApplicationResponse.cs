@@ -17,7 +17,11 @@ public sealed class ApplicationResponse<T>
     public ExceptionData? Exception { get; set; }
 
     [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
-    public IEnumerable<Inconsistency>? Inconsistencies => inconsistencies;
+    public IEnumerable<Inconsistency>? Inconsistencies
+    {
+        get => inconsistencies;
+        set => inconsistencies = value?.ToList();
+    }
 
     private IList<Inconsistency>? inconsistencies;
 

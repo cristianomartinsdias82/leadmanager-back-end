@@ -77,7 +77,7 @@ public sealed class RequestHandlingMiddleware
         {
             inconsistencies.AddRange([..appOperRuleExc.RuleViolations]);
 
-			_logger.LogInformation(
+			_logger.LogWarning(
                 exc,
                 "One or more application operating rules have been violated while attempting to perform the request. {@violatedApplicationOperatingRules}",
                 appOperRuleExc.RuleViolations);

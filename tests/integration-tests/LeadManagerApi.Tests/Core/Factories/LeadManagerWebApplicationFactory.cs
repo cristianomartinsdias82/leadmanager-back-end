@@ -148,23 +148,30 @@ public class LeadManagerWebApplicationFactory : WebApplicationFactory<Program>, 
         return httpClient;
     }
 
-    //public async Task UsingContextAsync(Func<ILeadManagerDbContext, Task> action)
-    //{
-    //    await using var scope = Services.CreateAsyncScope();
-    //    await using var context = scope.ServiceProvider.GetRequiredService<ILeadManagerDbContext>();
+	public virtual HttpClient CreateHttpClient(bool includeApiKeyHeader = true, params (string Name, string Value)[] headers)
+	{
+		var apiSettings = Services.GetRequiredService<LeadManagerApiSettings>();
 
-    //    await action(context);
-    //}
+		return CreateHttpClient([..headers, (apiSettings.ApiKeyRequestHeaderName!, apiSettings.ApiKeyRequestHeaderValue)]);
+	}
 
-    //public async Task<TResult> UsingContextAsync<TResult>(Func<ILeadManagerDbContext, Task<TResult>> action)
-    //{
-    //    await using var scope = Services.CreateAsyncScope();
-    //    await using var context = scope.ServiceProvider.GetRequiredService<ILeadManagerDbContext>();
+	//public async Task UsingContextAsync(Func<ILeadManagerDbContext, Task> action)
+	//{
+	//    await using var scope = Services.CreateAsyncScope();
+	//    await using var context = scope.ServiceProvider.GetRequiredService<ILeadManagerDbContext>();
 
-    //    return await action(context);
-    //}
+	//    await action(context);
+	//}
 
-    public T? DeserializeFromJson<T>(string json)
+	//public async Task<TResult> UsingContextAsync<TResult>(Func<ILeadManagerDbContext, Task<TResult>> action)
+	//{
+	//    await using var scope = Services.CreateAsyncScope();
+	//    await using var context = scope.ServiceProvider.GetRequiredService<ILeadManagerDbContext>();
+
+	//    return await action(context);
+	//}
+
+	public T? DeserializeFromJson<T>(string json)
         => JsonSerializer.Deserialize<T>(json, _jsonSerializerOptions);
 
     private async Task InitializeRespawnerAsync()
@@ -265,6 +272,23 @@ public class LeadManagerWebApplicationFactory : WebApplicationFactory<Program>, 
 
             //Time provider
             services.AddSingleton(services => TimeProviderMother.MondayInBusinessHoursTimeWindowMorning());
+            services.AddSingleton(services =>
+            {
+				//(For application operating rules tests)
+				//Whenever a Time-window-rule-violation-test header is present in the request, an access attempt datetime that goes against the
+				//time window application operating rule is injected so the application rejects the request, making tests of such scenarios possible
+				var httpContext = services.GetRequiredService<IHttpContextAccessor>().HttpContext!;
+                
+                if (httpContext.Request.Headers.ContainsKey("Time-window-rule-violation-test"))
+                    return TimeProviderMother.MondayBeforeBusinessHoursTimeWindow();
+
+				//Whenever a Day-rule-violation-test header is present in the request, an access attempt datetime that goes against the
+				//buiness days application operating rules is injected so the application rejects the request, making tests of such scenarios possible
+				if (httpContext.Request.Headers.ContainsKey("Day-rule-violation-test"))
+					return TimeProviderMother.Saturday();
+
+				return TimeProviderMother.MondayInBusinessHoursTimeWindowMorning();
+			});
 
             services.AddSingleton(services => Configuration.GetSection($"{nameof(CachingPoliciesSettings)}:{nameof(LeadsCachingPolicy)}").Get<LeadsCachingPolicy>()!);
             services.AddSingleton(services => Configuration.GetSection($"{nameof(CachingPoliciesSettings)}:{nameof(AddressesCachingPolicy)}").Get<AddressesCachingPolicy>()!);

@@ -26,13 +26,13 @@ public sealed class RegisterLeadControllerTests : SharedResourcesTestsBase
     {
         //Arrange
         using var cts = new CancellationTokenSource();
-        var httpClient = _factory.CreateHttpClient();
+        using var httpClient = _factory.CreateHttpClient();
         var newLeadContent = new StringContent(
                                     JsonSerializer.Serialize(RegisterLeadCommandRequestMother.XptoIncLeadRequest()),
                                     new MediaTypeHeaderValue(MediaTypeNames.Application.Json));
 
         //Act
-        var response = await httpClient.PostAsync(LeadsEndpoint, newLeadContent, cts.Token);
+        using var response = await httpClient.PostAsync(LeadsEndpoint, newLeadContent, cts.Token);
 
         //Basic asserts
         response.EnsureSuccessStatusCode();
