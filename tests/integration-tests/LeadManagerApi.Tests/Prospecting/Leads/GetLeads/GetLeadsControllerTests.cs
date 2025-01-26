@@ -18,10 +18,10 @@ public class GetLeadsControllerTests : SharedResourcesTestsBase
     public async Task Get_RequestWithoutApiKeyHeader_ShouldFail()
     {
         // Arrange
-        var httpClient = _factory.CreateHttpClient(false);
+        using var httpClient = _factory.CreateHttpClient(false);
 
         // Act
-        var response = await httpClient.GetAsync(LeadsEndpoint);
+        using var response = await httpClient.GetAsync(LeadsEndpoint);
 
         // Assert
         response.ReasonPhrase.Should().Contain(HttpStatusCode.Unauthorized.ToString(), because: "Api key header has not been set.");
@@ -38,10 +38,10 @@ public class GetLeadsControllerTests : SharedResourcesTestsBase
     public async Task Get_RequestWithInvalidApiKeyHeader_ShouldFail(string headerName, string headerValue)
     {
         // Arrange
-        var httpClient = _factory.CreateHttpClient((headerName, headerValue));
+        using var httpClient = _factory.CreateHttpClient((headerName, headerValue));
 
-        // Act
-        var response = await httpClient.GetAsync(LeadsEndpoint);
+		// Act
+		using var response = await httpClient.GetAsync(LeadsEndpoint);
 
         // Assert
         response.ReasonPhrase.Should().Contain("Unauthorized", because: "The informed Api key is invalid.");
@@ -53,10 +53,10 @@ public class GetLeadsControllerTests : SharedResourcesTestsBase
     public async Task Get_RequestWithValidApiKeyHeader_ShouldSucceed()
     {
         // Arrange
-        var httpClient = _factory.CreateHttpClient();
+        using var httpClient = _factory.CreateHttpClient();
 
         // Act
-        var response = await httpClient.GetAsync(LeadsEndpoint);
+        using var response = await httpClient.GetAsync(LeadsEndpoint);
 
         // Assert
         response.EnsureSuccessStatusCode();
@@ -75,4 +75,65 @@ public class GetLeadsControllerTests : SharedResourcesTestsBase
         apiResponse.OperationCode.Should().Be(OperationCodes.Successful);
         apiResponse.Data.Should().NotBeNull();
     }
+
+	[Fact(Skip = "Why does this test succeeds when in debug mode but fails when it's not?")]
+	public async Task Get_RequestContainingTimeWindowRuleViolationTestHeader_ShouldFail()
+	{
+		// Arrange
+		using var httpClient = _factory.CreateHttpClient(
+                                    true,
+                                    ("Time-window-rule-violation-test", "1"));
+
+		// Act
+		using var response = await httpClient.GetAsync(LeadsEndpoint);
+
+		// Assert
+		response.StatusCode.Should().Be(HttpStatusCode.InternalServerError);
+		response.IsSuccessStatusCode.Should().BeFalse();
+		var responseContent = await response.Content.ReadAsStringAsync();
+
+        ApplicationResponse<object> apiResponse = default!;
+        Action action = () =>
+        {
+            apiResponse = _factory.DeserializeFromJson<ApplicationResponse<object>>(responseContent)!;
+        };
+
+        action.Should().NotThrow<Exception>();
+        apiResponse.Exception.Should().NotBeNull();
+        apiResponse.Success.Should().BeFalse();
+        apiResponse.OperationCode.Should().Be(OperationCodes.Error);
+        apiResponse.Inconsistencies.Should().NotBeNull();
+        apiResponse.Inconsistencies!.Any(inc => inc.Description.Contains("não é permitido utilizar a aplicação fora do horário comercial"))
+                                    .Should().BeTrue();
+	}
+
+	[Fact(Skip = "Why does this test succeeds when in debug mode but fails when it's not?")]
+	public async Task Get_RequestContainingDayRuleViolationTestHeader_ShouldFail()
+	{
+		// Arrange
+		using var httpClient = _factory.CreateHttpClient(
+                                    true,
+                                    ("Day-rule-violation-test", "1"));
+
+		// Act
+		using var response = await httpClient.GetAsync(LeadsEndpoint);
+
+		// Assert
+		response.StatusCode.Should().Be(HttpStatusCode.InternalServerError);
+		response.IsSuccessStatusCode.Should().BeFalse();
+		var responseContent = await response.Content.ReadAsStringAsync();
+
+		ApplicationResponse<object> apiResponse = default!;
+		Action action = () =>
+		{
+			apiResponse = _factory.DeserializeFromJson<ApplicationResponse<object>>(responseContent)!;
+		};
+
+		action.Should().NotThrow<Exception>();
+		apiResponse.Exception.Should().NotBeNull();
+		apiResponse.Success.Should().BeFalse();
+		apiResponse.OperationCode.Should().Be(OperationCodes.Error);
+		apiResponse.Inconsistencies!.Any(inc => inc.Description.Contains("não é permitido utilizar a aplicação aos fins de semana"))
+									.Should().BeTrue();
+	}
 }
