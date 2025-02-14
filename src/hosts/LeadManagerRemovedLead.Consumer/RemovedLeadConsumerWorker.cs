@@ -1,22 +1,33 @@
+using CrossCutting.MessageContracts;
 using CrossCutting.Messaging;
-using System.Text;
+using CrossCutting.Messaging.RabbitMq.Diagnostics;
+using CrossCutting.Serialization;
+using LeadManager.BackendServices.Consumers.Common.Diagnostics;
+using Shared.Diagnostics;
+using System.Diagnostics;
 
 namespace LeadManagerRemovedLead.Consumer;
 
 public class RemovedLeadConsumerWorker : BackgroundService
 {
     private readonly IMessageConsumption _messageConsumer;
-    private readonly ILogger<RemovedLeadConsumerWorker> _logger;
+	private readonly IDataSerialization _dataSerializer;
+	private readonly TimeProvider _timeProvider;
+	private readonly ILogger<RemovedLeadConsumerWorker> _logger;
     private readonly string _queueName;
     private readonly string _routingKey;
 
     public RemovedLeadConsumerWorker(
         IMessageConsumption messageConsumer,
         MessageChannelSettings messageChannelSettings,
-        ILogger<RemovedLeadConsumerWorker> logger)
+		IDataSerialization dataSerializer,
+        TimeProvider timeProvider,
+		ILogger<RemovedLeadConsumerWorker> logger)
     {
         _messageConsumer = messageConsumer;
-        _queueName = messageChannelSettings.RemovedLeadChannel.QueueName;
+		_dataSerializer = dataSerializer;
+		_timeProvider = timeProvider;
+		_queueName = messageChannelSettings.RemovedLeadChannel.QueueName;
         _routingKey = messageChannelSettings.RemovedLeadChannel.RoutingKey;
         _logger = logger;
     }
@@ -29,19 +40,44 @@ public class RemovedLeadConsumerWorker : BackgroundService
         await Task.Delay(1, stoppingToken);
         _logger.LogInformation("Starting Lead removal listener consumer worker...");
 
-        _messageConsumer.Subscribe(
+        _messageConsumer.Subscribe<string>(
             ProcessIncomingData,
             _queueName,
             nameof(RemovedLeadConsumerWorker),
             default!);
     }
 
-    private bool ProcessIncomingData(byte[] messageBytes)
-    {
-        Console.ForegroundColor = ConsoleColor.Green;
-        var data = Encoding.UTF8.GetString(messageBytes);
+    private bool ProcessIncomingData(byte[] messageBytes, IEnumerable<ActivityLink>? activityLinks)
+	{
+		_logger.LogInformation("A lead has been removed!");
 
-        Console.WriteLine("A Lead has been removed!");
+		var removedLead = _dataSerializer.Deserialize<LeadData>(messageBytes);
+
+		Console.ForegroundColor = ConsoleColor.Red;
+		Console.WriteLine("A lead has been removed!");
+		Console.WriteLine(removedLead);
+		Console.ResetColor();
+
+		DiagnosticsDataCollector
+			.WithActivityFromSource(
+				source: RabbitMqDiagnostics.ActivitySource,
+				name: MessageConsumersDiagnostics.RemovedLeadConstants.ActivityName,
+				kind: ActivityKind.Internal,
+				context: new ActivityContext(),
+				links: activityLinks //This last argument links the activities collected inside "(ExecuteTaskAsync method) consumer.Received += (model, ea) => {...}" to this activity.
+			)
+			.WithTags
+			(
+				(MessageConsumersDiagnostics.RemovedLeadConstants.LeadId, removedLead.Id)
+			)
+			.WithEvent(
+				name: MessageConsumersDiagnostics.RemovedLeadConstants.ActivityName,
+				timestamp: _timeProvider.GetUtcNow(),
+				tags: [
+					(MessageConsumersDiagnostics.CommonConstants.LeadProcessResultSucessful, "true")
+				])
+			//By using .WithEvent, the information appears as a subsection inside of the Span labeled "Logs" in the Tracing Web tool
+			.PushData();
 
         return true;
     }

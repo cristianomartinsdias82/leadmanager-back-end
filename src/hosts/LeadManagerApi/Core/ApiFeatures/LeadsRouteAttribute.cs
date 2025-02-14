@@ -1,6 +1,4 @@
-﻿using LeadManagerApi.Core.ApiFeatures;
-
-namespace LeadManagerApi.Prospecting.Leads.Core;
+﻿namespace LeadManagerApi.Core.ApiFeatures;
 
 public sealed class LeadsRouteAttribute : LeadManagerApiRouteAttribute
 {

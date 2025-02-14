@@ -22,6 +22,7 @@ public sealed class MessageBusHelper : IMessageBusHelper
             _messageChannelSettings.RemovedLeadChannel.TopicName,
             _messageChannelSettings.RemovedLeadChannel.RoutingKey,
             removedLead,
+            "lead.removed",
             cancellationToken);
 
     public ValueTask SendToLeadUpdatedChannelAsync(LeadData updatedLead, CancellationToken cancellationToken = default)
@@ -29,12 +30,14 @@ public sealed class MessageBusHelper : IMessageBusHelper
             _messageChannelSettings.UpdatedLeadChannel.TopicName,
             _messageChannelSettings.UpdatedLeadChannel.RoutingKey,
             updatedLead,
-            cancellationToken);
+			"lead.updated",
+			cancellationToken);
 
     public ValueTask SendToNewlyCreatedLeadsChannelAsync(List<LeadData> newlyCreatedLeads, CancellationToken cancellationToken = default)
         =>_messageDispatcher.SendToTopicAsync(
             _messageChannelSettings.NewlyRegisteredLeadsChannel.TopicName,
             _messageChannelSettings.NewlyRegisteredLeadsChannel.RoutingKey,
             newlyCreatedLeads,
-            cancellationToken);
+			"lead.created",
+			cancellationToken);
 }

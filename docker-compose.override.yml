@@ -2,27 +2,27 @@
 
 services:
 
-  portainer:
-    container_name: portainer
-    restart: always
-    ports:
-      - "8000:8000"
-      - "9000:9000"
-    volumes:
-      - /var/run/docker.sock:/var/run/docker.sock
-      - portainer_data:/data/portainer
+  # portainer:
+  #   container_name: portainer
+  #   restart: always
+  #   ports:
+  #     - "8000:8000"
+  #     - "9000:9000"
+  #   volumes:
+  #     - /var/run/docker.sock:/var/run/docker.sock
+  #     - portainer_data:/data/portainer
 
-  leadmanager.logging-ingestion:
-    container_name: leadmanagerseq
-    restart: always
-    environment:
-      - ACCEPT_EULA=Y
-      - "Logging:SeqIngestionSink:ServerUrl=http://leadmanagerseq:5341"
-    ports:
-      - "5341:5341"
-      - "7999:80"
-    volumes:
-      - seq_data:/var/opt/seq
+  # leadmanager.logging-ingestion:
+  #   container_name: leadmanagerseq
+  #   restart: always
+  #   environment:
+  #     - ACCEPT_EULA=Y
+  #     - "Logging:SeqIngestionSink:ServerUrl=http://leadmanagerseq:5341"
+  #   ports:
+  #     - "5341:5341"
+  #     - "7999:80"
+  #   volumes:
+  #     - seq_data:/var/opt/seq
 
   leadmanager.db:
     container_name: leadmanagerdb
@@ -35,18 +35,6 @@ services:
       - "1433:1433"
     volumes:
       - db_data:/var/opt/mssql
-
-  leadmanager.messagebus:
-    container_name: leadmanagermessagebus
-    restart: always
-    environment:
-      - RABBITMQ_DEFAULT_USER=guest
-      - RABBITMQ_DEFAULT_PASS=guest
-    ports:
-      - "5672:5672"
-      - "15672:15672"
-    volumes:
-      - messagebus_data:/var/opt/rabbitmq
 
   leadmanager.blob:
     container_name: leadmanagerblob
@@ -66,24 +54,36 @@ services:
     volumes:
       - caching_data:/var/data/caching
 
-  leadmanager.client:
-    container_name: leadmanagerweb
+  leadmanager.messagebus:
+    container_name: leadmanagermessagebus
+    restart: always
+    environment:
+      - RABBITMQ_DEFAULT_USER=guest
+      - RABBITMQ_DEFAULT_PASS=guest
     ports:
-      - "8002:80"
+      - "5672:5672"
+      - "15672:15672"
+    volumes:
+      - messagebus_data:/var/opt/rabbitmq
+
+  # leadmanager.client:
+  #   container_name: leadmanagerweb
+  #   ports:
+  #     - "8002:80"
 
   leadmanager.api:
     container_name: leadmanagerapi
     depends_on:
+      #- leadmanager.logging-ingestion
       - leadmanager.db
-      - leadmanager.messagebus
       - leadmanager.blob
       - leadmanager.caching
-      - leadmanager.logging-ingestion
+      - leadmanager.messagebus
     environment:
       - ASPNETCORE_ENVIRONMENT=Development
       - "LeadManagerApiSettings:Cors_AllowedOrigins=http://localhost:8002, http://leadmanagerweb"
       - "LeadManagerApiSettings:ApiKeyRequestHeaderValue=74ynfkjy487yue47j"
-      - "Logging:FileSink:LogFilePath=/data/app/logs/applogs.log"
+      #- "Logging:FileSink:LogFilePath=/data/app/logs/applogs.log"
       - "DataSourceSettings:ConnectionString=Server=leadmanagerdb;Database=LeadManager;User id=sa;Password=Y0urStr0nGP@sswoRD_2023;MultipleActiveResultSets=true;Connect timeout=30;TrustServerCertificate=True"
       - "AzureStorageProviderSettings:ConnectionString=UseDevelopmentStorage=true;DevelopmentStorageProxyUri=http://leadmanagerblob"
       - "AzureStorageProviderSettings:ContainerName=lead-manager"
@@ -95,8 +95,31 @@ services:
       - "RabbitMqConnectionSettings:Password=guest"
       - "RabbitMqConnectionSettings:VirtualHost=/"
       - "RabbitMqConnectionSettings:ClientProvidedName=lead-manager"
+      - OTLP_Endpoint=http://otel-collector:4317
     ports:
-      - "8001:80"
+      - "8001:8080"
     volumes:
       - ${APPDATA}/Microsoft/UserSecrets:/root/.microsoft/usersecrets:ro
       - ${APPDATA}/ASP.NET/Https:/root/.aspnet/https:ro
+
+  leadmanagernewlycreatedleads.consumer:
+    environment:
+      - DOTNET_ENVIRONMENT=Development
+      - "RabbitMqConnectionSettings:HostName=leadmanagermessagebus"
+      - "RabbitMqConnectionSettings:PortNumber=5672"
+      - "RabbitMqConnectionSettings:UserName=guest"
+      - "RabbitMqConnectionSettings:Password=guest"
+      - "RabbitMqConnectionSettings:VirtualHost=/"
+      - "RabbitMqConnectionSettings:ClientProvidedName=lead-manager"
+      - OTLP_Endpoint=http://otel-collector:4317
+    volumes:
+      - ${APPDATA}/Microsoft/UserSecrets:/home/app/.microsoft/usersecrets:ro
+
+  grafana:
+    container_name: grafana
+
+  prometheus:
+    container_name: prometheus
+
+  otel-collector:
+    container_name: otel-collector

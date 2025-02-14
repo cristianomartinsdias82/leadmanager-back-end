@@ -1,7 +1,6 @@
 ﻿using Application.Prospecting.Leads.Commands.RegisterLead;
 using CrossCutting.Security.Authorization;
 using LeadManagerApi.Core.ApiFeatures;
-using LeadManagerApi.Prospecting.Leads.Core;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
 using Shared.Results;
@@ -18,8 +17,8 @@ public sealed class RegisterLeadController : LeadManagerController
     [HttpPost]
     [ProducesResponseType(typeof(ApplicationResponse<RegisterLeadCommandResponse>), StatusCodes.Status201Created)]
     [ProducesResponseType(typeof(ApplicationResponse<object>), StatusCodes.Status400BadRequest)]
-    [ProducesResponseType(typeof(ApplicationResponse<object>), StatusCodes.Status401Unauthorized)]
-    [ProducesResponseType(typeof(ApplicationResponse<object>), StatusCodes.Status500InternalServerError)]
+    [ProducesResponseType(StatusCodes.Status401Unauthorized)]
+    [ProducesResponseType(StatusCodes.Status500InternalServerError)]
     public async Task<IActionResult> RegisterLeadAsync([FromBody] RegisterLeadCommandRequest request, CancellationToken cancellationToken)
     {
         var response = await Mediator.Send(request, cancellationToken);

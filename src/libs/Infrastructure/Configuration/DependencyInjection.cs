@@ -2,7 +2,6 @@
 using Application.Core.Contracts.Persistence;
 using Application.Core.Contracts.Repository.Caching;
 using Application.Core.Contracts.Repository.Prospecting;
-using Application.Core.Contracts.Repository.Security;
 using Application.Core.Contracts.Repository.Security.Auditing;
 using Application.Core.Contracts.Repository.Security.OneTimePassword;
 using Application.Core.Contracts.Repository.UnitOfWork;
@@ -11,13 +10,15 @@ using Infrastructure.Messaging;
 using Infrastructure.Persistence;
 using Infrastructure.Repository.Caching;
 using Infrastructure.Repository.Prospecting;
-using Infrastructure.Repository.Security;
 using Infrastructure.Repository.Security.Auditing;
 using Infrastructure.Repository.Security.OneTimePassword;
 using Infrastructure.Repository.UnitOfWork;
+using Microsoft.AspNetCore.Hosting;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using OpenTelemetry.Metrics;
+using OpenTelemetry.Trace;
 using Shared.Events.EventDispatching;
 using Shared.Settings;
 
@@ -46,15 +47,49 @@ public static class DependencyInjection
                         sqlOptions.EnableRetryOnFailure(dataSourceSettings.RetryOperationMaxCount);
                     })
                  .AddInterceptors(serviceProvider.GetRequiredService<AppendAuditEntryInterceptor>());
-                
         });
 
         services.AddScoped<ILeadManagerDbContext, LeadManagerDbContext>();
 
-        return services;
+		return services;
     }
 
-    private static IServiceCollection AddRepository(this IServiceCollection services, IConfiguration configuration)
+    public static TracerProviderBuilder AddInfrastructureTracing(
+        this TracerProviderBuilder tracerProviderBuilder,
+        IServiceCollection services,
+        IConfiguration configuration,
+        IWebHostEnvironment hostingEnvironment)
+        => AddDataSourceTracing(tracerProviderBuilder, services, configuration, hostingEnvironment);
+
+	private static TracerProviderBuilder AddDataSourceTracing(
+        this TracerProviderBuilder tracerProviderBuilder,
+        IServiceCollection services,
+        IConfiguration configuration,
+        IWebHostEnvironment hostingEnvironment)
+    {
+		//https://github.com/open-telemetry/opentelemetry-dotnet-contrib/blob/main/src/OpenTelemetry.Instrumentation.EntityFrameworkCore/README.md
+
+		//services.Configure<EntityFrameworkInstrumentationOptions>(options =>
+		return tracerProviderBuilder
+			.AddEntityFrameworkCoreInstrumentation(options =>
+		    {
+			    options.EnrichWithIDbCommand = (activity, command) =>
+			    {
+				    activity.DisplayName = "Database activity";
+					activity.SetTag("db.sqlstatement", command.CommandText);
+					activity.SetTag("db.commandtype", command.CommandType);
+				};
+
+			    //Filters!
+			    //options.Filter = (providerName, command) =>
+			    //{
+			    //    return command.CommandType == CommandType.StoredProcedure;
+			    //};
+		    })
+			.AddConsoleExporter();
+	}
+
+	private static IServiceCollection AddRepository(this IServiceCollection services, IConfiguration configuration)
         => services
             .AddSingleton(services => configuration.GetSection($"{nameof(CachingPoliciesSettings)}:{nameof(LeadsCachingPolicy)}").Get<LeadsCachingPolicy>()!)
             .AddSingleton(services => configuration.GetSection($"{nameof(CachingPoliciesSettings)}:{nameof(AddressesCachingPolicy)}").Get<AddressesCachingPolicy>()!)

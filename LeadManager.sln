@@ -61,8 +61,6 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "backends-for-front-end", "b
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "background-services", "background-services", "{71C8B27E-0340-4390-A8DC-4DD3776E4E27}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "CrossCutting.Serialization.ProtoBuf", "src\libs\Cross-cutting\Cross-cutting.Serialization.ProtoBuf\CrossCutting.Serialization.ProtoBuf.csproj", "{F12DEEE7-141C-4302-9F89-2A6EC73667DE}"
-EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "CrossCutting.MessageContracts", "src\libs\Cross-cutting\Cross-cutting.MessageContracts\CrossCutting.MessageContracts.csproj", "{1CEE476B-A40D-44F2-876B-9BA25EBCCA3D}"
 EndProject
 Project("{E53339B2-1760-4266-BCC7-CA923CBCF16C}") = "docker-compose", "docker-compose.dcproj", "{5B9D956E-E842-4AD4-9A1C-3A80F347F1AF}"
@@ -87,8 +85,8 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ArchitectureValidation.Test
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "k8s", "k8s", "{BF2B1DB0-BBEE-4AB6-B6F0-61DEC1E871CB}"
 	ProjectSection(SolutionItems) = preProject
-		k8s\leadmanager.api-deployment.yaml = k8s\leadmanager.api-deployment.yaml
 		k8s\creating-running-local-k3d-based-k8s-cluster.txt = k8s\creating-running-local-k3d-based-k8s-cluster.txt
+		k8s\leadmanager.api-deployment.yaml = k8s\leadmanager.api-deployment.yaml
 		k8s\leadmanager.api-ingress.yaml = k8s\leadmanager.api-ingress.yaml
 		k8s\leadmanager.api-namespace.yaml = k8s\leadmanager.api-namespace.yaml
 		k8s\leadmanager.api-secret.yaml = k8s\leadmanager.api-secret.yaml
@@ -96,6 +94,15 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "k8s", "k8s", "{BF2B1DB0-BBE
 		k8s\leadmanager.messagebus-deployment.yaml = k8s\leadmanager.messagebus-deployment.yaml
 		k8s\leadmanager.nginx-ingress.yaml = k8s\leadmanager.nginx-ingress.yaml
 	EndProjectSection
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "instrumentation", "instrumentation", "{68E5C70F-5BE8-4F98-BB9F-E918EFE2E264}"
+	ProjectSection(SolutionItems) = preProject
+		grafana-datasources.yml = grafana-datasources.yml
+		otel-config.yaml = otel-config.yaml
+		prometheus.yml = prometheus.yml
+	EndProjectSection
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CrossCutting.Serialization", "src\libs\Cross-cutting\Cross-cutting.Serialization\CrossCutting.Serialization.csproj", "{A1F583B3-DB44-4133-A731-921CE3628507}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -175,10 +182,6 @@ Global
 		{D0131566-9F18-443F-B72B-A63C2A79A15B}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{D0131566-9F18-443F-B72B-A63C2A79A15B}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{D0131566-9F18-443F-B72B-A63C2A79A15B}.Release|Any CPU.Build.0 = Release|Any CPU
-		{F12DEEE7-141C-4302-9F89-2A6EC73667DE}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{F12DEEE7-141C-4302-9F89-2A6EC73667DE}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{F12DEEE7-141C-4302-9F89-2A6EC73667DE}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{F12DEEE7-141C-4302-9F89-2A6EC73667DE}.Release|Any CPU.Build.0 = Release|Any CPU
 		{1CEE476B-A40D-44F2-876B-9BA25EBCCA3D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{1CEE476B-A40D-44F2-876B-9BA25EBCCA3D}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{1CEE476B-A40D-44F2-876B-9BA25EBCCA3D}.Release|Any CPU.ActiveCfg = Release|Any CPU
@@ -215,6 +218,10 @@ Global
 		{68D1E35D-A92E-48A6-930C-7B32F39C37A7}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{68D1E35D-A92E-48A6-930C-7B32F39C37A7}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{68D1E35D-A92E-48A6-930C-7B32F39C37A7}.Release|Any CPU.Build.0 = Release|Any CPU
+		{A1F583B3-DB44-4133-A731-921CE3628507}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{A1F583B3-DB44-4133-A731-921CE3628507}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{A1F583B3-DB44-4133-A731-921CE3628507}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{A1F583B3-DB44-4133-A731-921CE3628507}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -247,7 +254,6 @@ Global
 		{D0131566-9F18-443F-B72B-A63C2A79A15B} = {71C8B27E-0340-4390-A8DC-4DD3776E4E27}
 		{6A278CFE-5241-47FC-97D5-FC7D48B08F86} = {B297EC06-E0FF-4D6F-88ED-54F72C02F429}
 		{71C8B27E-0340-4390-A8DC-4DD3776E4E27} = {B297EC06-E0FF-4D6F-88ED-54F72C02F429}
-		{F12DEEE7-141C-4302-9F89-2A6EC73667DE} = {0E78EACF-F14D-4BA2-94A3-37B64AAE5277}
 		{1CEE476B-A40D-44F2-876B-9BA25EBCCA3D} = {0E78EACF-F14D-4BA2-94A3-37B64AAE5277}
 		{47E988F4-689D-48B3-9E76-94745218E7FE} = {0E78EACF-F14D-4BA2-94A3-37B64AAE5277}
 		{C4ABF432-C55F-4F30-ABD8-AC7F0F3D7BB7} = {58B4156D-AC77-4489-8C76-911E2C2F32E3}
@@ -258,6 +264,7 @@ Global
 		{390FC0F6-D208-433C-BCE6-0374B58AFA6D} = {0E78EACF-F14D-4BA2-94A3-37B64AAE5277}
 		{124C9A1C-6B3F-4D43-9D5E-7BCA54BC68BB} = {84743509-9CD2-4FC3-AAAF-5EC3011067B3}
 		{68D1E35D-A92E-48A6-930C-7B32F39C37A7} = {124C9A1C-6B3F-4D43-9D5E-7BCA54BC68BB}
+		{A1F583B3-DB44-4133-A731-921CE3628507} = {0E78EACF-F14D-4BA2-94A3-37B64AAE5277}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {F5C96730-41C5-4999-9784-B64A284FE630}
