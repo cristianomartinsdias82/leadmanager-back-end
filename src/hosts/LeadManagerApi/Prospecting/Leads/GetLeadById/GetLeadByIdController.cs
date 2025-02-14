@@ -2,7 +2,6 @@
 using CrossCutting.Security.Authorization;
 using Domain.Prospecting.Entities;
 using LeadManagerApi.Core.ApiFeatures;
-using LeadManagerApi.Prospecting.Leads.Core;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
 using Shared.Results;
@@ -18,10 +17,10 @@ public sealed class GetLeadByIdController : LeadManagerController
 
     [HttpGet("{id:Guid}")]
     [ProducesResponseType(typeof(ApplicationResponse<LeadDto>), StatusCodes.Status200OK)]
-    [ProducesResponseType(typeof(ApplicationResponse<object>), StatusCodes.Status400BadRequest)]
     [ProducesResponseType(typeof(ApplicationResponse<LeadDto>), StatusCodes.Status404NotFound)]
-    [ProducesResponseType(typeof(ApplicationResponse<object>), StatusCodes.Status401Unauthorized)]
-    [ProducesResponseType(typeof(ApplicationResponse<object>), StatusCodes.Status500InternalServerError)]
+    [ProducesResponseType(typeof(ApplicationResponse<object>), StatusCodes.Status400BadRequest)]
+    [ProducesResponseType(StatusCodes.Status401Unauthorized)]
+    [ProducesResponseType(StatusCodes.Status500InternalServerError)]
     public async Task<IActionResult> GetLeadByIdAsync(Guid id, CancellationToken cancellationToken)
     {
         var response = await Mediator.Send(new GetLeadByIdQueryRequest { Id = id }, cancellationToken);

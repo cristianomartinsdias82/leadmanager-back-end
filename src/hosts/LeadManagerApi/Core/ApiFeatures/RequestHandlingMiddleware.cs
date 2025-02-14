@@ -2,7 +2,9 @@
 using Infrastructure.Persistence.Mappings;
 using Microsoft.EntityFrameworkCore;
 using Shared.ApplicationOperationRules;
+using Shared.Diagnostics;
 using Shared.Results;
+using System.Diagnostics;
 
 namespace LeadManagerApi.Core.ApiFeatures;
 
@@ -29,58 +31,82 @@ public sealed class RequestHandlingMiddleware
         {
             var inconsistencies = default(List<Inconsistency>);
 
-            HandleError(exc, ref inconsistencies);
+            var errorStatusCode = StatusCodes.Status500InternalServerError;
+			HandleError(exc, ref inconsistencies, ref errorStatusCode);
 
-            context.Response.StatusCode = StatusCodes.Status500InternalServerError;
+			context.Response.StatusCode = errorStatusCode;
             await context.Response.WriteAsJsonAsync(
                                     ApplicationResponse<object>.Create(
-                                        default!,
-                                        "Houve um erro técnico ao processar a solicitação.",
+                                        data: default!,
+                                        message: "Houve um erro técnico ao processar a solicitação.",
                                         exception: exc.AsExceptionData(),
                                         inconsistencies: inconsistencies?.ToArray() ?? null!));
 
             inconsistencies?.Clear();
             inconsistencies = null;
-        }
+		}
     }
 
-    private void HandleError(
-        Exception exc,
-        ref List<Inconsistency>? inconsistencies)
-    {
-        inconsistencies = new List<Inconsistency>();
+	private void HandleError(
+		Exception exc,
+		ref List<Inconsistency>? inconsistencies,
+        ref int statusCode)
+	{
+		inconsistencies = new List<Inconsistency>();
 
-        if (exc is DbUpdateException)
+        switch (exc)
         {
-            var message = exc.InnerException?.Message ?? string.Empty;
-            if (message.Contains(LeadEntityMetadata.CnpjColumnIndexName))
-                inconsistencies.Add(new(string.Empty, "Cnpj existente."));
+            case DbUpdateException dbExc:
 
-            if (message.Contains(LeadEntityMetadata.RazaoSocialColumnIndexName))
-                inconsistencies.Add(new(string.Empty, "Razão Social existente."));
+				var message = dbExc.InnerException?.Message ?? string.Empty;
+				if (message.Contains(LeadEntityMetadata.CnpjColumnIndexName))
+					inconsistencies.Add(new(string.Empty, "Cnpj existente."));
 
-            _logger.LogInformation(exc, "Db update exception: {Message}", message);
+				if (message.Contains(LeadEntityMetadata.RazaoSocialColumnIndexName))
+					inconsistencies.Add(new(string.Empty, "Razão Social existente."));
 
-            return;
-        }
+				_logger.LogInformation(dbExc, "Db update exception: {Message}", message);
 
-        if (exc is BusinessException)
-        {
-            inconsistencies.Add(new(string.Empty, exc.Message));
+                statusCode = StatusCodes.Status409Conflict;
 
-            _logger.LogInformation(exc, "Business exception: {Message}", exc.Message);
+				break;
 
-            return;
-        }
+			case BusinessException bsExc:
+				inconsistencies.Add(new(string.Empty, exc.Message));
 
-        if (exc is ApplicationOperatingRuleException appOperRuleExc)
-        {
-            inconsistencies.AddRange([..appOperRuleExc.RuleViolations]);
+				_logger.LogInformation(bsExc, "Business exception: {Message}", bsExc.Message);
 
-			_logger.LogWarning(
-                exc,
-                "One or more application operating rules have been violated while attempting to perform the request. {@violatedApplicationOperatingRules}",
-                appOperRuleExc.RuleViolations);
-        }
-    }
+				statusCode = StatusCodes.Status422UnprocessableEntity;
+
+				break;
+
+            case ApplicationOperatingRuleException oprExc:
+
+				inconsistencies.AddRange([.. oprExc.RuleViolations]);
+
+				_logger.LogWarning(
+					oprExc,
+					"One or more application operating rules have been violated while attempting to perform the request. {@violatedApplicationOperatingRules}",
+					oprExc.RuleViolations);
+
+                statusCode = StatusCodes.Status400BadRequest;
+
+				break;
+
+            default:
+
+				//Telemetry (Exception Span event)
+				DiagnosticsDataCollector
+					.WithActivity(Activity.Current)
+					.WithException(exc, TimeProvider.System.GetUtcNow())
+					.PushData();
+
+				statusCode = StatusCodes.Status500InternalServerError;
+				_logger.LogError(
+					exc,
+					"Error while processing the request: {message}. See stack trace for further details.", exc.Message);
+
+				break;
+		}
+	}
 }

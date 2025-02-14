@@ -2,7 +2,6 @@
 using CrossCutting.Security.Authorization;
 using LeadManagerApi.Core.ApiFeatures;
 using LeadManagerApi.Core.Configuration;
-using LeadManagerApi.Prospecting.Leads.Core;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
 using Shared.Results;
@@ -19,8 +18,8 @@ public sealed class BulkInsertLeadController : LeadManagerController
     [HttpPost("bulk-insert")]
     [ProducesResponseType(typeof(ApplicationResponse<BulkInsertLeadCommandResponse>), StatusCodes.Status200OK)]
     [ProducesResponseType(typeof(ApplicationResponse<object>), StatusCodes.Status400BadRequest)]
-    [ProducesResponseType(typeof(ApplicationResponse<object>), StatusCodes.Status401Unauthorized)]
-    [ProducesResponseType(typeof(ApplicationResponse<object>), StatusCodes.Status500InternalServerError)]
+    [ProducesResponseType(StatusCodes.Status401Unauthorized)]
+    [ProducesResponseType(StatusCodes.Status500InternalServerError)]
     public async Task<IActionResult> BulkInsertLeadAsync(IFormFile file, CancellationToken cancellationToken)
     {
         var request = new BulkInsertLeadCommandRequest

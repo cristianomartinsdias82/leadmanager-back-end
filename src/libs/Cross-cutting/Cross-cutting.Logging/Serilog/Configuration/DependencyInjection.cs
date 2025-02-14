@@ -51,11 +51,11 @@ public static class DependencyInjection
                         }
                     });
 
-            if (loggingSettings.SeqIngestionSink.Enabled)
-                loggerConfiguration.WriteTo.Seq(
-                    serverUrl: loggingSettings.SeqIngestionSink.ServerUrl,
-                    restrictedToMinimumLevel: ParseLogEvent(loggingSettings.SeqIngestionSink.LoggingLevel)
-                );
+            //if (loggingSettings.SeqIngestionSink.Enabled)
+            //    loggerConfiguration.WriteTo.Seq(
+            //        serverUrl: loggingSettings.SeqIngestionSink.ServerUrl,
+            //        restrictedToMinimumLevel: ParseLogEvent(loggingSettings.SeqIngestionSink.LoggingLevel)
+            //    );
         });
 
     private static LogEventLevel ParseLogEvent(string logLevel)

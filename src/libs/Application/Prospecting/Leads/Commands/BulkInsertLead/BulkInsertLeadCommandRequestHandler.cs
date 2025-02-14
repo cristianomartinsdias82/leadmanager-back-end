@@ -1,4 +1,5 @@
 ﻿using Application.Core.Contracts.Repository.Prospecting;
+using Application.Core.Diagnostics;
 using Application.Prospecting.Leads.Commands.RegisterLead;
 using Application.Prospecting.Leads.IntegrationEvents.LeadBulkInserted;
 using Application.Prospecting.Leads.Shared;
@@ -9,10 +10,13 @@ using Domain.Prospecting.Entities;
 using FluentValidation;
 using FluentValidation.Results;
 using MediatR;
+using OpenTelemetry;
 using Shared.DataPagination;
+using Shared.Diagnostics;
 using Shared.Events.EventDispatching;
 using Shared.RequestHandling;
 using Shared.Results;
+using System.Diagnostics;
 using System.Globalization;
 using System.Text;
 
@@ -111,8 +115,43 @@ internal sealed class BulkInsertLeadCommandRequestHandler : ApplicationRequestHa
 
         await _leadRepository.AddRangeAsync(newLeads, cancellationToken);
 
-        AddEvent(new LeadBulkInsertedIntegrationEvent(newLeads.MapToDtoList()));
+        PushTelemetryData(newLeads);
+
+		AddEvent(new LeadBulkInsertedIntegrationEvent(newLeads.MapToDtoList()));
 
         return ApplicationResponse<BulkInsertLeadCommandResponse>.Create(new());
     }
+
+    private void PushTelemetryData(IEnumerable<Lead> newLeads)
+    {
+        var leadCount = newLeads.Count();
+
+		//This counter is configured to be a metric and exported to Prometheus (see OpenTelemetryConfigurationExtensions.cs -> .WithMetrics -> mtr.AddPrometheusExporter())
+		//This counter is also configured to be scraped by Prometheus via and endpoint that was set in Program.cs file (app.UseOpenTelemetryPrometheusScrapingEndpoint();)
+		ApplicationDiagnostics.RegisteredLeadsCounter.Add(
+		/*Add*/leadCount
+		//,[
+		//    new KeyValuePair<string, object?>("client.membership", client.Membership.ToString())
+		//	  //add as many new tags as you see fit...
+		//]
+		//Adding kvps to the counter makes Grafana data grouping possible, for example
+		);
+
+		var handlerName = GetType().FullName!;
+		var diagnosticsDataCollector = DiagnosticsDataCollector
+										.WithActivity(Activity.Current)
+										.WithTags(
+											(ApplicationDiagnostics.Constants.LeadId, string.Join(',', newLeads.Select(l => l.Id))),
+											(ApplicationDiagnostics.Constants.HandlerName, handlerName)
+										)
+										//Just experimenting C# 12 new sugar syntax in the next lines of code
+										.WithTags([.. newLeads.Select(ld => ($"lead_{ld.Id}", ld.Id))])
+										.WithTags([.. Enumerable.Range(1, leadCount).Select(c => ($"lead_{c}", newLeads.ElementAt(c - 1).RazaoSocial))])
+										.WithBaggageData( //Useful for data Propagation
+											Baggage.Current,
+											(ApplicationDiagnostics.Constants.LeadId, string.Join(',', newLeads.Select(l => l.Id))),
+											(ApplicationDiagnostics.Constants.HandlerName, handlerName)
+										)
+										.PushData();
+	}
 }

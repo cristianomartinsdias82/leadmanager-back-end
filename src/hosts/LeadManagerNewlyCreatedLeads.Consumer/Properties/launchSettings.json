@@ -1,11 +1,14 @@
-﻿{
+{
   "profiles": {
     "LeadManagerNewlyCreatedLeads.Consumer": {
       "commandName": "Project",
-      "dotnetRunMessages": true,
       "environmentVariables": {
         "DOTNET_ENVIRONMENT": "Development"
-      }
+      },
+      "dotnetRunMessages": true
+    },
+    "Container (Dockerfile)": {
+      "commandName": "Docker"
     }
   }
 }

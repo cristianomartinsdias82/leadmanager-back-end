@@ -1,6 +1,7 @@
 ﻿using CrossCutting.Messaging.RabbitMq.Configuration;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using OpenTelemetry.Trace;
 
 namespace CrossCutting.Messaging.Configuration;
 
@@ -14,4 +15,10 @@ public static class DependencyInjection
 
         return services;
     }
+
+	public static TracerProviderBuilder AddMessageBusTracing(
+		this TracerProviderBuilder tracerProviderBuilder,
+		IServiceCollection services,
+		IConfiguration configuration)
+		=> tracerProviderBuilder.AddRabbitMqMessageBusTracing(services, configuration);
 }

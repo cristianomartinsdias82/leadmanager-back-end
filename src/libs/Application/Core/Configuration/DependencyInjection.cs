@@ -1,4 +1,5 @@
 ﻿using Application.Core.Behaviors;
+using Application.Core.Diagnostics;
 using Application.Core.OperatingRules;
 using Application.Core.Processors;
 using Application.Prospecting.Addresses.Queries.SearchAddressByZipCode;
@@ -18,14 +19,19 @@ using CrossCutting.Logging.Configuration;
 using CrossCutting.Messaging.Configuration;
 using CrossCutting.Monitoring.Configuration;
 using CrossCutting.Security;
+using CrossCutting.Serialization.Configuration;
 using Domain.Core;
 using Domain.Prospecting.Entities;
 using FluentValidation;
 using MediatR;
 using MediatR.Pipeline;
+using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using OpenTelemetry.Logs;
+using OpenTelemetry.Metrics;
+using OpenTelemetry.Trace;
 using Shared.ApplicationOperationRules;
 using Shared.Results;
 using ViaCep.ServiceClient.Configuration;
@@ -37,7 +43,7 @@ public static class DependencyInjection
     public static IServiceCollection AddApplicationServices(
         this IServiceCollection services,
         IConfiguration configuration,
-        IHostEnvironment hostingEnvironment)
+        IWebHostEnvironment hostingEnvironment)
     {
         var applicationAssemblyRef = typeof(DependencyInjection).Assembly;
         var coreAssemblyRef = typeof(IEntity).Assembly;
@@ -46,7 +52,7 @@ public static class DependencyInjection
                 .AddMediatR(config =>
                 {
                     config.RegisterServicesFromAssemblies(coreAssemblyRef, applicationAssemblyRef)
-                          .RegisterProcessors(services)
+                          .RegisterProcessors(services, hostingEnvironment)
                           .RegisterBehaviors(services);
                 })
                 .AddIntegrationClientServices(configuration)
@@ -57,7 +63,32 @@ public static class DependencyInjection
 		return services;
     }
 
-    private static IServiceCollection AddIntegrationClientServices(this IServiceCollection services, IConfiguration configuration)
+    public static TracerProviderBuilder AddApplicationTracing(
+        this TracerProviderBuilder tracerProviderBuilder,
+		IServiceCollection services,
+		IConfiguration configuration,
+        IWebHostEnvironment hostingEnvironment)
+        => tracerProviderBuilder.AddCrossCuttingTracing(services, configuration, hostingEnvironment);
+
+    public static MeterProviderBuilder AddApplicationMetric(
+        this MeterProviderBuilder meterProviderBuilder,
+        IServiceCollection services,
+        IConfiguration configuration,
+        IWebHostEnvironment hostingEnvironment)
+    { 
+	    return meterProviderBuilder
+			.AddMeter(ApplicationDiagnostics.Meter.Name)
+			.AddCrossCuttingMetric(services, configuration, hostingEnvironment);
+    }
+
+	public static LoggerProviderBuilder AddApplicationLogging(
+		this LoggerProviderBuilder loggerProviderBuilder,
+		IServiceCollection services,
+		IConfiguration configuration,
+		IWebHostEnvironment hostingEnvironment)
+	    => loggerProviderBuilder.AddCrossCuttingLogging(services, configuration, hostingEnvironment);
+
+	private static IServiceCollection AddIntegrationClientServices(this IServiceCollection services, IConfiguration configuration)
     {
         services.AddViaCepIntegrationServiceClient(configuration);
 
@@ -75,7 +106,8 @@ public static class DependencyInjection
                    .AddCaching(configuration)
                    .AddMessageBus(configuration)
                    .AddSecurity(configuration)
-                   .AddLeadManagerApiMonitoring(configuration);
+                   .AddSerialization(configuration)
+				   .AddLeadManagerApiMonitoring(configuration);
 
     private static MediatRServiceConfiguration RegisterBehaviors(this MediatRServiceConfiguration config, IServiceCollection services)
     {
@@ -84,9 +116,14 @@ public static class DependencyInjection
         return config.RegisterValidationBehaviors();
     }
 
-    private static MediatRServiceConfiguration RegisterProcessors(this MediatRServiceConfiguration config, IServiceCollection services)
+    private static MediatRServiceConfiguration RegisterProcessors(
+        this MediatRServiceConfiguration config,
+        IServiceCollection services,
+        IWebHostEnvironment hostingEnvironment)
     {
-        config.AddOpenRequestPreProcessor(typeof(ApplicationOperatingRulesProcessor<>)); //O que me ajudou a fazer este PreProcessor funcionar: https://github.com/jbogard/MediatR/issues/868
+        if (!hostingEnvironment.IsDevelopment())
+            config.AddOpenRequestPreProcessor(typeof(ApplicationOperatingRulesProcessor<>)); //O que me ajudou a fazer este PreProcessor funcionar: https://github.com/jbogard/MediatR/issues/868
+
 		services.AddTransient(typeof(IRequestPostProcessor<,>), typeof(EventHandlerDispatchingProcessor<,>));
 
 		return config;
@@ -102,4 +139,33 @@ public static class DependencyInjection
                  .AddBehavior<IPipelineBehavior<BulkInsertLeadCommandRequest, ApplicationResponse<BulkInsertLeadCommandResponse>>, ValidationBehavior<BulkInsertLeadCommandRequest, BulkInsertLeadCommandResponse>>()
                  .AddBehavior<IPipelineBehavior<GenerateOneTimePasswordCommandRequest, ApplicationResponse<GenerateOneTimePasswordCommandResponse>>, ValidationBehavior<GenerateOneTimePasswordCommandRequest, GenerateOneTimePasswordCommandResponse>>()
                  .AddBehavior<IPipelineBehavior<HandleOneTimePasswordCommandRequest, ApplicationResponse<HandleOneTimePasswordCommandResponse>>, ValidationBehavior<HandleOneTimePasswordCommandRequest, HandleOneTimePasswordCommandResponse>>();
+
+    private static TracerProviderBuilder AddCrossCuttingTracing(
+        this TracerProviderBuilder tracerProviderBuilder,
+        IServiceCollection services,
+        IConfiguration configuration,
+        IWebHostEnvironment hostingEnvironment)
+    {
+        return tracerProviderBuilder
+                .AddCachingTracing(services, configuration)
+				.AddMessageBusTracing(services, configuration);
+    }
+
+    private static MeterProviderBuilder AddCrossCuttingMetric(
+        this MeterProviderBuilder meterProviderBuilder,
+        IServiceCollection services,
+        IConfiguration configuration,
+        IWebHostEnvironment hostingEnvironment)
+    { 
+	    return meterProviderBuilder;
+    }
+
+    private static LoggerProviderBuilder AddCrossCuttingLogging(
+        this LoggerProviderBuilder loggerProviderBuilder,
+        IServiceCollection services,
+        IConfiguration configuration,
+        IWebHostEnvironment hostingEnvironment)
+    {
+        return loggerProviderBuilder;
+    }
 }

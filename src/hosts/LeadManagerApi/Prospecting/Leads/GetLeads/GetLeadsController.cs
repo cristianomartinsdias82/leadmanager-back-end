@@ -2,7 +2,6 @@
 using CrossCutting.Security.Authorization;
 using Domain.Prospecting.Entities;
 using LeadManagerApi.Core.ApiFeatures;
-using LeadManagerApi.Prospecting.Leads.Core;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
 using Shared.DataPagination;
@@ -19,11 +18,11 @@ public sealed class GetLeadsController : LeadManagerController
 
     [HttpGet]
     [ProducesResponseType(typeof(ApplicationResponse<PagedList<LeadDto>>), StatusCodes.Status200OK)]
-    [ProducesResponseType(typeof(ApplicationResponse<object>), StatusCodes.Status401Unauthorized)]
-    [ProducesResponseType(typeof(ApplicationResponse<object>), StatusCodes.Status500InternalServerError)]
+    [ProducesResponseType(StatusCodes.Status401Unauthorized)]
+    [ProducesResponseType(StatusCodes.Status500InternalServerError)]
     public async Task<IActionResult> GetLeadsAsync([FromQuery] PaginationOptions paginationOptions, CancellationToken cancellationToken)
     {
-        var response = await Mediator.Send(new GetLeadsQueryRequest(paginationOptions), cancellationToken);
+	    var response = await Mediator.Send(new GetLeadsQueryRequest(paginationOptions), cancellationToken);
 
         return Result(response);
     }

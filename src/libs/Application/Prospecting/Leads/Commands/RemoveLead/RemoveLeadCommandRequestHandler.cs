@@ -1,12 +1,16 @@
 ﻿using Application.Core.Contracts.Persistence;
 using Application.Core.Contracts.Repository.Prospecting;
+using Application.Core.Diagnostics;
 using Application.Prospecting.Leads.IntegrationEvents.LeadRemoved;
 using Domain.Prospecting.Entities;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
+using OpenTelemetry;
+using Shared.Diagnostics;
 using Shared.Events.EventDispatching;
 using Shared.RequestHandling;
 using Shared.Results;
+using System.Diagnostics;
 
 namespace Application.Prospecting.Leads.Commands.RemoveLead;
 
@@ -61,6 +65,8 @@ internal sealed class RemoveLeadCommandRequestHandler : ApplicationRequestHandle
                 operationCode: OperationCodes.ConcurrencyIssue);
         }
 
+        PushTelemetryData(lead);
+
         AddEvent(new LeadRemovedIntegrationEvent(lead.MapToDto()));
 
         return ApplicationResponse<RemoveLeadCommandResponse>.Create(
@@ -69,4 +75,32 @@ internal sealed class RemoveLeadCommandRequestHandler : ApplicationRequestHandle
                 default,
                 default));
     }
+
+	private void PushTelemetryData(Lead lead)
+	{
+		//This counter is configured to be a metric and exported to Prometheus (see OpenTelemetryConfigurationExtensions.cs -> .WithMetrics -> mtr.AddPrometheusExporter())
+		//This counter is also configured to be scraped by Prometheus via and endpoint that was set in Program.cs file (app.UseOpenTelemetryPrometheusScrapingEndpoint();)
+		ApplicationDiagnostics.RemovedLeadsCounter.Add(
+		/*Add*/1
+		//,[
+		//    new KeyValuePair<string, object?>("client.membership", client.Membership.ToString())
+		//	  //add as many new tags as you see fit...
+		//]
+		//Adding kvps to the counter makes Grafana data grouping possible, for example
+		);
+
+		var handlerName = GetType().FullName!;
+		var diagnosticsDataCollector = DiagnosticsDataCollector
+										.WithActivity(Activity.Current)
+										.WithTags(
+											(ApplicationDiagnostics.Constants.LeadId, lead.Id),
+											(ApplicationDiagnostics.Constants.HandlerName, handlerName)
+										)
+										.WithBaggageData( //Useful for data Propagation
+											Baggage.Current,
+											(ApplicationDiagnostics.Constants.LeadId, lead.Id.ToString()),
+											(ApplicationDiagnostics.Constants.HandlerName, handlerName)
+										)
+										.PushData();
+	}
 }

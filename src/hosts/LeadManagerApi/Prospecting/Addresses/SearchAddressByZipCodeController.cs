@@ -18,8 +18,8 @@ public sealed class SearchAddressByZipCodeController : LeadManagerController
     [ProducesResponseType(typeof(ApplicationResponse<SearchAddressByZipCodeQueryResponse>), StatusCodes.Status200OK)]
     [ProducesResponseType(typeof(ApplicationResponse<SearchAddressByZipCodeQueryResponse>), StatusCodes.Status404NotFound)]
     [ProducesResponseType(typeof(ApplicationResponse<object>), StatusCodes.Status400BadRequest)]
-    [ProducesResponseType(typeof(ApplicationResponse<object>), StatusCodes.Status401Unauthorized)]
-    [ProducesResponseType(typeof(ApplicationResponse<object>), StatusCodes.Status500InternalServerError)]
+    [ProducesResponseType(StatusCodes.Status401Unauthorized)]
+    [ProducesResponseType(StatusCodes.Status500InternalServerError)]
     public async Task<IActionResult> SearchAddressByZipCodeAsync(string cep, CancellationToken cancellationToken)
     {
         var response = await Mediator.Send(new SearchAddressByZipCodeQueryRequest(cep), cancellationToken);

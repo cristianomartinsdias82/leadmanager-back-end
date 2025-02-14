@@ -5,6 +5,7 @@ using Infrastructure.Configuration;
 using LeadManagerApi.Core.ApiFeatures;
 using LeadManagerApi.Core.Configuration;
 using Microsoft.AspNetCore.Diagnostics.HealthChecks;
+using SwaggerThemes;
 using static Application.Security.LeadManagerSecurityConfiguration;
 
 namespace LeadManagerApi;
@@ -16,9 +17,11 @@ public class Program
         //Services configuration
         var builder = WebApplication.CreateBuilder(args);
 
-        builder.Services.AddApiServices(builder.Configuration)
-                        .AddApplicationServices(builder.Configuration, builder.Environment)
-                        .AddInfrastructureServices(builder.Configuration);
+		builder.Services.AddApiServices(builder.Configuration, builder.Environment);
+		builder.Services.AddAggregatedTelemetry(builder.Configuration, builder.Environment);
+
+		builder.Services.AddApplicationServices(builder.Configuration, builder.Environment);
+        builder.Services.AddInfrastructureServices(builder.Configuration);
 
         var app = builder.Build();
 
@@ -28,21 +31,23 @@ public class Program
         if (app.Environment.IsDevelopment())
         {
             app.UseSwagger();
-            app.UseSwaggerUI();
-        }
+            app.UseSwaggerUI(Theme.UniversalDark);
+			//https://www.reddit.com/r/dotnet/comments/18m2wgx/swagger_theme_changer/
+			//https://github.com/oqo0/swagger-themes/tree/main
+		}
 
-        app.UseHttpsRedirection();
+		app.UseHttpsRedirection();
 
-        app.MapHealthChecks("/_health", new HealthCheckOptions
+        app.MapHealthChecks("/healthz", new HealthCheckOptions
         {
             ResponseWriter = UIResponseWriter.WriteHealthCheckUIResponse
         });
 
         app.UseAuthentication();
 
-        app.UseAuthorization();
+		app.UseAuthorization();
 
-        app.MapControllers();
+		app.MapControllers();
 
         app.UseDataSourceInitialization();
         app.UseMessageBusInitialization();
