@@ -14,6 +14,8 @@ E outra tela para as operações de adicionar ou atualizar um lead previamente s
 - Em situações de conflito de atualização e remoção de dados, o usuário tem a possibilidade de tomar uma decisão sobre como proceder neste tipo de cenário (sobrescrever, carregar os novos dados, cancelar...)
 de maneira fácil e intuitiva
 
+
+Desenho arquitetural
 ![image](https://github.com/user-attachments/assets/f759267a-0e25-4179-b371-abe796f2e242)
 
 
@@ -58,6 +60,7 @@ Caso a máquina seja Mac, siga os passos conforme a url: https://docs.docker.com
 Caso a máquina seja Linux, siga os passos conforme a url: https://docs.docker.com/desktop/install/linux-install/#generic-installation-steps<br/>
 Caso a máquina seja Windows, siga os passos conforme a url: https://docs.docker.com/desktop/install/windows-install/<br/>
 
+[Por enquanto, ignorar este tópico]
 Como executar o projeto localmente?<br/>
 Após a configuração da máquina - conforme a seção "Pré-requisitos para execução do Front-End da aplicação" - faça o seguinte:<br/>
 - Inicialize o Docker<br/>
@@ -67,25 +70,6 @@ docker-compose up -d<br/>
 docker-compose down)
 - Abra o navegador e digite a seguinte URL na barra de endereço:<br/>
 http://localhost:8002<br/>
-
-Backlog:
-- (Technical debt) Proteger a API contra acesso indevido, de maneira que somente usuários autenticados possam invocar os endpoints
-  - Possibilidade 1: a aplicação deverá ser capaz de encaminhar a solicitação de autenticação para um servidor de identidade a fim de obter o Token de autenticação
-  - Possibilidade 2: a aplicação deverá ser capaz de validar tokens de autenticação/autorização - incluindo Claims - que possibilitem ou recusem executar os endpoints da API
-- (Technical debt) Implementar um filtro de ação que envia um SMS / mensagem no WhatsApp (de maneira Fake) ao usuário contendo um token de 4 dígitos numéricos para realizar a operação de Remoção de Leads
-  - A ideia: na solicitação de remoção, deverá ser informado no cabeçalho HTTP um header LeadManager-Confirmation-Number com um código válido.
-    - Se na solicitação não veio este cabeçalho, a aplicação deverá gerar e armazenar um token com tempo de expiração de 1 minuto.
-    - Se na solicitação veio o cabeçalho, a aplicação deverá validar se o token ainda é válido (informou o token certo + token não está expirado), podendo gerar como resultado ao usuário as informações: 'Token incorreto' ou 'Token expirado'
-- (Technical debt) Implementar os testes unitários das classes contidas em libs/Shared; especificamente, das classes ApplicationResponse, PaginationOptions, Inconsistency e CnpjValidator
-- (Technical debt) Implementar os testes unitários do service client de integração com o serviço ViaCep
-- (Technical debt) Implementar os testes de integração dos endpoints:<br/>
-  GetLeadById<br/>
-  RegisterLead<br/>
-  RemoveLead<br/>
-  UpdateLead<br/>
-  SearchLead<br/>
-  BulkInsertLead<br/>
-- (Technical debt) Implementar testes unitários de concorrência de operações de atualização e remoção de leads (depende do item '(Technical debt) Utlizar TestContainers nos testes unitários utilizando o Sql Server)
 
 Em termos de implementação, o que tem de reaproveitável no código-fonte deste projeto e/ou que de repente pode servir como ponto de partida para outros projetos? Muitas coisas rs!
 - Estruturação de pastas focado em funcionalidades (casos de uso da aplicação) de maneira que inclusive seja muito fácil encontrar classes de Handlers, Validação, Requests, Testes unitários e de Integração correspondentes
@@ -102,7 +86,6 @@ Em termos de implementação, o que tem de reaproveitável no código-fonte dest
 - Implementação de um service client de integração com o serviço de localização de endereços ViaCep
 - Abstrações para manipulação de eventos:
   - IEvent
-    - IDomainEvent
     - IIntegrationEvent
 - Classes que fazem forte uso da biblioteca MediatR:
   - Classes base para Command and Query Handlers e Notification Handlers
