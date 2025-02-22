@@ -17,7 +17,6 @@ namespace Application.Prospecting.Leads.Commands.RemoveLead;
 internal sealed class RemoveLeadCommandRequestHandler : ApplicationRequestHandler<RemoveLeadCommandRequest, RemoveLeadCommandResponse>
 {
     private const string Mensagem_FalhaAtualizacaoConcorrente = "Este registro foi atualizado anteriormente por outro usuário.";
-    private const string Mensagem_FalhaRemocaoConcorrente = "Este registro foi removido anteriormente por outro usuário.";
     private const string Mensagem_LeadNaoEncontrado = "Lead não encontrado.";
     private readonly ILeadRepository _leadRepository;
 
