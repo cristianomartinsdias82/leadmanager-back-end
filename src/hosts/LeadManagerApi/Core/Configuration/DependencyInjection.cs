@@ -3,14 +3,14 @@ using Infrastructure.Configuration;
 using LeadManagerApi.Core.ApiFeatures;
 using LeadManagerApi.Core.Configuration.Security;
 using Microsoft.AspNetCore.Http.Features;
-using Microsoft.AspNetCore.Mvc;
+//using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Server.Kestrel.Core;
 using OpenTelemetry.Logs;
 using OpenTelemetry.Metrics;
 using OpenTelemetry.Resources;
 using OpenTelemetry.Trace;
 using System.Reflection;
-using System.Text.Json.Serialization;
+//using System.Text.Json.Serialization;
 
 namespace LeadManagerApi.Core.Configuration;
 
@@ -25,7 +25,10 @@ public static class DependencyInjection
         services.AddSingleton(apiSettings);
 
         //You can see how this configuration reflects in Swagger (GetLeads endpoint -> SortDirection parameter. Instead of displaying the options 0 or 1, it displays Ascending or Descending)
-		services.Configure<JsonOptions>(options => options.JsonSerializerOptions.Converters.Add(new JsonStringEnumConverter()));
+        //However, it has negative impact when update/remove there are concurrency issues that are handled by the application: instead of the serializer, emits HttpStatusCode 409 to the client,
+        //it sends a text "ConcurrencyIssue" (see OperationCodes enum) and it breaks the web application in this case, because it's expecting a numeric code.
+        //Thus, this line must remain commented out.
+		//services.Configure<JsonOptions>(options => options.JsonSerializerOptions.Converters.Add(new JsonStringEnumConverter()));
 
 		services.AddControllers(config =>
         {

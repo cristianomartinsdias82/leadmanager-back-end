@@ -16,8 +16,7 @@ namespace Application.Prospecting.Leads.Commands.RemoveLead;
 
 internal sealed class RemoveLeadCommandRequestHandler : ApplicationRequestHandler<RemoveLeadCommandRequest, RemoveLeadCommandResponse>
 {
-    private const string Mensagem_FalhaAtualizacaoConcorrente = "Este registro foi atualizado por outro usuário antes desta operação.";
-    private const string Mensagem_FalhaRemocaoConcorrente = "Este registro foi removido por outro usuário antes desta operação.";
+    private const string Mensagem_FalhaAtualizacaoConcorrente = "Este registro foi atualizado anteriormente por outro usuário.";
     private const string Mensagem_LeadNaoEncontrado = "Lead não encontrado.";
     private readonly ILeadRepository _leadRepository;
 
@@ -42,8 +41,8 @@ internal sealed class RemoveLeadCommandRequestHandler : ApplicationRequestHandle
         catch (DbUpdateConcurrencyException dbConcExc)
         {
             var entry = dbConcExc.Entries.SingleOrDefault();
-            if (entry is not null)
-            {
+            if (entry is not null) //If found, the record was previously updated
+			{
                 var databaseValues = await entry.GetDatabaseValuesAsync(cancellationToken);
                 if (databaseValues is not null)
                     return ApplicationResponse<RemoveLeadCommandResponse>.Create(
@@ -52,17 +51,9 @@ internal sealed class RemoveLeadCommandRequestHandler : ApplicationRequestHandle
                                     new(databaseValues.GetValue<Guid>(nameof(Lead.Id)), databaseValues.GetValue<byte[]>(nameof(Lead.RowVersion))),
                                     ((Lead)databaseValues.ToObject()).MapToDto()),
                         message: Mensagem_FalhaAtualizacaoConcorrente,
-                        operationCode: OperationCodes.ConcurrencyIssue);
+						inconsistencies: new Inconsistency("ConcurrencyIssue", string.Empty),
+						operationCode: OperationCodes.ConcurrencyIssue);
             }
-
-            return ApplicationResponse<RemoveLeadCommandResponse>.Create(
-                data: new RemoveLeadCommandResponse(
-                            RecordStates.Deleted,
-                            default!,
-                            default!),
-                exception: dbConcExc.AsExceptionData(),
-                message: Mensagem_FalhaRemocaoConcorrente,
-                operationCode: OperationCodes.ConcurrencyIssue);
         }
 
         PushTelemetryData(lead);

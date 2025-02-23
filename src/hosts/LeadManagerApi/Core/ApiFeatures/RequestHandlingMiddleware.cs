@@ -67,7 +67,7 @@ public sealed class RequestHandlingMiddleware
 
 				_logger.LogInformation(dbExc, "Db update exception: {Message}", message);
 
-                statusCode = StatusCodes.Status409Conflict;
+                statusCode = StatusCodes.Status500InternalServerError;
 
 				break;
 
@@ -82,7 +82,8 @@ public sealed class RequestHandlingMiddleware
 
             case ApplicationOperatingRuleException oprExc:
 
-				inconsistencies.AddRange([.. oprExc.RuleViolations]);
+				if (oprExc.RuleViolations?.Any() ?? false)
+					inconsistencies.AddRange([..oprExc.RuleViolations!]);
 
 				_logger.LogWarning(
 					oprExc,

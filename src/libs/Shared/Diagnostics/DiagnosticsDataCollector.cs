@@ -74,7 +74,7 @@ public class DiagnosticsDataCollector
 		_events.Add(new(
 			name,
 			timestamp,
-			tags: new ActivityTagsCollection([.. tags.Select(tag => new KeyValuePair<string, object>(tag.Key, tag.Value))])));
+			tags: new ActivityTagsCollection([..tags.Select(tag => new KeyValuePair<string, object?>(tag.Key, tag.Value))])));
 
 		return this;
 	}
