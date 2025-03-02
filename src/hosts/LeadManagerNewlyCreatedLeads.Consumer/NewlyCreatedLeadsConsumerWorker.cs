@@ -74,7 +74,7 @@ public class NewlyCreatedLeadsConsumerWorker : BackgroundService
             .WithTags
             (
                 (MessageConsumersDiagnostics.NewlyCreatedLeadsConstants.Count, incomingLeads.Count()),
-                (MessageConsumersDiagnostics.NewlyCreatedLeadsConstants.LeadIds, string.Join(",", incomingLeads.Select(ld => ld.Id))),
+                (MessageConsumersDiagnostics.NewlyCreatedLeadsConstants.LeadIds, string.Join(",", incomingLeads.Select(ld => ld.Id)))
                 //[..Baggage.Current.GetBaggage().Select(kvp => new (kvp.Key, kvp.Value))]
             );
 
