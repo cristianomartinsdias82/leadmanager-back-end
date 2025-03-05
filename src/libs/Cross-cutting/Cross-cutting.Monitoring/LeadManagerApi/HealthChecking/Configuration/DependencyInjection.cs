@@ -44,11 +44,11 @@ internal static class DependencyInjection
                 connectionString: dataSourceSettings.ConnectionString,
                 timeout: TimeSpan.FromSeconds(cachingProviderSettings.HealthCheckingTimeoutInSecs)
             )
-            .AddRabbitMQ(
-                rabbitConnectionString: rabbitMqConnectionSettings.ConnectionString,
-                timeout: TimeSpan.FromSeconds(cachingProviderSettings.HealthCheckingTimeoutInSecs)
-            )
-            .AddIdentityServer(
+			.AddRabbitMQ(
+				rabbitConnectionString: rabbitMqConnectionSettings.ConnectionString,
+				timeout: TimeSpan.FromSeconds(cachingProviderSettings.HealthCheckingTimeoutInSecs)
+			)
+            .AddOpenIdConnectServer(
                 new Uri(authenticationProviderSettings.AuthorityBaseUri),
                 timeout: TimeSpan.FromSeconds(cachingProviderSettings.HealthCheckingTimeoutInSecs)
             );

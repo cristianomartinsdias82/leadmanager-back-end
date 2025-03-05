@@ -1,5 +1,6 @@
 ﻿using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using MongoDB.Driver;
 using Shared.Settings;
 
 namespace CrossCutting.Monitoring.IAMServer.HealthChecking.Configuration;
@@ -13,7 +14,7 @@ internal static class DependencyInjection
 
         return healthChecksBuilder
             .AddMongoDb(
-                mongodbConnectionString: dataSourceSettings.ConnectionString,
+                sp => sp.GetRequiredService<IMongoClient>(),
                 timeout: TimeSpan.FromSeconds(dataSourceSettings.HealthCheckingTimeoutInSecs));
     }
 }

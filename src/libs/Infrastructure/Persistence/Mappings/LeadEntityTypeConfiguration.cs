@@ -71,16 +71,19 @@ internal sealed class LeadEntityTypeConfiguration : IEntityTypeConfiguration<Lea
 
 	private void Seed(EntityTypeBuilder<Lead> builder)
 	{
+        var lead = Lead.Criar(
+            "80.732.377/0001-74",
+            "Lead Manager Brasil S.A.",
+            "04858-040",
+            "Constelação do Escorpião",
+            "Jardim Campinas",
+            "São Paulo",
+            "SP",
+            "43",
+            default);
+        lead.Id = Guid.Parse("0E81A1FA-976C-4F18-8802-3D315C37AC1E");
+
 		//Data seed
-		builder.HasData(Lead.Criar(
-			"80.732.377/0001-74",
-			"Lead Manager Brasil S.A.",
-			"04858-040",
-			"Constelação do Escorpião",
-			"Jardim Campinas",
-			"São Paulo",
-			"SP",
-			"43",
-			default));
+		builder.HasData(lead);
 	}
 }
