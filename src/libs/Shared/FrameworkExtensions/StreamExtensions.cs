@@ -12,9 +12,9 @@ public static class StreamExtensions
 
         try
         {
-            await stream.ReadAsync(byteArray, 0, byteArray.Length, cancellationToken);
+            await stream.ReadExactlyAsync(byteArray, cancellationToken: cancellationToken);
 
-            if (resetStreamPositionOnRead && stream.Position > 0)
+            if (resetStreamPositionOnRead && stream.Position != 0)
                 stream.Position = 0;
 
             readSuccessful = true;
