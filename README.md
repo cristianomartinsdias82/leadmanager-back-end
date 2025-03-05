@@ -18,9 +18,11 @@ de maneira fácil e intuitiva
 Desenho arquitetural
 ![image](https://github.com/user-attachments/assets/f759267a-0e25-4179-b371-abe796f2e242)
 
+Dashboard de mensagens de Leads novos, atualizados e removidos no RabbitMQ
+![image](https://github.com/user-attachments/assets/fb4a6aac-c90b-4943-ad05-7dd669dad053)
 
 O projeto está em constante evolução e utiliza a seguinte plataforma e linguagens, tecnologias, funcionalidades e ferramentas:
-- .Net Core 8
+- .Net Core 7 (migrado posteriormente para o 8, e agora para o 9)
 - Linguagem C#
 - Orientação a objetos
 - Práticas de Código limpo / Clean code
