@@ -398,6 +398,8 @@ FodyWeavers.xsd
 
 # JetBrains Rider
 *.sln.iml
+
+#Nuget-related irrelevant stuffs
 /src/hosts/LeadManagerApi/obj/LeadManagerApi.csproj.nuget.dgspec.json
 /src/hosts/LeadManagerApi/obj/LeadManagerApi.csproj.nuget.g.props
 /src/hosts/LeadManagerApi/obj/LeadManagerApi.csproj.nuget.g.targets
