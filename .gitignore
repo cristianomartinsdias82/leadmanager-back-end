@@ -34,7 +34,6 @@ bld/
 
 # Visual Studio 2015/2017 cache/options directory
 .vs/
-.vs/**/FileContentIndex/
 # Uncomment if you have tasks that create the project's static files in wwwroot
 #wwwroot/
 
@@ -58,13 +57,10 @@ dlldata.c
 # Benchmark Results
 BenchmarkDotNet.Artifacts/
 
-# .NET
+# .NET Core
 project.lock.json
 project.fragment.lock.json
 artifacts/
-
-# Tye
-.tye/
 
 # ASP.NET Scaffolding
 ScaffoldingReadMe.txt
@@ -86,6 +82,8 @@ StyleCopReport.xml
 *.pgc
 *.pgd
 *.rsp
+# but not Directory.Build.rsp, as it configures directory-level build defaults
+!Directory.Build.rsp
 *.sbr
 *.tlb
 *.tli
@@ -400,140 +398,30 @@ FodyWeavers.xsd
 
 # JetBrains Rider
 *.sln.iml
-
-##
-## Visual studio for Mac
-##
-
-
-# globs
-Makefile.in
-*.userprefs
-*.usertasks
-config.make
-config.status
-aclocal.m4
-install-sh
-autom4te.cache/
-*.tar.gz
-tarballs/
-test-results/
-
-# Mac bundle stuff
-*.dmg
-*.app
-
-# content below from: https://github.com/github/gitignore/blob/master/Global/macOS.gitignore
-# General
-.DS_Store
-.AppleDouble
-.LSOverride
-
-# Icon must end with two \r
-Icon
-
-
-# Thumbnails
-._*
-
-# Files that might appear in the root of a volume
-.DocumentRevisions-V100
-.fseventsd
-.Spotlight-V100
-.TemporaryItems
-.Trashes
-.VolumeIcon.icns
-.com.apple.timemachine.donotpresent
-
-# Directories potentially created on remote AFP share
-.AppleDB
-.AppleDesktop
-Network Trash Folder
-Temporary Items
-.apdisk
-
-# content below from: https://github.com/github/gitignore/blob/master/Global/Windows.gitignore
-# Windows thumbnail cache files
-Thumbs.db
-ehthumbs.db
-ehthumbs_vista.db
-
-# Dump file
-*.stackdump
-
-# Folder config file
-[Dd]esktop.ini
-
-# Recycle Bin used on file shares
-$RECYCLE.BIN/
-
-# Windows Installer files
-*.cab
-*.msi
-*.msix
-*.msm
-*.msp
-
-# Windows shortcuts
-*.lnk
-/.vs/LeadManager/v17/.suo
-/.vs/LeadManager/v17/TestStore/0/040.testlog
-/src/hosts/LeadManagerApi/obj/Debug/net7.0/LeadManagerApi.csproj.AssemblyReference.cache
-/src/libs/Application/obj/Debug/net7.0/Application.csproj.AssemblyReference.cache
-/src/libs/Infrastructure/obj/Debug/net7.0/Infrastructure.csproj.AssemblyReference.cache
-/tests/common/Tests.Common/obj/Debug/net7.0/Tests.Common.csproj.AssemblyReference.cache
-/tests/integration-tests/LeadManagerApi.Tests/obj/Debug/net7.0/LeadManagerApi.Tests.csproj.AssemblyReference.cache
-/tests/unit-tests/Application.Tests/obj/Debug/net7.0/Application.Tests.csproj.AssemblyReference.cache
-/tests/unit-tests/Core.Tests/obj/Debug/net7.0/Core.Tests.csproj.AssemblyReference.cache
-/.vs/LeadManager/DesignTimeBuild/.dtbcache.v2
-/.vs/LeadManager/v17/TestStore/0/testlog.manifest
-/src/hosts/LeadManagerApi/obj/Debug/net7.0/ref/LeadManagerApi.dll
-/src/hosts/LeadManagerApi/obj/Debug/net7.0/refint/LeadManagerApi.dll
-/src/libs/Application/obj/Debug/net7.0/Application.csproj.CoreCompileInputs.cache
-/src/libs/Core/obj/Debug/net7.0/Core.csproj.dotnet-codegen.GeneratedFileList.txt
-/src/libs/Core/obj/Debug/net7.0/Core.csproj.dotnet-codegen.rsp
-/tests/common/Tests.Common/obj/Debug/net7.0/Tests.Common.assets.cache
-/tests/integration-tests/LeadManagerApi.Tests/obj/Debug/net7.0/LeadManagerApi.Tests.assets.cache
-/tests/unit-tests/Application.Tests/obj/Debug/net7.0/Application.Tests.assets.cache
-/tests/unit-tests/Core.Tests/obj/Debug/net7.0/Core.Tests.assets.cache
-/src/hosts/LeadManagerApi/obj/Debug/net7.0/LeadManagerApi.assets.cache
-/src/hosts/LeadManagerApi/obj/project.nuget.cache
-/src/libs/Application/obj/project.nuget.cache
-/src/libs/Infrastructure/obj/project.nuget.cache
-/tests/integration-tests/LeadManagerApi.Tests/obj/project.nuget.cache
-/tests/unit-tests/Core.Tests/obj/project.nuget.cache
-/src/libs/Infrastructure/obj/Debug/net7.0/Infrastructure.assets.cache
-/tests/common/Tests.Common/obj/project.nuget.cache
-/tests/unit-tests/Shared.Tests/obj/project.nuget.cache
-/tests/unit-tests/Shared.Tests/obj/Debug/net7.0/Shared.Tests.assets.cache
-/tests/unit-tests/Application.Tests/obj/project.nuget.cache
-/src/libs/Application/obj/Debug/net7.0/Application.assets.cache
-/src/hosts/LeadManagerApi/obj/Debug/net7.0/LeadManagerApi.AssemblyInfo.cs
-/src/hosts/LeadManagerApi/obj/Debug/net7.0/LeadManagerApi.AssemblyInfoInputs.cache
-/src/libs/Core/obj/Core.csproj.nuget.dgspec.json
-/src/libs/Core/obj/Core.csproj.nuget.g.props
-/src/libs/Core/obj/Core.csproj.nuget.g.targets
-/src/libs/Core/obj/Debug/net7.0/Core.assets.cache
-/src/libs/Core/obj/Debug/net7.0/Core.csproj.AssemblyReference.cache
-/src/libs/Core/obj/Debug/net7.0/Core.GeneratedMSBuildEditorConfig.editorconfig
-/src/libs/Core/obj/project.assets.json
-/src/libs/Core/obj/project.nuget.cache
-/src/libs/Integrations/ViaCep.ServiceClient/obj/Debug/net7.0/ViaCep.ServiceClient.assets.cache
-/src/libs/Integrations/ViaCep.ServiceClient/obj/Debug/net7.0/ViaCep.ServiceClient.GeneratedMSBuildEditorConfig.editorconfig
-/src/libs/Integrations/ViaCep.ServiceClient/obj/project.assets.json
-/src/libs/Integrations/ViaCep.ServiceClient/obj/project.nuget.cache
-/src/libs/Integrations/ViaCep.ServiceClient/obj/ViaCep.ServiceClient.csproj.nuget.dgspec.json
-/src/libs/Shared/obj/Debug/net7.0/Shared.assets.cache
-/src/libs/Shared/obj/Debug/net7.0/Shared.csproj.AssemblyReference.cache
-/src/libs/Shared/obj/Debug/net7.0/Shared.GeneratedMSBuildEditorConfig.editorconfig
-/src/libs/Shared/obj/project.assets.json
-/src/libs/Shared/obj/project.nuget.cache
-/src/libs/Shared/obj/Shared.csproj.nuget.dgspec.json
-/src/hosts/LeadManagerApi/obj/Debug/net7.0/LeadManagerApi.GeneratedMSBuildEditorConfig.editorconfig
-/src/libs/Application/obj/Debug/net7.0/Application.GeneratedMSBuildEditorConfig.editorconfig
-/src/libs/Infrastructure/obj/Debug/net7.0/Infrastructure.GeneratedMSBuildEditorConfig.editorconfig
-/src/libs/Application/obj/Debug/net7.0/Application.AssemblyInfoInputs.cache
-/src/libs/Infrastructure/obj/Debug/net7.0/Infrastructure.AssemblyInfoInputs.cache
-/src/libs/Integrations/ViaCep.ServiceClient/obj/Debug/net7.0/ViaCep.ServiceClient.AssemblyInfoInputs.cache
-/src/libs/Integrations/ViaCep.ServiceClient/obj/Debug/net7.0/ViaCep.ServiceClient.csproj.AssemblyReference.cache
-/src/libs/Shared/obj/Debug/net7.0/Shared.AssemblyInfoInputs.cache
+/src/hosts/LeadManagerApi/obj/LeadManagerApi.csproj.nuget.dgspec.json
+/src/hosts/LeadManagerApi/obj/LeadManagerApi.csproj.nuget.g.props
+/src/hosts/LeadManagerApi/obj/LeadManagerApi.csproj.nuget.g.targets
+/src/hosts/LeadManagerApi/obj/project.assets.json
+/src/libs/Application/obj/Application.csproj.nuget.dgspec.json
+/src/libs/Application/obj/Application.csproj.nuget.g.props
+/src/libs/Application/obj/Application.csproj.nuget.g.targets
+/src/libs/Application/obj/project.assets.json
+/src/libs/Infrastructure/obj/Infrastructure.csproj.nuget.dgspec.json
+/src/libs/Infrastructure/obj/Infrastructure.csproj.nuget.g.props
+/src/libs/Infrastructure/obj/Infrastructure.csproj.nuget.g.targets
+/src/libs/Infrastructure/obj/project.assets.json
+/src/libs/Integrations/ViaCep.ServiceClient/obj/ViaCep.ServiceClient.csproj.nuget.g.props
+/src/libs/Shared/obj/Shared.csproj.nuget.g.props
+/src/libs/Shared/obj/Shared.csproj.nuget.g.targets
+/tests/common/Tests.Common/obj/project.assets.json
+/tests/common/Tests.Common/obj/Tests.Common.csproj.nuget.dgspec.json
+/tests/common/Tests.Common/obj/Tests.Common.csproj.nuget.g.props
+/tests/common/Tests.Common/obj/Tests.Common.csproj.nuget.g.targets
+/tests/integration-tests/LeadManagerApi.Tests/obj/LeadManagerApi.Tests.csproj.nuget.dgspec.json
+/tests/integration-tests/LeadManagerApi.Tests/obj/LeadManagerApi.Tests.csproj.nuget.g.props
+/tests/integration-tests/LeadManagerApi.Tests/obj/LeadManagerApi.Tests.csproj.nuget.g.targets
+/tests/integration-tests/LeadManagerApi.Tests/obj/project.assets.json
+/tests/unit-tests/Application.Tests/obj/Application.Tests.csproj.nuget.dgspec.json
+/tests/unit-tests/Application.Tests/obj/Application.Tests.csproj.nuget.g.props
+/tests/unit-tests/Application.Tests/obj/Application.Tests.csproj.nuget.g.targets
+/tests/unit-tests/Application.Tests/obj/project.assets.json
