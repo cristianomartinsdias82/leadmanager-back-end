@@ -17,6 +17,7 @@ namespace Application.Prospecting.Leads.Commands.RemoveLead;
 internal sealed class RemoveLeadCommandRequestHandler : ApplicationRequestHandler<RemoveLeadCommandRequest, RemoveLeadCommandResponse>
 {
     private const string Mensagem_FalhaAtualizacaoConcorrente = "Este registro foi atualizado anteriormente por outro usuário.";
+    private const string Mensagem_LeadRemovido = "Este registro foi removido por outro usuário.";
     private const string Mensagem_LeadNaoEncontrado = "Lead não encontrado.";
     private readonly ILeadRepository _leadRepository;
 
@@ -54,7 +55,17 @@ internal sealed class RemoveLeadCommandRequestHandler : ApplicationRequestHandle
 						inconsistencies: new Inconsistency("ConcurrencyIssue", string.Empty),
 						operationCode: OperationCodes.ConcurrencyIssue);
             }
-        }
+            else //The record was perviously deleted - TODO: Ver como o front se comporta com este bloco else. Fiz ele para passar nos testes unitários existentes na base de código
+				return ApplicationResponse<RemoveLeadCommandResponse>.Create(
+						data: new RemoveLeadCommandResponse(
+									RecordStates.Deleted,
+									default,
+									lead.MapToDto()),
+						message: Mensagem_LeadRemovido,
+						inconsistencies: new Inconsistency("ConcurrencyIssue", string.Empty),
+                        exception: dbConcExc.AsExceptionData(),
+						operationCode: OperationCodes.ConcurrencyIssue);
+		}
 
         PushTelemetryData(lead);
 

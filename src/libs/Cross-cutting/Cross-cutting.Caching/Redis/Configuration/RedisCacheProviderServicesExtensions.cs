@@ -14,7 +14,12 @@ internal static class RedisCacheProviderServicesExtensions
         var cachingProviderSettings = configuration.GetSection(nameof(RedisCacheProviderSettings)).Get<RedisCacheProviderSettings>()!;
         services.AddSingleton(cachingProviderSettings);
 
-		IConnectionMultiplexer redisConnMultiplexer = ConnectionMultiplexer.Connect($"{cachingProviderSettings.Server}:{cachingProviderSettings.PortNumber}");
+		IConnectionMultiplexer redisConnMultiplexer = ConnectionMultiplexer
+														.Connect($"{cachingProviderSettings.Server}:{cachingProviderSettings.PortNumber}",
+																config =>
+																{
+																	config.AbortOnConnectFail = false;
+																});
 		services.AddSingleton(redisConnMultiplexer);
 		services.AddStackExchangeRedisCache(options => {
 			options.ConnectionMultiplexerFactory = () => Task.FromResult(redisConnMultiplexer);

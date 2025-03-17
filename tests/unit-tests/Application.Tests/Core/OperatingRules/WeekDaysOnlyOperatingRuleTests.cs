@@ -8,7 +8,7 @@ namespace Application.Tests.Core.OperatingRules;
 public sealed class WeekDaysOnlyOperatingRuleTests
 {
 	[Fact]
-	public async Task Apply_Weekends_ShouldReturnRuleViolation()
+	public async Task Apply_Weekends_ProducesRuleViolation()
 	{
 		//Arrange
 		var timeProvider = TimeProviderMother.Saturday();
@@ -22,7 +22,7 @@ public sealed class WeekDaysOnlyOperatingRuleTests
 	}
 
 	[Fact]
-	public async Task Apply_BusinessDays_ShouldNotReturnRuleViolation()
+	public async Task Apply_BusinessDays_DoesNotProduceRuleViolation()
 	{
 		//Arrange
 		var timeProvider = TimeProviderMother.MondayInBusinessHoursTimeWindowMorning();

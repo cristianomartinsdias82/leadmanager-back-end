@@ -14,7 +14,7 @@ internal sealed class WeekDaysOnlyOperatingRule : ApplicationOperatingRule
 
 	public override Task<Inconsistency?> ApplyAsync(CancellationToken cancellationToken = default)
 	{
-		var now = _timeProvider.GetUtcNow();
+		var now = _timeProvider.GetLocalNow();
 		if (new DayOfWeek[] { DayOfWeek.Saturday, DayOfWeek.Sunday }.Contains(now.DayOfWeek))
 			return Task.FromResult<Inconsistency?>(new("Regras para funcionamento da aplicação", "não é permitido utilizar a aplicação aos fins de semana."));
 

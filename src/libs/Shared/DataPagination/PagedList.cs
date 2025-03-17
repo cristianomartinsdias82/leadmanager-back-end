@@ -15,7 +15,7 @@ public struct PagedList<T>
         {
             ItemCount = ItemCount,
             PageCount = PageCount,
-            Items = Items.Select(map).ToList(),
+            Items = Items?.Select(map)?.ToList() ?? Enumerable.Empty<TOther>(),
             HasPreviousPage = HasPreviousPage,
             HasNextPage = HasNextPage
         };

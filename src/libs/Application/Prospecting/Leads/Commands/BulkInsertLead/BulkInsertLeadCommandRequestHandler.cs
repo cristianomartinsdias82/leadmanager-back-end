@@ -84,7 +84,10 @@ internal sealed class BulkInsertLeadCommandRequestHandler : ApplicationRequestHa
                 inconsistencies: inconsistencies.ToArray()
             );
 
-        var existingLeads = await _leadRepository.GetAsync(PaginationOptions.SinglePage(), cancellationToken);
+        var existingLeads = await _leadRepository.GetAsync(
+            default,
+            PaginationOptions.SinglePage(),
+            cancellationToken);
         if (existingLeads.Items.Any())
             upcomingLeads.ForEach(upcLead =>
             {

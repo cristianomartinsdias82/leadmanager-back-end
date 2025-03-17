@@ -28,7 +28,10 @@ internal sealed class AuditingRepository : RepositoryBase<AuditEntry>, IAuditing
         throw new NotImplementedException();
     }
 
-    public override Task<PagedList<AuditEntry>> GetAsync(PaginationOptions paginationOptions, CancellationToken cancellationToken = default)
+    public override Task<PagedList<AuditEntry>> GetAsync(
+        string? search,
+        PaginationOptions paginationOptions,
+        CancellationToken cancellationToken = default)
     {
         throw new NotImplementedException();
     }

@@ -1,4 +1,5 @@
 ﻿using Application.Core.Contracts.Repository;
+//using Domain.Prospecting.Entities;
 //using Domain.Core;
 using Shared.DataPagination;
 using System.Linq.Expressions;
@@ -19,7 +20,9 @@ internal abstract class RepositoryBase<T> : IRepository<T> where T : class//, IE
         Guid id,
         CancellationToken cancellationToken = default);
 
-    public abstract Task<PagedList<T>> GetAsync(
+
+	public abstract Task<PagedList<T>> GetAsync(
+        string? search,
         PaginationOptions paginationOptions,
         CancellationToken cancellationToken = default);
 

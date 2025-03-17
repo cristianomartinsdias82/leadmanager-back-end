@@ -11,11 +11,12 @@ namespace LeadManagerApi.Tests.Prospecting.Leads.GetLeads;
 
 public class GetLeadsControllerTests : SharedResourcesTestsBase
 {
-    public GetLeadsControllerTests(
-        LeadManagerWebApplicationFactory factory) : base(factory) {}
+    private const string CorrectApiKeyRequestHeaderName = "LeadManager-Api-Key";
+
+	public GetLeadsControllerTests(LeadManagerWebApplicationFactory factory) : base(factory) {}
 
     [Fact]
-    public async Task Get_RequestWithoutApiKeyHeader_ShouldFail()
+    public async Task Get_RequestWithoutApiKeyHeader_ReturnsUnauthorized()
     {
         // Arrange
         using var httpClient = _factory.CreateHttpClient(false);
@@ -28,14 +29,9 @@ public class GetLeadsControllerTests : SharedResourcesTestsBase
         response.StatusCode.Should().Be(HttpStatusCode.Unauthorized, because: "Api key header has not been set.");
     }
 
-    [Theory]
-    [InlineData("a", "b")]
-    [InlineData("X-Api-Key", "1341341")]
-    [InlineData("X-Api-Key", "")]
-    [InlineData("X-Lead-Manager-Api-Key", "12312312")]
-    [InlineData("X-Lead-Manager-Api-Key", "")]
-    [InlineData("c", "1341341")]
-    public async Task Get_RequestWithInvalidApiKeyHeader_ShouldFail(string headerName, string headerValue)
+	[Theory]
+    [MemberData(nameof(InvalidApiKeyHeadersAndValues))]
+    public async Task Get_RequestWithInvalidApiKeyHeaderAndOrValue_ReturnsUnauthorized(string headerName, string headerValue)
     {
         // Arrange
         using var httpClient = _factory.CreateHttpClient((headerName, headerValue));
@@ -50,7 +46,7 @@ public class GetLeadsControllerTests : SharedResourcesTestsBase
     }
 
     [Fact]
-    public async Task Get_RequestWithValidApiKeyHeader_ShouldSucceed()
+    public async Task Get_RequestWithValidApiKeyHeader_ReturnsOk()
     {
         // Arrange
         using var httpClient = _factory.CreateHttpClient();
@@ -77,7 +73,7 @@ public class GetLeadsControllerTests : SharedResourcesTestsBase
     }
 
 	[Fact(Skip = "Why does this test succeeds when in debug mode but fails when it's not?")]
-	public async Task Get_RequestContainingTimeWindowRuleViolationTestHeader_ShouldFail()
+	public async Task Get_RequestWithTimeWindowRule_Enabled_ReturnsResponseWithErrorCode()
 	{
 		// Arrange
 		using var httpClient = _factory.CreateHttpClient(
@@ -88,7 +84,7 @@ public class GetLeadsControllerTests : SharedResourcesTestsBase
 		using var response = await httpClient.GetAsync(LeadsEndpoint);
 
 		// Assert
-		response.StatusCode.Should().Be(HttpStatusCode.InternalServerError);
+		response.StatusCode.Should().Be(HttpStatusCode.BadRequest);
 		response.IsSuccessStatusCode.Should().BeFalse();
 		var responseContent = await response.Content.ReadAsStringAsync();
 
@@ -108,7 +104,7 @@ public class GetLeadsControllerTests : SharedResourcesTestsBase
 	}
 
 	[Fact(Skip = "Why does this test succeeds when in debug mode but fails when it's not?")]
-	public async Task Get_RequestContainingDayRuleViolationTestHeader_ShouldFail()
+	public async Task Get_RequestWithDayRule_Enabled_ReturnsResponseWithErrorCode()
 	{
 		// Arrange
 		using var httpClient = _factory.CreateHttpClient(
@@ -135,5 +131,15 @@ public class GetLeadsControllerTests : SharedResourcesTestsBase
 		apiResponse.OperationCode.Should().Be(OperationCodes.Error);
 		apiResponse.Inconsistencies!.Any(inc => inc.Description.Contains("não é permitido utilizar a aplicação aos fins de semana"))
 									.Should().BeTrue();
+	}
+
+	public static IEnumerable<object[]> InvalidApiKeyHeadersAndValues()
+	{
+		yield return new object[] { "a", "b" };
+		yield return new object[] { "X-Api-Key", "1341341" };
+		yield return new object[] { "X-Api-Key", string.Empty };
+		yield return new object[] { CorrectApiKeyRequestHeaderName, "12312312" };
+		yield return new object[] { CorrectApiKeyRequestHeaderName, string.Empty };
+		yield return new object[] { "c", "1341341" };
 	}
 }

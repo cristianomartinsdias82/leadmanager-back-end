@@ -72,6 +72,7 @@ public class LeadManagerWebApplicationFactory : WebApplicationFactory<Program>, 
                                     .WithWaitStrategy(Wait.ForUnixContainer().UntilPortIsAvailable(int.Parse(dbResourcePortNumber)))
                                     .Build();
 
+        //Heads up! When running integration tests o your local machine, please make sure Redis server port number is not being used already (docker composition, for example)
         var cacheResourcePortNumber = Configuration["RedisCacheProviderSettings:PortNumber"]!;
         var cacheImageName = Configuration["RedisCacheProviderSettings:ImageName"]!;
         _cacheContainer = new RedisBuilder()

@@ -22,16 +22,21 @@ internal sealed class LeadRepository : RepositoryBase<Lead>, ILeadRepository
     public override async Task AddRangeAsync(IEnumerable<Lead> leads, CancellationToken cancellationToken = default)
         => await _leadDbContext.Leads.AddRangeAsync(leads, cancellationToken);
 
-    public override async Task<PagedList<Lead>> GetAsync(PaginationOptions paginationOptions, CancellationToken cancellationToken = default)
+    public override async Task<PagedList<Lead>> GetAsync(
+		string? search,
+		PaginationOptions paginationOptions,
+        CancellationToken cancellationToken = default)
         => PagedList<Lead>.Paginate(
-            await _leadDbContext.Leads.ToListAsync(cancellationToken),
-            PaginationOptions
-                .SinglePage()
-                .WithSortColumn(paginationOptions.SortColumn)
-                .WithSortDirection(paginationOptions.SortDirection)
-            );
+            await _leadDbContext
+                    .Leads
+			        .Where(it => string.IsNullOrWhiteSpace(search) || it.Cnpj.Contains(search) || it.RazaoSocial.Contains(search))
+					.ToListAsync(cancellationToken),
+                        PaginationOptions
+                            .SinglePage()
+                            .WithSortColumn(paginationOptions.SortColumn)
+                            .WithSortDirection(paginationOptions.SortDirection));
 
-    public override async Task<Lead?> GetByIdAsync(Guid id, CancellationToken cancellationToken = default)
+	public override async Task<Lead?> GetByIdAsync(Guid id, CancellationToken cancellationToken = default)
         => await _leadDbContext.Leads.FindAsync(id, cancellationToken);
 
     public override async Task RemoveAsync(Lead lead, byte[] rowVersion, CancellationToken cancellationToken = default)

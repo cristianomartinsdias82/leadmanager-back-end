@@ -30,39 +30,100 @@ internal sealed class CachingLeadRepository : ILeadRepository, ICachingLeadRepos
         _leadsCachingPolicy = leadsCachingPolicy;
     }
 
-    public async Task<PagedList<Lead>> GetAsync(
-        PaginationOptions paginationOptions,
-        CancellationToken cancellationToken = default)
-    {
-        var cachedLeads = await _cacheProvider.GetAsync<IEnumerable<LeadData>>(
-            _leadsCachingPolicy.CacheKey,
-            cancellationToken);
+	public async Task<PagedList<Lead>> GetAsync(
+		string? search,
+		PaginationOptions paginationOptions,
+		CancellationToken cancellationToken = default)
+	{
+
+        //TODO: Implement stampede aside cache with double-lock checking
+
+		var cachedLeads = await _cacheProvider.GetAsync<IEnumerable<LeadData>>(
+			_leadsCachingPolicy.CacheKey,
+			cancellationToken);
 
         if (cachedLeads is not null)
-            return cachedLeads.ToSortedPagedList(
-                paginationOptions.SortColumn ?? nameof(Lead.RazaoSocial),
-                paginationOptions.SortDirection,
-                paginationOptions,
-                ld => ld.MapToEntity());
+        {
+            if (string.IsNullOrWhiteSpace(search))
+				return cachedLeads
+						.ToSortedPagedList(
+							paginationOptions.SortColumn ?? nameof(Lead.RazaoSocial),
+							paginationOptions.SortDirection,
+							paginationOptions,
+							ld => ld.MapToEntity());
 
-        var leads = await _leadRepository.GetAsync(paginationOptions, cancellationToken);
-        if (leads.ItemCount.Equals(0))
-            return PagedList<Lead>.Empty();
+			var leadCacheSearchResult = cachedLeads
+					.Where(it => string.IsNullOrWhiteSpace(search) || it.Cnpj.Contains(search) || it.RazaoSocial.Contains(search))
+					.ToSortedPagedList(
+						paginationOptions.SortColumn ?? nameof(Lead.RazaoSocial),
+						paginationOptions.SortDirection,
+						paginationOptions,
+						ld => ld.MapToEntity());
 
-        await _cacheProvider.SetAsync(
-            _leadsCachingPolicy.CacheKey,
-            cachedLeads = leads.Items.Select(ld => ld.MapToMessageContract()),
-            ttlInSeconds: _leadsCachingPolicy.TtlInSeconds,
-            cancellationToken: cancellationToken);
+			if (leadCacheSearchResult.ItemCount > 0)
+				return leadCacheSearchResult;
 
-        return leads.Items.ToSortedPagedList(
-            paginationOptions.SortColumn ?? nameof(Lead.RazaoSocial),
-            paginationOptions.SortDirection,
-            paginationOptions,
-            leads => leads);
-    }
+			var leadDbSearchResult = await _leadRepository.GetAsync(search, paginationOptions, cancellationToken);
+			return leadDbSearchResult.Items.ToSortedPagedList(
+							paginationOptions.SortColumn ?? nameof(Lead.RazaoSocial),
+							paginationOptions.SortDirection,
+							paginationOptions,
+							leads => leads);
+		}
 
-    public async Task<Lead?> GetByIdAsync(Guid id, CancellationToken cancellationToken = default)
+		var leads = await _leadRepository.GetAsync(search, paginationOptions, cancellationToken);
+		if (leads.ItemCount.Equals(0))
+			return PagedList<Lead>.Empty();
+
+		await _cacheProvider.SetAsync(
+			_leadsCachingPolicy.CacheKey,
+			cachedLeads = leads.Items.Select(ld => ld.MapToMessageContract()),
+			ttlInSeconds: _leadsCachingPolicy.TtlInSeconds,
+			cancellationToken: cancellationToken);
+
+		return leads.Items.ToSortedPagedList(
+			paginationOptions.SortColumn ?? nameof(Lead.RazaoSocial),
+			paginationOptions.SortDirection,
+			paginationOptions,
+			leads => leads);
+	}
+
+	//  public async Task<PagedList<Lead>> GetAsync(
+	//string? search,
+	//PaginationOptions paginationOptions,
+	//      CancellationToken cancellationToken = default)
+	//  {
+	//      var cachedLeads = await _cacheProvider.GetAsync<IEnumerable<LeadData>>(
+	//          _leadsCachingPolicy.CacheKey,
+	//          cancellationToken);
+
+	//      if (cachedLeads is not null)
+	//          return cachedLeads
+	//		.Where(it => string.IsNullOrWhiteSpace(search) || it.Cnpj.Contains(search) || it.RazaoSocial.Contains(search))
+	//		.ToSortedPagedList(
+	//                  paginationOptions.SortColumn ?? nameof(Lead.RazaoSocial),
+	//                  paginationOptions.SortDirection,
+	//                  paginationOptions,
+	//                  ld => ld.MapToEntity());
+
+	//      var leads = await _leadRepository.GetAsync(search, paginationOptions, cancellationToken);
+	//      if (leads.ItemCount.Equals(0))
+	//          return PagedList<Lead>.Empty();
+
+	//      await _cacheProvider.SetAsync(
+	//          _leadsCachingPolicy.CacheKey,
+	//          cachedLeads = leads.Items.Select(ld => ld.MapToMessageContract()),
+	//          ttlInSeconds: _leadsCachingPolicy.TtlInSeconds,
+	//          cancellationToken: cancellationToken);
+
+	//      return leads.Items.ToSortedPagedList(
+	//          paginationOptions.SortColumn ?? nameof(Lead.RazaoSocial),
+	//          paginationOptions.SortDirection,
+	//          paginationOptions,
+	//          leads => leads);
+	//  }
+
+	public async Task<Lead?> GetByIdAsync(Guid id, CancellationToken cancellationToken = default)
     {
         var cachedLeads = await _cacheProvider.GetAsync<IEnumerable<LeadData>>(
             _leadsCachingPolicy.CacheKey,
