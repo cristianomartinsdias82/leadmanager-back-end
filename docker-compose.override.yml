@@ -2,15 +2,23 @@
 
 services:
 
-  # portainer:
-  #   container_name: portainer
-  #   restart: always
-  #   ports:
-  #     - "8000:8000"
-  #     - "9000:9000"
-  #   volumes:
-  #     - /var/run/docker.sock:/var/run/docker.sock
-  #     - portainer_data:/data/portainer
+  portainer:
+    container_name: portainer
+    restart: always
+    ports:
+      - "8000:8000"
+      - "9000:9000"
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
+      - portainer_data:/data/portainer
+
+  iamserver.db:
+    container_name: iamserverdb
+    restart: always
+    ports:
+      - "27020:27017"
+    volumes:
+      - iamserverdb_data:/var/data/iamserverdb
 
   # leadmanager.logging-ingestion:
   #   container_name: leadmanagerseq

@@ -2,8 +2,11 @@
 
 services:
 
-  # portainer:
-  #   image: portainer/portainer-ce
+  portainer:
+    image: portainer/portainer-ce
+
+  iamserver.db:
+    image: mongo:6.0
 
   # leadmanager.logging-ingestion:
   #   image: datalust/seq:2023.4
@@ -36,7 +39,7 @@ services:
       context: .
       dockerfile: src/hosts/LeadManagerNewlyCreatedLeads.Consumer/Dockerfile
 
-  #instrumentation section below
+  #instrumentation section down below
 
   otel-collector:
     image: otel/opentelemetry-collector-contrib:0.103.0
@@ -89,8 +92,9 @@ services:
       - "3000:3000"
 
 volumes:
-  #portainer_data:
+  portainer_data:
   db_data:
   messagebus_data:
   blob_data:
   caching_data:
+  iamserverdb_data:
