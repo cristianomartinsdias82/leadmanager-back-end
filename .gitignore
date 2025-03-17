@@ -427,3 +427,4 @@ FodyWeavers.xsd
 /tests/unit-tests/Application.Tests/obj/Application.Tests.csproj.nuget.g.props
 /tests/unit-tests/Application.Tests/obj/Application.Tests.csproj.nuget.g.targets
 /tests/unit-tests/Application.Tests/obj/project.assets.json
+/src/hosts/IAMServer/tempkey.jwk
