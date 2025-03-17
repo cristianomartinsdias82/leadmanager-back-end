@@ -3,9 +3,9 @@ using MediatR;
 using Shared.RequestHandling;
 using Shared.Results;
 
-namespace Application.Prospecting.Leads.Queries.SearchLead;
+namespace Application.Prospecting.Leads.Queries.ExistsLead;
 
-internal sealed class SearchLeadQueryRequestHandler : ApplicationRequestHandler<SearchLeadQueryRequest, bool>
+internal sealed class ExistsLeadQueryRequestHandler : ApplicationRequestHandler<ExistsLeadQueryRequest, bool>
 {
     //private readonly ILeadManagerDbContext _leadManagerDbContext;
 
@@ -30,14 +30,14 @@ internal sealed class SearchLeadQueryRequestHandler : ApplicationRequestHandler<
 
     private readonly ILeadRepository _leadRepository;
 
-    public SearchLeadQueryRequestHandler(
+    public ExistsLeadQueryRequestHandler(
         IMediator mediator,
         ILeadRepository leadRepository) : base(mediator, default!)
     {
         _leadRepository = leadRepository;
     }
 
-    public override async Task<ApplicationResponse<bool>> Handle(SearchLeadQueryRequest request, CancellationToken cancellationToken)
+    public override async Task<ApplicationResponse<bool>> Handle(ExistsLeadQueryRequest request, CancellationToken cancellationToken)
     {
         var searchTerm = request.SearchTerm!.Trim();
 

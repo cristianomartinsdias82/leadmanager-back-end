@@ -11,6 +11,7 @@ using Xunit;
 
 namespace Application.Tests.Prospecting.Leads.Queries.GetLeadById;
 
+//TODO: Utilizar uma implementação real de repositório para estes testes
 public sealed class GetLeadByIdQueryRequestHandlerTests
 {
     private readonly GetLeadByIdQueryRequestHandler _handler;

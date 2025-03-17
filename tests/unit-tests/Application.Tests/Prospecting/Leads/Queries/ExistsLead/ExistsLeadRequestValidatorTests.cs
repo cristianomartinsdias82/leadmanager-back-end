@@ -1,19 +1,19 @@
-﻿using Application.Prospecting.Leads.Queries.SearchLead;
+﻿using Application.Prospecting.Leads.Queries.ExistsLead;
 using FluentAssertions;
 using Xunit;
 
-namespace Application.Tests.Prospecting.Leads.Queries.SearchLead;
+namespace Application.Tests.Prospecting.Leads.Queries.ExistsLead;
 
-public sealed class GetLeadByIdRequestValidatorTests
+public sealed class ExistsLeadRequestValidatorTests
 {
-    private readonly SearchLeadQueryRequestValidator _validator = new();
+    private readonly ExistsLeadQueryRequestValidator _validator = new();
 
     [Fact]
     public void Validate_ValidRequestParameters_ShouldSucceed()
     {
         //Arrange
         //Act
-        var result = _validator.Validate(new SearchLeadQueryRequest(default, "Gumper Inc."));
+        var result = _validator.Validate(new ExistsLeadQueryRequest(default, "Gumper Inc."));
 
         //Assert
         result.IsValid.Should().BeTrue();
@@ -23,7 +23,7 @@ public sealed class GetLeadByIdRequestValidatorTests
     [Theory]
     [MemberData(nameof(InvalidQueryRequestsSimulations))]
     public void Validate_InvalidRequestParameters_ShouldFail(
-        SearchLeadQueryRequest request,
+        ExistsLeadQueryRequest request,
         params string[] expectedErrorMessages)
     {
         //Arrange
@@ -41,19 +41,19 @@ public sealed class GetLeadByIdRequestValidatorTests
     {
         yield return new object[]
         {
-            new SearchLeadQueryRequest(default, null!),
+            new ExistsLeadQueryRequest(default, null!),
             "Termo para pesquisa é obrigatório."
         };
 
         yield return new object[]
         {
-            new SearchLeadQueryRequest(default, ""),
+            new ExistsLeadQueryRequest(default, ""),
             "Termo para pesquisa é obrigatório."
         };
 
         yield return new object[]
         {
-            new SearchLeadQueryRequest(default, " "),
+            new ExistsLeadQueryRequest(default, " "),
             "Termo para pesquisa é obrigatório."
         };
     }

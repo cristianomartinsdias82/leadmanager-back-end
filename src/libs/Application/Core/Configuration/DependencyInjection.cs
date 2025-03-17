@@ -7,8 +7,9 @@ using Application.Prospecting.Leads.Commands.BulkInsertLead;
 using Application.Prospecting.Leads.Commands.RegisterLead;
 using Application.Prospecting.Leads.Commands.RemoveLead;
 using Application.Prospecting.Leads.Commands.UpdateLead;
+using Application.Prospecting.Leads.Queries.ExistsLead;
 using Application.Prospecting.Leads.Queries.GetLeadById;
-using Application.Prospecting.Leads.Queries.SearchLead;
+using Application.Prospecting.Leads.Queries.GetLeads;
 using Application.Security.OneTimePassword.Commands.GenerateOneTimePassword;
 using Application.Security.OneTimePassword.Commands.HandleOneTimePassword;
 using CrossCutting.Caching.Configuration;
@@ -33,6 +34,7 @@ using OpenTelemetry.Logs;
 using OpenTelemetry.Metrics;
 using OpenTelemetry.Trace;
 using Shared.ApplicationOperationRules;
+using Shared.DataPagination;
 using Shared.Results;
 using ViaCep.ServiceClient.Configuration;
 
@@ -122,7 +124,7 @@ public static class DependencyInjection
         IWebHostEnvironment hostingEnvironment)
     {
         if (!hostingEnvironment.IsDevelopment())
-            config.AddOpenRequestPreProcessor(typeof(ApplicationOperatingRulesProcessor<>)); //O que me ajudou a fazer este PreProcessor funcionar: https://github.com/jbogard/MediatR/issues/868
+            config.AddOpenRequestPreProcessor(typeof(ApplicationOperatingRulesProcessor<>)); //Here's the article that helped make this PreProcessor work: https://github.com/jbogard/MediatR/issues/868
 
 		services.AddTransient(typeof(IRequestPostProcessor<,>), typeof(EventHandlerDispatchingProcessor<,>));
 
@@ -131,11 +133,12 @@ public static class DependencyInjection
 
     private static MediatRServiceConfiguration RegisterValidationBehaviors(this MediatRServiceConfiguration config)
         => config.AddBehavior<IPipelineBehavior<GetLeadByIdQueryRequest, ApplicationResponse<LeadDto>>, ValidationBehavior<GetLeadByIdQueryRequest, LeadDto>>()
-                 .AddBehavior<IPipelineBehavior<SearchAddressByZipCodeQueryRequest, ApplicationResponse<SearchAddressByZipCodeQueryResponse>>, ValidationBehavior<SearchAddressByZipCodeQueryRequest, SearchAddressByZipCodeQueryResponse>>()
+		         .AddBehavior<IPipelineBehavior<GetLeadsQueryRequest, ApplicationResponse<PagedList<LeadDto>>>, ValidationBehavior<GetLeadsQueryRequest, PagedList<LeadDto>>>()
+				 .AddBehavior<IPipelineBehavior<SearchAddressByZipCodeQueryRequest, ApplicationResponse<SearchAddressByZipCodeQueryResponse>>, ValidationBehavior<SearchAddressByZipCodeQueryRequest, SearchAddressByZipCodeQueryResponse>>()
                  .AddBehavior<IPipelineBehavior<RegisterLeadCommandRequest, ApplicationResponse<RegisterLeadCommandResponse>>, ValidationBehavior<RegisterLeadCommandRequest, RegisterLeadCommandResponse>>()
                  .AddBehavior<IPipelineBehavior<UpdateLeadCommandRequest, ApplicationResponse<UpdateLeadCommandResponse>>, ValidationBehavior<UpdateLeadCommandRequest, UpdateLeadCommandResponse>>()
                  .AddBehavior<IPipelineBehavior<RemoveLeadCommandRequest, ApplicationResponse<RemoveLeadCommandResponse>>, ValidationBehavior<RemoveLeadCommandRequest, RemoveLeadCommandResponse>>()
-                 .AddBehavior<IPipelineBehavior<SearchLeadQueryRequest, ApplicationResponse<bool>>, ValidationBehavior<SearchLeadQueryRequest, bool>>()
+                 .AddBehavior<IPipelineBehavior<ExistsLeadQueryRequest, ApplicationResponse<bool>>, ValidationBehavior<ExistsLeadQueryRequest, bool>>()
                  .AddBehavior<IPipelineBehavior<BulkInsertLeadCommandRequest, ApplicationResponse<BulkInsertLeadCommandResponse>>, ValidationBehavior<BulkInsertLeadCommandRequest, BulkInsertLeadCommandResponse>>()
                  .AddBehavior<IPipelineBehavior<GenerateOneTimePasswordCommandRequest, ApplicationResponse<GenerateOneTimePasswordCommandResponse>>, ValidationBehavior<GenerateOneTimePasswordCommandRequest, GenerateOneTimePasswordCommandResponse>>()
                  .AddBehavior<IPipelineBehavior<HandleOneTimePasswordCommandRequest, ApplicationResponse<HandleOneTimePasswordCommandResponse>>, ValidationBehavior<HandleOneTimePasswordCommandRequest, HandleOneTimePasswordCommandResponse>>();

@@ -23,6 +23,7 @@ internal sealed class GetLeadsQueryRequestHandler : ApplicationRequestHandler<Ge
         CancellationToken cancellationToken)
     {
         var pagedLeads = await _leadRepository.GetAsync(
+            request.Search,
             request.PaginationOptions,
             cancellationToken);
 

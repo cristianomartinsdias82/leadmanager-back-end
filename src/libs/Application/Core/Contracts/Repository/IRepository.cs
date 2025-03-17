@@ -15,7 +15,8 @@ public interface IRepository<T> where T : class//, IEntity
         CancellationToken cancellationToken = default);
 
     Task<PagedList<T>> GetAsync(
-        PaginationOptions paginationOptions,
+		string? search,
+		PaginationOptions paginationOptions,
         CancellationToken cancellationToken = default);
 
     Task AddRangeAsync(

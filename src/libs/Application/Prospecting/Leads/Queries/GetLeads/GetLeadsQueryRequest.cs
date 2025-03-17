@@ -5,4 +5,6 @@ using Shared.Results;
 
 namespace Application.Prospecting.Leads.Queries.GetLeads;
 
-public sealed record GetLeadsQueryRequest(PaginationOptions PaginationOptions) : IRequest<ApplicationResponse<PagedList<LeadDto>>>;
+public sealed record GetLeadsQueryRequest(
+						string? Search,
+						PaginationOptions PaginationOptions) : IRequest<ApplicationResponse<PagedList<LeadDto>>>;
