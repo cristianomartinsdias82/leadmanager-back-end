@@ -1,19 +1,18 @@
 ﻿using CrossCutting.EndUserCommunication.Sms;
-using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 
-namespace CrossCutting.EndUserCommunication;
+namespace CrossCutting.EndUserCommunication.Configuration;
 
 public static class DependencyInjection
 {
-    public static IServiceCollection AddEndUserCommunicationServices(this IServiceCollection services, IConfiguration configuration)
+    public static IServiceCollection AddEndUserCommunicationServices(this IServiceCollection services)
     {
-        services.AddSmsService(configuration);
+        services.AddSmsService();
 
         return services;
     }
 
-    private static IServiceCollection AddSmsService(this IServiceCollection services, IConfiguration configuration)
+    private static IServiceCollection AddSmsService(this IServiceCollection services)
     {
         services.AddTransient<ISmsDeliveryService, DebugWriteLineBasedFakeSmsDeliveryService>();
 

@@ -16,9 +16,6 @@ public static class DependencyInjection
         return services;
     }
 
-	public static TracerProviderBuilder AddMessageBusTracing(
-		this TracerProviderBuilder tracerProviderBuilder,
-		IServiceCollection services,
-		IConfiguration configuration)
-		=> tracerProviderBuilder.AddRabbitMqMessageBusTracing(services, configuration);
+	public static TracerProviderBuilder AddMessageBusTracing(this TracerProviderBuilder tracerProviderBuilder)
+		=> tracerProviderBuilder.AddRabbitMqMessageBusTracing();
 }

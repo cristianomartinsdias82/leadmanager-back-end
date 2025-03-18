@@ -7,7 +7,7 @@ namespace CrossCutting.Security.Authentication.JsonWebTokens.Configuration;
 
 internal static class JwtAuthenticationServicesExtensions
 {
-    public static AuthenticationBuilder AddJwtAuthentication(this IServiceCollection services, IConfiguration configuration)
+    public static AuthenticationBuilder AddJwtAuthentication(this IServiceCollection services)
         => services.ConfigureOptions<JwtAuthenticationConfigureOptions>()
                 .AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
                 .AddJwtBearer(options =>

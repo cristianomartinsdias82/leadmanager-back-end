@@ -1,4 +1,4 @@
-using CrossCutting.Messaging.Consumers.BackendServices.Common;
+using LeadManager.BackendServices.Consumers.Common;
 
 namespace LeadManagerNewlyCreatedLeads.Consumer;
 

@@ -17,7 +17,7 @@ public class Program
         //Services configuration
         var builder = WebApplication.CreateBuilder(args);
 
-		builder.Services.AddApiServices(builder.Configuration, builder.Environment);
+		builder.Services.AddApiServices(builder.Configuration);
 		builder.Services.AddAggregatedTelemetry(builder.Configuration, builder.Environment);
 
 		builder.Services.AddApplicationServices(builder.Configuration, builder.Environment);
@@ -44,6 +44,8 @@ public class Program
         });
 
         app.UseAuthentication();
+
+        app.UseOutputCache();
 
 		app.UseAuthorization();
 
