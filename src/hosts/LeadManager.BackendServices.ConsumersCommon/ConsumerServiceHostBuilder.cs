@@ -12,17 +12,17 @@ using OpenTelemetry.Resources;
 using OpenTelemetry.Trace;
 using System.Reflection;
 
-namespace CrossCutting.Messaging.Consumers.BackendServices.Common;
+namespace LeadManager.BackendServices.Consumers.Common;
 
-public class ConsumerServiceHostBuilder
+public sealed class ConsumerServiceHostBuilder
 {
 	private readonly string[] _args;
-	private List<Action<IServiceCollection>> _addHostedService;
+	private readonly List<Action<IServiceCollection>> _addHostedService;
 
 	private ConsumerServiceHostBuilder(string[] args)
 	{
 		_args = args;
-		_addHostedService = new List<Action<IServiceCollection>>();
+		_addHostedService = [];
 	}
 
 	public static ConsumerServiceHostBuilder New(string[] args) => new(args);
@@ -45,7 +45,7 @@ public class ConsumerServiceHostBuilder
 
 					services
 						.AddSingleton((_) => TimeProvider.System)
-						.AddSerialization(configuration)
+						.AddSerialization()
 						.AddMessageBus(configuration)
 						.ConfigureOpenTelemetryTracerProvider(tracerProviderBuilder =>
 						{

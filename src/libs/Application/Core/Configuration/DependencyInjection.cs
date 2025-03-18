@@ -14,12 +14,12 @@ using Application.Security.OneTimePassword.Commands.GenerateOneTimePassword;
 using Application.Security.OneTimePassword.Commands.HandleOneTimePassword;
 using CrossCutting.Caching.Configuration;
 using CrossCutting.Csv.Configuration;
-using CrossCutting.EndUserCommunication;
+using CrossCutting.EndUserCommunication.Configuration;
 using CrossCutting.FileStorage.Configuration;
 using CrossCutting.Logging.Configuration;
 using CrossCutting.Messaging.Configuration;
 using CrossCutting.Monitoring.Configuration;
-using CrossCutting.Security;
+using CrossCutting.Security.Configuration;
 using CrossCutting.Serialization.Configuration;
 using Domain.Core;
 using Domain.Prospecting.Entities;
@@ -45,7 +45,7 @@ public static class DependencyInjection
     public static IServiceCollection AddApplicationServices(
         this IServiceCollection services,
         IConfiguration configuration,
-        IWebHostEnvironment hostingEnvironment)
+        IHostEnvironment hostEnvironment)
     {
         var applicationAssemblyRef = typeof(DependencyInjection).Assembly;
         var coreAssemblyRef = typeof(IEntity).Assembly;
@@ -54,41 +54,29 @@ public static class DependencyInjection
                 .AddMediatR(config =>
                 {
                     config.RegisterServicesFromAssemblies(coreAssemblyRef, applicationAssemblyRef)
-                          .RegisterProcessors(services, hostingEnvironment)
+                          .RegisterProcessors(services, hostEnvironment)
                           .RegisterBehaviors(services);
                 })
                 .AddIntegrationClientServices(configuration)
-                .AddCrossCuttingServices(configuration)
-                .AddEndUserCommunicationServices(configuration)
-                .AddAplicationOperatingRules(configuration);
+                .AddCrossCuttingServices(configuration, hostEnvironment)
+                .AddEndUserCommunicationServices()
+                .AddAplicationOperatingRules();
 
 		return services;
     }
 
-    public static TracerProviderBuilder AddApplicationTracing(
-        this TracerProviderBuilder tracerProviderBuilder,
-		IServiceCollection services,
-		IConfiguration configuration,
-        IWebHostEnvironment hostingEnvironment)
-        => tracerProviderBuilder.AddCrossCuttingTracing(services, configuration, hostingEnvironment);
+    public static TracerProviderBuilder AddApplicationTracing(this TracerProviderBuilder tracerProviderBuilder)
+        => tracerProviderBuilder.AddCrossCuttingTracing();
 
-    public static MeterProviderBuilder AddApplicationMetric(
-        this MeterProviderBuilder meterProviderBuilder,
-        IServiceCollection services,
-        IConfiguration configuration,
-        IWebHostEnvironment hostingEnvironment)
+    public static MeterProviderBuilder AddApplicationMetric(this MeterProviderBuilder meterProviderBuilder)
     { 
 	    return meterProviderBuilder
 			.AddMeter(ApplicationDiagnostics.Meter.Name)
-			.AddCrossCuttingMetric(services, configuration, hostingEnvironment);
+			.AddCrossCuttingMetric();
     }
 
-	public static LoggerProviderBuilder AddApplicationLogging(
-		this LoggerProviderBuilder loggerProviderBuilder,
-		IServiceCollection services,
-		IConfiguration configuration,
-		IWebHostEnvironment hostingEnvironment)
-	    => loggerProviderBuilder.AddCrossCuttingLogging(services, configuration, hostingEnvironment);
+	public static LoggerProviderBuilder AddApplicationLogging(this LoggerProviderBuilder loggerProviderBuilder)
+	    => loggerProviderBuilder.AddCrossCuttingLogging();
 
 	private static IServiceCollection AddIntegrationClientServices(this IServiceCollection services, IConfiguration configuration)
     {
@@ -97,18 +85,21 @@ public static class DependencyInjection
         return services;
     }
 
-	private static IServiceCollection AddAplicationOperatingRules(this IServiceCollection services, IConfiguration configuration)
+	private static IServiceCollection AddAplicationOperatingRules(this IServiceCollection services)
 		=> services.AddSingleton<IApplicationOperatingRule, BusinessHoursOnlyOperatingRule>()
 				   .AddSingleton<IApplicationOperatingRule, WeekDaysOnlyOperatingRule>();
 
-	private static IServiceCollection AddCrossCuttingServices(this IServiceCollection services, IConfiguration configuration)
-        => services.AddCsvHelper(configuration)
+	private static IServiceCollection AddCrossCuttingServices(
+        this IServiceCollection services,
+        IConfiguration configuration,
+        IHostEnvironment hostEnvironment)
+        => services.AddCsvHelper()
                    .AddFileStorage(configuration)
                    .AddMultiSinkLogging(configuration)
-                   .AddCaching(configuration)
+                   .AddCaching(configuration, hostEnvironment)
                    .AddMessageBus(configuration)
-                   .AddSecurity(configuration)
-                   .AddSerialization(configuration)
+                   .AddSecurity()
+                   .AddSerialization()
 				   .AddLeadManagerApiMonitoring(configuration);
 
     private static MediatRServiceConfiguration RegisterBehaviors(this MediatRServiceConfiguration config, IServiceCollection services)
@@ -121,7 +112,7 @@ public static class DependencyInjection
     private static MediatRServiceConfiguration RegisterProcessors(
         this MediatRServiceConfiguration config,
         IServiceCollection services,
-        IWebHostEnvironment hostingEnvironment)
+        IHostEnvironment hostingEnvironment)
     {
         if (!hostingEnvironment.IsDevelopment())
             config.AddOpenRequestPreProcessor(typeof(ApplicationOperatingRulesProcessor<>)); //Here's the article that helped make this PreProcessor work: https://github.com/jbogard/MediatR/issues/868
@@ -143,31 +134,19 @@ public static class DependencyInjection
                  .AddBehavior<IPipelineBehavior<GenerateOneTimePasswordCommandRequest, ApplicationResponse<GenerateOneTimePasswordCommandResponse>>, ValidationBehavior<GenerateOneTimePasswordCommandRequest, GenerateOneTimePasswordCommandResponse>>()
                  .AddBehavior<IPipelineBehavior<HandleOneTimePasswordCommandRequest, ApplicationResponse<HandleOneTimePasswordCommandResponse>>, ValidationBehavior<HandleOneTimePasswordCommandRequest, HandleOneTimePasswordCommandResponse>>();
 
-    private static TracerProviderBuilder AddCrossCuttingTracing(
-        this TracerProviderBuilder tracerProviderBuilder,
-        IServiceCollection services,
-        IConfiguration configuration,
-        IWebHostEnvironment hostingEnvironment)
+    private static TracerProviderBuilder AddCrossCuttingTracing(this TracerProviderBuilder tracerProviderBuilder)
     {
         return tracerProviderBuilder
-                .AddCachingTracing(services, configuration)
-				.AddMessageBusTracing(services, configuration);
+                .AddCachingTracing()
+				.AddMessageBusTracing();
     }
 
-    private static MeterProviderBuilder AddCrossCuttingMetric(
-        this MeterProviderBuilder meterProviderBuilder,
-        IServiceCollection services,
-        IConfiguration configuration,
-        IWebHostEnvironment hostingEnvironment)
+    private static MeterProviderBuilder AddCrossCuttingMetric(this MeterProviderBuilder meterProviderBuilder)
     { 
 	    return meterProviderBuilder;
     }
 
-    private static LoggerProviderBuilder AddCrossCuttingLogging(
-        this LoggerProviderBuilder loggerProviderBuilder,
-        IServiceCollection services,
-        IConfiguration configuration,
-        IWebHostEnvironment hostingEnvironment)
+    private static LoggerProviderBuilder AddCrossCuttingLogging(this LoggerProviderBuilder loggerProviderBuilder)
     {
         return loggerProviderBuilder;
     }

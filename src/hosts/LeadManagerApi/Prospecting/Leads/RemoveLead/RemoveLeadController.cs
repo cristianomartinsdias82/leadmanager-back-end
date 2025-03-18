@@ -1,8 +1,10 @@
 ﻿using Application.Prospecting.Leads.Commands.RemoveLead;
 using CrossCutting.Security.Authorization;
 using LeadManagerApi.Core.ApiFeatures;
+using LeadManagerApi.Core.Configuration.Caching;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.OutputCaching;
 using Shared.Results;
 using static Application.Security.LeadManagerSecurityConfiguration;
 
@@ -13,7 +15,14 @@ namespace LeadManagerApi.Prospecting.Leads.RemoveLead;
 [RequiresOneTimePassword(Order = 2)]
 public sealed class RemoveLeadController : LeadManagerController
 {
-    public RemoveLeadController(ISender sender) : base(sender) { }
+	private readonly IOutputCacheStore _outputCacheStore;
+
+    public RemoveLeadController(
+		ISender mediator,
+		IOutputCacheStore outputCacheStore) : base(mediator)
+	{
+		_outputCacheStore = outputCacheStore;
+	}
 
     [HttpDelete("{id:Guid}")]
     [ProducesResponseType(typeof(ApplicationResponse<RemoveLeadCommandResponse>), StatusCodes.Status200OK)]
@@ -29,7 +38,12 @@ public sealed class RemoveLeadController : LeadManagerController
     {
         var response = await Mediator.Send(new RemoveLeadCommandRequest { Id = id, Revision = revision }, cancellationToken);
 
-        return Result(
+		if (response.Success)
+			await _outputCacheStore.EvictByTagAsync(
+						LeadManagerApiCachingConfiguration.Policies.Get.Tag,
+						cancellationToken);
+
+		return Result(
             response,
             onSuccessStatusCodeFactory: (_, _) => StatusCodes.Status204NoContent);
     }

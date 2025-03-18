@@ -6,9 +6,9 @@ namespace CrossCutting.Serialization.Configuration;
 
 public static class DependencyInjection
 {
-	public static IServiceCollection AddSerialization(this IServiceCollection services, IConfiguration configuration)
+	public static IServiceCollection AddSerialization(this IServiceCollection services)
 	{
-		services.AddProtoBufSerializationServices(configuration);
+		services.AddProtoBufSerializationServices();
 
 		return services;
 	}

@@ -5,21 +5,21 @@ using CrossCutting.Security.Secrecy.Configuration;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 
-namespace CrossCutting.Security;
+namespace CrossCutting.Security.Configuration;
 
 public static class DependencyInjection
 {
-    public static IServiceCollection AddSecurity(this IServiceCollection services, IConfiguration configuration)
+    public static IServiceCollection AddSecurity(this IServiceCollection services)
     {
-        services.AddJwtAuthentication(configuration);
-        services.AddAuthorizationCheckers(configuration);
-        services.AddUserServices(configuration);
-        services.AddSecrecyServices(configuration);
+        services.AddJwtAuthentication();
+        services.AddAuthorizationCheckers();
+        services.AddUserServices();
+        services.AddSecrecyServices();
 
         return services;
     }
 
-    private static IServiceCollection AddAuthorizationCheckers(this IServiceCollection services, IConfiguration configuration)
+    private static IServiceCollection AddAuthorizationCheckers(this IServiceCollection services)
     {
         services.AddTransient<MustHaveAtLeastOnePermissionAuthorizationChecker>();
         services.AddTransient<MustHaveAllPermissionsAuthorizationChecker>();

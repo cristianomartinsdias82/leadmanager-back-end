@@ -22,9 +22,6 @@ internal static class RabbitMqServiceExtensions
         return services;
     }
 
-	public static TracerProviderBuilder AddRabbitMqMessageBusTracing(
-		this TracerProviderBuilder tracerProviderBuilder,
-		IServiceCollection services,
-		IConfiguration configuration)
+	public static TracerProviderBuilder AddRabbitMqMessageBusTracing(this TracerProviderBuilder tracerProviderBuilder)
 		=> tracerProviderBuilder.AddSource(RabbitMqDiagnostics.ActivitySourceName);
 }

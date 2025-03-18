@@ -6,7 +6,7 @@ namespace CrossCutting.Csv.Configuration;
 
 public static class DependencyInjection
 {
-    public static IServiceCollection AddCsvHelper(this IServiceCollection services, IConfiguration configuration)
+    public static IServiceCollection AddCsvHelper(this IServiceCollection services)
     {
         services.TryAddSingleton<ICsvHelper, CsvHelper>();
 

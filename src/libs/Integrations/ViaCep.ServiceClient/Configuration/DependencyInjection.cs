@@ -29,7 +29,7 @@ namespace ViaCep.ServiceClient.Configuration
 
         //https://learn.microsoft.com/en-us/dotnet/architecture/microservices/implement-resilient-applications/implement-http-call-retries-exponential-backoff-polly
         //https://github.com/App-vNext/Polly/wiki/Retry-with-jitter
-        private static IAsyncPolicy<HttpResponseMessage> GetRetryPolicy()
+        private static AsyncPolicy<HttpResponseMessage> GetRetryPolicy()
             => HttpPolicyExtensions
                 .HandleTransientHttpError()
                 .OrResult(msg => msg.StatusCode == System.Net.HttpStatusCode.NotFound)
@@ -37,7 +37,7 @@ namespace ViaCep.ServiceClient.Configuration
                                                       TimeSpan.FromMilliseconds(Random.Shared.Next(0, 1734)));
 
         //https://learn.microsoft.com/en-us/dotnet/architecture/microservices/implement-resilient-applications/implement-circuit-breaker-pattern
-        private static IAsyncPolicy<HttpResponseMessage> GetCircuitBreakerPolicy()
+        private static AsyncPolicy<HttpResponseMessage> GetCircuitBreakerPolicy()
             => HttpPolicyExtensions
                 .HandleTransientHttpError()
                 .CircuitBreakerAsync(5, TimeSpan.FromSeconds(20));

@@ -5,7 +5,7 @@ namespace CrossCutting.Security.IAM.Configuration;
 
 internal static class UserServicesExtensions
 {
-    public static IServiceCollection AddUserServices(this IServiceCollection services, IConfiguration configuration)
+    public static IServiceCollection AddUserServices(this IServiceCollection services)
     {
         services.AddHttpContextAccessor();
         services.AddScoped<IUserService, UserService>();
