@@ -6,7 +6,7 @@ namespace CrossCutting.Serialization.ProtoBuf.Configuration;
 
 internal static class ProtoBufSerializationServicesExtensions
 {
-	public static IServiceCollection AddProtoBufSerializationServices(this IServiceCollection services)
+	public static IServiceCollection AddProtoBufSerializationServices(this IServiceCollection services, IConfiguration configuration)
 	{
 		services.TryAddSingleton<IDataSerialization, ProtoBufSerializer>();
 

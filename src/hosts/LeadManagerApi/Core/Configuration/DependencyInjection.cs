@@ -1,8 +1,6 @@
 ﻿using Application.Core.Configuration;
 using Infrastructure.Configuration;
 using LeadManagerApi.Core.ApiFeatures;
-using LeadManagerApi.Core.Configuration.Caching;
-using LeadManagerApi.Core.Configuration.Caching.Policies;
 using LeadManagerApi.Core.Configuration.Security;
 using Microsoft.AspNetCore.Http.Features;
 //using Microsoft.AspNetCore.Mvc;
@@ -18,7 +16,10 @@ namespace LeadManagerApi.Core.Configuration;
 
 public static class DependencyInjection
 {
-    public static IServiceCollection AddApiServices(this IServiceCollection services, IConfiguration configuration)
+    public static IServiceCollection AddApiServices(
+        this IServiceCollection services,
+        IConfiguration configuration,
+        IWebHostEnvironment hostingEnvironment)
     {
         var apiSettings = configuration.GetSection(nameof(LeadManagerApiSettings)).Get<LeadManagerApiSettings>()!;
         services.AddSingleton(apiSettings);
@@ -66,34 +67,13 @@ public static class DependencyInjection
 			LeadManagerApiSecurityConfiguration.SetAuthorizationForSwagger(config);
 		});
 
-		services.AddOutputCache(config =>
-		{
-			config.AddPolicy(
-                    LeadManagerApiCachingConfiguration.Policies.Get.Name,
-                    AuthenticationOverridePolicy.Instance);
-		});
-
-        //(Just a simple example of how to configure output cache)
-		//services.AddOutputCache(config =>
-		//{
-		//    config.AddBasePolicy(c => c.Cache());
-		//    config.AddPolicy(LeadManagerApiCachingConfiguration.Policies.Get.Name, builder =>
-		//    {
-		//        builder
-		//            .Cache()
-		//            .Expire(TimeSpan.FromMinutes(5))
-		//            .SetVaryByQuery(["search", "page", "pageSize", "sortColumn", "sortDirection"])
-		//            .Tag(LeadManagerApiCachingConfiguration.Policies.Get.Tag);
-		//    });
-		//});
-
-		return services;
+        return services;
     }
 
     public static IServiceCollection AddAggregatedTelemetry(
                             this IServiceCollection services,
                             IConfiguration configuration,
-                            IHostEnvironment hostingEnvironment)
+                            IWebHostEnvironment hostingEnvironment)
     {
 		var OtlpEndpoint = new Uri(configuration["OTLP_Endpoint"]!);
 
@@ -115,8 +95,8 @@ public static class DependencyInjection
                          .AddConsoleExporter()
                          .AddAspNetCoreInstrumentation()
                          .AddHttpClientInstrumentation() //"This API communicates to the RiskEvaluator GRPC service. As such, you need to add telemetry IN HERE so we can correlate it with Parent Span and visualize it as a hierarchical way in Jaeger!"
-                         .AddApplicationTracing()
-                         .AddInfrastructureTracing()
+                         .AddApplicationTracing(services, configuration, hostingEnvironment)
+                         .AddInfrastructureTracing(services, configuration, hostingEnvironment)
                          .AddOtlpExporter(cfg => cfg.Endpoint = OtlpEndpoint /*You can configure the protocol if needed, like this: cfg.Protocol = OtlpExportProtocol.Grpc or .HttpProtoBuf*/)
                 )
 				.WithMetrics(mtr => mtr
@@ -126,7 +106,7 @@ public static class DependencyInjection
 					//Metrics provided by Asp.Net Core
 					.AddMeter("Microsoft.AspNetCore.Hosting")
 					.AddMeter("Microsoft.AspNetCore.Server.Kestrel")
-                    .AddApplicationMetric()
+                    .AddApplicationMetric(services, configuration, hostingEnvironment)
 					.AddOtlpExporter(cfg => cfg.Endpoint = OtlpEndpoint)
 				    //.AddPrometheusExporter() //Necessary only when using the collector's pulling model. (The application sends data to the collector and Prometheus scrapes that data from there)
 				)

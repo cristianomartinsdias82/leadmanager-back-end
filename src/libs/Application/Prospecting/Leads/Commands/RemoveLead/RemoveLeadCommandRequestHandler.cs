@@ -31,7 +31,7 @@ internal sealed class RemoveLeadCommandRequestHandler : ApplicationRequestHandle
 
     public async override Task<ApplicationResponse<RemoveLeadCommandResponse>> Handle(RemoveLeadCommandRequest request, CancellationToken cancellationToken)
     {
-        var lead = await _leadRepository.GetByIdAsync(request.Id, cancellationToken);
+        var lead = await _leadRepository.GetByIdAsync(request.Id);
         if (lead is null)
             return ApplicationResponse<RemoveLeadCommandResponse>.Create(default!, message: Mensagem_LeadNaoEncontrado);
 
@@ -67,7 +67,7 @@ internal sealed class RemoveLeadCommandRequestHandler : ApplicationRequestHandle
 						operationCode: OperationCodes.ConcurrencyIssue);
 		}
 
-        await PushTelemetryData(lead);
+        PushTelemetryData(lead);
 
         AddEvent(new LeadRemovedIntegrationEvent(lead.MapToDto()));
 
@@ -78,7 +78,7 @@ internal sealed class RemoveLeadCommandRequestHandler : ApplicationRequestHandle
                 default));
     }
 
-	private async ValueTask PushTelemetryData(Lead lead)
+	private void PushTelemetryData(Lead lead)
 	{
 		//This counter is configured to be a metric and exported to Prometheus (see OpenTelemetryConfigurationExtensions.cs -> .WithMetrics -> mtr.AddPrometheusExporter())
 		//This counter is also configured to be scraped by Prometheus via and endpoint that was set in Program.cs file (app.UseOpenTelemetryPrometheusScrapingEndpoint();)
@@ -92,17 +92,17 @@ internal sealed class RemoveLeadCommandRequestHandler : ApplicationRequestHandle
 		);
 
 		var handlerName = GetType().FullName!;
-		await DiagnosticsDataCollector
-			.WithActivity(Activity.Current)
-			.WithTags(
-				(ApplicationDiagnostics.Constants.LeadId, lead.Id),
-				(ApplicationDiagnostics.Constants.HandlerName, handlerName)
-			)
-			.WithBaggageData( //Useful for data Propagation
-				Baggage.Current,
-				(ApplicationDiagnostics.Constants.LeadId, lead.Id.ToString()),
-				(ApplicationDiagnostics.Constants.HandlerName, handlerName)
-			)
-			.PushData();
+		var diagnosticsDataCollector = DiagnosticsDataCollector
+										.WithActivity(Activity.Current)
+										.WithTags(
+											(ApplicationDiagnostics.Constants.LeadId, lead.Id),
+											(ApplicationDiagnostics.Constants.HandlerName, handlerName)
+										)
+										.WithBaggageData( //Useful for data Propagation
+											Baggage.Current,
+											(ApplicationDiagnostics.Constants.LeadId, lead.Id.ToString()),
+											(ApplicationDiagnostics.Constants.HandlerName, handlerName)
+										)
+										.PushData();
 	}
 }

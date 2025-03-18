@@ -13,6 +13,7 @@ using Infrastructure.Repository.Prospecting;
 using Infrastructure.Repository.Security.Auditing;
 using Infrastructure.Repository.Security.OneTimePassword;
 using Infrastructure.Repository.UnitOfWork;
+using Microsoft.AspNetCore.Hosting;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -28,8 +29,8 @@ public static class DependencyInjection
     public static IServiceCollection AddInfrastructureServices(this IServiceCollection services, IConfiguration configuration)
         => services.AddDataSource(configuration)
                    .AddRepository(configuration)
-                   .AddEventDispatcher()
-                   .AddMessageBusHelper();
+                   .AddEventDispatcher(configuration)
+                   .AddMessageBusHelper(configuration);
 
     private static IServiceCollection AddDataSource(this IServiceCollection services, IConfiguration configuration)
     {
@@ -53,10 +54,18 @@ public static class DependencyInjection
 		return services;
     }
 
-    public static TracerProviderBuilder AddInfrastructureTracing(this TracerProviderBuilder tracerProviderBuilder)
-        => AddDataSourceTracing(tracerProviderBuilder);
+    public static TracerProviderBuilder AddInfrastructureTracing(
+        this TracerProviderBuilder tracerProviderBuilder,
+        IServiceCollection services,
+        IConfiguration configuration,
+        IWebHostEnvironment hostingEnvironment)
+        => AddDataSourceTracing(tracerProviderBuilder, services, configuration, hostingEnvironment);
 
-	private static TracerProviderBuilder AddDataSourceTracing(this TracerProviderBuilder tracerProviderBuilder)
+	private static TracerProviderBuilder AddDataSourceTracing(
+        this TracerProviderBuilder tracerProviderBuilder,
+        IServiceCollection services,
+        IConfiguration configuration,
+        IWebHostEnvironment hostingEnvironment)
     {
 		//https://github.com/open-telemetry/opentelemetry-dotnet-contrib/blob/main/src/OpenTelemetry.Instrumentation.EntityFrameworkCore/README.md
 
@@ -92,9 +101,9 @@ public static class DependencyInjection
             .AddScoped<IOneTimePasswordRepository, OneTimePasswordRepository>()
             .AddScoped<IAuditingRepository, AuditingRepository>();
 
-    private static IServiceCollection AddEventDispatcher(this IServiceCollection services)
+    private static IServiceCollection AddEventDispatcher(this IServiceCollection services, IConfiguration configuration)
         => services.AddScoped<IEventDispatching, EventDispatcher>();
 
-    private static IServiceCollection AddMessageBusHelper(this IServiceCollection services)
+    private static IServiceCollection AddMessageBusHelper(this IServiceCollection services, IConfiguration configuration)
         => services.AddSingleton<IMessageBusHelper, MessageBusHelper>();
 }

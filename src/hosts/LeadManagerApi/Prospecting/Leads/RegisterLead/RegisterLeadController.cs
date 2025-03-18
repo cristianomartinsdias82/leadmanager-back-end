@@ -1,10 +1,8 @@
 ﻿using Application.Prospecting.Leads.Commands.RegisterLead;
 using CrossCutting.Security.Authorization;
 using LeadManagerApi.Core.ApiFeatures;
-using LeadManagerApi.Core.Configuration.Caching;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.OutputCaching;
 using Shared.Results;
 using static Application.Security.LeadManagerSecurityConfiguration;
 
@@ -14,14 +12,7 @@ namespace LeadManagerApi.Prospecting.Leads.RegisterLead;
 [RequiredAllPermissions(Permissions.Insert)]
 public sealed class RegisterLeadController : LeadManagerController
 {
-	private readonly IOutputCacheStore _outputCacheStore;
-
-	public RegisterLeadController(
-        ISender mediator,
-        IOutputCacheStore outputCacheStore) : base(mediator)
-    {
-        _outputCacheStore = outputCacheStore;
-    }
+    public RegisterLeadController(ISender mediator) : base(mediator) { }
 
     [HttpPost]
     [ProducesResponseType(typeof(ApplicationResponse<RegisterLeadCommandResponse>), StatusCodes.Status201Created)]
@@ -32,12 +23,7 @@ public sealed class RegisterLeadController : LeadManagerController
     {
         var response = await Mediator.Send(request, cancellationToken);
 
-		if (response.Success)
-			await _outputCacheStore.EvictByTagAsync(
-						LeadManagerApiCachingConfiguration.Policies.Get.Tag,
-						cancellationToken);
-
-		return Result(
+        return Result(
             response,
             onSuccessStatusCodeFactory: (_, _) => StatusCodes.Status201Created,
             routeData: ("leads", response.Data.Id));

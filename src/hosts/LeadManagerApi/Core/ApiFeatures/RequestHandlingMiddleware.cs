@@ -52,7 +52,7 @@ public sealed class RequestHandlingMiddleware
 		ref List<Inconsistency>? inconsistencies,
         ref int statusCode)
 	{
-		inconsistencies ??= new();
+		inconsistencies = new List<Inconsistency>();
 
         switch (exc)
         {
@@ -82,7 +82,7 @@ public sealed class RequestHandlingMiddleware
 
             case ApplicationOperatingRuleException oprExc:
 
-				if ((oprExc.RuleViolations?.Count ?? 0) > 0)
+				if (oprExc.RuleViolations?.Any() ?? false)
 					inconsistencies.AddRange([..oprExc.RuleViolations!]);
 
 				_logger.LogWarning(

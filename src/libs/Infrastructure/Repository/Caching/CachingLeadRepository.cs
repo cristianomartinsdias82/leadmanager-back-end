@@ -150,7 +150,7 @@ internal sealed class CachingLeadRepository : ILeadRepository, ICachingLeadRepos
                                     .GetAsync<IEnumerable<LeadData>>(
                                         _leadsCachingPolicy.CacheKey,
                                         cancellationToken);
-        var leads = cachedLeads?.ToList() ?? [];
+        var leads = cachedLeads?.ToList() ?? new();
         leads.Add(lead.MapToMessageContract());
 
         await _cacheProvider.SetAsync(
@@ -171,7 +171,7 @@ internal sealed class CachingLeadRepository : ILeadRepository, ICachingLeadRepos
                                     .GetAsync<IEnumerable<LeadData>>(
                                         _leadsCachingPolicy.CacheKey,
                                         cancellationToken);
-        var existingLeads = cachedLeads?.ToList() ?? [];
+        var existingLeads = cachedLeads?.ToList() ?? new();
         existingLeads.AddRange(leads.MapToMessageContractList());
 
         await _cacheProvider.SetAsync<IEnumerable<LeadData>>(

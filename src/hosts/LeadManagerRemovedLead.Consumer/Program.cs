@@ -1,4 +1,4 @@
-using LeadManager.BackendServices.Consumers.Common;
+using CrossCutting.Messaging.Consumers.BackendServices.Common;
 
 namespace LeadManagerRemovedLead.Consumer;
 

@@ -5,7 +5,7 @@ namespace CrossCutting.Security.Secrecy.Configuration;
 
 internal static class SecrecyServicesExtensions
 {
-    public static IServiceCollection AddSecrecyServices(this IServiceCollection services)
+    public static IServiceCollection AddSecrecyServices(this IServiceCollection services, IConfiguration configuration)
     {
         services.AddScoped<ISecretGenerationService, SecretGeneratorService>();
 
