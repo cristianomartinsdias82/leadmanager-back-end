@@ -10,6 +10,7 @@ public static class TimeProviderMother
 		=> _timeProviderBuilder.WithYear(2025)
 							   .WithMonth(01)
 							   .WithDay(04)
+							   .WithHour(10)
 							   .BuildTimeProvider();
 
 	public static TimeProvider Sunday()
