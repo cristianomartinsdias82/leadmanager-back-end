@@ -31,7 +31,8 @@ public static class DependencyInjection
 
 		services.AddControllers(config =>
         {
-            config.Filters.Add<RequiresApiKeyActionFilter>();
+            //config.Filters.Add<RequiresApiKeyActionFilter>();
+            config.Filters.Add<RequiresApiKeyAuthFilter>();
 
 			//https://stackoverflow.com/questions/36413476/mvc-core-how-to-force-set-global-authorization-for-all-actions
 			//var policy = new AuthorizationPolicyBuilder()

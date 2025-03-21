@@ -1,30 +1,31 @@
-﻿using LeadManagerApi.Core.Configuration;
-using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Mvc.Filters;
+﻿//This component was replaced by an authorization filter (see RequiredApiKeyAuthFilter.cs)
+//using LeadManagerApi.Core.Configuration;
+//using Microsoft.AspNetCore.Mvc;
+//using Microsoft.AspNetCore.Mvc.Filters;
 
-namespace LeadManagerApi.Core.ApiFeatures;
+//namespace LeadManagerApi.Core.ApiFeatures;
 
-public sealed class RequiresApiKeyActionFilter : ActionFilterAttribute
-{
-    private readonly LeadManagerApiSettings _apiSettings;
+//public sealed class RequiresApiKeyActionFilter : ActionFilterAttribute
+//{
+//    private readonly LeadManagerApiSettings _apiSettings;
 
-    public RequiresApiKeyActionFilter(LeadManagerApiSettings apiSettings)
-    {
-        _apiSettings = apiSettings;
-    }
+//    public RequiresApiKeyActionFilter(LeadManagerApiSettings apiSettings)
+//    {
+//        _apiSettings = apiSettings;
+//    }
 
-    public override void OnActionExecuting(ActionExecutingContext context)
-    {
-        if (_apiSettings.ApiKeyRequestHeaderRequired)
-        {
-            if (!context.HttpContext.Request.Headers.TryGetValue(_apiSettings.ApiKeyRequestHeaderName!, out var apiKey) ||
-                !string.CompareOrdinal(apiKey, _apiSettings.ApiKeyRequestHeaderValue).Equals(0))
-            {
-                context.Result = new UnauthorizedResult();
-                return;
-            }
-        }
+//    public override void OnActionExecuting(ActionExecutingContext context)
+//    {
+//        if (_apiSettings.ApiKeyRequestHeaderRequired)
+//        {
+//            if (!context.HttpContext.Request.Headers.TryGetValue(_apiSettings.ApiKeyRequestHeaderName!, out var apiKey) ||
+//                !string.CompareOrdinal(apiKey, _apiSettings.ApiKeyRequestHeaderValue).Equals(0))
+//            {
+//                context.Result = new UnauthorizedResult();
+//                return;
+//            }
+//        }
 
-        base.OnActionExecuting(context);
-    }
-}
+//        base.OnActionExecuting(context);
+//    }
+//}
