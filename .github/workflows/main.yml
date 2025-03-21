@@ -8,10 +8,10 @@ on:
 
 env:
   #AZURE_WEBAPP_NAME: leadmanager-api
-  #AZURE_WEBAPP_PACKAGE_PATH: "./LeadManager.Api/publish"
+  #AZURE_WEBAPP_PACKAGE_PATH: "./src/hosts/LeadManagerApi/publish"
   DOTNET_VERSION: "9.x"
   SOLUTION_PATH: "LeadManager.sln"
-  API_PROJECT_PATH: "LeadManager.Api"
+  API_PROJECT_PATH: "src/hosts/LeadManagerApi"
   PUBLISH_DIR: "./publish"
 
 jobs:
@@ -39,11 +39,11 @@ jobs:
       - name: Publish
         run: dotnet publish ${{ env.API_PROJECT_PATH }} --configuration Release --no-restore --no-build --property:PublishDir=${{ env.PUBLISH_DIR }}
 
-      - name: Publish Artifacts
-        uses: actions/upload-artifact@v4
-        with:
-          name: webapp
-          path: ${{ env.AZURE_WEBAPP_PACKAGE_PATH }}
+#      - name: Publish Artifacts
+#        uses: actions/upload-artifact@v4
+#        with:
+#          name: webapp
+#          path: ${{ env.AZURE_WEBAPP_PACKAGE_PATH }}
 
 #  deploy:
 #    name: Deploy to Azure
