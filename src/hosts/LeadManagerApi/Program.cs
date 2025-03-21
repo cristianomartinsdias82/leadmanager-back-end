@@ -28,12 +28,14 @@ public class Program
         //Request pipeline configuration
         app.UseCors(Policies.LeadManagerCorsPolicy);
 
-        if (app.Environment.IsDevelopment())
-        {
-            app.UseSwagger();
-            app.UseSwaggerUI(Theme.UniversalDark);
+		if (app.Environment.IsDevelopment())
+		{
+			//https://stackoverflow.com/questions/51951641/swagger-unable-to-render-this-definition-the-provided-definition-does-not-speci
+			app.UseSwagger(x => x.OpenApiVersion = Microsoft.OpenApi.OpenApiSpecVersion.OpenApi2_0);
+
 			//https://www.reddit.com/r/dotnet/comments/18m2wgx/swagger_theme_changer/
 			//https://github.com/oqo0/swagger-themes/tree/main
+			app.UseSwaggerUI(Theme.UniversalDark);
 		}
 
 		app.UseHttpsRedirection();
