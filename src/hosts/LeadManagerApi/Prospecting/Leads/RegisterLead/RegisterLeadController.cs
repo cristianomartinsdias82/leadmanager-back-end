@@ -1,7 +1,7 @@
 ﻿using Application.Prospecting.Leads.Commands.RegisterLead;
 using CrossCutting.Security.Authorization;
 using LeadManagerApi.Core.ApiFeatures;
-using LeadManagerApi.Core.Configuration.Caching;
+//using LeadManagerApi.Core.Configuration.Caching;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.OutputCaching;
@@ -14,13 +14,13 @@ namespace LeadManagerApi.Prospecting.Leads.RegisterLead;
 [RequiredAllPermissions(Permissions.Insert)]
 public sealed class RegisterLeadController : LeadManagerController
 {
-	private readonly IOutputCacheStore _outputCacheStore;
+	//private readonly IOutputCacheStore _outputCacheStore;
 
 	public RegisterLeadController(
-        ISender mediator,
-        IOutputCacheStore outputCacheStore) : base(mediator)
+        ISender mediator
+        /*,IOutputCacheStore outputCacheStore*/) : base(mediator)
     {
-        _outputCacheStore = outputCacheStore;
+        //_outputCacheStore = outputCacheStore;
     }
 
     [HttpPost]
@@ -32,10 +32,11 @@ public sealed class RegisterLeadController : LeadManagerController
     {
         var response = await Mediator.Send(request, cancellationToken);
 
-		if (response.Success)
-			await _outputCacheStore.EvictByTagAsync(
-						LeadManagerApiCachingConfiguration.Policies.Get.Tag,
-						cancellationToken);
+		//(Output Cache) Keep it commented out (demonstration purposes of how to apply in projects)
+		//if (response.Success)
+		//	await _outputCacheStore.EvictByTagAsync(
+		//				LeadManagerApiCachingConfiguration.Policies.Get.Tag,
+		//				cancellationToken);
 
 		return Result(
             response,

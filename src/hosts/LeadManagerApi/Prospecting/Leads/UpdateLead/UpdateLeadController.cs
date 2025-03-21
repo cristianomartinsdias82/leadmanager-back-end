@@ -1,7 +1,7 @@
 ﻿using Application.Prospecting.Leads.Commands.UpdateLead;
 using CrossCutting.Security.Authorization;
 using LeadManagerApi.Core.ApiFeatures;
-using LeadManagerApi.Core.Configuration.Caching;
+//using LeadManagerApi.Core.Configuration.Caching;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.OutputCaching;
@@ -14,13 +14,13 @@ namespace LeadManagerApi.Prospecting.Leads.UpdateLead;
 [RequiredAllPermissions(Permissions.Update)]
 public sealed class UpdateLeadController : LeadManagerController
 {
-	private readonly IOutputCacheStore _outputCacheStore;
+	//private readonly IOutputCacheStore _outputCacheStore;
 
 	public UpdateLeadController(
-		ISender mediator,
-		IOutputCacheStore outputCacheStore) : base(mediator)
+		ISender mediator
+		/*,IOutputCacheStore outputCacheStore*/) : base(mediator)
 	{
-		_outputCacheStore = outputCacheStore;
+		//_outputCacheStore = outputCacheStore;
 	}
 
 	[HttpPut("{id:Guid}")]
@@ -35,10 +35,11 @@ public sealed class UpdateLeadController : LeadManagerController
 
         var response = await Mediator.Send(request, cancellationToken);
 
-		if (response.Success)
-			await _outputCacheStore.EvictByTagAsync(
-						LeadManagerApiCachingConfiguration.Policies.Get.Tag,
-						cancellationToken);
+		//(Output Cache) Keep it commented out (demonstration purposes of how to apply in projects)
+		//if (response.Success)
+		//	await _outputCacheStore.EvictByTagAsync(
+		//				LeadManagerApiCachingConfiguration.Policies.Get.Tag,
+		//				cancellationToken);
 
 		return Result(
             response,

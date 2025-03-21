@@ -1,8 +1,8 @@
 ﻿using Application.Core.Configuration;
 using Infrastructure.Configuration;
 using LeadManagerApi.Core.ApiFeatures;
-using LeadManagerApi.Core.Configuration.Caching;
-using LeadManagerApi.Core.Configuration.Caching.Policies;
+//using LeadManagerApi.Core.Configuration.Caching;
+//using LeadManagerApi.Core.Configuration.Caching.Policies;
 using LeadManagerApi.Core.Configuration.Security;
 using Microsoft.AspNetCore.Http.Features;
 //using Microsoft.AspNetCore.Mvc;
@@ -66,28 +66,29 @@ public static class DependencyInjection
 			LeadManagerApiSecurityConfiguration.SetAuthorizationForSwagger(config);
 		});
 
-		services.AddOutputCache(config =>
-		{
-			config.AddPolicy(
-                    LeadManagerApiCachingConfiguration.Policies.Get.Name,
-                    AuthenticationOverridePolicy.Instance);
-		});
+        //Keep it commented out for demonstration purposes of how to apply in projects.
+        //services.AddOutputCache(config =>
+        //{
+        //    config.AddPolicy(
+        //            LeadManagerApiCachingConfiguration.Policies.Get.Name,
+        //            AuthenticationOverridePolicy.Instance);
+        //});
 
-        //(Just a simple example of how to configure output cache)
-		//services.AddOutputCache(config =>
-		//{
-		//    config.AddBasePolicy(c => c.Cache());
-		//    config.AddPolicy(LeadManagerApiCachingConfiguration.Policies.Get.Name, builder =>
-		//    {
-		//        builder
-		//            .Cache()
-		//            .Expire(TimeSpan.FromMinutes(5))
-		//            .SetVaryByQuery(["search", "page", "pageSize", "sortColumn", "sortDirection"])
-		//            .Tag(LeadManagerApiCachingConfiguration.Policies.Get.Tag);
-		//    });
-		//});
+        ////(Here`s a simple example of how to configure output cache)
+        ////services.AddOutputCache(config =>
+        ////{
+        ////    config.AddBasePolicy(c => c.Cache());
+        ////    config.AddPolicy(LeadManagerApiCachingConfiguration.Policies.Get.Name, builder =>
+        ////    {
+        ////        builder
+        ////            .Cache()
+        ////            .Expire(TimeSpan.FromMinutes(5))
+        ////            .SetVaryByQuery(["search", "page", "pageSize", "sortColumn", "sortDirection"])
+        ////            .Tag(LeadManagerApiCachingConfiguration.Policies.Get.Tag);
+        ////    });
+        ////});
 
-		return services;
+        return services;
     }
 
     public static IServiceCollection AddAggregatedTelemetry(
