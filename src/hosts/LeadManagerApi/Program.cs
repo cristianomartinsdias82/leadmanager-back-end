@@ -45,7 +45,8 @@ public class Program
 
         app.UseAuthentication();
 
-        app.UseOutputCache();
+		//Keep it commented out for demonstration purposes of how to apply in projects.
+		//app.UseOutputCache();
 
 		app.UseAuthorization();
 
