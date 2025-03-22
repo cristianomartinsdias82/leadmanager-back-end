@@ -6,6 +6,7 @@ using MediatR;
 using NSubstitute;
 using Shared.DataPagination;
 using Shared.Results;
+using Tests.Common.ObjectMothers.Application;
 using Tests.Common.ObjectMothers.Domain;
 using Xunit;
 
@@ -49,8 +50,10 @@ public sealed class GetLeadsQueryRequestHandlerTests : IDisposable
 	}
 
 	[Theory]
-	[MemberData(nameof(LeadSearchMatchingTerms))]
-	[MemberData(nameof(LeadSearchNonMatchingTerms))]
+	//[MemberData(nameof(LeadSearchMatchingTerms))]
+	//[MemberData(nameof(LeadSearchNonMatchingTerms))]
+	[ClassData(typeof(LeadSearchMatchingTermsExemplars))]
+	[ClassData(typeof(LeadSearchNonMatchingTermsExemplars))]
 	public async Task Handle_Get_SearchTermInformed_NoDataInDataSource_ReturnsNoData(string search)
 	{
 		//Arrange
@@ -98,7 +101,8 @@ public sealed class GetLeadsQueryRequestHandlerTests : IDisposable
 	}
 
 	[Theory]
-	[MemberData(nameof(LeadSearchNonMatchingTerms))]
+	//[MemberData(nameof(LeadSearchNonMatchingTerms))]
+	[ClassData(typeof(LeadSearchNonMatchingTermsExemplars))]
 	public async Task Handle_Get_SearchTermInformed_WithNoMatches_ExistingData_ReturnsNoData(string search)
 	{
 		//Arrange
@@ -126,7 +130,8 @@ public sealed class GetLeadsQueryRequestHandlerTests : IDisposable
 	}
 
 	[Theory]
-	[MemberData(nameof(LeadSearchMatchingTerms))]
+	[ClassData(typeof(LeadSearchMatchingTermsExemplars))]
+	//[MemberData(nameof(LeadSearchMatchingTerms))]
 	public async Task Handle_Get_SearchTermInformed_WithMatches_ExistingData_ReturnsData(string search)
 	{
 		//Arrange
@@ -156,17 +161,19 @@ public sealed class GetLeadsQueryRequestHandlerTests : IDisposable
 		_cts.Dispose();
 	}
 
-	public static IEnumerable<object[]> LeadSearchMatchingTerms()
-	{
-		yield return new object[] { LeadMother.GumperInc().RazaoSocial };
-		yield return new object[] { LeadMother.XptoLLC().RazaoSocial };
-	}
+	//Used in conjunction with MemberData attribute
+	//public static IEnumerable<object[]> LeadSearchMatchingTerms()
+	//{
+	//	yield return new object[] { LeadMother.GumperInc().RazaoSocial };
+	//	yield return new object[] { LeadMother.XptoLLC().RazaoSocial };
+	//}
 
-	public static IEnumerable<object[]> LeadSearchNonMatchingTerms()
-	{
-		yield return new object[] { "this be the good old days" };
-		yield return new object[] { "le le le le" };
-		yield return new object[] { "123.46878.24456" };
-		yield return new object[] { "45654" };
-	}
+	//Used in conjunction with MemberData attribute
+	//public static IEnumerable<object[]> LeadSearchNonMatchingTerms()
+	//{
+	//	yield return new object[] { "this be the good old days" };
+	//	yield return new object[] { "le le le le" };
+	//	yield return new object[] { "123.46878.24456" };
+	//	yield return new object[] { "45654" };
+	//}
 }
