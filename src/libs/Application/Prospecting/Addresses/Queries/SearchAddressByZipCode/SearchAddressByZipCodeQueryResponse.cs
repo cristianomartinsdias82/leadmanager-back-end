@@ -4,8 +4,6 @@ namespace Application.Prospecting.Addresses.Queries.SearchAddressByZipCode;
 
 public sealed record SearchAddressByZipCodeQueryResponse
 {
-    private SearchAddressByZipCodeQueryResponse() { }
-
     public required string Endereco { get; init; }
     public required string Bairro { get; init; }
     public required string Cidade { get; init; }
