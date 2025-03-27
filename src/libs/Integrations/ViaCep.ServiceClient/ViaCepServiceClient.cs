@@ -1,6 +1,4 @@
 ﻿using Microsoft.Extensions.Logging;
-using System.Net.Http.Json;
-using System.Runtime.CompilerServices;
 using System.Text.Json;
 using System.Text.RegularExpressions;
 using ViaCep.ServiceClient.Configuration;
