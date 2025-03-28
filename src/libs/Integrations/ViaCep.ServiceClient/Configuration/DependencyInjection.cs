@@ -1,45 +1,53 @@
 ﻿using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
-using Polly.Extensions.Http;
-using Polly;
 
-namespace ViaCep.ServiceClient.Configuration
+namespace ViaCep.ServiceClient.Configuration;
+
+//For Resilience-related further explanation, refer to:
+//https://devblogs.microsoft.com/dotnet/building-resilient-cloud-services-with-dotnet-8/
+public static class DependencyInjection
 {
-    public static class DependencyInjection
-    {
-        public static IServiceCollection AddViaCepIntegrationServiceClient(
-            this IServiceCollection services,
-            IConfiguration configuration)
-        {
-            var settings = configuration.GetSection("ServiceIntegrations:ViaCep").Get<ViaCepIntegrationSettings>()!;
-            services.AddSingleton(settings);
+	public static IServiceCollection AddViaCepIntegrationServiceClient(
+		this IServiceCollection services,
+		IConfiguration configuration)
+	{
+		var settings = configuration.GetSection("ServiceIntegrations:ViaCep").Get<ViaCepIntegrationSettings>()!;
+		services
+			.AddSingleton(settings)
+			.AddScoped<ViaCepServiceClientRequestAuditingHandler>()
+			.AddHttpClient<IViaCepServiceClient, ViaCepServiceClient>(config =>
+			{
+				config.BaseAddress = new Uri(settings.Uri);
+				config.Timeout = TimeSpan.FromSeconds(settings.RequestTimeoutInSeconds);
+			})
+			.AddHttpMessageHandler<ViaCepServiceClientRequestAuditingHandler>()
+			.AddStandardResilienceHandler();
+		//Down below is an example of how to customize the resilience strategy for specific situations
+		//.AddStandardResilienceHandler(options =>
+		//{
+		//	//More on https://devblogs.microsoft.com/dotnet/building-resilient-cloud-services-with-dotnet-8/#standard-resilience-pipeline
+		//	options.Retry = new Microsoft.Extensions.Http.Resilience.HttpRetryStrategyOptions()
+		//	{
+		//		MaxRetryAttempts = 5,
+		//		BackoffType = Polly.DelayBackoffType.Constant,
+		//		Delay = TimeSpan.FromSeconds(2),
+		//		Name = "Custom ViaCep API retry strategy",
+		//		OnRetry = (responseMessage) => {
+		//			Console.WriteLine($"Failure while attempting to make a request to ViaCep API");
+		//			Console.WriteLine(responseMessage.Outcome!.Exception?.GetType()?.FullName ?? "No exception was captured");
 
-            services.AddHttpClient<IViaCepServiceClient, ViaCepServiceClient>(config =>
-            {
-                config.BaseAddress = new Uri(settings.Uri);
-                config.Timeout = TimeSpan.FromSeconds(settings.RequestTimeoutInSeconds);
-            })
-            .SetHandlerLifetime(TimeSpan.FromMinutes(5)) // <<< https://learn.microsoft.com/en-us/dotnet/architecture/microservices/implement-resilient-applications/use-httpclientfactory-to-implement-resilient-http-requests#httpclient-lifetimes
-            .AddPolicyHandler(GetRetryPolicy())
-            .AddPolicyHandler(GetCircuitBreakerPolicy())
-            .AddPolicyHandler(Policy.TimeoutAsync<HttpResponseMessage>(2));
+		//			return ValueTask.CompletedTask;
+		//		},
+		//		UseJitter = true,
+				
+		//		ShouldHandle = (response) => ValueTask.FromResult(
+		//			new System.Net.HttpStatusCode[] {
+		//				System.Net.HttpStatusCode.NotFound,
+		//				System.Net.HttpStatusCode.ServiceUnavailable }
+		//			.Contains(response.Outcome!.Result!.StatusCode))
+		//	};
+		//});
 
-            return services;
-        }
-
-        //https://learn.microsoft.com/en-us/dotnet/architecture/microservices/implement-resilient-applications/implement-http-call-retries-exponential-backoff-polly
-        //https://github.com/App-vNext/Polly/wiki/Retry-with-jitter
-        private static AsyncPolicy<HttpResponseMessage> GetRetryPolicy()
-            => HttpPolicyExtensions
-                .HandleTransientHttpError()
-                .OrResult(msg => msg.StatusCode == System.Net.HttpStatusCode.NotFound)
-                .WaitAndRetryAsync(5, retryAttempt => TimeSpan.FromSeconds(Math.Pow(2, retryAttempt)) +
-                                                      TimeSpan.FromMilliseconds(Random.Shared.Next(0, 1734)));
-
-        //https://learn.microsoft.com/en-us/dotnet/architecture/microservices/implement-resilient-applications/implement-circuit-breaker-pattern
-        private static AsyncPolicy<HttpResponseMessage> GetCircuitBreakerPolicy()
-            => HttpPolicyExtensions
-                .HandleTransientHttpError()
-                .CircuitBreakerAsync(5, TimeSpan.FromSeconds(20));
-    }
+		return services;
+	}
 }

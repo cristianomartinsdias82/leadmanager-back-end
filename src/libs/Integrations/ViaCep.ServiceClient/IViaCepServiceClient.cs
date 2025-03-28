@@ -1,9 +1,8 @@
 ﻿using ViaCep.ServiceClient.Models;
 
-namespace ViaCep.ServiceClient
+namespace ViaCep.ServiceClient;
+
+public interface IViaCepServiceClient
 {
-    public interface IViaCepServiceClient
-    {
-        Task<Endereco?> SearchAsync(string cep, CancellationToken cancellationToken);
-    }
+    Task<Endereco?> SearchAsync(string cep, CancellationToken cancellationToken);
 }
