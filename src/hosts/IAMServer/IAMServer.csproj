@@ -12,7 +12,7 @@
 	<PackageReference Include="AspNetCore.Identity.MongoDbCore" Version="3.1.2" />
 	<PackageReference Include="IdentityServer4" Version="4.1.2" />
 	<PackageReference Include="IdentityServer4.AspNetIdentity" Version="4.1.2" />
-	<PackageReference Include="Microsoft.AspNetCore.Identity.UI" Version="9.0.2" />
+	<PackageReference Include="Microsoft.AspNetCore.Identity.UI" Version="9.0.3" />
 	<PackageReference Include="Microsoft.VisualStudio.Web.CodeGeneration.Design" Version="9.0.0" />
   </ItemGroup>
 
