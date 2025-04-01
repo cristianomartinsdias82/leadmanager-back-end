@@ -41,7 +41,16 @@
   </ItemGroup>
 
   <ItemGroup>
-    <None Update="MockMappings\Addresses\get-address-by-zipcode.json">
+    <None Update="mocks\mappings\address-existing-zipcode.json">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Update="mocks\mappings\address-non-existing-zipcode.json">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Update="mocks\__files\existing-address-response.json">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Update="mocks\__files\non-existing-address-response.json">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
   </ItemGroup>

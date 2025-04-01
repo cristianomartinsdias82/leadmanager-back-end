@@ -13,8 +13,9 @@ namespace LeadManagerApi.Tests.Prospecting.Addresses.SearchAddressByZipCode;
 public class SearchAddressByZipCodeControllerTests : SharedResourcesTestsBase
 {
     private const string SearchAddressUri = $"{AddressesEndpoint}/search?cep=";
+	private const string AddressNotLocated = "Endereço não localizado.";
 
-    public SearchAddressByZipCodeControllerTests(
+	public SearchAddressByZipCodeControllerTests(
         LeadManagerWebApplicationFactory factory) : base(factory) { }
 
     [Fact]
@@ -32,7 +33,7 @@ public class SearchAddressByZipCodeControllerTests : SharedResourcesTestsBase
     }
 
     [Fact]
-    public async Task Get_ExistingZipCode_ShouldSucceedAndReturnFoundAddress()
+    public async Task Get_ExistingZipCode_ShouldSucceedAndReturnAddressData()
     {
         var address = AddressMother.FullAddress();
 
@@ -54,11 +55,11 @@ public class SearchAddressByZipCodeControllerTests : SharedResourcesTestsBase
         apiResponse.OperationCode.Should().Be(OperationCodes.Successful);
         apiResponse.Data.Should().NotBeNull();
 		apiResponse.Data.Cep.Should().BeEquivalentTo(address.Cep);
-		apiResponse.Message.Should().NotBeEquivalentTo("Endereço não localizado.");
+		apiResponse.Message.Should().NotBeEquivalentTo(AddressNotLocated);
 	}
 
     [Fact]
-    public async Task Get_NonExistingZipCode_ShouldSucceedAndReturnNotFoundAddress()
+    public async Task Get_NonExistingZipCode_ShouldSucceedAndReturnEmptyBodiedAddressData()
     {
         // Arrange
         var httpClient = _factory.CreateHttpClient();
@@ -76,6 +77,6 @@ public class SearchAddressByZipCodeControllerTests : SharedResourcesTestsBase
         apiResponse.Exception.Should().BeNull();
         apiResponse.Success.Should().BeTrue();
         apiResponse.OperationCode.Should().Be(OperationCodes.Successful);
-		apiResponse.Message.Should().BeEquivalentTo("Endereço não localizado.");
+		apiResponse.Message.Should().BeEquivalentTo(AddressNotLocated);
 	}
 }

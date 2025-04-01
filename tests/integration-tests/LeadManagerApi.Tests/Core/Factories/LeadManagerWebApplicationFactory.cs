@@ -8,6 +8,8 @@ using CrossCutting.Caching.Redis.Configuration;
 using CrossCutting.Messaging.RabbitMq;
 using CrossCutting.Security.IAM;
 using DotNet.Testcontainers.Builders;
+using DotNet.Testcontainers.Configurations;
+using DotNet.Testcontainers.Containers;
 using Infrastructure.Persistence;
 using Infrastructure.Repository.Caching;
 using Infrastructure.Repository.Prospecting;
@@ -40,8 +42,6 @@ using Tests.Common.ObjectMothers.DateTimeHandling;
 using Tests.Common.ObjectMothers.Domain;
 using ViaCep.ServiceClient;
 using ViaCep.ServiceClient.Configuration;
-using ViaCep.ServiceClient.Models;
-using WireMock.Net.Testcontainers;
 using Xunit;
 using static Application.Security.LeadManagerSecurityConfiguration;
 
@@ -50,10 +50,10 @@ namespace LeadManagerApi.Tests.Core.Factories;
 public class LeadManagerWebApplicationFactory : WebApplicationFactory<Program>, IAsyncLifetime
 {
 	//private readonly MockHttpMessageHandler _httpHandlerMock = new MockHttpMessageHandler(); //From RichardSzalay.MockHttp package. Works great, by the way.
-	private readonly WireMockContainer _wireMockServerContainer = default!;
 	private readonly MsSqlContainer _dbContainer;
     private readonly RedisContainer _cacheContainer;
-    private JsonSerializerOptions _jsonSerializerOptions = default!;
+    private readonly IContainer _wireMockContainer;
+	private JsonSerializerOptions _jsonSerializerOptions = default!;
     private DbConnection _dbConnection = default!;
     private Respawner _respawner = default!;
 
@@ -80,15 +80,14 @@ public class LeadManagerWebApplicationFactory : WebApplicationFactory<Program>, 
                                     .WithWaitStrategy(Wait.ForUnixContainer().UntilPortIsAvailable(int.Parse(cacheResourcePortNumber)))
                                     .Build();
 
-		_wireMockServerContainer = new WireMockContainerBuilder()
-								.WithAutoRemove(true)
-								.WithCleanUp(true)
-                                .WithMappings(Path.Combine(Environment.CurrentDirectory, "MockMappings","Addresses"))
-                                .WithWaitStrategy(Wait.ForUnixContainer())
-								.Build();
+		_wireMockContainer = new ContainerBuilder()
+		                            .WithImage("wiremock/wiremock:3.7.0")
+		                            .WithPortBinding(8080, true)
+		                            .WithBindMount(Path.Combine(Environment.CurrentDirectory, "mocks"), "/home/wiremock", AccessMode.ReadWrite)
+		                            .Build();
 	}
 
-    public async Task InitializeAsync()
+	public async Task InitializeAsync()
     {
         _jsonSerializerOptions = Services.GetRequiredService<IOptions<JsonOptions>>().Value.JsonSerializerOptions;
 
@@ -99,10 +98,7 @@ public class LeadManagerWebApplicationFactory : WebApplicationFactory<Program>, 
 
         await InitializeRespawnerAsync();
 
-        await _wireMockServerContainer
-                .StartAsync();
-                //.ConfigureAwait(false);
-
+		await _wireMockContainer.StartAsync();
 	}
 
     public async Task ResetDatabaseAsync()
@@ -117,7 +113,7 @@ public class LeadManagerWebApplicationFactory : WebApplicationFactory<Program>, 
 
         await _cacheContainer.StopAsync();
 
-		await _wireMockServerContainer.DisposeAsync();
+		await _wireMockContainer.DisposeAsync();
 
 		await base.DisposeAsync();
     }
@@ -334,25 +330,24 @@ public class LeadManagerWebApplicationFactory : WebApplicationFactory<Program>, 
             services.RemoveAll<IViaCepServiceClient>();
 
             //Based on WireMock Testcontainers package
+            services.AddHttpClient();
             services.AddScoped<IViaCepServiceClient>(services =>
             {
-                var httpContextAccessor = services.GetRequiredService<IHttpContextAccessor>();
-                var zipCodeInformed = httpContextAccessor.HttpContext!.Request.Query.TryGetValue("cep", out var zipCode);
-                
-                var viaCepIntegSettings = Services.GetRequiredService<ViaCepIntegrationSettings>() with { Uri = _wireMockServerContainer.GetPublicUrl() };
+				var httpClientFactory = services.GetRequiredService<IHttpClientFactory>();
+
+                var wireMockServerUri = new Uri($"http://127.0.0.1:{_wireMockContainer.GetMappedPublicPort(8080)}");
+				var viaCepHttpClient = httpClientFactory.CreateClient("ViaCep");
+				viaCepHttpClient.BaseAddress = wireMockServerUri;
+
+				var viaCepIntegrationSettings = Services.GetRequiredService<ViaCepIntegrationSettings>()
+                                            with
+                                            {
+                                                Uri = wireMockServerUri.ToString()
+				                            };                
 
 				return new ViaCepServiceClient(
-					_wireMockServerContainer.CreateClient(),
-					viaCepIntegSettings with
-                    {
-						Endpoint = !zipCodeInformed || zipCode == Endereco.CepInvalido.Replace("-", string.Empty)
-									? "/two"
-									: "/one"
-
-						//Endpoint = !zipCodeInformed || zipCode == Endereco.CepInvalido.Replace("-", string.Empty)
-						//            ? "/invalid?invalid=1"
-						//            : viaCepIntegSettings.Endpoint
-					},
+					viaCepHttpClient,
+					viaCepIntegrationSettings,
                     default!);
 
 				//https://github.com/WireMock-Net/WireMock.Net/wiki/Using-WireMock.Net.Testcontainers
