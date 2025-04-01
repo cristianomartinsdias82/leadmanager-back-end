@@ -1,0 +1,13 @@
+{
+  "request": {
+    "method": "GET",
+    "url": "/ws/01234567/json/"
+  },
+  "response": {
+    "status": 200,
+    "bodyFileName": "existing-address-response.json",
+    "headers": {
+      "Content-Type": "application/json"
+    }
+  }
+}

@@ -21,6 +21,7 @@
     <PackageReference Include="Testcontainers" Version="4.3.0" />
     <PackageReference Include="Testcontainers.MsSql" Version="4.3.0" />
     <PackageReference Include="Testcontainers.Redis" Version="4.3.0" />
+    <PackageReference Include="WireMock.Net.Testcontainers" Version="1.7.4" />
     <PackageReference Include="xunit" Version="2.9.3" />
     <PackageReference Include="xunit.runner.visualstudio" Version="3.0.2">
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
@@ -37,6 +38,21 @@
     <ProjectReference Include="..\..\..\src\libs\Cross-cutting\Cross-cutting.Caching\CrossCutting.Caching.csproj" />
     <ProjectReference Include="..\..\..\src\libs\Cross-cutting\Cross-cutting.Messaging\CrossCutting.Messaging.csproj" />
     <ProjectReference Include="..\..\common\Tests.Common\Tests.Common.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Update="mocks\mappings\address-existing-zipcode.json">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Update="mocks\mappings\address-non-existing-zipcode.json">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Update="mocks\__files\existing-address-response.json">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Update="mocks\__files\non-existing-address-response.json">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
   </ItemGroup>
 
 </Project>

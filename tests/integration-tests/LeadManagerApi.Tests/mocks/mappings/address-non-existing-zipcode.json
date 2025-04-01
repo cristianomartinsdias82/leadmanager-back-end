@@ -1,0 +1,13 @@
+{
+  "request": {
+    "method": "GET",
+    "url": "/ws/00000000/json/"
+  },
+  "response": {
+    "status": 200,
+    "bodyFileName": "non-existing-address-response.json",
+    "headers": {
+      "Content-Type": "application/json"
+    }
+  }
+}

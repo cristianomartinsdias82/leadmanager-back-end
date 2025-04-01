@@ -1,8 +1,10 @@
-﻿using FluentAssertions;
+﻿using Application.Prospecting.Addresses.Queries.SearchAddressByZipCode;
+using FluentAssertions;
 using LeadManagerApi.Tests.Core;
 using LeadManagerApi.Tests.Core.Factories;
 using Shared.Results;
 using System.Net;
+using Tests.Common.ObjectMothers.Integrations.ViaCep;
 using ViaCep.ServiceClient.Models;
 using Xunit;
 
@@ -11,8 +13,9 @@ namespace LeadManagerApi.Tests.Prospecting.Addresses.SearchAddressByZipCode;
 public class SearchAddressByZipCodeControllerTests : SharedResourcesTestsBase
 {
     private const string SearchAddressUri = $"{AddressesEndpoint}/search?cep=";
+	private const string AddressNotLocated = "Endereço não localizado.";
 
-    public SearchAddressByZipCodeControllerTests(
+	public SearchAddressByZipCodeControllerTests(
         LeadManagerWebApplicationFactory factory) : base(factory) { }
 
     [Fact]
@@ -30,31 +33,33 @@ public class SearchAddressByZipCodeControllerTests : SharedResourcesTestsBase
     }
 
     [Fact]
-    public async Task Get_ExistingZipCode_ShouldSucceedAndReturnFoundAddress()
+    public async Task Get_ExistingZipCode_ShouldSucceedAndReturnAddressData()
     {
-        // Arrange
-        var httpClient = _factory.CreateHttpClient();
+        var address = AddressMother.FullAddress();
+
+		// Arrange
+		var httpClient = _factory.CreateHttpClient();
 
         // Act
-        var response = await httpClient.GetAsync(string.Concat(SearchAddressUri, "04858040"));
+        var response = await httpClient.GetAsync(string.Concat(SearchAddressUri, address.Cep));
 
         // Assert
         response.EnsureSuccessStatusCode();
-        response.StatusCode.Should().Be(HttpStatusCode.OK);
         var responseContent = await response.Content.ReadAsStringAsync();
 
-        ApplicationResponse<Endereco> apiResponse = default!;
-        Action action = () => { apiResponse = _factory.DeserializeFromJson<ApplicationResponse<Endereco>>(responseContent)!; };
-        action.Should().NotThrow<Exception>();
+        ApplicationResponse<SearchAddressByZipCodeQueryResponse> apiResponse = default!;
+		Action action = () => { apiResponse = _factory.DeserializeFromJson<ApplicationResponse<SearchAddressByZipCodeQueryResponse>>(responseContent)!; };
+		action.Should().NotThrow<Exception>();
         apiResponse.Exception.Should().BeNull();
         apiResponse.Success.Should().BeTrue();
         apiResponse.OperationCode.Should().Be(OperationCodes.Successful);
         apiResponse.Data.Should().NotBeNull();
-        //other assertions..
-    }
+		apiResponse.Data.Cep.Should().BeEquivalentTo(address.Cep);
+		apiResponse.Message.Should().NotBeEquivalentTo(AddressNotLocated);
+	}
 
     [Fact]
-    public async Task Get_NonExistingZipCode_ShouldSucceedAndReturnNotFoundAddress()
+    public async Task Get_NonExistingZipCode_ShouldSucceedAndReturnEmptyBodiedAddressData()
     {
         // Arrange
         var httpClient = _factory.CreateHttpClient();
@@ -64,16 +69,14 @@ public class SearchAddressByZipCodeControllerTests : SharedResourcesTestsBase
 
         // Assert
         response.EnsureSuccessStatusCode();
-        response.StatusCode.Should().Be(HttpStatusCode.OK);
         var responseContent = await response.Content.ReadAsStringAsync();
 
-        ApplicationResponse<Endereco> apiResponse = default!;
-        Action action = () => { apiResponse = _factory.DeserializeFromJson<ApplicationResponse<Endereco>>(responseContent)!; };
+        ApplicationResponse<SearchAddressByZipCodeQueryResponse> apiResponse = default!;
+        Action action = () => { apiResponse = _factory.DeserializeFromJson<ApplicationResponse<SearchAddressByZipCodeQueryResponse>>(responseContent)!; };
         action.Should().NotThrow<Exception>();
         apiResponse.Exception.Should().BeNull();
         apiResponse.Success.Should().BeTrue();
         apiResponse.OperationCode.Should().Be(OperationCodes.Successful);
-        apiResponse.Data.Should().NotBeNull();
-        //other assertions..
-    }
+		apiResponse.Message.Should().BeEquivalentTo(AddressNotLocated);
+	}
 }

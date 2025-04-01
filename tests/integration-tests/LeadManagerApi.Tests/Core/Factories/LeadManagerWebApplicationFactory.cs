@@ -8,6 +8,8 @@ using CrossCutting.Caching.Redis.Configuration;
 using CrossCutting.Messaging.RabbitMq;
 using CrossCutting.Security.IAM;
 using DotNet.Testcontainers.Builders;
+using DotNet.Testcontainers.Configurations;
+using DotNet.Testcontainers.Containers;
 using Infrastructure.Persistence;
 using Infrastructure.Repository.Caching;
 using Infrastructure.Repository.Prospecting;
@@ -30,20 +32,16 @@ using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using NSubstitute;
 using Respawn;
-using RichardSzalay.MockHttp;
+//using RichardSzalay.MockHttp;
 using Shared.Settings;
 using System.Data.Common;
-using System.Net;
-using System.Net.Http.Json;
 using System.Text.Json;
 using Testcontainers.MsSql;
 using Testcontainers.Redis;
 using Tests.Common.ObjectMothers.DateTimeHandling;
 using Tests.Common.ObjectMothers.Domain;
-using Tests.Common.ObjectMothers.Integrations.ViaCep;
 using ViaCep.ServiceClient;
 using ViaCep.ServiceClient.Configuration;
-using ViaCep.ServiceClient.Models;
 using Xunit;
 using static Application.Security.LeadManagerSecurityConfiguration;
 
@@ -51,10 +49,11 @@ namespace LeadManagerApi.Tests.Core.Factories;
 
 public class LeadManagerWebApplicationFactory : WebApplicationFactory<Program>, IAsyncLifetime
 {
-    private readonly MockHttpMessageHandler _httpHandlerMock = new MockHttpMessageHandler();
-    private readonly MsSqlContainer _dbContainer;
+	//private readonly MockHttpMessageHandler _httpHandlerMock = new MockHttpMessageHandler(); //From RichardSzalay.MockHttp package. Works great, by the way.
+	private readonly MsSqlContainer _dbContainer;
     private readonly RedisContainer _cacheContainer;
-    private JsonSerializerOptions _jsonSerializerOptions = default!;
+    private readonly IContainer _wireMockContainer;
+	private JsonSerializerOptions _jsonSerializerOptions = default!;
     private DbConnection _dbConnection = default!;
     private Respawner _respawner = default!;
 
@@ -72,7 +71,7 @@ public class LeadManagerWebApplicationFactory : WebApplicationFactory<Program>, 
                                     .WithWaitStrategy(Wait.ForUnixContainer().UntilPortIsAvailable(int.Parse(dbResourcePortNumber)))
                                     .Build();
 
-        //Heads up! When running integration tests o your local machine, please make sure Redis server port number is not being used already (docker composition, for example)
+        //Heads up! When running integration tests in your local machine, please make sure Redis server port number is not being used already (docker composition, for example)
         var cacheResourcePortNumber = Configuration["RedisCacheProviderSettings:PortNumber"]!;
         var cacheImageName = Configuration["RedisCacheProviderSettings:ImageName"]!;
         _cacheContainer = new RedisBuilder()
@@ -80,9 +79,15 @@ public class LeadManagerWebApplicationFactory : WebApplicationFactory<Program>, 
                                     .WithPortBinding(cacheResourcePortNumber, false) //the generated database in some debugging session
                                     .WithWaitStrategy(Wait.ForUnixContainer().UntilPortIsAvailable(int.Parse(cacheResourcePortNumber)))
                                     .Build();
-    }
 
-    public async Task InitializeAsync()
+		_wireMockContainer = new ContainerBuilder()
+		                            .WithImage("wiremock/wiremock:3.7.0")
+		                            .WithPortBinding(8080, true)
+		                            .WithBindMount(Path.Combine(Environment.CurrentDirectory, "mocks"), "/home/wiremock", AccessMode.ReadWrite)
+		                            .Build();
+	}
+
+	public async Task InitializeAsync()
     {
         _jsonSerializerOptions = Services.GetRequiredService<IOptions<JsonOptions>>().Value.JsonSerializerOptions;
 
@@ -92,7 +97,9 @@ public class LeadManagerWebApplicationFactory : WebApplicationFactory<Program>, 
         await _cacheContainer.StartAsync();
 
         await InitializeRespawnerAsync();
-    }
+
+		await _wireMockContainer.StartAsync();
+	}
 
     public async Task ResetDatabaseAsync()
     {
@@ -103,9 +110,12 @@ public class LeadManagerWebApplicationFactory : WebApplicationFactory<Program>, 
     public new async Task DisposeAsync()
     {
         await _dbContainer.StopAsync();
+
         await _cacheContainer.StopAsync();
 
-        await base.DisposeAsync();
+		await _wireMockContainer.DisposeAsync();
+
+		await base.DisposeAsync();
     }
 
     //public virtual HttpClient CreateHttpClientMock(
@@ -132,7 +142,7 @@ public class LeadManagerWebApplicationFactory : WebApplicationFactory<Program>, 
     public virtual HttpClient CreateHttpClient(bool includeApiKeyHeader = true)
     {
         var apiSettings = Services.GetRequiredService<LeadManagerApiSettings>();
-        var headers = includeApiKeyHeader ? new (string Name, string Value)[] { (apiSettings.ApiKeyRequestHeaderName!, apiSettings.ApiKeyRequestHeaderValue) } : Enumerable.Empty<(string Name, string Value)>();
+        var headers = includeApiKeyHeader ? [(apiSettings.ApiKeyRequestHeaderName!, apiSettings.ApiKeyRequestHeaderValue)] : Enumerable.Empty<(string Name, string Value)>();
             
         return CreateHttpClient(headers.ToArray());
     }
@@ -318,31 +328,67 @@ public class LeadManagerWebApplicationFactory : WebApplicationFactory<Program>, 
 
             services.AddSingleton(services => Configuration.GetSection("ServiceIntegrations:ViaCep").Get<ViaCepIntegrationSettings>()!);
             services.RemoveAll<IViaCepServiceClient>();
+
+            //Based on WireMock Testcontainers package
+            services.AddHttpClient();
             services.AddScoped<IViaCepServiceClient>(services =>
             {
-                var leadManagerApiSettings = Services.GetRequiredService<LeadManagerApiSettings>();
-                var viaCepApiSettings = Services.GetRequiredService<ViaCepIntegrationSettings>();
+				var httpClientFactory = services.GetRequiredService<IHttpClientFactory>();
 
-                var httpContextAccessor = services.GetRequiredService<IHttpContextAccessor>();
-                if (!httpContextAccessor.HttpContext!.Request.Query.TryGetValue("cep", out var cep))
-                    cep = Endereco.CepInvalido;
+                var wireMockServerUri = new Uri($"http://127.0.0.1:{_wireMockContainer.GetMappedPublicPort(8080)}");
+				var viaCepHttpClient = httpClientFactory.CreateClient("ViaCep");
+				viaCepHttpClient.BaseAddress = wireMockServerUri;
 
-                _httpHandlerMock
-                    .When($"{viaCepApiSettings.Uri}/{string.Format(viaCepApiSettings.Endpoint, cep!)}")
-                    .Respond(
-                        HttpStatusCode.OK,
-                        JsonContent.Create(cep.Equals(Endereco.CepInvalido) ? AddressMother.NotFoundAddress() : AddressMother.FullAddress())
-                    );
+				var viaCepIntegrationSettings = Services.GetRequiredService<ViaCepIntegrationSettings>()
+                                            with
+                                            {
+                                                Uri = wireMockServerUri.ToString()
+				                            };                
 
-                var httpClient = _httpHandlerMock.ToHttpClient();
-                httpClient.BaseAddress = new Uri(viaCepApiSettings.Uri);
-                httpClient.Timeout = TimeSpan.FromSeconds(viaCepApiSettings.RequestTimeoutInSeconds);
-                httpClient.DefaultRequestHeaders.Add(
-                    leadManagerApiSettings.ApiKeyRequestHeaderName,
-                    leadManagerApiSettings.ApiKeyRequestHeaderValue);
+				return new ViaCepServiceClient(
+					viaCepHttpClient,
+					viaCepIntegrationSettings,
+                    default!);
 
-                return new ViaCepServiceClient(httpClient, viaCepApiSettings, default!);
-            });
-        });
+				//https://github.com/WireMock-Net/WireMock.Net/wiki/Using-WireMock.Net.Testcontainers
+				//https://www.youtube.com/watch?v=l39pTG31VmA "WireMock With Testcontainers"
+				//https://wiremock.org/docs/request-matching/
+				//https://antondevtips.com/blog/how-to-test-integrations-with-apis-using-wiremock-in-dotnet (showcases mapping complex matching patterns)
+
+				//How does it work?
+				//First, the unit test invokes the LeadManager Api via http client.
+				//(The handler that receives the request when the Api is invoked has a dependency on IViaCepServiceClient
+				//that is passed via constructor injection.)
+				//When the handler class constructor is invoked, this very code is run and all it does is to provide a custom implementation
+				//of a http client instance which base Uri points to the ViaCep Mock http server.
+			});
+
+			//Based on RichardSzalay.MockHttp package. Works great, by the way.
+			//services.AddScoped<IViaCepServiceClient>(services =>
+			//{
+			//    var leadManagerApiSettings = Services.GetRequiredService<LeadManagerApiSettings>();
+			//    var viaCepApiSettings = Services.GetRequiredService<ViaCepIntegrationSettings>();
+                  
+			//    var httpContextAccessor = services.GetRequiredService<IHttpContextAccessor>();
+			//    if (!httpContextAccessor.HttpContext!.Request.Query.TryGetValue("cep", out var cep))
+			//        cep = Endereco.CepInvalido;
+
+			//    _httpHandlerMock
+			//        .When($"{viaCepApiSettings.Uri}/{string.Format(viaCepApiSettings.Endpoint, cep!)}")
+			//        .Respond(
+			//            HttpStatusCode.OK,
+			//            JsonContent.Create(cep.Equals(Endereco.CepInvalido) ? AddressMother.NotFoundAddress() : AddressMother.FullAddress())
+			//        );
+                  
+			//    var httpClient = _httpHandlerMock.ToHttpClient();
+			//    httpClient.BaseAddress = new Uri(viaCepApiSettings.Uri);
+			//    httpClient.Timeout = TimeSpan.FromSeconds(viaCepApiSettings.RequestTimeoutInSeconds);
+			//    httpClient.DefaultRequestHeaders.Add(
+			//        leadManagerApiSettings.ApiKeyRequestHeaderName,
+			//        leadManagerApiSettings.ApiKeyRequestHeaderValue);
+                  
+			//    return new ViaCepServiceClient(httpClient, viaCepApiSettings, default!);
+			//});
+		});
     }
 }
