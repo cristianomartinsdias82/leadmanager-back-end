@@ -13,6 +13,7 @@ env:
   SOLUTION_PATH: "LeadManager.sln"
   API_PROJECT_PATH: "src/hosts/LeadManagerApi"
   PUBLISH_DIR: "./publish"
+  #APPLICATION_LAYER_UNIT_TESTS_PROJECT_PATH: "tests/unit-tests/Application.Tests"
 
 jobs:
   build:
@@ -39,15 +40,27 @@ jobs:
     needs: [build]
 
     steps:
-  #    - uses: actions/checkout@v4
+      - uses: actions/checkout@v4
+      
+      - name: Setup .NET
+        uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: ${{ env.DOTNET_VERSION }}
 
-  #    - name: Setup .NET
-  #      uses: actions/setup-dotnet@v4
-  #      with:
-  #        dotnet-version: ${{ env.DOTNET_VERSION }}
+      - name: Tests
+        run: dotnet test ${{ env.SOLUTION_PATH }} --configuration Release --verbosity minimal --logger:"html;LogFileName=resultado-testes.html" --collect:"XPlat Code Coverage"
 
-      - name: Test
-        run: dotnet test ${{ env.SOLUTION_PATH }} --configuration Release --verbosity normal
+      - name: Install Report Generation tool
+        if: success()
+        run: dotnet tool install --global dotnet-reportgenerator-globaltool --version 5.4.5
+
+      - name: Generate code coverage report
+        if: success()
+        run: |
+          cd ${{ env.SOLUTION_PATH }}/TestResults
+          # Cd into generated directory with code coverage generated XML output
+          cd $(ls -d */|head -n 1)
+          reportgenerator "-reports:coverage.cobertura.xml" "-targetdir:coveragereport" -reporttypes:Html
 
   #publish:
   #  name: Publish
