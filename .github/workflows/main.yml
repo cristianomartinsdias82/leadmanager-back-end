@@ -13,7 +13,8 @@ env:
   SOLUTION_PATH: "LeadManager.sln"
   API_PROJECT_PATH: "src/hosts/LeadManagerApi"
   PUBLISH_DIR: "./publish"
-  #APPLICATION_LAYER_UNIT_TESTS_PROJECT_PATH: "tests/unit-tests/Application.Tests"
+  APPLICATION_LAYER_UNIT_TESTS_PROJECT_PATH: "tests/unit-tests/Application.Tests"
+  
 
 jobs:
   build:
@@ -57,7 +58,7 @@ jobs:
       - name: Generate code coverage report
         if: success()
         run: |
-          cd ${{ env.SOLUTION_PATH }}/TestResults
+          cd ${{ env.APPLICATION_LAYER_UNIT_TESTS_PROJECT_PATH }}/TestResults
           # Cd into generated directory with code coverage generated XML output
           cd $(ls -d */|head -n 1)
           reportgenerator "-reports:coverage.cobertura.xml" "-targetdir:coveragereport" -reporttypes:Html
