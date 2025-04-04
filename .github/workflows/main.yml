@@ -65,9 +65,9 @@ jobs:
       
       - name: Upload successful tests execution report as an artifact
         uses: actions/upload-artifact@v2.2.2
-        if: success()
         env:
           TESTS_RESULTS_DIR: ${{ env.APPLICATION_LAYER_UNIT_TESTS_DIR }}/TestResults/
+        if: success()        
         with:
           name: tests-results
           path: ${{ env.TESTS_RESULTS_DIR }}
