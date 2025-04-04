@@ -13,7 +13,7 @@ env:
   SOLUTION_PATH: "LeadManager.sln"
   API_PROJECT_PATH: "src/hosts/LeadManagerApi"
   PUBLISH_DIR: "./publish"
-  APPLICATION_LAYER_UNIT_TESTS_DIR: "tests/unit-tests/application-tests"
+  APPLICATION_LAYER_UNIT_TESTS_DIR: "tests/unit-tests/application.tests"
 
 jobs:
   build:
