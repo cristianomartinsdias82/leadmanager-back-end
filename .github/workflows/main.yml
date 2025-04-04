@@ -13,7 +13,7 @@ env:
   SOLUTION_PATH: "LeadManager.sln"
   API_PROJECT_PATH: "src/hosts/LeadManagerApi"
   PUBLISH_DIR: "./publish"
-  APPLICATION_LAYER_UNIT_TESTS_DIR: "tests/unit-tests/application.tests"
+  APPLICATION_LAYER_UNIT_TESTS_DIR: "tests/unit-tests/Application.Tests"
 
 jobs:
   build:
@@ -48,7 +48,7 @@ jobs:
           dotnet-version: ${{ env.DOTNET_VERSION }}
 
       - name: Tests
-        run: dotnet test ${{ env.SOLUTION_PATH }} --configuration Release --verbosity minimal --logger:"html;LogFileName=resultado-testes.html" --collect:"XPlat Code Coverage"
+        run: dotnet test ${{ env.APPLICATION_LAYER_UNIT_TESTS_DIR }} --configuration Release --verbosity minimal --logger:"html;LogFileName=tests-results.html" --collect:"XPlat Code Coverage"
 
       - name: Install Report Generator tool
         if: success()
