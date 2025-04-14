@@ -17,9 +17,8 @@ namespace Application.Prospecting.Leads.Commands.UpdateLead;
 internal sealed class UpdateLeadCommandRequestHandler : ApplicationRequestHandler<UpdateLeadCommandRequest, UpdateLeadCommandResponse>
 {
     private const string Mensagem_FalhaAtualizacaoConcorrente = "Este registro foi atualizado anteriormente por outro usuário.";
-    private const string Mensagem_FalhaRemocaoConcorrente = "Este registro foi removido anteriormente por outro usuário.";
-    private const string Mensagem_LeadNaoEncontrado = "Lead não encontrado.";
-    private readonly ILeadRepository _leadRepository;
+	private const string Mensagem_LeadNaoEncontrado = "Lead não encontrado. Estes dados podem ter sido excluídos por outro usuário.";
+	private readonly ILeadRepository _leadRepository;
 
     public UpdateLeadCommandRequestHandler(
         IMediator mediator,
@@ -31,9 +30,16 @@ internal sealed class UpdateLeadCommandRequestHandler : ApplicationRequestHandle
 
     public async override Task<ApplicationResponse<UpdateLeadCommandResponse>> Handle(UpdateLeadCommandRequest request, CancellationToken cancellationToken)
     {
-        var lead = await _leadRepository.GetByIdAsync(request.Id!.Value, cancellationToken);
+        var lead = await _leadRepository.GetByIdAsync(
+                                                    request.Id!.Value,
+													bypassCacheLayer: true,
+													cancellationToken);
         if (lead is null)
-            return ApplicationResponse<UpdateLeadCommandResponse>.Create(null!, message: Mensagem_LeadNaoEncontrado);
+            return ApplicationResponse<UpdateLeadCommandResponse>
+                        .Create(default!,
+                                message: Mensagem_LeadNaoEncontrado,
+                                operationCode: OperationCodes.NotFound,
+                                inconsistencies: new Inconsistency(string.Empty, Mensagem_LeadNaoEncontrado));
 
         lead.Atualizar(
             request.RazaoSocial!,
@@ -68,19 +74,18 @@ internal sealed class UpdateLeadCommandRequestHandler : ApplicationRequestHandle
             }
 
 			//Otherwise, the record was previously deleted
-
 			return ApplicationResponse<UpdateLeadCommandResponse>.Create(
                 data: new UpdateLeadCommandResponse(
                             RecordStates.Deleted,
                             default!,
                             default!),
                 exception: dbConcExc.AsExceptionData(),
-                message: Mensagem_FalhaRemocaoConcorrente,
+                message: Mensagem_LeadNaoEncontrado,
 				inconsistencies: new Inconsistency("ConcurrencyIssue", string.Empty),
 				operationCode: OperationCodes.ConcurrencyIssue);
         }
 
-        PushTelemetryData(lead);
+        await PushTelemetryData(lead);
 
         AddEvent(new LeadUpdatedIntegrationEvent(lead.MapToDto()));
 
@@ -91,7 +96,7 @@ internal sealed class UpdateLeadCommandRequestHandler : ApplicationRequestHandle
                     default));
     }
 
-	private void PushTelemetryData(Lead lead)
+	private async ValueTask PushTelemetryData(Lead lead)
 	{
 		//This counter is configured to be a metric and exported to Prometheus (see OpenTelemetryConfigurationExtensions.cs -> .WithMetrics -> mtr.AddPrometheusExporter())
 		//This counter is also configured to be scraped by Prometheus via and endpoint that was set in Program.cs file (app.UseOpenTelemetryPrometheusScrapingEndpoint();)
@@ -105,17 +110,17 @@ internal sealed class UpdateLeadCommandRequestHandler : ApplicationRequestHandle
 		);
 
 		var handlerName = GetType().FullName!;
-		var diagnosticsDataCollector = DiagnosticsDataCollector
-										.WithActivity(Activity.Current)
-										.WithTags(
-											(ApplicationDiagnostics.Constants.LeadId, lead.Id),
-											(ApplicationDiagnostics.Constants.HandlerName, handlerName)
-										)
-										.WithBaggageData( //Useful for data Propagation
-											Baggage.Current,
-											(ApplicationDiagnostics.Constants.LeadId, lead.Id.ToString()),
-											(ApplicationDiagnostics.Constants.HandlerName, handlerName)
-										)
-										.PushData();
+		await DiagnosticsDataCollector
+		        .WithActivity(Activity.Current)
+		        .WithTags(
+			        (ApplicationDiagnostics.Constants.LeadId, lead.Id),
+			        (ApplicationDiagnostics.Constants.HandlerName, handlerName)
+		        )
+		        .WithBaggageData( //Useful for data Propagation
+			        Baggage.Current,
+			        (ApplicationDiagnostics.Constants.LeadId, lead.Id.ToString()),
+			        (ApplicationDiagnostics.Constants.HandlerName, handlerName)
+		        )
+		        .PushData();
 	}
 }

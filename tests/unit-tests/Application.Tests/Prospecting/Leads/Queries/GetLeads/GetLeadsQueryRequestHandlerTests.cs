@@ -33,7 +33,7 @@ public sealed class GetLeadsQueryRequestHandlerTests : IDisposable
 		//Arrange
 		var paginationOptions = new PaginationOptions();
 		_leadRepositoryMock
-			.GetAsync(default, paginationOptions, _cts.Token)
+			.GetAsync(paginationOptions, default, _cts.Token)
 			.Returns(PagedList<Lead>.Empty());
 
 		//Act
@@ -59,7 +59,7 @@ public sealed class GetLeadsQueryRequestHandlerTests : IDisposable
 		//Arrange
 		var paginationOptions = new PaginationOptions();
 		_leadRepositoryMock
-			.GetAsync(default, paginationOptions, _cts.Token)
+			.GetAsync(paginationOptions, default, _cts.Token)
 			.Returns(PagedList<Lead>.Empty());
 
 		//Act
@@ -81,7 +81,7 @@ public sealed class GetLeadsQueryRequestHandlerTests : IDisposable
 		//Arrange
 		var paginationOptions = new PaginationOptions();
 		var leads = LeadMother.Leads().ToList();
-		_leadRepositoryMock.GetAsync(default, new(), _cts.Token)
+		_leadRepositoryMock.GetAsync(new(), default, _cts.Token)
 						  .Returns(PagedList<Lead>.Paginate(leads, paginationOptions));
 
 		//Act
@@ -97,7 +97,7 @@ public sealed class GetLeadsQueryRequestHandlerTests : IDisposable
 		result.Data.Items.Should().NotBeNull().And.HaveCount(leads.Count);
 		result.Data.Items.Any(x => x.RazaoSocial == leads[0].RazaoSocial).Should().BeTrue();
 		result.Data.Items.Any(x => x.RazaoSocial == leads[1].RazaoSocial).Should().BeTrue();
-		await _leadRepositoryMock.Received(1).GetAsync(default, Arg.Any<PaginationOptions>(), _cts.Token);
+		await _leadRepositoryMock.Received(1).GetAsync(Arg.Any<PaginationOptions>(), default, _cts.Token);
 	}
 
 	[Theory]
@@ -112,7 +112,7 @@ public sealed class GetLeadsQueryRequestHandlerTests : IDisposable
 						.Where(ld => ld.RazaoSocial.Contains(search) || ld.Cnpj.Contains(search))
 						.ToList();
 		_leadRepositoryMock
-			.GetAsync(search, paginationOptions, _cts.Token)
+			.GetAsync(paginationOptions, search, _cts.Token)
 			.Returns(PagedList<Lead>.Paginate(leads, paginationOptions));
 
 		//Act
@@ -126,7 +126,7 @@ public sealed class GetLeadsQueryRequestHandlerTests : IDisposable
 		result.Inconsistencies.Should().BeNullOrEmpty();
 		result.Data.Should().NotBeNull();
 		result.Data.Items.Should().NotBeNull().And.HaveCount(0);
-		await _leadRepositoryMock.Received(1).GetAsync(search, Arg.Any<PaginationOptions>(), _cts.Token);
+		await _leadRepositoryMock.Received(1).GetAsync(Arg.Any<PaginationOptions>(), search, _cts.Token);
 	}
 
 	[Theory]
@@ -139,7 +139,7 @@ public sealed class GetLeadsQueryRequestHandlerTests : IDisposable
 		var leads = LeadMother
 						.Leads()
 						.Where(ld => ld.Cnpj.Contains(search) || ld.RazaoSocial.Contains(search)).ToList();
-		_leadRepositoryMock.GetAsync(search, new(), _cts.Token)
+		_leadRepositoryMock.GetAsync(new(), search, _cts.Token)
 						  .Returns(PagedList<Lead>.Paginate(leads, paginationOptions));
 
 		//Act
@@ -153,7 +153,7 @@ public sealed class GetLeadsQueryRequestHandlerTests : IDisposable
 		result.Inconsistencies.Should().BeNullOrEmpty();
 		result.Data.Should().NotBeNull();
 		result.Data.Items.Should().NotBeNull().And.HaveCountGreaterThanOrEqualTo(1);
-		await _leadRepositoryMock.Received(1).GetAsync(search, Arg.Any<PaginationOptions>(), _cts.Token);
+		await _leadRepositoryMock.Received(1).GetAsync(Arg.Any<PaginationOptions>(), search, _cts.Token);
 	}
 
 	public void Dispose()

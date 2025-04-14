@@ -21,6 +21,7 @@ public sealed class UpdateLeadCommandRequestHandlerTests
     private readonly ILeadRepository _leadRepository;
     private readonly IEventDispatching _eventDispatcher;
     private readonly CancellationTokenSource _cts;
+    private readonly string Mensagem_LeadNaoEncontrado = "Lead não encontrado. Estes dados podem ter sido excluídos por outro usuário.";
 
     public UpdateLeadCommandRequestHandlerTests()
     {
@@ -38,7 +39,7 @@ public sealed class UpdateLeadCommandRequestHandlerTests
         var lead = LeadMother.XptoLLC();
         var request = UpdateLeadCommandRequestMother.XptoIncLeadRequest();
 
-        _leadRepository.GetByIdAsync(Arg.Any<Guid>(), Arg.Any<CancellationToken>())
+        _leadRepository.GetByIdAsync(Arg.Any<Guid>(), Arg.Any<bool>(), Arg.Any<CancellationToken>())
                        .Returns(lead);
 
         _leadRepository.UpdateAsync(lead, lead.RowVersion, Arg.Any<CancellationToken>())
@@ -68,7 +69,7 @@ public sealed class UpdateLeadCommandRequestHandlerTests
         var lead = LeadMother.XptoLLC();
         var updateRequest = UpdateLeadCommandRequestMother.XptoIncLeadRequest();
 
-        _leadRepository.GetByIdAsync(Arg.Any<Guid>(), _cts.Token).Returns(lead);
+        _leadRepository.GetByIdAsync(Arg.Any<Guid>(), Arg.Any<bool>(), _cts.Token).Returns(lead);
         _leadRepository.UpdateAsync(lead, lead.RowVersion, _cts.Token).Returns(Task.CompletedTask);
 
         //Act
@@ -80,7 +81,7 @@ public sealed class UpdateLeadCommandRequestHandlerTests
         result.Success.Should().BeTrue();
         result.Inconsistencies.Should().BeNullOrEmpty();
         result.Should().BeOfType<ApplicationResponse<UpdateLeadCommandResponse>>();
-        await _leadRepository.Received(1).GetByIdAsync(Arg.Any<Guid>(), Arg.Any<CancellationToken>());
+        await _leadRepository.Received(1).GetByIdAsync(Arg.Any<Guid>(), Arg.Any<bool>(), Arg.Any<CancellationToken>());
         await _leadRepository.Received(1).UpdateAsync(Arg.Any<Lead>(), Arg.Any<byte[]>(), Arg.Any<CancellationToken>());
         _eventDispatcher.Received(1).AddEvent(Arg.Any<IEvent>());
     }
@@ -91,19 +92,20 @@ public sealed class UpdateLeadCommandRequestHandlerTests
         //Arrange
         var updateRequest = UpdateLeadCommandRequestMother.XptoIncLeadRequest();
 
-        _leadRepository.GetByIdAsync(Guid.NewGuid(), _cts.Token).Returns(default(Lead));
+        _leadRepository.GetByIdAsync(Guid.NewGuid(), default, _cts.Token).Returns(default(Lead));
 
         //Act
         var result = await _handler.Handle(updateRequest, _cts.Token);
 
         //Assert
         result.Should().NotBeNull();
-        result.OperationCode.Should().Be(OperationCodes.Successful);
-        result.Success.Should().BeTrue();
-        result.Inconsistencies.Should().BeNullOrEmpty();
-        result.Should().BeOfType<ApplicationResponse<UpdateLeadCommandResponse>>();
-        result.Message.Should().BeEquivalentTo("Lead não encontrado.");
-        await _leadRepository.Received(1).GetByIdAsync(Arg.Any<Guid>(), Arg.Any<CancellationToken>());
+        result.OperationCode.Should().Be(OperationCodes.NotFound);
+        result.Success.Should().BeFalse();
+        result.Inconsistencies.Should().NotBeNullOrEmpty();
+        result.Inconsistencies!.First().Description.Should().BeEquivalentTo(Mensagem_LeadNaoEncontrado);
+		result.Should().BeOfType<ApplicationResponse<UpdateLeadCommandResponse>>();
+        result.Message.Should().BeEquivalentTo(Mensagem_LeadNaoEncontrado);
+        await _leadRepository.Received(1).GetByIdAsync(Arg.Any<Guid>(), Arg.Any<bool>(), Arg.Any<CancellationToken>());
         await _leadRepository.Received(0).UpdateAsync(Arg.Any<Lead>(), Arg.Any<byte[]>(), Arg.Any<CancellationToken>());
         _eventDispatcher.Received(0).AddEvent(Arg.Any<IEvent>());
     }

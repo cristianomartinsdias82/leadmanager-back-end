@@ -31,7 +31,7 @@ internal sealed class OneTimePasswordRepository : IOneTimePasswordRepository
             $"{oneTimePasswordDto.UserId}_{oneTimePasswordDto.Resource}",
             oneTimePasswordDto,
             _oneTimePasswordCachingPolicy.TtlInSeconds,
-            cancellationToken);
+			cancellationToken: cancellationToken);
 
     public async Task RemoveAsync(
         Guid userId,

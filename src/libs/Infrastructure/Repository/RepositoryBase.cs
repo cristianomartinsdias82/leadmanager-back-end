@@ -18,17 +18,18 @@ internal abstract class RepositoryBase<T> : IRepository<T> where T : class//, IE
 
     public abstract Task<T?> GetByIdAsync(
         Guid id,
+        bool? bypassCacheLayer = false,
         CancellationToken cancellationToken = default);
 
+    public abstract Task<PagedList<T>> GetAsync(
+           PaginationOptions paginationOptions,
+           string? search = default,
+           CancellationToken cancellationToken = default);
 
-	public abstract Task<PagedList<T>> GetAsync(
-        string? search,
-        PaginationOptions paginationOptions,
-        CancellationToken cancellationToken = default);
+    public abstract Task<IEnumerable<T>> GetAllAsync(CancellationToken cancellationToken = default);
 
-    public abstract Task RemoveAsync(
+	public abstract Task RemoveAsync(
         T entity,
-        byte[] rowVersion,
         CancellationToken cancellationToken = default);
 
     public abstract Task UpdateAsync(

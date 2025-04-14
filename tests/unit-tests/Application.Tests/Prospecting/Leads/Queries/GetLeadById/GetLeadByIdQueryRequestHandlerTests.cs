@@ -11,7 +11,6 @@ using Xunit;
 
 namespace Application.Tests.Prospecting.Leads.Queries.GetLeadById;
 
-//TODO: Utilizar uma implementação real de repositório para estes testes
 public sealed class GetLeadByIdQueryRequestHandlerTests
 {
     private readonly GetLeadByIdQueryRequestHandler _handler;
@@ -53,7 +52,9 @@ public sealed class GetLeadByIdQueryRequestHandlerTests
     {
         //Arrange
         var _xptoIncLead = LeadMother.XptoLLC();
-        _leadRepositoryMock.GetByIdAsync(_xptoIncLead.Id, _cts.Token).Returns(_xptoIncLead);
+        _leadRepositoryMock
+            .GetByIdAsync(_xptoIncLead.Id, cancellationToken: _cts.Token)
+            .Returns(_xptoIncLead);
         GetLeadByIdQueryRequest request = new() { Id = _xptoIncLead.Id };
 
         //Act

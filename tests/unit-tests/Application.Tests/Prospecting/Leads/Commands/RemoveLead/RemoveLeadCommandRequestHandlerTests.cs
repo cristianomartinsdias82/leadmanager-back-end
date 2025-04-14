@@ -15,7 +15,8 @@ namespace Application.Tests.Prospecting.Leads.Commands.RemoveLead;
 
 public sealed class RemoveLeadCommandRequestHandlerTests
 {
-    private readonly RemoveLeadCommandRequestHandler _handler;
+	private const string LeadNotFound = "Lead não encontrado.";
+	private readonly RemoveLeadCommandRequestHandler _handler;
     private readonly IMediator _mediator;
     private readonly ILeadRepository _leadRepository;
     private readonly IEventDispatching _eventDispatcher;
@@ -41,10 +42,10 @@ public sealed class RemoveLeadCommandRequestHandlerTests
             Revision = lead.RowVersion
         };
 
-        _leadRepository.GetByIdAsync(Arg.Any<Guid>(), Arg.Any<CancellationToken>())
+        _leadRepository.GetByIdAsync(Arg.Any<Guid>(), Arg.Any<bool>(), Arg.Any<CancellationToken>())
                        .Returns(lead);
 
-        _leadRepository.RemoveAsync(lead, lead.RowVersion, Arg.Any<CancellationToken>())
+        _leadRepository.RemoveAsync(lead, Arg.Any<CancellationToken>())
                        .ReturnsForAnyArgs(
                             /*On first execution, return*/ Task.CompletedTask,
                             /*On second execution, return*/ Task.FromException<DbUpdateConcurrencyException>(new DbUpdateConcurrencyException())
@@ -60,7 +61,7 @@ public sealed class RemoveLeadCommandRequestHandlerTests
         secondRequest.Exception.Should().NotBeNull();
         secondRequest.Exception!.ExceptionType.Should().BeEquivalentTo(typeof(DbUpdateConcurrencyException).FullName);
         secondRequest.OperationCode.Should().Be(OperationCodes.ConcurrencyIssue);
-        await _leadRepository.Received(2).RemoveAsync(Arg.Any<Lead>(), Arg.Any<byte[]>(), Arg.Any<CancellationToken>());
+        await _leadRepository.Received(2).RemoveAsync(Arg.Any<Lead>(), Arg.Any<CancellationToken>());
         _eventDispatcher.Received(1).AddEvent(Arg.Any<IEvent>());
     }
 
@@ -70,7 +71,7 @@ public sealed class RemoveLeadCommandRequestHandlerTests
         //Arrange
         var lead = LeadMother.XptoLLC();
         var deleteRequest = new RemoveLeadCommandRequest { Id = lead.Id };
-        _leadRepository.GetByIdAsync(Arg.Any<Guid>(), _cts.Token).ReturnsForAnyArgs(lead);
+        _leadRepository.GetByIdAsync(Arg.Any<Guid>(), Arg.Any<bool>(), _cts.Token).ReturnsForAnyArgs(lead);
 
         //Act
         var result = await _handler.Handle(deleteRequest, _cts.Token);
@@ -83,8 +84,8 @@ public sealed class RemoveLeadCommandRequestHandlerTests
         result.Data.Should().NotBeNull();
         result.Inconsistencies.Should().BeNullOrEmpty();
         result.Message.Should().BeNullOrEmpty();
-        await _leadRepository.Received(1).GetByIdAsync(Arg.Any<Guid>(), Arg.Any<CancellationToken>());
-        await _leadRepository.Received(1).RemoveAsync(Arg.Any<Lead>(), Arg.Any<byte[]>(), Arg.Any<CancellationToken>());
+        await _leadRepository.Received(1).GetByIdAsync(Arg.Any<Guid>(), Arg.Any<bool>(), Arg.Any<CancellationToken>());
+        await _leadRepository.Received(1).RemoveAsync(Arg.Any<Lead>(), Arg.Any<CancellationToken>());
         _eventDispatcher.Received(1).AddEvent(Arg.Any<IEvent>());
     }
 
@@ -104,9 +105,9 @@ public sealed class RemoveLeadCommandRequestHandlerTests
         result.Should().BeOfType<ApplicationResponse<RemoveLeadCommandResponse>>();
         result.Data.Should().BeNull();
         result.Inconsistencies.Should().BeNullOrEmpty();
-        result.Message.Should().BeEquivalentTo("Lead não encontrado.");
-        await _leadRepository.Received(1).GetByIdAsync(Arg.Any<Guid>(), Arg.Any<CancellationToken>());
-        await _leadRepository.Received(0).RemoveAsync(Arg.Any<Lead>(), Arg.Any<byte[]>(), Arg.Any<CancellationToken>());
+        result.Message.Should().BeEquivalentTo(LeadNotFound);
+        await _leadRepository.Received(1).GetByIdAsync(Arg.Any<Guid>(), Arg.Any<bool>(), Arg.Any<CancellationToken>());
+        await _leadRepository.Received(0).RemoveAsync(Arg.Any<Lead>(), Arg.Any<CancellationToken>());
         _eventDispatcher.Received(0).AddEvent(Arg.Any<IEvent>());
     }
 }

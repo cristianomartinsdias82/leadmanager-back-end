@@ -1,8 +1,10 @@
-﻿using Application.Core.Contracts.Repository.Prospecting;
+﻿using Application.Core.Contracts.Repository.Caching;
+using Application.Core.Contracts.Repository.Prospecting;
 using Application.Core.Diagnostics;
 using Application.Prospecting.Leads.Commands.RegisterLead;
 using Application.Prospecting.Leads.IntegrationEvents.LeadBulkInserted;
 using Application.Prospecting.Leads.Shared;
+using CrossCutting.Caching;
 using CrossCutting.Csv;
 using CrossCutting.FileStorage;
 using CrossCutting.Security.IAM;
@@ -30,13 +32,13 @@ internal sealed class BulkInsertLeadCommandRequestHandler : ApplicationRequestHa
     private readonly IUserService _userService;
     private readonly ILeadRepository _leadRepository;
 
-    public BulkInsertLeadCommandRequestHandler(
+	public BulkInsertLeadCommandRequestHandler(
         IMediator mediator,
         IEventDispatching eventDispatcher,
         ICsvHelper csvHelper,
         IFileStorageProvider fileStorageProvider,
         ILeadRepository leadRepository,
-        IUserService userService,
+	    IUserService userService,
         IValidator<RegisterLeadCommandRequest> requestValidator) : base(mediator, eventDispatcher)
     {
         _csvHelper = csvHelper;
@@ -44,7 +46,7 @@ internal sealed class BulkInsertLeadCommandRequestHandler : ApplicationRequestHa
         _fileStorageProvider = fileStorageProvider;
         _userService = userService;
         _leadRepository = leadRepository;
-    }
+	}
 
     public async override Task<ApplicationResponse<BulkInsertLeadCommandResponse>> Handle(BulkInsertLeadCommandRequest request, CancellationToken cancellationToken)
     {
@@ -66,7 +68,7 @@ internal sealed class BulkInsertLeadCommandRequestHandler : ApplicationRequestHa
         foreach (var item in items)
         {
             ++index;
-            validationResult = await _requestValidator.ValidateAsync(item);
+            validationResult = await _requestValidator.ValidateAsync(item, cancellationToken);
             if (!validationResult.IsValid)
             {
                 inconsistencies.Add(new($"Registro #{index}", string.Join(", ", validationResult.Errors.Select(err => err.ErrorMessage))));
@@ -81,13 +83,12 @@ internal sealed class BulkInsertLeadCommandRequestHandler : ApplicationRequestHa
                 new(),
                 message: "Por favor, corrija o(s) erro(s) a seguir e tente novamente:",
                 operationCode: OperationCodes.ValidationFailure,
-                inconsistencies: inconsistencies.ToArray()
+                inconsistencies: [..inconsistencies]
             );
 
         var existingLeads = await _leadRepository.GetAsync(
-            default,
             PaginationOptions.SinglePage(),
-            cancellationToken);
+            cancellationToken: cancellationToken);
         if (existingLeads.Items.Any())
             upcomingLeads.ForEach(upcLead =>
             {
@@ -101,7 +102,7 @@ internal sealed class BulkInsertLeadCommandRequestHandler : ApplicationRequestHa
                 new(),
                 message: "Por favor, corrija o(s) erro(s) a seguir e tente novamente:",
                 operationCode: OperationCodes.ValidationFailure,
-                inconsistencies: inconsistencies.ToArray()
+                inconsistencies: [..inconsistencies]
             );
 
         var newLeads = upcomingLeads
@@ -118,14 +119,14 @@ internal sealed class BulkInsertLeadCommandRequestHandler : ApplicationRequestHa
 
         await _leadRepository.AddRangeAsync(newLeads, cancellationToken);
 
-        PushTelemetryData(newLeads);
+        await PushTelemetryData(newLeads);
 
 		AddEvent(new LeadBulkInsertedIntegrationEvent(newLeads.MapToDtoList()));
 
         return ApplicationResponse<BulkInsertLeadCommandResponse>.Create(new());
     }
 
-    private void PushTelemetryData(IEnumerable<Lead> newLeads)
+    private async ValueTask PushTelemetryData(IEnumerable<Lead> newLeads)
     {
         var leadCount = newLeads.Count();
 
@@ -141,20 +142,20 @@ internal sealed class BulkInsertLeadCommandRequestHandler : ApplicationRequestHa
 		);
 
 		var handlerName = GetType().FullName!;
-		var diagnosticsDataCollector = DiagnosticsDataCollector
-										.WithActivity(Activity.Current)
-										.WithTags(
-											(ApplicationDiagnostics.Constants.LeadId, string.Join(',', newLeads.Select(l => l.Id))),
-											(ApplicationDiagnostics.Constants.HandlerName, handlerName)
-										)
-										//Just experimenting C# 12 new sugar syntax in the next lines of code
-										.WithTags([.. newLeads.Select(ld => ($"lead_{ld.Id}", ld.Id))])
-										.WithTags([.. Enumerable.Range(1, leadCount).Select(c => ($"lead_{c}", newLeads.ElementAt(c - 1).RazaoSocial))])
-										.WithBaggageData( //Useful for data Propagation
-											Baggage.Current,
-											(ApplicationDiagnostics.Constants.LeadId, string.Join(',', newLeads.Select(l => l.Id))),
-											(ApplicationDiagnostics.Constants.HandlerName, handlerName)
-										)
-										.PushData();
+		await DiagnosticsDataCollector
+				.WithActivity(Activity.Current)
+				.WithTags(
+					(ApplicationDiagnostics.Constants.LeadId, string.Join(',', newLeads.Select(l => l.Id))),
+					(ApplicationDiagnostics.Constants.HandlerName, handlerName)
+				)
+				//Just experimenting C# 12 new sugar syntax in the next lines of code
+				.WithTags([.. newLeads.Select(ld => ($"lead_{ld.Id}", ld.Id))])
+				.WithTags([.. Enumerable.Range(1, leadCount).Select(c => ($"lead_{c}", newLeads.ElementAt(c - 1).RazaoSocial))])
+				.WithBaggageData( //Useful for data Propagation
+					Baggage.Current,
+					(ApplicationDiagnostics.Constants.LeadId, string.Join(',', newLeads.Select(l => l.Id))),
+					(ApplicationDiagnostics.Constants.HandlerName, handlerName)
+				)
+				.PushData();
 	}
 }

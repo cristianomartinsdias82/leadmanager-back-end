@@ -83,4 +83,9 @@ public sealed class LeadManagerDbContext : DbContext, ILeadManagerDbContext
     {
         Entry(entity).Property(propertyName).OriginalValue = rowVersion;
     }
+
+    public void SetStateToModified<T>(T entity) where T : IEntity
+    {
+        Entry(entity).State = EntityState.Modified;
+    }
 }

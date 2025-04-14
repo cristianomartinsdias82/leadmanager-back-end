@@ -23,39 +23,56 @@ internal sealed class LeadRepository : RepositoryBase<Lead>, ILeadRepository
         => await _leadDbContext.Leads.AddRangeAsync(leads, cancellationToken);
 
     public override async Task<PagedList<Lead>> GetAsync(
-		string? search,
-		PaginationOptions paginationOptions,
+        PaginationOptions paginationOptions,
+        string? search = default,
         CancellationToken cancellationToken = default)
         => PagedList<Lead>.Paginate(
-            await _leadDbContext
-                    .Leads
-			        .Where(it => string.IsNullOrWhiteSpace(search) || it.Cnpj.Contains(search) || it.RazaoSocial.Contains(search))
-					.ToListAsync(cancellationToken),
+            await GenerateSearchQueryExpression(_leadDbContext.Leads.AsNoTracking(), search)
+                    .ToListAsync(cancellationToken),
                         PaginationOptions
                             .SinglePage()
                             .WithSortColumn(paginationOptions.SortColumn)
                             .WithSortDirection(paginationOptions.SortDirection));
 
-	public override async Task<Lead?> GetByIdAsync(Guid id, CancellationToken cancellationToken = default)
-        => await _leadDbContext.Leads.FindAsync(id, cancellationToken);
+    public override async Task<IEnumerable<Lead>> GetAllAsync(CancellationToken cancellationToken = default)
+       => await _leadDbContext
+                    .Leads
+                    .AsNoTracking()
+                    .ToListAsync(cancellationToken);
 
-    public override async Task RemoveAsync(Lead lead, byte[] rowVersion, CancellationToken cancellationToken = default)
+    public override async Task<Lead?> GetByIdAsync(
+        Guid id,
+        bool? bypassCacheLayer = false,
+        CancellationToken cancellationToken = default)
+        => await _leadDbContext.Leads.FindAsync([id], cancellationToken: cancellationToken);
+
+    public override async Task RemoveAsync(Lead lead, CancellationToken cancellationToken = default)
     {
         if (await _leadDbContext.Leads.AnyAsync(ld => ld.Id == lead.Id, cancellationToken))
-        {
             _leadDbContext.Leads.Remove(lead);
-            _leadDbContext.SetConcurrencyToken(lead, nameof(Lead.RowVersion), rowVersion);
-        }
     }
 
     public override async Task UpdateAsync(Lead lead, byte[] rowVersion, CancellationToken cancellationToken = default)
     {
         if (await _leadDbContext.Leads.AnyAsync(ld => ld.Id == lead.Id, cancellationToken))
+        {
+            _leadDbContext.SetStateToModified(lead);
             _leadDbContext.SetConcurrencyToken(lead, nameof(Lead.RowVersion), rowVersion);
+        }
     }
 
     public override async Task<bool> ExistsAsync(
         Expression<Func<Lead, bool>> matchCriteria,
         CancellationToken cancellationToken = default)
-        => await _leadDbContext.Leads.AnyAsync(matchCriteria, cancellationToken);
+        => await _leadDbContext
+                    .Leads
+                    .AsNoTracking()
+                    .AnyAsync(matchCriteria, cancellationToken);
+
+    public static IQueryable<Lead> GenerateSearchQueryExpression(
+        IQueryable<Lead> queryable,
+        string? search = default)
+        => queryable.Where(it => string.IsNullOrWhiteSpace(search) ||
+                                 it.Cnpj.Contains(search) ||
+                                 it.RazaoSocial.ToUpper().Contains(search, StringComparison.InvariantCultureIgnoreCase));
 }

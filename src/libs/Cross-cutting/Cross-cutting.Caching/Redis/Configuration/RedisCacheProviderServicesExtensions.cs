@@ -1,6 +1,6 @@
 ﻿using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.DependencyInjection.Extensions;
+//using Microsoft.Extensions.DependencyInjection.Extensions;
 using Microsoft.Extensions.Hosting;
 using StackExchange.Redis;
 
@@ -24,20 +24,21 @@ internal static class RedisCacheProviderServicesExtensions
 																});
 		services.AddSingleton(redisConnMultiplexer);
 
-		//Presentation layer cache
-		services.AddStackExchangeRedisOutputCache(options =>
-		{
-			options.InstanceName = $"{hostEnvironment.EnvironmentName}_PresentationCacheLayer";
-			options.ConnectionMultiplexerFactory = () => Task.FromResult(redisConnMultiplexer);
-		});
+		////Presentation layer cache
+		//services.AddStackExchangeRedisOutputCache(options =>
+		//{
+		//	options.InstanceName = $"{hostEnvironment.EnvironmentName}_PresentationCacheLayer";
+		//	options.ConnectionMultiplexerFactory = () => Task.FromResult(redisConnMultiplexer);
+		//});
 
 		//Application layer cache
 		services.AddStackExchangeRedisCache(options => {
-			options.InstanceName = $"{hostEnvironment.EnvironmentName}_ApplicationCacheLayer";
+			options.InstanceName = $"{hostEnvironment.EnvironmentName}_ApplicationCacheLayer_";
 			options.ConnectionMultiplexerFactory = () => Task.FromResult(redisConnMultiplexer);
 		});
 
-		services.TryAddScoped<ICacheProvider, RedisCacheProvider>();
+		//Replaced by an implementation that uses .Net 9's new HybridCache
+		//services.TryAddScoped<ICacheProvider, RedisCacheProvider>();
 
         return services;
     }
