@@ -8,7 +8,9 @@ namespace Application.Prospecting.Leads.Queries.GetLeadById;
 
 internal sealed class GetLeadByIdQueryRequestHandler : ApplicationRequestHandler<GetLeadByIdQueryRequest, LeadDto>
 {
-    private readonly ILeadRepository _leadRepository;
+	private static readonly string Mensagem_LeadNaoEncontrado = "Código do Lead inválido ou os dados foram excluídos por outro usuário.";
+
+	private readonly ILeadRepository _leadRepository;
 
     public GetLeadByIdQueryRequestHandler(
         IMediator mediator,
@@ -19,12 +21,13 @@ internal sealed class GetLeadByIdQueryRequestHandler : ApplicationRequestHandler
 
     public override async Task<ApplicationResponse<LeadDto>> Handle(GetLeadByIdQueryRequest request, CancellationToken cancellationToken)
     {
-        var lead = await _leadRepository.GetByIdAsync(request.Id, cancellationToken);
+        var lead = await _leadRepository.GetByIdAsync(request.Id, cancellationToken: cancellationToken);
         if (lead is null)
             return ApplicationResponse<LeadDto>
                     .Create(default!,
-                            message: "Lead não encontrado.",
-                            operationCode: OperationCodes.NotFound);
+                            message: Mensagem_LeadNaoEncontrado,
+                            operationCode: OperationCodes.NotFound,
+                            inconsistencies: new Inconsistency(string.Empty, Mensagem_LeadNaoEncontrado));
 
         return ApplicationResponse<LeadDto>.Create(lead.MapToDto());
     }

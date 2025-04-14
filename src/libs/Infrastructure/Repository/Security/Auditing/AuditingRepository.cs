@@ -16,7 +16,9 @@ internal sealed class AuditingRepository : RepositoryBase<AuditEntry>, IAuditing
     }
 
     public override async Task AddAsync(AuditEntry entity, CancellationToken cancellationToken = default)
-        => await _leadManagerDbContext.AuditEntries.AddAsync(entity, cancellationToken);
+        => await _leadManagerDbContext
+                    .AuditEntries
+                    .AddAsync(entity, cancellationToken);
 
     public override Task AddRangeAsync(IEnumerable<AuditEntry> entities, CancellationToken cancellationToken = default)
     {
@@ -29,19 +31,27 @@ internal sealed class AuditingRepository : RepositoryBase<AuditEntry>, IAuditing
     }
 
     public override Task<PagedList<AuditEntry>> GetAsync(
-        string? search,
         PaginationOptions paginationOptions,
+        string? search = default,
         CancellationToken cancellationToken = default)
     {
         throw new NotImplementedException();
     }
 
-    public override Task<AuditEntry?> GetByIdAsync(Guid id, CancellationToken cancellationToken = default)
+	public override Task<IEnumerable<AuditEntry>> GetAllAsync(CancellationToken cancellationToken = default)
+	{
+		throw new NotImplementedException();
+	}
+
+	public override Task<AuditEntry?> GetByIdAsync(
+        Guid id,
+		bool? bypassCacheLayer = false,
+		CancellationToken cancellationToken = default)
     {
         throw new NotImplementedException();
     }
 
-    public override Task RemoveAsync(AuditEntry entity, byte[] rowVersion, CancellationToken cancellationToken = default)
+    public override Task RemoveAsync(AuditEntry entity, CancellationToken cancellationToken = default)
     {
         throw new NotImplementedException();
     }

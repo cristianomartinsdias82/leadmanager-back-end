@@ -39,11 +39,4 @@ public struct LeadData
 
     [ProtoMember(11)]
     public byte[] Revision { get; set; } = default!;
-
-    public bool IsNull => string.IsNullOrWhiteSpace(Cnpj);
-
-	public override string ToString()
-	{
-        return $"{Cnpj} - {RazaoSocial}";
-	}
 }

@@ -13,7 +13,7 @@ internal sealed class ViaCepServiceClientRequestAuditingHandler : DelegatingHand
 
 	protected override async Task<HttpResponseMessage> SendAsync(HttpRequestMessage request, CancellationToken cancellationToken)
 	{
-		_logger.LogWarning("Sending request to {requestUri}", request.RequestUri?.AbsolutePath);
+		_logger.LogWarning("{infoSource} - Sending request to {requestUri}", GetType().Name, request.RequestUri?.AbsolutePath);
 
 		return await base.SendAsync(request, cancellationToken);
 	}

@@ -3,6 +3,7 @@ using Application.Core.Contracts.Repository.Caching;
 using Application.Core.Contracts.Repository.Prospecting;
 using Application.Core.Contracts.Repository.UnitOfWork;
 using CrossCutting.Caching;
+using CrossCutting.Caching.Hybrid;
 using CrossCutting.Caching.Redis;
 using CrossCutting.Caching.Redis.Configuration;
 using CrossCutting.Messaging.RabbitMq;
@@ -311,7 +312,8 @@ public class LeadManagerWebApplicationFactory : WebApplicationFactory<Program>, 
 
                 options.Configuration = $"{cacheProviderSettings.Server}:{cacheProviderSettings.PortNumber}";
             });
-            services.TryAddScoped<ICacheProvider, RedisCacheProvider>();
+			//services.TryAddScoped<ICacheProvider, RedisCacheProvider>();
+			services.TryAddScoped<ICacheProvider, HybridCacheProvider>();
 
             services.RemoveAll<IUnitOfWork>();
             services.AddScoped<IUnitOfWork, UnitOfWork>();

@@ -1,10 +1,12 @@
-﻿using Application.Core.Contracts.Repository.Prospecting;
-using Application.Core.Contracts.Repository.Caching;
+﻿using Application.Core.Contracts.Repository.Caching;
+using Application.Core.Contracts.Repository.Prospecting;
 using Application.Core.Contracts.Repository.UnitOfWork;
 using Application.Prospecting.Leads.Shared;
 using CrossCutting.Caching;
 using CrossCutting.MessageContracts;
 using Domain.Prospecting.Entities;
+using Infrastructure.Repository.Prospecting;
+using LanguageExt;
 using Shared.DataPagination;
 using Shared.FrameworkExtensions;
 using System.Linq.Expressions;
@@ -13,246 +15,149 @@ namespace Infrastructure.Repository.Caching;
 
 internal sealed class CachingLeadRepository : ILeadRepository, ICachingLeadRepository
 {
-    private readonly ILeadRepository _leadRepository;
-    private readonly IUnitOfWork _unitOfWork;
-    private readonly ICacheProvider _cacheProvider;
-    private readonly LeadsCachingPolicy _leadsCachingPolicy;
+	private readonly ILeadRepository _leadRepository;
+	private readonly IUnitOfWork _unitOfWork;
+	private readonly ICacheProvider _cacheProvider;
+	private readonly LeadsCachingPolicy _leadsCachingPolicy;
+	private readonly Func<CancellationToken, Task<IEnumerable<LeadData>>> _getDataFactory;
 
-    public CachingLeadRepository(
-        ILeadRepository leadRepository,
-        IUnitOfWork unitOfWork,
-        ICacheProvider cacheProvider,
-        LeadsCachingPolicy leadsCachingPolicy)
-    {
-        _leadRepository = leadRepository;
-        _unitOfWork = unitOfWork;
-        _cacheProvider = cacheProvider;
-        _leadsCachingPolicy = leadsCachingPolicy;
-    }
+	public CachingLeadRepository(
+		ILeadRepository leadRepository,
+		IUnitOfWork unitOfWork,
+		ICacheProvider cacheProvider,
+		LeadsCachingPolicy leadsCachingPolicy)
+	{
+		_leadRepository = leadRepository;
+		_unitOfWork = unitOfWork;
+		_cacheProvider = cacheProvider;
+		_leadsCachingPolicy = leadsCachingPolicy;
+
+		_getDataFactory = async ct =>
+		{
+			var leads = await _leadRepository.GetAllAsync(ct);
+
+			return leads.Select(ld => ld.MapToMessageContract());
+		};
+	}
+
+	public async Task<IEnumerable<Lead>> GetAllAsync(CancellationToken cancellationToken = default)
+		=> await _leadRepository.GetAllAsync(cancellationToken);
 
 	public async Task<PagedList<Lead>> GetAsync(
-		string? search,
 		PaginationOptions paginationOptions,
+		string? search = null,
 		CancellationToken cancellationToken = default)
 	{
-
-        //TODO: Implement stampede aside cache with double-lock checking
-
-		var cachedLeads = await _cacheProvider.GetAsync<IEnumerable<LeadData>>(
+		var cachedLeads = await _cacheProvider.GetOrCreateAsync(
 			_leadsCachingPolicy.CacheKey,
+			async ct => await _getDataFactory(ct),
+			tags: [_leadsCachingPolicy.CacheKey],
 			cancellationToken);
 
-        if (cachedLeads is not null)
-        {
-            if (string.IsNullOrWhiteSpace(search))
-				return cachedLeads
-						.ToSortedPagedList(
-							paginationOptions.SortColumn ?? nameof(Lead.RazaoSocial),
-							paginationOptions.SortDirection,
-							paginationOptions,
-							ld => ld.MapToEntity());
-
-			var leadCacheSearchResult = cachedLeads
-					.Where(it => string.IsNullOrWhiteSpace(search) || it.Cnpj.Contains(search) || it.RazaoSocial.Contains(search))
+		return LeadRepository.GenerateSearchQueryExpression(
+					cachedLeads
+						.Select(ld => ld.MapToEntity())
+						.AsQueryable(),
+					search)
 					.ToSortedPagedList(
 						paginationOptions.SortColumn ?? nameof(Lead.RazaoSocial),
 						paginationOptions.SortDirection,
 						paginationOptions,
-						ld => ld.MapToEntity());
-
-			if (leadCacheSearchResult.ItemCount > 0)
-				return leadCacheSearchResult;
-
-			var leadDbSearchResult = await _leadRepository.GetAsync(search, paginationOptions, cancellationToken);
-			return leadDbSearchResult.Items.ToSortedPagedList(
-							paginationOptions.SortColumn ?? nameof(Lead.RazaoSocial),
-							paginationOptions.SortDirection,
-							paginationOptions,
-							leads => leads);
-		}
-
-		var leads = await _leadRepository.GetAsync(search, paginationOptions, cancellationToken);
-		if (leads.ItemCount.Equals(0))
-			return PagedList<Lead>.Empty();
-
-		await _cacheProvider.SetAsync(
-			_leadsCachingPolicy.CacheKey,
-			cachedLeads = leads.Items.Select(ld => ld.MapToMessageContract()),
-			ttlInSeconds: _leadsCachingPolicy.TtlInSeconds,
-			cancellationToken: cancellationToken);
-
-		return leads.Items.ToSortedPagedList(
-			paginationOptions.SortColumn ?? nameof(Lead.RazaoSocial),
-			paginationOptions.SortDirection,
-			paginationOptions,
-			leads => leads);
+						x => x);
 	}
 
-	//  public async Task<PagedList<Lead>> GetAsync(
-	//string? search,
-	//PaginationOptions paginationOptions,
-	//      CancellationToken cancellationToken = default)
-	//  {
-	//      var cachedLeads = await _cacheProvider.GetAsync<IEnumerable<LeadData>>(
-	//          _leadsCachingPolicy.CacheKey,
-	//          cancellationToken);
+	public async Task<Lead?> GetByIdAsync(
+		Guid id,
+		bool? bypassCacheLayer = false,
+		CancellationToken cancellationToken = default)
+	{
+		if (bypassCacheLayer.HasValue && bypassCacheLayer.Value)
+			return await _leadRepository.GetByIdAsync(id, bypassCacheLayer, cancellationToken);
 
-	//      if (cachedLeads is not null)
-	//          return cachedLeads
-	//		.Where(it => string.IsNullOrWhiteSpace(search) || it.Cnpj.Contains(search) || it.RazaoSocial.Contains(search))
-	//		.ToSortedPagedList(
-	//                  paginationOptions.SortColumn ?? nameof(Lead.RazaoSocial),
-	//                  paginationOptions.SortDirection,
-	//                  paginationOptions,
-	//                  ld => ld.MapToEntity());
+		var cachedLeads = await GetAsync(
+			PaginationOptions.SinglePage(),
+			cancellationToken: cancellationToken);
 
-	//      var leads = await _leadRepository.GetAsync(search, paginationOptions, cancellationToken);
-	//      if (leads.ItemCount.Equals(0))
-	//          return PagedList<Lead>.Empty();
+		return cachedLeads.Items.SingleOrDefault(ld => ld.Id == id);
+	}
 
-	//      await _cacheProvider.SetAsync(
-	//          _leadsCachingPolicy.CacheKey,
-	//          cachedLeads = leads.Items.Select(ld => ld.MapToMessageContract()),
-	//          ttlInSeconds: _leadsCachingPolicy.TtlInSeconds,
-	//          cancellationToken: cancellationToken);
+	public async Task AddAsync(Lead lead, CancellationToken cancellationToken = default)
+	{
+		await _leadRepository.AddAsync(lead, cancellationToken);
+		var rowsAffected = await _unitOfWork.CommitAsync(cancellationToken);
+		if (rowsAffected.Equals(0))
+			return;
 
-	//      return leads.Items.ToSortedPagedList(
-	//          paginationOptions.SortColumn ?? nameof(Lead.RazaoSocial),
-	//          paginationOptions.SortDirection,
-	//          paginationOptions,
-	//          leads => leads);
-	//  }
+		var leads = await GetAsync(PaginationOptions.SinglePage(), cancellationToken: cancellationToken);
+		
+		await UpdateCacheAsync([..leads.Items, lead], cancellationToken);
+	}
 
-	public async Task<Lead?> GetByIdAsync(Guid id, CancellationToken cancellationToken = default)
-    {
-        var cachedLeads = await _cacheProvider.GetAsync<IEnumerable<LeadData>>(
-            _leadsCachingPolicy.CacheKey,
-            cancellationToken);
+	public async Task AddRangeAsync(IEnumerable<Lead> leadsBatch, CancellationToken cancellationToken = default)
+	{
+		await _leadRepository.AddRangeAsync(leadsBatch, cancellationToken);
+		var rowsAffected = await _unitOfWork.CommitAsync(cancellationToken);
+		if (rowsAffected.Equals(0))
+			return;
 
-        if (!cachedLeads?.Any() ?? false)
-        {
-            var lead = cachedLeads!.SingleOrDefault(ld => ld.Id == id);
-            if (!lead.IsNull)
-                return lead.MapToEntity();
-        }
+		var leads = await GetAsync(PaginationOptions.SinglePage(), cancellationToken: cancellationToken);
 
-        return await _leadRepository.GetByIdAsync(id, cancellationToken);
-    }
+		await UpdateCacheAsync([..leads.Items, ..leadsBatch], cancellationToken);
+	}
 
-    public async Task AddAsync(Lead lead, CancellationToken cancellationToken = default)
-    {
-        await _leadRepository.AddAsync(lead, cancellationToken);
-        var rowsAffected = await _unitOfWork.CommitAsync(cancellationToken);
-        if (rowsAffected.Equals(0))
-            return;
+	public async Task RemoveAsync(Lead lead, CancellationToken cancellationToken = default)
+	{
+		await _leadRepository.RemoveAsync(lead, cancellationToken);
 
-        var cachedLeads = await _cacheProvider
-                                    .GetAsync<IEnumerable<LeadData>>(
-                                        _leadsCachingPolicy.CacheKey,
-                                        cancellationToken);
-        var leads = cachedLeads?.ToList() ?? [];
-        leads.Add(lead.MapToMessageContract());
+		var rowsAffected = await _unitOfWork.CommitAsync(cancellationToken);
+		if (rowsAffected.Equals(0))
+			return;
 
-        await _cacheProvider.SetAsync(
-                _leadsCachingPolicy.CacheKey,
-                leads,
-                _leadsCachingPolicy.TtlInSeconds,
-                cancellationToken);
-    }
+		var leads = await GetAsync(PaginationOptions.SinglePage(), cancellationToken: cancellationToken);
 
-    public async Task AddRangeAsync(IEnumerable<Lead> leads, CancellationToken cancellationToken = default)
-    {
-        await _leadRepository.AddRangeAsync(leads, cancellationToken);
-        var rowsAffected = await _unitOfWork.CommitAsync(cancellationToken);
-        if (rowsAffected.Equals(0))
-            return;
+		await UpdateCacheAsync([..leads.Items.Where(ld => ld.Id != lead.Id)], cancellationToken);
+	}
 
-        var cachedLeads = await _cacheProvider
-                                    .GetAsync<IEnumerable<LeadData>>(
-                                        _leadsCachingPolicy.CacheKey,
-                                        cancellationToken);
-        var existingLeads = cachedLeads?.ToList() ?? [];
-        existingLeads.AddRange(leads.MapToMessageContractList());
+	public async Task UpdateAsync(Lead lead, byte[] rowVersion, CancellationToken cancellationToken = default)
+	{
+		await _leadRepository.UpdateAsync(lead, rowVersion, cancellationToken);
 
-        await _cacheProvider.SetAsync<IEnumerable<LeadData>>(
-                _leadsCachingPolicy.CacheKey,
-                existingLeads,
-                _leadsCachingPolicy.TtlInSeconds,
-                cancellationToken);
-    }
+		var rowsAffected = await _unitOfWork.CommitAsync(cancellationToken);
+		if (rowsAffected.Equals(0))
+			return;
 
-    public async Task RemoveAsync(Lead lead, byte[] rowVersion, CancellationToken cancellationToken = default)
-    {
-        await _leadRepository.RemoveAsync(lead, rowVersion, cancellationToken);
-        var rowsAffected = await _unitOfWork.CommitAsync(cancellationToken);
-        if (rowsAffected.Equals(0))
-            return;
+		var leads = await GetAsync(
+									PaginationOptions.SinglePage(),
+									cancellationToken: cancellationToken);
 
-        var cachedLeads = await _cacheProvider
-                                    .GetAsync<IEnumerable<LeadData>>(
-                                        _leadsCachingPolicy.CacheKey,
-                                        cancellationToken);
-        if (!cachedLeads?.Any() ?? false)
-            return;
+		await UpdateCacheAsync([..leads.Items.Where(ld => ld.Id != lead.Id), lead], cancellationToken);
+	}
 
-        var leads = cachedLeads!.ToList();
-        var leadToRemove = leads.SingleOrDefault(ld => ld.Id == lead.Id);
-        if (leadToRemove.IsNull)
-            return;
+	public async Task<bool> ExistsAsync(
+		Expression<Func<Lead, bool>> matchCriteria,
+		CancellationToken cancellationToken = default)
+	{
+		var cachedLeads = await GetAsync(
+									PaginationOptions.SinglePage(),
+									cancellationToken: cancellationToken);
 
-        leads.Remove(leadToRemove);
-        await _cacheProvider.SetAsync<IEnumerable<LeadData>>(
-                _leadsCachingPolicy.CacheKey,
-                leads,
-                _leadsCachingPolicy.TtlInSeconds,
-                cancellationToken);
-    }
+		if (cachedLeads.ItemCount > 0)
+			return cachedLeads.Items.Any(matchCriteria.Compile());
 
-    public async Task UpdateAsync(Lead lead, byte[] rowVersion, CancellationToken cancellationToken = default)
-    {
-        await _leadRepository.UpdateAsync(lead, rowVersion, cancellationToken);
-        var rowsAffected = await _unitOfWork.CommitAsync(cancellationToken);
-        if (rowsAffected.Equals(0))
-            return;
+		return await _leadRepository.ExistsAsync(matchCriteria, cancellationToken);
+	}
 
-        var cachedLeads = await _cacheProvider.GetAsync<IEnumerable<LeadData>>(
-            _leadsCachingPolicy.CacheKey,
-            cancellationToken);
+	public async Task ClearAsync(CancellationToken cancellationToken = default)
+		=> await _cacheProvider.RemoveAsync(_leadsCachingPolicy.CacheKey, cancellationToken);
+	//=> await _cacheProvider.RemoveByTagAsync(_leadsCachingPolicy.CacheKey, cancellationToken);
 
-        if (!cachedLeads?.Any() ?? false)
-            return;
-
-        var leads = cachedLeads!.ToList();
-        var outdatedLead = leads.SingleOrDefault(ld => ld.Id == lead.Id);
-        if (outdatedLead.IsNull)
-            return;
-
-        leads.Remove(outdatedLead);
-        leads.Add(lead.MapToMessageContract());
-
-        await _cacheProvider.SetAsync<IEnumerable<LeadData>>(
-                _leadsCachingPolicy.CacheKey,
-                leads,
-                _leadsCachingPolicy.TtlInSeconds,
-                cancellationToken);
-    }
-
-    public async Task<bool> ExistsAsync(
-        Expression<Func<Lead, bool>> matchCriteria,
-        CancellationToken cancellationToken = default)
-    {
-        var cachedLeads = await _cacheProvider.GetAsync<IEnumerable<LeadData>>(
-            _leadsCachingPolicy.CacheKey,
-            cancellationToken);
-
-        if (!cachedLeads?.Any() ?? false)
-            return cachedLeads!
-                    .Select(ld => ld.MapToEntity())
-                    .Any(matchCriteria.Compile());
-
-        return await _leadRepository.ExistsAsync(matchCriteria, cancellationToken);
-    }
-
-    public async Task ClearAsync(CancellationToken cancellationToken = default)
-        => await _cacheProvider.RemoveAsync(_leadsCachingPolicy.CacheKey, cancellationToken);
+	private async Task UpdateCacheAsync(
+		List<Lead> leads,
+		CancellationToken cancellationToken = default)
+		=> await _cacheProvider.SetAsync(
+				_leadsCachingPolicy.CacheKey,
+				leads.Select(ld => ld.MapToMessageContract()),
+				_leadsCachingPolicy.TtlInSeconds,
+				tags: [_leadsCachingPolicy.CacheKey],
+				cancellationToken);
 }

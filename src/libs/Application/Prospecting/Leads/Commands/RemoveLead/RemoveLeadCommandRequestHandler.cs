@@ -31,13 +31,17 @@ internal sealed class RemoveLeadCommandRequestHandler : ApplicationRequestHandle
 
     public async override Task<ApplicationResponse<RemoveLeadCommandResponse>> Handle(RemoveLeadCommandRequest request, CancellationToken cancellationToken)
     {
-        var lead = await _leadRepository.GetByIdAsync(request.Id, cancellationToken);
+        var lead = await _leadRepository.GetByIdAsync(
+                                                    request.Id,
+                                                    bypassCacheLayer: true,
+                                                    cancellationToken);
         if (lead is null)
-            return ApplicationResponse<RemoveLeadCommandResponse>.Create(default!, message: Mensagem_LeadNaoEncontrado);
+            return ApplicationResponse<RemoveLeadCommandResponse>
+                    .Create(default!, message: Mensagem_LeadNaoEncontrado);
 
         try
         {
-            await _leadRepository.RemoveAsync(lead, request.Revision!, cancellationToken);
+            await _leadRepository.RemoveAsync(lead, cancellationToken);
         }
         catch (DbUpdateConcurrencyException dbConcExc)
         {
@@ -55,7 +59,7 @@ internal sealed class RemoveLeadCommandRequestHandler : ApplicationRequestHandle
 						inconsistencies: new Inconsistency("ConcurrencyIssue", string.Empty),
 						operationCode: OperationCodes.ConcurrencyIssue);
             }
-            else //The record was perviously deleted - TODO: Ver como o front se comporta com este bloco else. Fiz ele para passar nos testes unitários existentes na base de código
+            else //The record was previously deleted - TODO: Ver como o front se comporta com este bloco else. Fiz ele para passar nos testes unitários existentes na base de código
 				return ApplicationResponse<RemoveLeadCommandResponse>.Create(
 						data: new RemoveLeadCommandResponse(
 									RecordStates.Deleted,
