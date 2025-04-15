@@ -1,13 +1,13 @@
-﻿using ViaCep.ServiceClient.Models;
+﻿using Application.AddressSearch.Models;
+//using ViaCep.ServiceClient.Models;
 
 namespace Tests.Common.ObjectMothers.Integrations.ViaCep;
 
 public class AddressMother
 {
     private AddressMother() { }
-    public static Endereco FullAddress()
-    {
-        return new()
+    public static Address FullAddress()
+        => new()
         {
             Cep = "01234-567",
             Bairro = "Vila Alexandria",
@@ -15,11 +15,9 @@ public class AddressMother
             Logradouro = "Rua das Pitombeiras",
             Uf = "SP"
         };
-    }
 
-    public static Endereco NotFoundAddress()
-    {
-        return new()
+    public static Address NotFoundAddress()
+        => new()
         {
             Cep = string.Empty,
             Bairro = string.Empty,
@@ -27,9 +25,8 @@ public class AddressMother
             Logradouro = string.Empty,
             Uf = string.Empty
         };
-    }
 
-    public static Endereco FaultedAddress()
+    public static Address FaultedAddress()
         => new()
         {
             Erro = true,

@@ -4,6 +4,7 @@ using LeadManagerApi.Tests.Core;
 using LeadManagerApi.Tests.Core.Factories;
 using Shared.Results;
 using System.Net;
+using System.Text.Json;
 using Tests.Common.ObjectMothers.Integrations.ViaCep;
 using ViaCep.ServiceClient.Models;
 using Xunit;
@@ -19,7 +20,7 @@ public class SearchAddressByZipCodeControllerTests : SharedResourcesTestsBase
         LeadManagerWebApplicationFactory factory) : base(factory) { }
 
     [Fact]
-    public async Task Get_ApiKeyHeaderNotSet_ShouldFail()
+    public async Task Handle_ApiKeyHeaderNotSet_ShouldFail()
     {
         // Arrange
         var httpClient = _factory.CreateHttpClient(false);
@@ -33,7 +34,7 @@ public class SearchAddressByZipCodeControllerTests : SharedResourcesTestsBase
     }
 
     [Fact(Skip = "Find out the reason why this test succeeds only when in debug mode.")]
-    public async Task Get_ExistingZipCode_ShouldSucceedAndReturnAddressData()
+    public async Task Handle_ExistingZipCode_ShouldSucceedAndReturnAddressData()
     {
         var address = AddressMother.FullAddress();
 
@@ -59,7 +60,7 @@ public class SearchAddressByZipCodeControllerTests : SharedResourcesTestsBase
 	}
 
     [Fact]
-    public async Task Get_NonExistingZipCode_ShouldSucceedAndReturnEmptyBodiedAddressData()
+    public async Task Handle_NonExistingZipCode_ShouldReturnEmptyBody()
     {
         // Arrange
         var httpClient = _factory.CreateHttpClient();
@@ -72,11 +73,12 @@ public class SearchAddressByZipCodeControllerTests : SharedResourcesTestsBase
         var responseContent = await response.Content.ReadAsStringAsync();
 
         ApplicationResponse<SearchAddressByZipCodeQueryResponse> apiResponse = default!;
-        Action action = () => { apiResponse = _factory.DeserializeFromJson<ApplicationResponse<SearchAddressByZipCodeQueryResponse>>(responseContent)!; };
-        action.Should().NotThrow<Exception>();
-        apiResponse.Exception.Should().BeNull();
+		Action action = () => { apiResponse = _factory.DeserializeFromJson<ApplicationResponse<SearchAddressByZipCodeQueryResponse>>(responseContent)!; };
+		action.Should().NotThrow<Exception>();
+		apiResponse.OperationCode.Should().Be(OperationCodes.NotFound);
         apiResponse.Success.Should().BeTrue();
-        apiResponse.OperationCode.Should().Be(OperationCodes.Successful);
 		apiResponse.Message.Should().BeEquivalentTo(AddressNotLocated);
+        apiResponse.Data.Should().BeNull();
+        apiResponse.Exception.Should().BeNull();
 	}
 }

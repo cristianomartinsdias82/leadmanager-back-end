@@ -1,4 +1,5 @@
-﻿using Microsoft.Extensions.Configuration;
+﻿using Application.AddressSearch.Contracts;
+using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 
 namespace ViaCep.ServiceClient.Configuration;
@@ -22,6 +23,9 @@ public static class DependencyInjection
 			})
 			.AddHttpMessageHandler<ViaCepServiceClientRequestAuditingHandler>()
 			.AddStandardResilienceHandler();
+
+		services.AddScoped<IAddressSearch>(sp => sp.GetRequiredService<IViaCepServiceClient>());
+
 		//Down below is an example of how to customize the resilience strategy for specific situations
 		//.AddStandardResilienceHandler(options =>
 		//{

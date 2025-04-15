@@ -17,7 +17,7 @@ internal sealed class ViaCepIntegrationHealthCheck : IHealthCheck
     {
         try
         {
-            await _serviceClient.SearchAsync("04858040", cancellationToken);
+            await _serviceClient.SearchByZipCodeAsync("04858040", cancellationToken);
 
             return HealthCheckResult.Healthy();
         }

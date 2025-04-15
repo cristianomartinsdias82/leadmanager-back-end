@@ -1,4 +1,5 @@
-﻿using Application.Core.Contracts.Persistence;
+﻿using Application.AddressSearch.Contracts;
+using Application.Core.Contracts.Persistence;
 using Application.Core.Contracts.Repository.Caching;
 using Application.Core.Contracts.Repository.Prospecting;
 using Application.Core.Contracts.Repository.UnitOfWork;
@@ -364,6 +365,7 @@ public class LeadManagerWebApplicationFactory : WebApplicationFactory<Program>, 
 				//When the handler class constructor is invoked, this very code is run and all it does is to provide a custom implementation
 				//of a http client instance which base Uri points to the ViaCep Mock http server.
 			});
+            services.AddScoped<IAddressSearch>(sp => sp.GetRequiredService<IViaCepServiceClient>());
 
 			//Based on RichardSzalay.MockHttp package. Works great, by the way.
 			//services.AddScoped<IViaCepServiceClient>(services =>

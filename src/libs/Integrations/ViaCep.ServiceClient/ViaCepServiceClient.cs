@@ -1,9 +1,11 @@
-﻿using Microsoft.Extensions.Logging;
+﻿using Application.AddressSearch.Models;
+using Microsoft.Extensions.Logging;
 using System.Net.Http.Json;
 using System.Text.Json;
 using System.Text.RegularExpressions;
 using ViaCep.ServiceClient.Configuration;
 using ViaCep.ServiceClient.Models;
+using ViaCep.ServiceClient.Mappings;
 
 namespace ViaCep.ServiceClient;
 
@@ -23,25 +25,49 @@ internal sealed class ViaCepServiceClient : IViaCepServiceClient
 		_logger = logger;
 	}
 
-	public async Task<Endereco?> SearchAsync(string cep, CancellationToken cancellationToken)
+	public async Task<Address?> SearchByZipCodeAsync(string zipCode, CancellationToken cancellationToken = default)
 	{
 		try
 		{
-			return await _httpClient
-							.GetFromJsonAsync<Endereco?>(
-											string.Format(_settings.Endpoint, Regex.Replace(cep, @"\D", string.Empty)),
+			var address = await _httpClient
+							.GetFromJsonAsync<Endereco>(
+											string.Format(_settings.Endpoint, Regex.Replace(zipCode, @"\D", string.Empty)),
 											cancellationToken);
+
+			return address.ToAddress();
 		}
 		catch (JsonException) { }
 		catch (Exception exc)
 		{
 			_logger?.LogError(
-				exc, 
+				exc,
 				"Error while attempting to communicate to ViaCep API | Type: {type} - Message: {message}",
 				exc.GetType().FullName,
 				exc.Message);
 		}
 
-		return new Endereco() { Erro = true };
+		return default;
 	}
+
+	//public async Task<Endereco?> SearchAsync(string cep, CancellationToken cancellationToken)
+	//{
+	//	try
+	//	{
+	//		return await _httpClient
+	//						.GetFromJsonAsync<Endereco?>(
+	//							string.Format(_settings.Endpoint, Regex.Replace(cep, @"\D", string.Empty)),
+	//							cancellationToken);
+	//	}
+	//	catch (JsonException) { }
+	//	catch (Exception exc)
+	//	{
+	//		_logger?.LogError(
+	//			exc, 
+	//			"Error while attempting to communicate to ViaCep API | Type: {type} - Message: {message}",
+	//			exc.GetType().FullName,
+	//			exc.Message);
+	//	}
+
+	//	return new Endereco() { Erro = true };
+	//}
 }
