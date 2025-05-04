@@ -18,7 +18,7 @@ namespace Infrastructure.Persistence.Migrations
 #pragma warning disable 612, 618
             modelBuilder
                 .HasDefaultSchema("Prospecting")
-                .HasAnnotation("ProductVersion", "9.0.2")
+                .HasAnnotation("ProductVersion", "9.0.3")
                 .HasAnnotation("Relational:MaxIdentifierLength", 128);
 
             SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder);
@@ -153,8 +153,45 @@ namespace Infrastructure.Persistence.Migrations
                             Logradouro = "Constelação do Escorpião",
                             Numero = "43",
                             RazaoSocial = "Lead Manager Brasil S.A.",
-                            RowVersion = new byte[] { 53, 92, 221, 8, 32, 53, 90, 109, 0, 21, 93, 90, 120, 60, 0, 0 }
+                            RowVersion = new byte[] { 17, 129, 221, 8, 83, 214, 44, 71, 0, 21, 93, 90, 100, 70, 0, 0 }
                         });
+                });
+
+            modelBuilder.Entity("Domain.Prospecting.Entities.LeadsFile", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<DateTimeOffset>("CreatedAt")
+                        .HasColumnType("datetimeoffset");
+
+                    b.Property<string>("Description")
+                        .HasMaxLength(255)
+                        .HasColumnType("VARCHAR");
+
+                    b.Property<string>("FileId")
+                        .IsRequired()
+                        .HasMaxLength(255)
+                        .HasColumnType("VARCHAR");
+
+                    b.Property<string>("FileName")
+                        .IsRequired()
+                        .HasMaxLength(255)
+                        .HasColumnType("VARCHAR");
+
+                    b.Property<string>("PathOrContainerName")
+                        .HasMaxLength(255)
+                        .HasColumnType("VARCHAR");
+
+                    b.Property<string>("UserId")
+                        .IsRequired()
+                        .HasMaxLength(255)
+                        .HasColumnType("VARCHAR");
+
+                    b.HasKey("Id")
+                        .HasName("PK_LeadsFile_Id");
+
+                    b.ToTable("LeadsFiles", "Prospecting");
                 });
 #pragma warning restore 612, 618
         }

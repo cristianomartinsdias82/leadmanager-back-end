@@ -1,10 +1,8 @@
-﻿namespace CrossCutting.FileStorage.Azure.Configuration;
+﻿using CrossCutting.FileStorage.Configuration;
 
-public sealed record AzureStorageProviderSettings
-(
-    string ConnectionString,
-    string StorageFolderPath,
-    string ContainerName,
-    int UploadAttemptsMaxCount,
-    int HealthCheckingTimeoutInSecs
-);
+namespace CrossCutting.FileStorage.Azure.Configuration;
+
+public sealed class AzureStorageProviderSettings : StorageProviderSettings
+{
+	new public const string SectionName = nameof(AzureStorageProviderSettings);
+}

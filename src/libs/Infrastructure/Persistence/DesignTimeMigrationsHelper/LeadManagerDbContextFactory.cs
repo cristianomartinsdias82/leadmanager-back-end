@@ -1,5 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Design;
+using Microsoft.Extensions.Configuration;
 
 namespace Infrastructure.Persistence.DesignTimeMigrationsHelper;
 
@@ -9,11 +10,15 @@ public sealed class LeadManagerDbContextFactory : IDesignTimeDbContextFactory<Le
 {
     public LeadManagerDbContext CreateDbContext(string[] args)
     {
-        Console.WriteLine($"args = {string.Join(",", args)}");
+		var config = new ConfigurationBuilder()
+						.SetBasePath(Directory.GetCurrentDirectory())
+						.AddJsonFile("appsettings.json")
+						.Build();
 
         var optionsBuilder = new DbContextOptionsBuilder<LeadManagerDbContext>();
-        optionsBuilder.UseSqlServer("PASTE THE CONNECTION STRING HERE TO CREATE AND EXECUTE MIGRATIONS");
 
-        return new LeadManagerDbContext(optionsBuilder.Options, default!);
+		optionsBuilder.UseSqlServer(config["DataSourceSettings:ConnectionString"]);
+
+        return new(optionsBuilder.Options, default!, TimeProvider.System);
     }
 }

@@ -41,10 +41,9 @@ public abstract class LeadManagerController : ControllerBase
                 var statusCode = onSuccessStatusCodeFactory(HttpContext, response);
                 return statusCode switch
                 {
-                    StatusCodes.Status201Created => routeData is not null ?
-                                                    Created(new Uri($"{HttpContext.GetBaseUrl()}{LeadManagerApiRouteAttribute.ApiRoutePrefix}/{routeData.Value.Endpoint}/{routeData.Value.DataId}"), new { id = routeData.Value.DataId })
-                                                    :
-                                                    Ok(response),
+                    StatusCodes.Status201Created => routeData is not null
+                                                        ? Created(new Uri($"{HttpContext.GetBaseUrl()}{LeadManagerApiRouteAttribute.ApiRoutePrefix}/{routeData.Value.Endpoint}/{routeData.Value.DataId}"), new { id = routeData.Value.DataId })
+                                                        : Ok(response),
                     StatusCodes.Status204NoContent => NoContent(),
                     _ => Ok(response)
                 };

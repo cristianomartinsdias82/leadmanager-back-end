@@ -4,9 +4,11 @@ using Application.Core.OperatingRules;
 using Application.Core.Processors;
 using Application.Prospecting.Addresses.Queries.SearchAddressByZipCode;
 using Application.Prospecting.Leads.Commands.BulkInsertLead;
+using Application.Prospecting.Leads.Commands.BulkRemoveLeadsFiles;
 using Application.Prospecting.Leads.Commands.RegisterLead;
 using Application.Prospecting.Leads.Commands.RemoveLead;
 using Application.Prospecting.Leads.Commands.UpdateLead;
+using Application.Prospecting.Leads.Queries.DownloadLeadsFile;
 using Application.Prospecting.Leads.Queries.ExistsLead;
 using Application.Prospecting.Leads.Queries.GetLeadById;
 using Application.Prospecting.Leads.Queries.GetLeads;
@@ -132,7 +134,9 @@ public static class DependencyInjection
                  .AddBehavior<IPipelineBehavior<ExistsLeadQueryRequest, ApplicationResponse<bool>>, ValidationBehavior<ExistsLeadQueryRequest, bool>>()
                  .AddBehavior<IPipelineBehavior<BulkInsertLeadCommandRequest, ApplicationResponse<BulkInsertLeadCommandResponse>>, ValidationBehavior<BulkInsertLeadCommandRequest, BulkInsertLeadCommandResponse>>()
                  .AddBehavior<IPipelineBehavior<GenerateOneTimePasswordCommandRequest, ApplicationResponse<GenerateOneTimePasswordCommandResponse>>, ValidationBehavior<GenerateOneTimePasswordCommandRequest, GenerateOneTimePasswordCommandResponse>>()
-                 .AddBehavior<IPipelineBehavior<HandleOneTimePasswordCommandRequest, ApplicationResponse<HandleOneTimePasswordCommandResponse>>, ValidationBehavior<HandleOneTimePasswordCommandRequest, HandleOneTimePasswordCommandResponse>>();
+                 .AddBehavior<IPipelineBehavior<HandleOneTimePasswordCommandRequest, ApplicationResponse<HandleOneTimePasswordCommandResponse>>, ValidationBehavior<HandleOneTimePasswordCommandRequest, HandleOneTimePasswordCommandResponse>>()
+                 .AddBehavior<IPipelineBehavior<BulkRemoveLeadsFilesCommandRequest, ApplicationResponse<bool>>, ValidationBehavior<BulkRemoveLeadsFilesCommandRequest, bool>>()
+		         .AddBehavior<IPipelineBehavior<DownloadLeadsFileQueryRequest, ApplicationResponse<DownloadLeadsFileDto?>>, ValidationBehavior<DownloadLeadsFileQueryRequest, DownloadLeadsFileDto?>>();
 
     private static TracerProviderBuilder AddCrossCuttingTracing(this TracerProviderBuilder tracerProviderBuilder)
     {

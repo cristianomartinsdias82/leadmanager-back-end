@@ -1,4 +1,4 @@
-﻿using System;
+﻿using System.Collections;
 
 namespace Shared.DataPagination;
 
@@ -34,7 +34,8 @@ public struct PagedList<T>
         {
             ItemCount = items.Count(),
             PageCount = pageCount,
-            Items = items.Take(range).ToList(),
+            Items = items is IList ? items.Take(range) : items.Take(range).ToList(),
+            //Items = items.Take(range).ToList(),
             HasPreviousPage = paginationOptions.Page > 1,
             HasNextPage = paginationOptions.Page < pageCount
         };

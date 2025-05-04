@@ -2,5 +2,7 @@
 
 public interface IUnitOfWork
 {
-    Task<int> CommitAsync(CancellationToken cancellationToken = default);
+	Task<int> CommitAsync(CancellationToken cancellationToken = default);
+
+	void AddNonObtrusiveCommitSuccessfulPostAction(Action<CancellationToken> operation);
 }

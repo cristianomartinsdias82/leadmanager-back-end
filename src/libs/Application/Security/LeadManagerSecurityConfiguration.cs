@@ -7,6 +7,7 @@ public static class LeadManagerSecurityConfiguration
         public const string LeadManagerDefaultPolicy = "LeadManagerDefaultPolicy";
         public const string LeadManagerRemovePolicy = "LeadManagerRemovePolicy";
         public const string LeadManagerCorsPolicy = "LeadWebAppCorsPolicy";
+        public const string LeadManagerAdministrativeTasksPolicy = "LeadManagerAdministrativeTasksPolicy";
     }
 
     public static class Roles

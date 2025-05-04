@@ -6,7 +6,7 @@ using Microsoft.AspNetCore.Mvc;
 using Shared.Results;
 using static Application.Security.LeadManagerSecurityConfiguration;
 
-namespace LeadManagerApi.Prospecting.Addresses;
+namespace LeadManagerApi.Prospecting.Addresses.SearchAddressByZipCode;
 
 [LeadManagerApiRoute("addresses")]
 [RequiredAllPermissions(Permissions.Read)]

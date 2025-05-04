@@ -1,4 +1,5 @@
 ﻿using Application.Core.Contracts.Repository.Prospecting;
+using Application.Core.Contracts.Repository.UnitOfWork;
 using Application.Prospecting.Leads.Commands.RegisterLead;
 using CrossCutting.Security.IAM;
 using Domain.Prospecting.Entities;
@@ -20,7 +21,8 @@ public sealed class RegisterLeadCommandRequestHandlerTests
     private readonly ILeadRepository _leadRepository;
     private readonly IMediator _mediator;
     private readonly IEventDispatching _eventDispatcher;
-    private readonly CancellationTokenSource _cts;
+	private readonly IUnitOfWork _unitOfWork;
+	private readonly CancellationTokenSource _cts;
 
     public RegisterLeadCommandRequestHandlerTests()
     {
@@ -29,7 +31,8 @@ public sealed class RegisterLeadCommandRequestHandlerTests
         _mediator = Substitute.For<IMediator>();
         _leadRepository = Substitute.For<ILeadRepository>();
         _eventDispatcher = Substitute.For<IEventDispatching>();
-        _handler = new RegisterLeadCommandRequestHandler(_mediator, _eventDispatcher, _leadRepository);
+		_unitOfWork = Substitute.For<IUnitOfWork>();
+		_handler = new RegisterLeadCommandRequestHandler(_mediator, _eventDispatcher, _leadRepository, _unitOfWork);
         _cts = new();
     }
 

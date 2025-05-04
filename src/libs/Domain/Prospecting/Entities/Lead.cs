@@ -89,6 +89,7 @@ public class Lead : Entity, ILead
             RowVersion = leads.Revision
         };
 
+    //TODO: This Dto is not part of the Entities. Fix it!
     public LeadDto MapToDto()
         => new(Id, RazaoSocial, Cnpj, Logradouro, Numero, Complemento, Cep, Cidade, Bairro, Estado, RowVersion);
 

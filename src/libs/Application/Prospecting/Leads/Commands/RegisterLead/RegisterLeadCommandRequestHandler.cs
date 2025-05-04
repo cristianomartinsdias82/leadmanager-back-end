@@ -1,4 +1,5 @@
 ﻿using Application.Core.Contracts.Repository.Prospecting;
+using Application.Core.Contracts.Repository.UnitOfWork;
 using Application.Core.Diagnostics;
 using Application.Prospecting.Leads.IntegrationEvents.LeadRegistered;
 using Domain.Prospecting.Entities;
@@ -15,13 +16,16 @@ namespace Application.Prospecting.Leads.Commands.RegisterLead;
 internal sealed class RegisterLeadCommandRequestHandler : ApplicationRequestHandler<RegisterLeadCommandRequest, RegisterLeadCommandResponse>
 {
     private readonly ILeadRepository _leadRepository;
+    private readonly IUnitOfWork _unitOfWork;
 
     public RegisterLeadCommandRequestHandler(
         IMediator mediator,
         IEventDispatching eventDispatcher,
-        ILeadRepository leadRepository) : base(mediator, eventDispatcher)
+        ILeadRepository leadRepository,
+		IUnitOfWork unitOfWork) : base(mediator, eventDispatcher)
     {
         _leadRepository = leadRepository;
+		_unitOfWork = unitOfWork;
     }
 
     public async override Task<ApplicationResponse<RegisterLeadCommandResponse>> Handle(RegisterLeadCommandRequest request, CancellationToken cancellationToken)
@@ -39,6 +43,8 @@ internal sealed class RegisterLeadCommandRequestHandler : ApplicationRequestHand
         );
 
         await _leadRepository.AddAsync(lead, cancellationToken);
+
+		await _unitOfWork.CommitAsync(cancellationToken);
 
 		PushTelemetryData(lead);
 

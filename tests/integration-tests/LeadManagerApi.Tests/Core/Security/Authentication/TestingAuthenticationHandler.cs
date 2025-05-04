@@ -5,6 +5,7 @@ using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using System.Security.Claims;
 using System.Text.Encodings.Web;
+using static Application.Security.LeadManagerSecurityConfiguration;
 
 namespace LeadManagerApi.Tests.Core.Security.Authentication;
 
@@ -27,10 +28,12 @@ internal class TestingAuthenticationHandler : AuthenticationHandler<Authenticati
                 new Claim (LeadManagerSecurityConfiguration.ClaimTypes.LDM, LeadManagerSecurityConfiguration.Claims.Update),
                 new Claim (LeadManagerSecurityConfiguration.ClaimTypes.LDM, LeadManagerSecurityConfiguration.Claims.Delete),
                 new Claim (JwtClaimTypes.Subject, "955FBD5F-7479-440F-B581-799119060AED"),
-                new Claim (JwtClaimTypes.Email, "test-user@leadmanager.com.br")
+                new Claim (JwtClaimTypes.Email, "test-user@leadmanager.com.br"),
+                new Claim (System.Security.Claims.ClaimTypes.Name, "Testing"),
+                new Claim (System.Security.Claims.ClaimTypes.Role, Roles.Administrators),
             ],
-            "Testing");
-        var principal = new ClaimsPrincipal(identity);
+			TestingScheme);
+		var principal = new ClaimsPrincipal(identity);
 
         var ticket = new AuthenticationTicket(principal, TestingScheme);
 

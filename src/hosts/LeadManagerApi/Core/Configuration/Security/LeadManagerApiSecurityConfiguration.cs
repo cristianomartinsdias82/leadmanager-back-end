@@ -31,6 +31,13 @@ internal static class LeadManagerApiSecurityConfiguration
             policy.RequireRole(Roles.Administrators);
             policy.RequireClaim(ClaimTypes.LDM, Permissions.Delete);
         });
+
+        policyOptions.AddPolicy(Policies.LeadManagerAdministrativeTasksPolicy, policy =>
+        {
+			policy.AddAuthenticationSchemes(JwtBearerDefaults.AuthenticationScheme);
+			policy.RequireAuthenticatedUser();
+			policy.RequireRole(Roles.Administrators);
+		});
     }
 
     public static void SetAuthorizationForSwagger(SwaggerGenOptions swaggerGenOptions)
@@ -67,6 +74,7 @@ internal static class LeadManagerApiSecurityConfiguration
                 {
                     builder.WithOrigins(apiSettings.Cors_AllowedOrigins.Split(','))
                            .WithMethods("POST", "GET", "PUT", "DELETE", "HEAD", "OPTIONS")
+                           .WithExposedHeaders("Content-Disposition")
                            .AllowAnyHeader()
                            .AllowCredentials()
                            .Build();

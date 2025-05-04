@@ -11,18 +11,22 @@ namespace Infrastructure.Persistence;
 public sealed class LeadManagerDbContext : DbContext, ILeadManagerDbContext
 {
     private readonly IUserService _userService;
+	private readonly TimeProvider _timeProvider;
 
-    public LeadManagerDbContext(
+	public LeadManagerDbContext(
         DbContextOptions<LeadManagerDbContext> options,
-        IUserService userService) : base(options)
+        IUserService userService,
+        TimeProvider timeProvider) : base(options)
     {
+		_timeProvider = timeProvider;
         _userService = userService;
-    }
+	}
 
     public DbSet<Lead> Leads { get; set; }
     public DbSet<AuditEntry> AuditEntries { get; set; }
+	public DbSet<LeadsFile> LeadsFiles { get; set; }
 
-    protected override void OnModelCreating(ModelBuilder modelBuilder)
+	protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
         modelBuilder.HasDefaultSchema(LeadEntityMetadata.DatabaseSchemaName);
 
@@ -40,15 +44,15 @@ public sealed class LeadManagerDbContext : DbContext, ILeadManagerDbContext
     }
 
     public override int SaveChanges()
-        => SaveChangesAsync().GetAwaiter().GetResult();
+        => SaveChangesAsync()
+            .GetAwaiter()
+            .GetResult();
 
     public override async Task<int> SaveChangesAsync(CancellationToken cancellationToken = default)
     {
-        var userId = _userService.GetUserId();
-        if (userId is null)
-            throw new InvalidProgramException();
+        var userId = _userService.GetUserId() ?? throw new InvalidProgramException();
 
-        var now = DateTimeOffset.UtcNow;
+		var now = _timeProvider.GetUtcNow();
 
         //https://codewithmukesh.com/blog/audit-trail-implementation-in-aspnet-core/
         foreach (var entry in ChangeTracker
@@ -61,7 +65,7 @@ public sealed class LeadManagerDbContext : DbContext, ILeadManagerDbContext
                     {
                         var auditableEntity = (IAuditableEntity)entry.Entity;
                         auditableEntity.CreatedAt = now;
-                        auditableEntity.CreatedUserId = userId.Value;
+                        auditableEntity.CreatedUserId = userId;
 
                         break;
                     }

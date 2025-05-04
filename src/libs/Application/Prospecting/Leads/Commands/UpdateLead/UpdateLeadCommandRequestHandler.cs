@@ -1,5 +1,6 @@
 ﻿using Application.Core.Contracts.Persistence;
 using Application.Core.Contracts.Repository.Prospecting;
+using Application.Core.Contracts.Repository.UnitOfWork;
 using Application.Core.Diagnostics;
 using Application.Prospecting.Leads.IntegrationEvents.LeadUpdated;
 using Domain.Prospecting.Entities;
@@ -19,13 +20,16 @@ internal sealed class UpdateLeadCommandRequestHandler : ApplicationRequestHandle
     private const string Mensagem_FalhaAtualizacaoConcorrente = "Este registro foi atualizado anteriormente por outro usuário.";
 	private const string Mensagem_LeadNaoEncontrado = "Lead não encontrado. Estes dados podem ter sido excluídos por outro usuário.";
 	private readonly ILeadRepository _leadRepository;
+    private readonly IUnitOfWork _unitOfWork;
 
-    public UpdateLeadCommandRequestHandler(
+	public UpdateLeadCommandRequestHandler(
         IMediator mediator,
         IEventDispatching eventDispatcher,
-        ILeadRepository leadRepository) : base(mediator, eventDispatcher)
+        ILeadRepository leadRepository,
+        IUnitOfWork unitOfWork) : base(mediator, eventDispatcher)
     {
         _leadRepository = leadRepository;
+        _unitOfWork = unitOfWork;
     }
 
     public async override Task<ApplicationResponse<UpdateLeadCommandResponse>> Handle(UpdateLeadCommandRequest request, CancellationToken cancellationToken)
@@ -51,10 +55,12 @@ internal sealed class UpdateLeadCommandRequestHandler : ApplicationRequestHandle
             request.Numero,
             request.Complemento);
 
-        try
-        {
-            await _leadRepository.UpdateAsync(lead, request.Revision!, cancellationToken);
-        }
+		await _leadRepository.UpdateAsync(lead, request.Revision!, cancellationToken);
+
+		try
+        {   
+			await _unitOfWork.CommitAsync(cancellationToken);
+		}
         catch (DbUpdateConcurrencyException dbConcExc)
         {
             var entry = dbConcExc.Entries.SingleOrDefault();

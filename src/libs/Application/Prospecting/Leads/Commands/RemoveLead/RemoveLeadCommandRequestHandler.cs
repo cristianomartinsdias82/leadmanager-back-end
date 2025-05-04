@@ -1,5 +1,6 @@
 ﻿using Application.Core.Contracts.Persistence;
 using Application.Core.Contracts.Repository.Prospecting;
+using Application.Core.Contracts.Repository.UnitOfWork;
 using Application.Core.Diagnostics;
 using Application.Prospecting.Leads.IntegrationEvents.LeadRemoved;
 using Domain.Prospecting.Entities;
@@ -20,14 +21,17 @@ internal sealed class RemoveLeadCommandRequestHandler : ApplicationRequestHandle
     private const string Mensagem_LeadRemovido = "Este registro foi removido por outro usuário.";
     private const string Mensagem_LeadNaoEncontrado = "Lead não encontrado.";
     private readonly ILeadRepository _leadRepository;
+	private readonly IUnitOfWork _unitOfWork;
 
-    public RemoveLeadCommandRequestHandler(
+	public RemoveLeadCommandRequestHandler(
         IMediator mediator,
-        ILeadRepository leadRepository,
-        IEventDispatching eventDispatcher) : base(mediator, eventDispatcher)
+		IEventDispatching eventDispatcher,
+		ILeadRepository leadRepository,
+        IUnitOfWork unitOfWork) : base(mediator, eventDispatcher)
     {
         _leadRepository = leadRepository;
-    }
+		_unitOfWork = unitOfWork;
+	}
 
     public async override Task<ApplicationResponse<RemoveLeadCommandResponse>> Handle(RemoveLeadCommandRequest request, CancellationToken cancellationToken)
     {
@@ -39,10 +43,12 @@ internal sealed class RemoveLeadCommandRequestHandler : ApplicationRequestHandle
             return ApplicationResponse<RemoveLeadCommandResponse>
                     .Create(default!, message: Mensagem_LeadNaoEncontrado);
 
-        try
+		await _leadRepository.RemoveAsync(lead, cancellationToken);
+
+		try
         {
-            await _leadRepository.RemoveAsync(lead, cancellationToken);
-        }
+            await _unitOfWork.CommitAsync(cancellationToken);
+		}
         catch (DbUpdateConcurrencyException dbConcExc)
         {
             var entry = dbConcExc.Entries.SingleOrDefault();

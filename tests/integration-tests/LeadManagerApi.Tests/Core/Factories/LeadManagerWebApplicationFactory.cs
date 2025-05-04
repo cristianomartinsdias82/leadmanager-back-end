@@ -37,6 +37,7 @@ using Respawn;
 //using RichardSzalay.MockHttp;
 using Shared.Settings;
 using System.Data.Common;
+using System.Net.Http.Headers;
 using System.Text.Json;
 using Testcontainers.MsSql;
 using Testcontainers.Redis;
@@ -142,21 +143,28 @@ public class LeadManagerWebApplicationFactory : WebApplicationFactory<Program>, 
     //}
 
     public virtual HttpClient CreateHttpClient(bool includeApiKeyHeader = true)
+        => CreateHttpClient([.. includeApiKeyHeader
+                                ? [GetLeadManagerApiKeyNameValueHeader()]
+                                : Enumerable.Empty<(string Name, string Value)>()]);
+
+    public LeadManagerApiSettings GetLeadManagerApiSettings() =>
+		Services.GetRequiredService<LeadManagerApiSettings>();
+
+    public (string Name, string Value) GetLeadManagerApiKeyNameValueHeader()
     {
-        var apiSettings = Services.GetRequiredService<LeadManagerApiSettings>();
-        var headers = includeApiKeyHeader ? [(apiSettings.ApiKeyRequestHeaderName!, apiSettings.ApiKeyRequestHeaderValue)] : Enumerable.Empty<(string Name, string Value)>();
-            
-        return CreateHttpClient(headers.ToArray());
+        var apiSettings = GetLeadManagerApiSettings();
+
+        return (apiSettings.ApiKeyRequestHeaderName!, apiSettings.ApiKeyRequestHeaderValue);
     }
 
-    public virtual HttpClient CreateHttpClient(params (string Name, string Value)[] headers)
+	public virtual HttpClient CreateHttpClient(params (string Name, string Value)[] headers)
     {
         var httpClient = CreateClient();
 
-        foreach (var header in headers)
-            httpClient.DefaultRequestHeaders.Add(
-                header.Name,
-                header.Value);
+        httpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue(TestingAuthenticationHandler.TestingScheme);
+
+        foreach (var (name,value) in headers)
+            httpClient.DefaultRequestHeaders.Add(name,value);
 
         return httpClient;
     }
@@ -201,11 +209,12 @@ public class LeadManagerWebApplicationFactory : WebApplicationFactory<Program>, 
             });
     }
 
-    private async Task Seed(ILeadManagerDbContext context)
+    private static async Task Seed(LeadManagerDbContext context)
     {
         if (!context.Leads.Any())
         {
             await context.Leads.AddRangeAsync(LeadMother.Leads());
+            await context.LeadsFiles.AddRangeAsync(LeadsFileMother.LeadsFiles());
             await context.SaveChangesAsync();
         }
     }
@@ -228,12 +237,12 @@ public class LeadManagerWebApplicationFactory : WebApplicationFactory<Program>, 
                         .AddScheme<AuthenticationSchemeOptions, TestingAuthenticationHandler>(
                                         TestingAuthenticationHandler.TestingScheme,
                                         options => { });
-            services.AddAuthorization(policyOptions =>
-            {
-                policyOptions.AddPolicy(Policies.LeadManagerDefaultPolicy, policy =>
+
+            services.AddAuthorizationBuilder()
+				.AddPolicy(Policies.LeadManagerDefaultPolicy, policy =>
                 {
-                    //policy.AddAuthenticationSchemes(TestingAuthenticationHandler.TestingScheme);
-                    //policy.RequireAuthenticatedUser();
+                    policy.AddAuthenticationSchemes(TestingAuthenticationHandler.TestingScheme);
+                    policy.RequireAuthenticatedUser();
                     policy.RequireClaim(
                         ClaimTypes.LDM,
                         Permissions.Read,
@@ -241,20 +250,24 @@ public class LeadManagerWebApplicationFactory : WebApplicationFactory<Program>, 
                         Permissions.Insert,
                         Permissions.Update,
                         Permissions.Delete);
-                });
-
-                policyOptions.AddPolicy(Policies.LeadManagerRemovePolicy, policy =>
+                })
+				.AddPolicy(Policies.LeadManagerRemovePolicy, policy =>
                 {
-                    //policy.AddAuthenticationSchemes(TestingAuthenticationHandler.TestingScheme);
-                    //policy.RequireAuthenticatedUser();
+                    policy.AddAuthenticationSchemes(TestingAuthenticationHandler.TestingScheme);
+                    policy.RequireAuthenticatedUser();
                     policy.RequireRole(Roles.Administrators);
                     policy.RequireClaim(ClaimTypes.LDM, Permissions.Delete);
-                });
-            });
+                })
+				.AddPolicy(Policies.LeadManagerAdministrativeTasksPolicy, policy =>
+				{
+					policy.AddAuthenticationSchemes(TestingAuthenticationHandler.TestingScheme);
+					policy.RequireAuthenticatedUser();
+					policy.RequireRole(Roles.Administrators);
+				});
 
-            services.AddSingleton(services => Configuration.GetSection(nameof(DataSourceSettings)).Get<DataSourceSettings>()!);
+			services.AddSingleton(services => Configuration.GetSection(nameof(DataSourceSettings)).Get<DataSourceSettings>()!);
                 
-            services.RemoveAll(typeof(DbContextOptions<LeadManagerDbContext>));
+            services.RemoveAll<DbContextOptions<LeadManagerDbContext>>();
             services.RemoveAll<ILeadManagerDbContext>();
             services.AddScoped<ILeadManagerDbContext>(provider =>
             {
@@ -268,13 +281,14 @@ public class LeadManagerWebApplicationFactory : WebApplicationFactory<Program>, 
                     .EnableSensitiveDataLogging()
                     .LogTo(
                         action: Console.WriteLine,
-                        categories: new[] { DbLoggerCategory.Database.Command.Name },
+                        categories: [DbLoggerCategory.Database.Command.Name],
                         minimumLevel: LogLevel.Information)
                     .Options;
 
                 var context = new LeadManagerDbContext(
                                     options,
-                                    provider.GetRequiredService<IUserService>());
+                                    provider.GetRequiredService<IUserService>(),
+									provider.GetRequiredService<TimeProvider>());
 
                 context.Database.EnsureCreated();
 

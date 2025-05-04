@@ -7,12 +7,15 @@ namespace Tests.Common.Factories;
 
 public static class InMemoryLeadManagerDbContextFactory
 {
-    public static ILeadManagerDbContext Create(IUserService userUservice, string? databaseName = default)
+    public static ILeadManagerDbContext Create(
+        IUserService userUservice,
+        TimeProvider timeProvider,
+        string? databaseName = default)
     {
         var options = new DbContextOptionsBuilder<LeadManagerDbContext>()
                         .UseInMemoryDatabase(databaseName ?? Guid.NewGuid().ToString())
                         .Options;
 
-        return new LeadManagerDbContext(options, userUservice);
+        return new LeadManagerDbContext(options, userUservice, timeProvider);
     }
 }

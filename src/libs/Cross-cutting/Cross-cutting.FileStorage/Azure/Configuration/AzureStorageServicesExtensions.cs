@@ -1,4 +1,5 @@
-﻿using Microsoft.Extensions.Configuration;
+﻿using CrossCutting.FileStorage.Configuration;
+using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.DependencyInjection.Extensions;
 
@@ -8,8 +9,11 @@ internal static class AzureStorageServicesExtensions
 {
     public static IServiceCollection AddAzureFileStorageServices(this IServiceCollection services, IConfiguration configuration)
     {
-        var storageSettings = configuration.GetSection(nameof(AzureStorageProviderSettings)).Get<AzureStorageProviderSettings>()!;
-        services.AddSingleton(storageSettings);
+        var storageProviderSettings = configuration
+                                .GetSection(AzureStorageProviderSettings.SectionName)
+                                .Get<AzureStorageProviderSettings>()!;
+
+        services.AddSingleton<StorageProviderSettings>(_ => storageProviderSettings);
 
         services.TryAddSingleton<IFileStorageProvider, BlobStorageProvider>();
 
