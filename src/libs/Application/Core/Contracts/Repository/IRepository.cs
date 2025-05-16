@@ -1,5 +1,4 @@
-﻿//using Domain.Core;
-using Shared.DataPagination;
+﻿using Shared.DataQuerying;
 using System.Linq.Expressions;
 
 namespace Application.Core.Contracts.Repository;
@@ -16,8 +15,8 @@ public interface IRepository<T> where T : class//, IEntity
 		CancellationToken cancellationToken = default);
 
 	Task<PagedList<T>> GetAsync(
-		PaginationOptions paginationOptions,
-		string? search = default,
+		PaginationOptions? paginationOptions = default,
+		QueryOptions? queryOptions = default,
 		CancellationToken cancellationToken = default);
 
 	Task<IEnumerable<T>> GetAllAsync(CancellationToken cancellationToken = default);

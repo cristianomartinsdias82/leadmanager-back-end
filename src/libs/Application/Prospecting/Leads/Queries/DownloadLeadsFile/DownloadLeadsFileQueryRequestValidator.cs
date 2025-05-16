@@ -2,9 +2,9 @@
 
 namespace Application.Prospecting.Leads.Queries.DownloadLeadsFile;
 
-public sealed class DownloadLeadsFileRequestValidator : AbstractValidator<DownloadLeadsFileQueryRequest>
+public sealed class DownloadLeadsFileQueryRequestValidator : AbstractValidator<DownloadLeadsFileQueryRequest>
 {
-    public DownloadLeadsFileRequestValidator()
+    public DownloadLeadsFileQueryRequestValidator()
     {
         RuleFor(request => request)
             .NotNull()

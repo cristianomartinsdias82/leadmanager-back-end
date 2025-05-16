@@ -1,5 +1,4 @@
-﻿using Domain.Core;
-using Shared.Generators;
+﻿using Shared.Generators;
 
 namespace Domain.Prospecting.Entities;
 
@@ -16,7 +15,7 @@ public sealed class LeadsFile
 	public string? PathOrContainerName { get; private set; }
 
 	public static LeadsFile Create(
-		TimeProvider timeProvider,
+		DateTimeOffset createdAt,
 		string userId,
 		string fileId,
 		string fileName,
@@ -25,7 +24,7 @@ public sealed class LeadsFile
 		=> new()
 		{
 			Id = IdGenerator.NextId(),
-			CreatedAt = timeProvider.GetUtcNow(),
+			CreatedAt = createdAt,
 			UserId = userId,
 			FileId = fileId,
 			FileName = fileName,

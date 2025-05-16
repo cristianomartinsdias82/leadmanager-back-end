@@ -4,9 +4,11 @@ using IAMServer.Clients.LeadWebApp.Security;
 using IAMServer.Core.HostingServices;
 using IAMServer.Entities;
 using IAMServer.Settings;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
 using MongoDB.Bson;
 using MongoDB.Bson.Serialization;
 using MongoDB.Bson.Serialization.Serializers;
+using static IAMServer.Clients.LeadWebApp.Security.LeadManagerAppConstants;
 
 namespace IAMServer.Core.Configuration;
 
@@ -40,7 +42,35 @@ public static class DependencyInjection
             );
         });
 
-        return builder;
+		var iamServerApiSettings = builder.Configuration
+                                            .GetSection(nameof(IAMServerApiSettings))
+											.Get<IAMServerApiSettings>()!;
+
+		builder.Services
+                .AddAuthentication(options =>
+                {
+                    options.DefaultScheme =
+                    options.DefaultAuthenticateScheme =
+                    options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
+                })
+                .AddJwtBearer(JwtBearerDefaults.AuthenticationScheme, options =>
+                {
+                    options.Authority = iamServerApiSettings.Authority;
+                    options.Audience = iamServerApiSettings.Audience;
+                    options.RequireHttpsMetadata = iamServerApiSettings.RequireHttpsMetadata;
+                });
+
+        builder.Services.AddAuthorization(policyOptions =>
+        {
+			policyOptions.AddPolicy(Policies.LeadManagerAdministrativeTasksPolicy, policy =>
+			{
+				policy.AddAuthenticationSchemes(JwtBearerDefaults.AuthenticationScheme);
+				policy.RequireAuthenticatedUser();
+				policy.RequireRole(Roles.Administrators);
+			});
+		});
+
+		return builder;
     }
 
     public static WebApplicationBuilder AddIS4(this WebApplicationBuilder builder)

@@ -18,7 +18,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\AddressSearch\Application.AddressSearch\Application.AddressSearch.csproj" />
+    <ProjectReference Include="..\Application.AddressSearch\Application.AddressSearch.csproj" />
   </ItemGroup>
 
 </Project>

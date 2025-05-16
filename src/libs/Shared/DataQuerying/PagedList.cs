@@ -1,8 +1,8 @@
 ﻿using System.Collections;
 
-namespace Shared.DataPagination;
+namespace Shared.DataQuerying;
 
-public struct PagedList<T>
+public readonly struct PagedList<T>
 {
     public IEnumerable<T> Items { get; init; }
     public int PageCount { get; init; }
@@ -34,7 +34,7 @@ public struct PagedList<T>
         {
             ItemCount = items.Count(),
             PageCount = pageCount,
-            Items = items is IList ? items.Take(range) : items.Take(range).ToList(),
+            Items = items is IList ? items.Take(range) : [.. items.Take(range)],
             //Items = items.Take(range).ToList(),
             HasPreviousPage = paginationOptions.Page > 1,
             HasNextPage = paginationOptions.Page < pageCount
@@ -42,5 +42,5 @@ public struct PagedList<T>
     }
 
     public static PagedList<T> Empty()
-        => new() { Items = Enumerable.Empty<T>() };
+        => new() { Items = [] };
 }

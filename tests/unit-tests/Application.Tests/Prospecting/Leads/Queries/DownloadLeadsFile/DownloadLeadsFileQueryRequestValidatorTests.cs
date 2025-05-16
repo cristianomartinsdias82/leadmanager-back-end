@@ -6,7 +6,7 @@ namespace Application.Tests.Prospecting.Leads.Queries.DownloadLeadsFile;
 
 public sealed class DownloadLeadsFileQueryRequestValidatorTests
 {
-	private readonly DownloadLeadsFileRequestValidator _sut = new();
+	private readonly DownloadLeadsFileQueryRequestValidator _sut = new();
 	public DownloadLeadsFileQueryRequestValidatorTests()
 	{
 		_sut = new();

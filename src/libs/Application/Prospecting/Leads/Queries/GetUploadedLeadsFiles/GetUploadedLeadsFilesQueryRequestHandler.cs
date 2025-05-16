@@ -1,6 +1,6 @@
 ﻿using Application.Core.Contracts.Repository.Prospecting;
 using MediatR;
-using Shared.DataPagination;
+using Shared.DataQuerying;
 using Shared.RequestHandling;
 using Shared.Results;
 
@@ -20,7 +20,7 @@ internal sealed class GetUploadedLeadsFilesQueryRequestHandler : ApplicationRequ
 
     public async override Task<ApplicationResponse<PagedList<UploadedLeadsFileDto>>> Handle(
 		GetUploadedLeadsFilesQueryRequest request,
-        CancellationToken cancellationToken)
+        CancellationToken cancellationToken = default)
     {
         var pagedUploadedLeadsFiles = await _leadRepository.GetLeadsFilesAsync(
             request.PaginationOptions,

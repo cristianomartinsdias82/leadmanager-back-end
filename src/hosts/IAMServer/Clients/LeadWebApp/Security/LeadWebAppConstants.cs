@@ -18,4 +18,9 @@ public static class LeadManagerAppConstants
     {
         public const string Administrators = "Administrators";
     }
+
+	public static class Policies
+	{
+		public const string LeadManagerAdministrativeTasksPolicy = "LeadManagerAdministrativeTasksPolicy";
+	}
 }

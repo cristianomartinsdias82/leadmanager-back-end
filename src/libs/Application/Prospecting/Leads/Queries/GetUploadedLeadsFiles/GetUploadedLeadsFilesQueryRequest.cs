@@ -1,5 +1,5 @@
 ﻿using MediatR;
-using Shared.DataPagination;
+using Shared.DataQuerying;
 using Shared.Results;
 
 namespace Application.Prospecting.Leads.Queries.GetUploadedLeadsFiles;

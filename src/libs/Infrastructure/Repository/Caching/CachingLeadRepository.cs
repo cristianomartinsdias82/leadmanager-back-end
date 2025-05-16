@@ -5,10 +5,10 @@ using Application.Prospecting.Leads.Shared;
 using CrossCutting.Caching;
 using CrossCutting.MessageContracts;
 using Domain.Prospecting.Entities;
-using Infrastructure.Repository.Prospecting;
 using LanguageExt;
-using Shared.DataPagination;
+using Shared.DataQuerying;
 using Shared.FrameworkExtensions;
+using System.ComponentModel;
 using System.Linq.Expressions;
 
 namespace Infrastructure.Repository.Caching;
@@ -44,8 +44,8 @@ internal sealed class CachingLeadRepository : ILeadRepository, ICachingLeadRepos
 		=> await _leadRepository.GetAllAsync(cancellationToken);
 
 	public async Task<PagedList<Lead>> GetAsync(
-		PaginationOptions paginationOptions,
-		string? search = null,
+		PaginationOptions? paginationOptions = default,
+		QueryOptions? queryOptions = default,
 		CancellationToken cancellationToken = default)
 	{
 		var cachedLeads = await _cacheProvider.GetOrCreateAsync(
@@ -54,16 +54,39 @@ internal sealed class CachingLeadRepository : ILeadRepository, ICachingLeadRepos
 			tags: [_leadsCachingPolicy.CacheKey],
 			cancellationToken);
 
-		return LeadRepository.GenerateSearchQueryExpression(
-					cachedLeads
-						.Select(ld => ld.MapToEntity())
-						.AsQueryable(),
-					search)
-					.ToSortedPagedList(
-						paginationOptions.SortColumn ?? nameof(Lead.RazaoSocial),
-						paginationOptions.SortDirection,
-						paginationOptions,
-						x => x);
+		return await Task.FromResult(
+							cachedLeads
+								.AsQueryable()
+								.ToFilteredOrderedPagedList(
+									GenerateSearchQueryExpression,
+									queryOptions,
+									paginationOptions?.SortColumn ?? nameof(Lead.RazaoSocial),
+									paginationOptions?.SortDirection ?? ListSortDirection.Ascending,
+									paginationOptions,
+									leadData => leadData.MapToEntity()));
+	}
+
+	public async Task<PagedList<LeadDto>> GetAsDtoAsync(
+		PaginationOptions? paginationOptions = default,
+		QueryOptions? queryOptions = default,
+		CancellationToken cancellationToken = default)
+	{
+		var cachedLeads = await _cacheProvider.GetOrCreateAsync(
+			_leadsCachingPolicy.CacheKey,
+			async ct => await _getData(ct),
+			tags: [_leadsCachingPolicy.CacheKey],
+			cancellationToken);
+
+		return await Task.FromResult(
+							cachedLeads
+								.AsQueryable()
+								.ToFilteredOrderedPagedList(
+									GenerateSearchQueryExpression,
+									queryOptions,
+									paginationOptions?.SortColumn ?? nameof(Lead.RazaoSocial),
+									paginationOptions?.SortDirection ?? ListSortDirection.Ascending,
+									paginationOptions,
+									leadData => leadData.MapToDto()));
 	}
 
 	public async Task<Lead?> GetByIdAsync(
@@ -185,4 +208,18 @@ internal sealed class CachingLeadRepository : ILeadRepository, ICachingLeadRepos
 				cachingPolicy.TtlInSeconds,
 				tags: [cachingPolicy.CacheKey],
 				cancellationToken);
+
+	private static IQueryable<LeadData> GenerateSearchQueryExpression(
+		IQueryable<LeadData> queryable,
+		QueryOptions? queryOptions)
+	{
+		if (queryOptions is null)
+			return queryable;
+
+		if (!string.IsNullOrWhiteSpace(queryOptions.Term))
+			queryable = queryable.Where(it => it.Cnpj.Contains(queryOptions.Term, StringComparison.InvariantCultureIgnoreCase) ||
+											  it.RazaoSocial.Contains(queryOptions.Term, StringComparison.InvariantCultureIgnoreCase));
+
+		return queryable;
+	}
 }

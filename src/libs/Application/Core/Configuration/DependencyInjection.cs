@@ -12,6 +12,7 @@ using Application.Prospecting.Leads.Queries.DownloadLeadsFile;
 using Application.Prospecting.Leads.Queries.ExistsLead;
 using Application.Prospecting.Leads.Queries.GetLeadById;
 using Application.Prospecting.Leads.Queries.GetLeads;
+using Application.Security.Auditing.Queries.ListUsersActions;
 using Application.Security.OneTimePassword.Commands.GenerateOneTimePassword;
 using Application.Security.OneTimePassword.Commands.HandleOneTimePassword;
 using CrossCutting.Caching.Configuration;
@@ -36,9 +37,10 @@ using OpenTelemetry.Logs;
 using OpenTelemetry.Metrics;
 using OpenTelemetry.Trace;
 using Shared.ApplicationOperationRules;
-using Shared.DataPagination;
+using Shared.DataQuerying;
 using Shared.Results;
 using ViaCep.ServiceClient.Configuration;
+using IAMServer.ServiceClient.Configuration;
 
 namespace Application.Core.Configuration;
 
@@ -59,7 +61,7 @@ public static class DependencyInjection
                           .RegisterProcessors(services, hostEnvironment)
                           .RegisterBehaviors(services);
                 })
-                .AddIntegrationClientServices(configuration)
+                .AddIntegrationServiceClients(configuration)
                 .AddCrossCuttingServices(configuration, hostEnvironment)
                 .AddEndUserCommunicationServices()
                 .AddAplicationOperatingRules();
@@ -80,9 +82,10 @@ public static class DependencyInjection
 	public static LoggerProviderBuilder AddApplicationLogging(this LoggerProviderBuilder loggerProviderBuilder)
 	    => loggerProviderBuilder.AddCrossCuttingLogging();
 
-	private static IServiceCollection AddIntegrationClientServices(this IServiceCollection services, IConfiguration configuration)
+	private static IServiceCollection AddIntegrationServiceClients(this IServiceCollection services, IConfiguration configuration)
     {
         services.AddViaCepIntegrationServiceClient(configuration);
+        services.AddIAMServerIntegrationServiceClient(configuration);
 
         return services;
     }
@@ -136,7 +139,8 @@ public static class DependencyInjection
                  .AddBehavior<IPipelineBehavior<GenerateOneTimePasswordCommandRequest, ApplicationResponse<GenerateOneTimePasswordCommandResponse>>, ValidationBehavior<GenerateOneTimePasswordCommandRequest, GenerateOneTimePasswordCommandResponse>>()
                  .AddBehavior<IPipelineBehavior<HandleOneTimePasswordCommandRequest, ApplicationResponse<HandleOneTimePasswordCommandResponse>>, ValidationBehavior<HandleOneTimePasswordCommandRequest, HandleOneTimePasswordCommandResponse>>()
                  .AddBehavior<IPipelineBehavior<BulkRemoveLeadsFilesCommandRequest, ApplicationResponse<bool>>, ValidationBehavior<BulkRemoveLeadsFilesCommandRequest, bool>>()
-		         .AddBehavior<IPipelineBehavior<DownloadLeadsFileQueryRequest, ApplicationResponse<DownloadLeadsFileDto?>>, ValidationBehavior<DownloadLeadsFileQueryRequest, DownloadLeadsFileDto?>>();
+		         .AddBehavior<IPipelineBehavior<DownloadLeadsFileQueryRequest, ApplicationResponse<DownloadLeadsFileDto?>>, ValidationBehavior<DownloadLeadsFileQueryRequest, DownloadLeadsFileDto?>>()
+		         .AddBehavior<IPipelineBehavior<ListUsersActionsQueryRequest, ApplicationResponse<PagedList<AuditEntryDto>>>, ValidationBehavior<ListUsersActionsQueryRequest, PagedList<AuditEntryDto>>>();
 
     private static TracerProviderBuilder AddCrossCuttingTracing(this TracerProviderBuilder tracerProviderBuilder)
     {

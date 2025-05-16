@@ -29,7 +29,7 @@ internal sealed class AuditEntryTypeConfiguration : IEntityTypeConfiguration<Aud
                .IsRequired()
                .HasColumnType("VARCHAR")
                .HasMaxLength(100)
-               .HasConversion(new EnumToStringDescriptionConverter<SystemActions>());        
+               .HasConversion(new EnumToStringDescriptionConverter<SystemActions>());
 
         builder.Property(x => x.SubjectId);
 

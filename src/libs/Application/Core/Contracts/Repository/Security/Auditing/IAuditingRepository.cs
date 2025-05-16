@@ -1,3 +1,5 @@
-﻿namespace Application.Core.Contracts.Repository.Security.Auditing;
+﻿using Shared.DataQuerying;
 
-public interface IAuditingRepository : IRepository<AuditEntry> { }
+namespace Application.Core.Contracts.Repository.Security.Auditing;
+
+public interface IAuditingRepository : IRepository<AuditEntry> {}

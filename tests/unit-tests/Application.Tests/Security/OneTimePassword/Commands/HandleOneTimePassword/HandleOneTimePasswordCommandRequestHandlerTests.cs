@@ -26,7 +26,7 @@ public sealed class HandleOneTimePasswordCommandRequestHandlerTests
 
     public HandleOneTimePasswordCommandRequestHandlerTests()
     {
-        _handler = new(_oneTimePasswordCachingPolicy, _mediator, _oneTimePasswordRepository);
+        _handler = new(_oneTimePasswordCachingPolicy, _mediator, _oneTimePasswordRepository, TimeProvider.System);
     }
 
     ~HandleOneTimePasswordCommandRequestHandlerTests()

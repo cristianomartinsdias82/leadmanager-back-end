@@ -72,7 +72,7 @@ public class RemovedLeadConsumerWorker : BackgroundService
 			)
 			.WithEvent(
 				name: MessageConsumersDiagnostics.RemovedLeadConstants.ActivityName,
-				timestamp: _timeProvider.GetUtcNow(),
+				timestamp: _timeProvider.GetLocalNow(),
 				tags: [
 					(MessageConsumersDiagnostics.CommonConstants.LeadProcessResultSucessful, "true")
 				])

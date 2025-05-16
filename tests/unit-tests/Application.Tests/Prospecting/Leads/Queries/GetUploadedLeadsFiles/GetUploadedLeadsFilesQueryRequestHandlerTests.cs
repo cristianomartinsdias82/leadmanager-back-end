@@ -4,12 +4,12 @@ using Domain.Prospecting.Entities;
 using FluentAssertions;
 using MediatR;
 using NSubstitute;
-using Shared.DataPagination;
+using Shared.DataQuerying;
 using Shared.Results;
 using Tests.Common.ObjectMothers.Domain;
 using Xunit;
 
-namespace Application.Tests.Prospecting.Leads.Queries.GetLeads;
+namespace Application.Tests.Prospecting.Leads.Queries.GetUploadedLeadsFiles;
 
 public sealed class GetUploadedLeadsFilesQueryRequestHandlerTests : IDisposable
 {

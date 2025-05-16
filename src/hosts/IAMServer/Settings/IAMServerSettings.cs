@@ -11,10 +11,8 @@ public class IAMServerSettings
     public IReadOnlyCollection<Client> Clients { get; init; } = default!;
 
     public IReadOnlyCollection<IdentityResource> IdentityResources
-        => new IdentityResource[]
-        {
-            new IdentityResources.OpenId(),
+        => [new IdentityResources.OpenId(),
             new IdentityResources.Profile(),
-            new IdentityResource("roles", new string[]{ "role" }),
-        };
+            new IdentityResource("roles", ["role"]),
+			new IdentityResource("identityserver-api", ["identityserver-api"])];
 }

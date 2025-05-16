@@ -1,5 +1,5 @@
 ﻿using Domain.Prospecting.Entities;
-using Shared.DataPagination;
+using Shared.DataQuerying;
 
 namespace Application.Core.Contracts.Repository.Prospecting;
 

@@ -19,7 +19,8 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\..\Integrations\ViaCep.ServiceClient\ViaCep.ServiceClient.csproj" />
+    <ProjectReference Include="..\..\Integrations\IAMServer\IAMServer.ServiceClient\IAMServer.ServiceClient.csproj" />
+    <ProjectReference Include="..\..\Integrations\ViaCep\ViaCep.ServiceClient\ViaCep.ServiceClient.csproj" />
     <ProjectReference Include="..\..\Shared\Shared.csproj" />
     <ProjectReference Include="..\Cross-cutting.Caching\CrossCutting.Caching.csproj" />
     <ProjectReference Include="..\Cross-cutting.FileStorage\CrossCutting.FileStorage.csproj" />

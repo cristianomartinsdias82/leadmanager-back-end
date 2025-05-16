@@ -32,7 +32,11 @@ public sealed class RequestHandlingMiddleware
             var inconsistencies = default(List<Inconsistency>);
 
             var errorStatusCode = StatusCodes.Status500InternalServerError;
-			HandleError(exc, ref inconsistencies, ref errorStatusCode);
+			HandleError(
+				exc,
+				context.RequestServices.GetRequiredService<TimeProvider>(),
+				ref inconsistencies,
+				ref errorStatusCode);
 
 			context.Response.StatusCode = errorStatusCode;
             await context.Response.WriteAsJsonAsync(
@@ -49,6 +53,7 @@ public sealed class RequestHandlingMiddleware
 
 	private void HandleError(
 		Exception exc,
+		TimeProvider timeProvider,
 		ref List<Inconsistency>? inconsistencies,
         ref int statusCode)
 	{
@@ -99,7 +104,7 @@ public sealed class RequestHandlingMiddleware
 				//Telemetry (Exception Span event)
 				DiagnosticsDataCollector
 					.WithActivity(Activity.Current)
-					.WithException(exc, TimeProvider.System.GetUtcNow())
+					.WithException(exc, timeProvider.GetLocalNow())
 					.PushData();
 
 				statusCode = StatusCodes.Status500InternalServerError;

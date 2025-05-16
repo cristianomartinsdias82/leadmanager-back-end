@@ -13,7 +13,7 @@ using FluentValidation;
 using FluentValidation.Results;
 using MediatR;
 using OpenTelemetry;
-using Shared.DataPagination;
+using Shared.DataQuerying;
 using Shared.Diagnostics;
 using Shared.Events.EventDispatching;
 using Shared.FrameworkExtensions;
@@ -141,7 +141,7 @@ internal sealed class BulkInsertLeadCommandRequestHandler : ApplicationRequestHa
 		var fileId = LeadsFile.CreateFileId(Path.GetExtension(request.FileName));
 
 		var leadsFile = LeadsFile.Create(
-							_timeProvider,
+							_timeProvider.GetLocalNow(),
 							_userService.GetUserEmail()!,
 							fileId,
 							request.FileName,

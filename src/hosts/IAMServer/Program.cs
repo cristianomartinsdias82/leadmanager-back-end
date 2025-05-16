@@ -1,4 +1,5 @@
 using HealthChecks.UI.Client;
+using IAMServer.Clients.LeadWebApp.Configuration;
 using IAMServer.Clients.LeadWebApp.Security;
 using IAMServer.Core.Configuration;
 using Microsoft.AspNetCore.Diagnostics.HealthChecks;
@@ -9,8 +10,8 @@ public class Program
 {
     public static void Main(string[] args)
     {
-        //Build and add services
-        var builder = WebApplication
+		//Build and add services
+		var builder = WebApplication
                         .CreateBuilder(args)
                         .AddWebAppServices()
                         .AddIS4();
@@ -31,13 +32,14 @@ public class Program
 
         app.UseIdentityServer(); // <<< I had to add it manually
 
-        //app.UseAuthentication(); //Use it in case you expose an user management API here in this server
+        app.UseAuthentication(); //Use it in case you expose an user management API here in this server
 
-        app.UseAuthorization();
+		app.UseAuthorization();
 
         app.MapRazorPages(); // <<< I had to add it manually
 
         app.MapControllers();
+        app.MapEndpoints();
 
         app.Run();
     }

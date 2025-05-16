@@ -1,4 +1,4 @@
-﻿using Shared.DataPagination;
+﻿using Shared.DataQuerying;
 using System.ComponentModel;
 using System.Linq.Expressions;
 
@@ -6,7 +6,7 @@ namespace Shared.FrameworkExtensions;
 
 public static class EnumerableExtensions
 {
-    public static IList<T> ToSortedList<T>(
+    public static IList<T> ToOrderedList<T>(
         this IEnumerable<T> items,
         string sortColumn,
         ListSortDirection sortDirection)
@@ -20,7 +20,7 @@ public static class EnumerableExtensions
 
         return sortDirection switch
         {
-            ListSortDirection.Ascending => items.OrderBy(sortExpression).ToList(),
+            ListSortDirection.Ascending => [.. items.OrderBy(sortExpression)],
             _ => items.OrderByDescending(sortExpression).ToList()
         };
     }
@@ -36,22 +36,56 @@ public static class EnumerableExtensions
         Func<T, TOutput> map)
         => PagedList<T>.Paginate(items, paginationOptions, map);
 
-    public static PagedList<T> ToSortedPagedList<T>(
+    public static PagedList<T> ToOrderedPagedList<T>(
         this IEnumerable<T> items,
         PaginationOptions paginationOptions,
         string sortColumn,
         ListSortDirection sortDirection)
         => items
-            .ToSortedList(sortColumn, sortDirection)
+            .ToOrderedList(sortColumn, sortDirection)
             .ToPagedList(paginationOptions);
 
-    public static PagedList<TOutput> ToSortedPagedList<T, TOutput>(
+    public static PagedList<TOutput> ToOrderedPagedList<T, TOutput>(
         this IEnumerable<T> items,
         string sortColumn,
         ListSortDirection sortDirection,
         PaginationOptions paginationOptions,
         Func<T, TOutput> map)
         => items
-            .ToSortedList(sortColumn, sortDirection)
+            .ToOrderedList(sortColumn, sortDirection)
             .ToPagedList(paginationOptions, map);
+
+    public static PagedList<T> ToFilteredOrderedPagedList<T>(
+      this IQueryable<T> items,
+	  Func<IQueryable<T>, QueryOptions, IQueryable<T>> filterFactory,
+      QueryOptions queryOptions,
+	  string sortColumn,
+      ListSortDirection sortDirection,
+      PaginationOptions? paginationOptions)
+	{
+        var filter = filterFactory(items, queryOptions);
+
+        return filter.ToOrderedPagedList(
+                        paginationOptions ?? PaginationOptions.SinglePage(),
+                        sortColumn,
+                        sortDirection);
+	}
+
+	public static PagedList<TOutput> ToFilteredOrderedPagedList<T, TOutput>(
+	  this IQueryable<T> items,
+	  Func<IQueryable<T>, QueryOptions?, IQueryable<T>> filterFactory,
+	  QueryOptions? queryOptions,
+	  string sortColumn,
+	  ListSortDirection sortDirection,
+	  PaginationOptions? paginationOptions,
+	  Func<T, TOutput> map)
+	{
+		var filter = filterFactory(items, queryOptions);
+
+		return filter.ToOrderedPagedList(
+                        sortColumn,
+                        sortDirection,
+                        paginationOptions ??  PaginationOptions.SinglePage(),
+                        map);
+	}
 }

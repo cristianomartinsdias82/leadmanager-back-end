@@ -30,7 +30,8 @@
     <ProjectReference Include="..\Cross-cutting\Cross-cutting.Security\CrossCutting.Security.csproj" />
     <ProjectReference Include="..\Cross-cutting\Cross-cutting.Serialization\CrossCutting.Serialization.csproj" />
     <ProjectReference Include="..\Domain\Domain.csproj" />
-    <ProjectReference Include="..\Integrations\AddressSearch\Application.AddressSearch\Application.AddressSearch.csproj" />
+    <ProjectReference Include="..\Integrations\IAMServer\Application.UsersManagement\Application.UsersManagement.csproj" />
+    <ProjectReference Include="..\Integrations\ViaCep\Application.AddressSearch\Application.AddressSearch.csproj" />
     <ProjectReference Include="..\Shared\Shared.csproj" />
   </ItemGroup>
 

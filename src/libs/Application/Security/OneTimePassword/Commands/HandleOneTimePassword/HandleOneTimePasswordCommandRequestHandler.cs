@@ -11,14 +11,17 @@ internal sealed class HandleOneTimePasswordCommandRequestHandler : ApplicationRe
 {
     private readonly IOneTimePasswordRepository _oneTimePasswordRepository;
     private readonly OneTimePasswordCachingPolicy _oneTimePasswordCachingPolicy;
+	private readonly TimeProvider _timeProvider;
 
-    public HandleOneTimePasswordCommandRequestHandler(
+	public HandleOneTimePasswordCommandRequestHandler(
         OneTimePasswordCachingPolicy oneTimePasswordCachingPolicy,
         IMediator mediator,
-        IOneTimePasswordRepository oneTimePasswordRepository) : base(mediator, default!)
+        IOneTimePasswordRepository oneTimePasswordRepository,
+        TimeProvider timeProvider) : base(mediator, default!)
     {
         _oneTimePasswordRepository = oneTimePasswordRepository;
         _oneTimePasswordCachingPolicy = oneTimePasswordCachingPolicy;
+        _timeProvider = timeProvider;
     }
 
     public async override Task<ApplicationResponse<HandleOneTimePasswordCommandResponse>> Handle(HandleOneTimePasswordCommandRequest request, CancellationToken cancellationToken)
@@ -36,7 +39,7 @@ internal sealed class HandleOneTimePasswordCommandRequestHandler : ApplicationRe
             await GenerateAndPersistCode();
         else
         {
-            var now = DateTime.UtcNow;
+            var now = _timeProvider.GetLocalNow();
             var oneTimePasswordDto = await _oneTimePasswordRepository
                                     .GetAsync(request.UserId,
                                               request.Resource,

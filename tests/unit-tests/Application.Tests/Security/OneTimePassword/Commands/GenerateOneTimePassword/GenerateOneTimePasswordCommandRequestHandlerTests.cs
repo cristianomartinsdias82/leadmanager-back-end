@@ -48,7 +48,8 @@ public sealed class GenerateOneTimePasswordCommandRequestHandlerTests
                                                 userService,
                                                 secretGeneratorService,
                                                 oneTimePasswordRepository,
-                                                eventDispatcher)
+                                                eventDispatcher,
+                                                TimeProvider.System)
                                             .Handle(new() { Resource = string.Empty }, cts.Token);
 
         //Assert

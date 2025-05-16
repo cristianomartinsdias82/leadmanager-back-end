@@ -2,7 +2,7 @@
 using FluentAssertions;
 using LeadManagerApi.Tests.Core;
 using LeadManagerApi.Tests.Core.Factories;
-using Shared.DataPagination;
+using Shared.DataQuerying;
 using Shared.Results;
 using System.Net;
 using Xunit;

@@ -52,7 +52,7 @@ public sealed class LeadManagerDbContext : DbContext, ILeadManagerDbContext
     {
         var userId = _userService.GetUserId() ?? throw new InvalidProgramException();
 
-		var now = _timeProvider.GetUtcNow();
+		var now = _timeProvider.GetLocalNow();
 
         //https://codewithmukesh.com/blog/audit-trail-implementation-in-aspnet-core/
         foreach (var entry in ChangeTracker

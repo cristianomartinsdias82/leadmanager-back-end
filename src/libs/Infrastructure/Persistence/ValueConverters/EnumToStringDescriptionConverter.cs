@@ -9,7 +9,7 @@ public class EnumToStringDescriptionConverter<TEnum> : ValueConverter<TEnum, str
     public EnumToStringDescriptionConverter()
         : base(
             v => v.GetEnumDescription(),
-            v => (TEnum)Enum.Parse(typeof(TEnum), v))
-    {
+			v => v.GetEnumOption<TEnum>())
+	{
     }
 }

@@ -85,7 +85,7 @@ public class NewlyCreatedLeadsConsumerWorker : BackgroundService
 		diagnostics
             .WithEvent(
                 name: MessageConsumersDiagnostics.NewlyCreatedLeadsConstants.ActivityName,
-                timestamp: _timeProvider.GetUtcNow(),
+                timestamp: _timeProvider.GetLocalNow(),
                 tags: [
                     (MessageConsumersDiagnostics.CommonConstants.LeadProcessResultSucessful, "true")
                 ])

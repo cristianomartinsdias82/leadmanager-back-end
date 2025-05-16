@@ -3,6 +3,6 @@
 public sealed record OneTimePasswordDto(
     Guid UserId,
     string Resource,
-    DateTime CreatedOn,
+    DateTimeOffset CreatedOn,
     string Code
 );

@@ -1,11 +1,13 @@
-﻿using Application.Core.Contracts.Repository.Prospecting;
+﻿using Application.Core.Contracts.Repository.Caching;
+using Application.Core.Contracts.Repository.Prospecting;
 using Application.Prospecting.Leads.Queries.GetLeads;
 using Domain.Prospecting.Entities;
 using FluentAssertions;
 using MediatR;
 using NSubstitute;
-using Shared.DataPagination;
+using Shared.DataQuerying;
 using Shared.Results;
+using System.Linq;
 using Tests.Common.ObjectMothers.Application;
 using Tests.Common.ObjectMothers.Domain;
 using Xunit;
@@ -15,14 +17,14 @@ namespace Application.Tests.Prospecting.Leads.Queries.GetLeads;
 public sealed class GetLeadsQueryRequestHandlerTests : IDisposable
 {
 	private readonly GetLeadsQueryRequestHandler _handler;
-	private readonly ILeadRepository _leadRepositoryMock;
+	private readonly ICachingLeadRepository _leadRepositoryMock;
 	private readonly IMediator _mediator;
 	private readonly CancellationTokenSource _cts;
 
 	public GetLeadsQueryRequestHandlerTests()
 	{
 		_mediator = Substitute.For<IMediator>();
-		_leadRepositoryMock = Substitute.For<ILeadRepository>();
+		_leadRepositoryMock = Substitute.For<ICachingLeadRepository>();
 		_handler = new(_mediator, _leadRepositoryMock);
 		_cts = new();
 	}
@@ -33,8 +35,8 @@ public sealed class GetLeadsQueryRequestHandlerTests : IDisposable
 		//Arrange
 		var paginationOptions = new PaginationOptions();
 		_leadRepositoryMock
-			.GetAsync(paginationOptions, default, _cts.Token)
-			.Returns(PagedList<Lead>.Empty());
+			.GetAsDtoAsync(paginationOptions, default, _cts.Token)
+			.Returns(PagedList<LeadDto>.Empty());
 
 		//Act
 		var result = await _handler.Handle(new(default, paginationOptions), _cts.Token);
@@ -59,8 +61,8 @@ public sealed class GetLeadsQueryRequestHandlerTests : IDisposable
 		//Arrange
 		var paginationOptions = new PaginationOptions();
 		_leadRepositoryMock
-			.GetAsync(paginationOptions, default, _cts.Token)
-			.Returns(PagedList<Lead>.Empty());
+			.GetAsDtoAsync(paginationOptions, default, _cts.Token)
+			.Returns(PagedList<LeadDto>.Empty());
 
 		//Act
 		var result = await _handler.Handle(new(search, paginationOptions), _cts.Token);
@@ -80,9 +82,9 @@ public sealed class GetLeadsQueryRequestHandlerTests : IDisposable
 	{
 		//Arrange
 		var paginationOptions = new PaginationOptions();
-		var leads = LeadMother.Leads().ToList();
-		_leadRepositoryMock.GetAsync(new(), default, _cts.Token)
-						  .Returns(PagedList<Lead>.Paginate(leads, paginationOptions));
+		var leads = LeadMother.Leads().Select(it => it.MapToDto()).ToList();
+		_leadRepositoryMock.GetAsDtoAsync(new(), default, _cts.Token)
+						  .Returns(PagedList<LeadDto>.Paginate(leads, paginationOptions));
 
 		//Act
 		var result = await _handler.Handle(new(default, paginationOptions), _cts.Token);
@@ -97,7 +99,7 @@ public sealed class GetLeadsQueryRequestHandlerTests : IDisposable
 		result.Data.Items.Should().NotBeNull().And.HaveCount(leads.Count);
 		result.Data.Items.Any(x => x.RazaoSocial == leads[0].RazaoSocial).Should().BeTrue();
 		result.Data.Items.Any(x => x.RazaoSocial == leads[1].RazaoSocial).Should().BeTrue();
-		await _leadRepositoryMock.Received(1).GetAsync(Arg.Any<PaginationOptions>(), default, _cts.Token);
+		await _leadRepositoryMock.Received(1).GetAsDtoAsync(Arg.Any<PaginationOptions>(), default, _cts.Token);
 	}
 
 	[Theory]
@@ -107,13 +109,18 @@ public sealed class GetLeadsQueryRequestHandlerTests : IDisposable
 	{
 		//Arrange
 		var paginationOptions = new PaginationOptions();
+		var queryOptions = new QueryOptions
+		{
+			Term = search
+		};
 		var leads = LeadMother
 						.Leads()
 						.Where(ld => ld.RazaoSocial.Contains(search) || ld.Cnpj.Contains(search))
+						.Select(ld => ld.MapToDto())
 						.ToList();
 		_leadRepositoryMock
-			.GetAsync(paginationOptions, search, _cts.Token)
-			.Returns(PagedList<Lead>.Paginate(leads, paginationOptions));
+			.GetAsDtoAsync(paginationOptions, queryOptions, _cts.Token)
+			.Returns(PagedList<LeadDto>.Paginate(leads, paginationOptions));
 
 		//Act
 		var result = await _handler.Handle(new(search, paginationOptions), _cts.Token);
@@ -126,7 +133,7 @@ public sealed class GetLeadsQueryRequestHandlerTests : IDisposable
 		result.Inconsistencies.Should().BeNullOrEmpty();
 		result.Data.Should().NotBeNull();
 		result.Data.Items.Should().NotBeNull().And.HaveCount(0);
-		await _leadRepositoryMock.Received(1).GetAsync(Arg.Any<PaginationOptions>(), search, _cts.Token);
+		await _leadRepositoryMock.Received(1).GetAsDtoAsync(Arg.Any<PaginationOptions>(), queryOptions, _cts.Token);
 	}
 
 	[Theory]
@@ -136,11 +143,17 @@ public sealed class GetLeadsQueryRequestHandlerTests : IDisposable
 	{
 		//Arrange
 		var paginationOptions = new PaginationOptions();
+		var queryOptions = new QueryOptions
+		{
+			Term = search
+		};
 		var leads = LeadMother
 						.Leads()
-						.Where(ld => ld.Cnpj.Contains(search) || ld.RazaoSocial.Contains(search)).ToList();
-		_leadRepositoryMock.GetAsync(new(), search, _cts.Token)
-						  .Returns(PagedList<Lead>.Paginate(leads, paginationOptions));
+						.Where(ld => ld.Cnpj.Contains(search) || ld.RazaoSocial.Contains(search))
+						.Select(ld => ld.MapToDto())
+						.ToList();
+		_leadRepositoryMock.GetAsDtoAsync(new(), queryOptions, _cts.Token)
+						  .Returns(PagedList<LeadDto>.Paginate(leads, paginationOptions));
 
 		//Act
 		var result = await _handler.Handle(new(search, paginationOptions), _cts.Token);
@@ -153,7 +166,7 @@ public sealed class GetLeadsQueryRequestHandlerTests : IDisposable
 		result.Inconsistencies.Should().BeNullOrEmpty();
 		result.Data.Should().NotBeNull();
 		result.Data.Items.Should().NotBeNull().And.HaveCountGreaterThanOrEqualTo(1);
-		await _leadRepositoryMock.Received(1).GetAsync(Arg.Any<PaginationOptions>(), search, _cts.Token);
+		await _leadRepositoryMock.Received(1).GetAsDtoAsync(Arg.Any<PaginationOptions>(), queryOptions, _cts.Token);
 	}
 
 	public void Dispose()

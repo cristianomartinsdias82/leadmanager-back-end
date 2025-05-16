@@ -14,4 +14,5 @@ public enum SystemActions
     LeadDataUpdate,
     [Description("Exclusão de Lead")]
     LeadExclusion,
+    Unknown,
 }

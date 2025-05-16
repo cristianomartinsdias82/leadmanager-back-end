@@ -19,7 +19,7 @@ public class AssemblyDependenciesTests
     private static readonly Assembly ApplicationAssembly = Assembly.GetAssembly(typeof(AppLayer.Core.Configuration.DependencyInjection))!;
     private static readonly Assembly InfrastructureAssembly = Assembly.GetAssembly(typeof(InfraLayer.Configuration.DependencyInjection))!;
     private static readonly Assembly PresentationAssembly = Assembly.GetAssembly(typeof(PresentationLayer.Program))!;
-    private static readonly Assembly SharedAssembly = Assembly.GetAssembly(typeof(Shared.DataPagination.PaginationOptions))!;
+    private static readonly Assembly SharedAssembly = Assembly.GetAssembly(typeof(Shared.DataQuerying.PaginationOptions))!;
 
     [Fact]
     public void DomainLayer_ShouldNotHaveDependencyOn_ApplicationLayer()

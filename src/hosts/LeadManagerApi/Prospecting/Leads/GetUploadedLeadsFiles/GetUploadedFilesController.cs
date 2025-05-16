@@ -3,7 +3,7 @@ using LeadManagerApi.Core.ApiFeatures;
 using MediatR;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using Shared.DataPagination;
+using Shared.DataQuerying;
 using Shared.Results;
 using static Application.Security.LeadManagerSecurityConfiguration;
 

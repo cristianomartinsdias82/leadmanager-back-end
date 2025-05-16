@@ -16,7 +16,6 @@
     <ProjectReference Include="..\..\..\src\libs\Application\Application.csproj" />
     <ProjectReference Include="..\..\..\src\libs\Domain\Domain.csproj" />
     <ProjectReference Include="..\..\..\src\libs\Infrastructure\Infrastructure.csproj" />
-    <ProjectReference Include="..\..\..\src\libs\Integrations\ViaCep.ServiceClient\ViaCep.ServiceClient.csproj" />
   </ItemGroup>
 
 </Project>

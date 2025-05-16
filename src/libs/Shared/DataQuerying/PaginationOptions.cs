@@ -1,6 +1,6 @@
 ﻿using System.ComponentModel;
 
-namespace Shared.DataPagination;
+namespace Shared.DataQuerying;
 
 public sealed record PaginationOptions
 {
