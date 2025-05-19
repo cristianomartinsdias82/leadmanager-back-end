@@ -5,7 +5,7 @@ using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
 namespace Infrastructure.Persistence.Mappings;
 
-internal sealed class AuditEntryTypeConfiguration : IEntityTypeConfiguration<AuditEntry>
+public sealed class AuditEntryTypeConfiguration : IEntityTypeConfiguration<AuditEntry>
 {
     public void Configure(EntityTypeBuilder<AuditEntry> builder)
     {

@@ -134,7 +134,8 @@ internal sealed class BulkInsertLeadCommandRequestHandler : ApplicationRequestHa
 												lead.Cidade!,
 												lead.Estado!,
 												lead.Numero,
-												lead.Complemento));
+												lead.Complemento))
+						.ToList();
 
 		await _leadRepository.AddRangeAsync(newLeads, cancellationToken);
 
@@ -191,7 +192,7 @@ internal sealed class BulkInsertLeadCommandRequestHandler : ApplicationRequestHa
 					(ApplicationDiagnostics.Constants.LeadId, string.Join(',', newLeads.Select(l => l.Id))),
 					(ApplicationDiagnostics.Constants.HandlerName, handlerName)
 				)
-				//Just experimenting C# 12 new sugar syntax in the next lines of code
+				//Just experimenting C# 12 new sugar syntax in lines of code below
 				.WithTags([.. newLeads.Select(ld => ($"lead_{ld.Id}", ld.Id))])
 				.WithTags([.. Enumerable.Range(1, leadCount).Select(c => ($"lead_{c}", newLeads.ElementAt(c - 1).RazaoSocial))])
 				.WithBaggageData( //Useful for data Propagation

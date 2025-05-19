@@ -4,7 +4,7 @@ using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
 namespace Infrastructure.Persistence.Mappings;
 
-internal sealed class LeadsFileEntityTypeConfiguration : IEntityTypeConfiguration<LeadsFile>
+public sealed class LeadsFileEntityTypeConfiguration : IEntityTypeConfiguration<LeadsFile>
 {
     public void Configure(EntityTypeBuilder<LeadsFile> builder)
     {
