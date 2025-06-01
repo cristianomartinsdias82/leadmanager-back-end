@@ -11,7 +11,8 @@ public sealed class LeadManagerDbContextFactory : IDesignTimeDbContextFactory<Le
     public LeadManagerDbContext CreateDbContext(string[] args)
     {
 		var config = new ConfigurationBuilder()
-						.SetBasePath(Directory.GetCurrentDirectory())
+						//.SetBasePath(Directory.GetCurrentDirectory())
+						.SetBasePath(@"F:\Codebase\_.NET Solutions\Core\7.x\LeadManager\backend\src\LeadManager\src\hosts\LeadManagerApi")
 						.AddJsonFile("appsettings.json")
 						.Build();
 

@@ -12,6 +12,7 @@ using Application.Prospecting.Leads.Queries.DownloadLeadsFile;
 using Application.Prospecting.Leads.Queries.ExistsLead;
 using Application.Prospecting.Leads.Queries.GetLeadById;
 using Application.Prospecting.Leads.Queries.GetLeads;
+using Application.Reporting.Commands.RequestReportGeneration;
 using Application.Security.Auditing.Queries.ListUsersActions;
 using Application.Security.OneTimePassword.Commands.GenerateOneTimePassword;
 using Application.Security.OneTimePassword.Commands.HandleOneTimePassword;
@@ -27,6 +28,7 @@ using CrossCutting.Serialization.Configuration;
 using Domain.Core;
 using Domain.Prospecting.Entities;
 using FluentValidation;
+using IAMServer.ServiceClient.Configuration;
 using MediatR;
 using MediatR.Pipeline;
 using Microsoft.AspNetCore.Hosting;
@@ -40,7 +42,6 @@ using Shared.ApplicationOperationRules;
 using Shared.DataQuerying;
 using Shared.Results;
 using ViaCep.ServiceClient.Configuration;
-using IAMServer.ServiceClient.Configuration;
 
 namespace Application.Core.Configuration;
 
@@ -129,8 +130,8 @@ public static class DependencyInjection
 
     private static MediatRServiceConfiguration RegisterValidationBehaviors(this MediatRServiceConfiguration config)
         => config.AddBehavior<IPipelineBehavior<GetLeadByIdQueryRequest, ApplicationResponse<LeadDto>>, ValidationBehavior<GetLeadByIdQueryRequest, LeadDto>>()
-		         .AddBehavior<IPipelineBehavior<GetLeadsQueryRequest, ApplicationResponse<PagedList<LeadDto>>>, ValidationBehavior<GetLeadsQueryRequest, PagedList<LeadDto>>>()
-				 .AddBehavior<IPipelineBehavior<SearchAddressByZipCodeQueryRequest, ApplicationResponse<SearchAddressByZipCodeQueryResponse>>, ValidationBehavior<SearchAddressByZipCodeQueryRequest, SearchAddressByZipCodeQueryResponse>>()
+                 .AddBehavior<IPipelineBehavior<GetLeadsQueryRequest, ApplicationResponse<PagedList<LeadDto>>>, ValidationBehavior<GetLeadsQueryRequest, PagedList<LeadDto>>>()
+                 .AddBehavior<IPipelineBehavior<SearchAddressByZipCodeQueryRequest, ApplicationResponse<SearchAddressByZipCodeQueryResponse>>, ValidationBehavior<SearchAddressByZipCodeQueryRequest, SearchAddressByZipCodeQueryResponse>>()
                  .AddBehavior<IPipelineBehavior<RegisterLeadCommandRequest, ApplicationResponse<RegisterLeadCommandResponse>>, ValidationBehavior<RegisterLeadCommandRequest, RegisterLeadCommandResponse>>()
                  .AddBehavior<IPipelineBehavior<UpdateLeadCommandRequest, ApplicationResponse<UpdateLeadCommandResponse>>, ValidationBehavior<UpdateLeadCommandRequest, UpdateLeadCommandResponse>>()
                  .AddBehavior<IPipelineBehavior<RemoveLeadCommandRequest, ApplicationResponse<RemoveLeadCommandResponse>>, ValidationBehavior<RemoveLeadCommandRequest, RemoveLeadCommandResponse>>()
@@ -139,8 +140,9 @@ public static class DependencyInjection
                  .AddBehavior<IPipelineBehavior<GenerateOneTimePasswordCommandRequest, ApplicationResponse<GenerateOneTimePasswordCommandResponse>>, ValidationBehavior<GenerateOneTimePasswordCommandRequest, GenerateOneTimePasswordCommandResponse>>()
                  .AddBehavior<IPipelineBehavior<HandleOneTimePasswordCommandRequest, ApplicationResponse<HandleOneTimePasswordCommandResponse>>, ValidationBehavior<HandleOneTimePasswordCommandRequest, HandleOneTimePasswordCommandResponse>>()
                  .AddBehavior<IPipelineBehavior<BulkRemoveLeadsFilesCommandRequest, ApplicationResponse<bool>>, ValidationBehavior<BulkRemoveLeadsFilesCommandRequest, bool>>()
-		         .AddBehavior<IPipelineBehavior<DownloadLeadsFileQueryRequest, ApplicationResponse<DownloadLeadsFileDto?>>, ValidationBehavior<DownloadLeadsFileQueryRequest, DownloadLeadsFileDto?>>()
-		         .AddBehavior<IPipelineBehavior<ListUsersActionsQueryRequest, ApplicationResponse<PagedList<AuditEntryDto>>>, ValidationBehavior<ListUsersActionsQueryRequest, PagedList<AuditEntryDto>>>();
+                 .AddBehavior<IPipelineBehavior<DownloadLeadsFileQueryRequest, ApplicationResponse<DownloadLeadsFileDto?>>, ValidationBehavior<DownloadLeadsFileQueryRequest, DownloadLeadsFileDto?>>()
+                 .AddBehavior<IPipelineBehavior<ListUsersActionsQueryRequest, ApplicationResponse<PagedList<AuditEntryDto>>>, ValidationBehavior<ListUsersActionsQueryRequest, PagedList<AuditEntryDto>>>()
+                 .AddBehavior<IPipelineBehavior<RequestReportGenerationCommandRequest, ApplicationResponse<RequestReportGenerationCommandResponse>>, ValidationBehavior<RequestReportGenerationCommandRequest, RequestReportGenerationCommandResponse>>();
 
     private static TracerProviderBuilder AddCrossCuttingTracing(this TracerProviderBuilder tracerProviderBuilder)
     {

@@ -4,6 +4,7 @@ using Infrastructure.Persistence;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Infrastructure.Persistence.Migrations
 {
     [DbContext(typeof(LeadManagerDbContext))]
-    partial class LeadManagerDbContextModelSnapshot : ModelSnapshot
+    [Migration("20250525225926_AddReportGenerationRequestTable")]
+    partial class AddReportGenerationRequestTable
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -59,52 +62,6 @@ namespace Infrastructure.Persistence.Migrations
                         .HasName("PK_AuditEntry_Id");
 
                     b.ToTable("AuditEntries", "Auditing");
-                });
-
-            modelBuilder.Entity("Application.Reporting.Shared.Model.ReportGenerationRequest", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
-
-                    b.Property<int>("ExecutionAttempts")
-                        .HasColumnType("int");
-
-                    b.Property<string>("Feature")
-                        .IsRequired()
-                        .HasMaxLength(100)
-                        .HasColumnType("VARCHAR");
-
-                    b.Property<DateTimeOffset?>("LastProcessedDate")
-                        .HasColumnType("datetimeoffset");
-
-                    b.Property<DateTimeOffset>("RequestedAt")
-                        .HasColumnType("datetimeoffset");
-
-                    b.Property<string>("SerializedParameters")
-                        .HasMaxLength(8000)
-                        .HasColumnType("VARCHAR");
-
-                    b.Property<string>("SerializedParametersDataType")
-                        .HasMaxLength(255)
-                        .HasColumnType("VARCHAR");
-
-                    b.Property<string>("Status")
-                        .IsRequired()
-                        .HasMaxLength(40)
-                        .HasColumnType("VARCHAR");
-
-                    b.Property<string>("UserId")
-                        .IsRequired()
-                        .HasMaxLength(255)
-                        .HasColumnType("VARCHAR");
-
-                    b.HasKey("Id")
-                        .HasName("PK_ReportGenerationRequest_Id");
-
-                    b.ToTable("ReportGenerationRequests", "Processes");
                 });
 
             modelBuilder.Entity("Domain.Prospecting.Entities.Lead", b =>
@@ -199,7 +156,7 @@ namespace Infrastructure.Persistence.Migrations
                             Logradouro = "Constelação do Escorpião",
                             Numero = "43",
                             RazaoSocial = "Lead Manager Brasil S.A.",
-                            RowVersion = new byte[] { 1, 156, 221, 8, 214, 228, 148, 230, 0, 21, 93, 90, 20, 27, 0, 0 }
+                            RowVersion = new byte[] { 223, 155, 221, 8, 244, 203, 141, 9, 0, 21, 93, 90, 28, 10, 0, 0 }
                         });
                 });
 
@@ -238,6 +195,47 @@ namespace Infrastructure.Persistence.Migrations
                         .HasName("PK_LeadsFile_Id");
 
                     b.ToTable("LeadsFiles", "Prospecting");
+                });
+
+            modelBuilder.Entity("Domain.Reporting.ReportGenerationRequest", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<int>("ExecutionAttempts")
+                        .HasColumnType("int");
+
+                    b.Property<string>("Feature")
+                        .IsRequired()
+                        .HasMaxLength(100)
+                        .HasColumnType("VARCHAR");
+
+                    b.Property<DateTimeOffset?>("LastProcessedDate")
+                        .HasColumnType("datetimeoffset");
+
+                    b.Property<DateTimeOffset>("RequestedAt")
+                        .HasColumnType("datetimeoffset");
+
+                    b.Property<string>("SerializedParameters")
+                        .HasMaxLength(8000)
+                        .HasColumnType("VARCHAR");
+
+                    b.Property<string>("SerializedParametersDataType")
+                        .HasMaxLength(255)
+                        .HasColumnType("VARCHAR");
+
+                    b.Property<string>("UserId")
+                        .IsRequired()
+                        .HasMaxLength(255)
+                        .HasColumnType("VARCHAR");
+
+                    b.HasKey("Id")
+                        .HasName("PK_ReportGenerationRequest_Id");
+
+                    b.ToTable("ReportGenerationRequests", "Processes");
                 });
 #pragma warning restore 612, 618
         }

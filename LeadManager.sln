@@ -117,6 +117,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Application.AddressSearch",
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "IAMServer.ServiceClient", "src\libs\Integrations\IAMServer\IAMServer.ServiceClient\IAMServer.ServiceClient.csproj", "{FFB64AED-ED08-1A0E-6946-E800295C89BA}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "LeadManager.BackendServices.ReportGeneration", "src\hosts\LeadManager.BackendServices.ReportGeneration\LeadManager.BackendServices.ReportGeneration.csproj", "{0D3BF309-D135-4448-A691-6D0CB18CB841}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -247,6 +249,10 @@ Global
 		{FFB64AED-ED08-1A0E-6946-E800295C89BA}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{FFB64AED-ED08-1A0E-6946-E800295C89BA}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{FFB64AED-ED08-1A0E-6946-E800295C89BA}.Release|Any CPU.Build.0 = Release|Any CPU
+		{0D3BF309-D135-4448-A691-6D0CB18CB841}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{0D3BF309-D135-4448-A691-6D0CB18CB841}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{0D3BF309-D135-4448-A691-6D0CB18CB841}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{0D3BF309-D135-4448-A691-6D0CB18CB841}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -295,6 +301,7 @@ Global
 		{55DF0D18-1164-4B16-B9E5-7E7D57971538} = {9DFBFDE4-5471-4D9D-8F61-E729BADCD004}
 		{5BB26DD2-43D2-7BA1-B4D4-97D6A7EB0CB0} = {02EA681E-C7D8-13C7-8484-4AC65E1B71E8}
 		{FFB64AED-ED08-1A0E-6946-E800295C89BA} = {9DFBFDE4-5471-4D9D-8F61-E729BADCD004}
+		{0D3BF309-D135-4448-A691-6D0CB18CB841} = {71C8B27E-0340-4390-A8DC-4DD3776E4E27}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {F5C96730-41C5-4999-9784-B64A284FE630}

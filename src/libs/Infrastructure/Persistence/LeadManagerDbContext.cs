@@ -3,6 +3,7 @@ using Application.Core.Contracts.Persistence;
 using CrossCutting.Security.IAM;
 using Domain.Core;
 using Domain.Prospecting.Entities;
+using Domain.Reporting;
 using Infrastructure.Persistence.Mappings;
 using Microsoft.EntityFrameworkCore;
 
@@ -25,6 +26,7 @@ public sealed class LeadManagerDbContext : DbContext, ILeadManagerDbContext
     public DbSet<Lead> Leads { get; set; }
     public DbSet<AuditEntry> AuditEntries { get; set; }
 	public DbSet<LeadsFile> LeadsFiles { get; set; }
+    public DbSet<ReportGenerationRequest> ReportGenerationRequests { get; set; }
 
 	protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
