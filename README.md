@@ -16,7 +16,7 @@ de maneira fácil e intuitiva
 
 
 Desenho arquitetural
-![image](https://github.com/user-attachments/assets/f759267a-0e25-4179-b371-abe796f2e242)
+![Lead Manager - Architecture diagram](https://github.com/user-attachments/assets/6d58fd5a-7bde-4416-9ab7-c83f5993b35e)
 
 Dashboard de mensagens de Leads novos, atualizados e removidos no RabbitMQ
 ![image](https://github.com/user-attachments/assets/fb4a6aac-c90b-4943-ad05-7dd669dad053)
