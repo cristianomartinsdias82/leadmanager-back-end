@@ -26,6 +26,7 @@ using Infrastructure.Repository.UnitOfWork;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Logging;
 using OpenTelemetry.Metrics;
 using OpenTelemetry.Trace;
 using Shared.Events.EventDispatching;
@@ -43,7 +44,6 @@ public static class DependencyInjection
                    .AddEventDispatcher()
                    .AddMessageBusHelper()
 				   .AddReportingGenerationServices();
-
 
 	private static IServiceCollection AddDataSource(this IServiceCollection services, IConfiguration configuration)
     {
@@ -116,13 +116,16 @@ public static class DependencyInjection
 
 	private static IServiceCollection AddReportingGenerationServices(this IServiceCollection services)
 	{
-		services.AddSingleton<Func<ReportGenerationFeatures, ExportFormats, IReportGeneration>>((feature, format) =>
+		services.AddSingleton<Func<IServiceProvider, ReportGenerationFeatures, ExportFormats, IReportGeneration>>((sp, feature, format) =>
 		{
 			return feature switch
 			{
 				ReportGenerationFeatures.LeadsList => format switch
 				{
-					ExportFormats.Pdf => new PdfFormatLeadsListReportGenerator(),
+					ExportFormats.Pdf => new PdfFormatLeadsListReportGenerator(
+												sp.GetRequiredService<ILeadRepository>(),
+												sp.GetRequiredService<TimeProvider>()
+											),
 					ExportFormats.Csv => new CsvFormatLeadsListReportGenerator(),
 					ExportFormats.Parquet => new ParquetFormatLeadsListReportGenerator(),
 					ExportFormats.All => new AllFormatsLeadsListReportGenerator(),

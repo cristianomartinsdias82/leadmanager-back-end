@@ -1,0 +1,37 @@
+﻿<!DOCTYPE html>
+
+<html lang="pt-br" xmlns="http://www.w3.org/1999/xhtml">
+    <head>
+        <meta charset="utf-8" />
+        <title>Leads list</title>
+    </head>
+    <body>
+        <table>
+            <thead>
+                <tr>
+                    <th>Cnpj</th>
+                    <th>Razão social</th>
+                </tr>
+            </thead>
+            <tbody>
+                {{ for lead in leads }}
+                <tr>
+                    <td>
+                        {{ lead.cnpj }}
+                    </td>
+                    <td>
+                        {{ lead.razao_social }}
+                    </td>
+                </tr>
+                {{ end }}
+            </tbody>
+            <tfoot>
+                <tr>
+                    <td colspan="2">
+                        Total de lead(s): {{count}}.
+                    </td>
+                </tr>
+            </tfoot>
+        </table>
+    </body>
+</html>
