@@ -8,6 +8,7 @@ public class PdfFormatLeadsListReportGenerator : LeadsListReportGenerator
 {
 	public override async Task<ApplicationResponse<PersistableData>> GenerateAsync(QueryOptions? queryOptions, CancellationToken cancellationToken = default)
 	{
+		await Task.Delay(0, cancellationToken);
 		return ApplicationResponse<PersistableData>
 					.Create(new(Array.Empty<byte>(), 0, "application/pdf", default));
 

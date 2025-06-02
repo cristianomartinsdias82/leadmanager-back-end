@@ -8,6 +8,7 @@ using Microsoft.AspNetCore.Authentication.JwtBearer;
 using MongoDB.Bson;
 using MongoDB.Bson.Serialization;
 using MongoDB.Bson.Serialization.Serializers;
+using Shared.Settings;
 using static IAMServer.Clients.LeadWebApp.Security.LeadManagerAppConstants;
 
 namespace IAMServer.Core.Configuration;
