@@ -1,9 +1,9 @@
 ﻿using Application.Core;
 using Application.Core.Contracts.Persistence;
+using Application.Reporting.Core;
 using CrossCutting.Security.IAM;
 using Domain.Core;
 using Domain.Prospecting.Entities;
-using Domain.Reporting;
 using Infrastructure.Persistence.Mappings;
 using Microsoft.EntityFrameworkCore;
 

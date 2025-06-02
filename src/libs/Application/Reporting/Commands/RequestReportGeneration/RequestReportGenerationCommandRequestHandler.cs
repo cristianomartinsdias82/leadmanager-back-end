@@ -1,9 +1,9 @@
 ﻿using Application.Core.Contracts.Persistence;
+using Application.Reporting.Core;
 using CrossCutting.Security.IAM;
-using Domain.Reporting;
 using MediatR;
 using Shared.Events.EventDispatching;
-using Shared.Reporting;
+using Shared.Exportation;
 using Shared.RequestHandling;
 using Shared.Results;
 using System.Text.Json;
@@ -37,7 +37,7 @@ internal sealed class RequestReportGenerationCommandRequestHandler : Application
 											ReportGenerationFeatures.LeadsList,
 											JsonSerializer.Serialize(new ReportGenerationRequestArgs
 											{
-												ExportFormat = Enum.Parse<ReportGenerationFormats>(request.Format, true),
+												ExportFormat = Enum.Parse<ExportFormats>(request.Format, true),
 												QueryOptions = request.Query
 											}),
 											$"{typeof(ReportGenerationRequestArgs).FullName}, {typeof(ReportGenerationRequestArgs).AssemblyQualifiedName}",

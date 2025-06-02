@@ -1,30 +1,36 @@
+using Application.Reporting.Commands.GenerateReport;
+using Application.Reporting.Core;
 using LeadManager.BackendServices.ReportGeneration.Core.Configuration;
 using LeadManager.BackendServices.ReportGeneration.DataService;
-using Shared.Reporting;
+using MediatR;
+using Shared.Settings;
 using System.Text.Json;
 
 namespace LeadManager.BackendServices.ReportGeneration;
 
-public class ReportGenerationWorker : BackgroundService
+internal class ReportGenerationWorker : BackgroundService
 {
 	private readonly ILogger<ReportGenerationWorker> _logger;
+	private readonly ReportGenerationRequestsDataService _dataService;
 	private readonly ReportGenerationWorkerSettings _reportGenerationWorkerSettings;
 	private readonly DataSourceSettings _dataSourceSettings;
 	private readonly TimeProvider _timeProvider;
 	private readonly IServiceProvider _serviceProvider;
 
 	public ReportGenerationWorker(
-		ILogger<ReportGenerationWorker> logger,
+		ReportGenerationRequestsDataService dataService,
 		ReportGenerationWorkerSettings reportGenerationWorkerSettings,
 		DataSourceSettings dataSourceSettings,
+		IServiceProvider serviceProvider,
 		TimeProvider timeProvider,
-		IServiceProvider serviceProvider)
+		ILogger<ReportGenerationWorker> logger)
 	{
-		_logger = logger;
+		_dataService = dataService;
 		_reportGenerationWorkerSettings = reportGenerationWorkerSettings;
 		_dataSourceSettings = dataSourceSettings;
-		_timeProvider = timeProvider;
 		_serviceProvider = serviceProvider;
+		_timeProvider = timeProvider;
+		_logger = logger;
 	}
 
 	protected override async Task ExecuteAsync(CancellationToken stoppingToken)
@@ -34,10 +40,8 @@ public class ReportGenerationWorker : BackgroundService
 			if (_logger.IsEnabled(LogLevel.Information))
 				_logger.LogInformation("Worker running at: {time}", _timeProvider.GetLocalNow());
 
-			var pendingRequests = await ReportGenerationRequestsDataService
-											.ClaimAndGetPendingRequestsAsync(
-												_dataSourceSettings,
-												stoppingToken);
+			var pendingRequests = await _dataService
+											.ClaimAndGetPendingRequestsAsync(stoppingToken);
 
 			var reportGenerationRequestsData = pendingRequests
 												.Select(req => (Request: req,
@@ -48,20 +52,43 @@ public class ReportGenerationWorker : BackgroundService
 										async (data, ct) =>
 										{
 											using var scope = _serviceProvider.CreateScope();
-											//var reportGenerator = scope.ServiceProvider.GetKeyedService<IReportGeneration>(ReportGenerationFormats.Pdf);
-											//await reportGenerator
-											//	.GenerateAsync(
-											//		receiver: /*data.Request.UserId*/,
-											//		queryOptions: /*data.Args.QueryOptions*/,
-											//		onSuccess(ct) => ReportGenerationRequestsDataService.MarkAsSucceeded(data.Request, ct)),
-											//		onFailure(ct) => ReportGenerationRequestsDataService.MarkAsFailed(data.Request, ct)),
-											//		ct);
+											var sender = scope.ServiceProvider.GetRequiredService<IMediator>();
 
-											await Task.Delay(0, ct);
+											await _dataService.MarkAsProcessingAsync(
+													data.Request,
+													_dataSourceSettings,
+													stoppingToken);
+
+											await sender.Send(new GenerateReportCommandRequest(
+												data.Request.UserId,
+												data.Request.Id,
+												data.Args!,
+												data.Request.Feature,
+												async(stoppingToken) => await _dataService.MarkAsSucceededAsync(
+																								data.Request,
+																								_dataSourceSettings,
+																								stoppingToken),
+												async(stoppingToken) => await _dataService.MarkAsFailedAsync(
+																								data.Request,
+																								_dataSourceSettings,
+																								_reportGenerationWorkerSettings.MaxProcessingAttempts,
+																								OnReportGenerationAttemptsThresholdReached,
+																								stoppingToken)
+											), stoppingToken);
 										});
 
 			//Wait for...
 			await Task.Delay(_reportGenerationWorkerSettings.ProbingTimeInSecs * 1000, stoppingToken);
 		}
+	}
+
+	private void OnReportGenerationAttemptsThresholdReached(
+		int maxProcessingAttempts,
+		ReportGenerationRequest request)
+	{
+		//TODO: Replace this logic by one that either sends a message to a queue, or texts/emails the user
+		//reporting him/her there was a problem when trying to generate the requested report.
+		_logger.LogError("Dear {user}, a problem occurred during the report generation process and the development" +
+			" team is looking into it as soon as possible. We apologize the inconvenient.", request.UserId);
 	}
 }

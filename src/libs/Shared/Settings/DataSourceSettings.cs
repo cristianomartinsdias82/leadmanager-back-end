@@ -2,8 +2,10 @@
 
 public sealed record DataSourceSettings
 (
-    string ConnectionString,
-    int RetryOperationMaxCount,
-    int HealthCheckingTimeoutInSecs,
-    string? DatabaseName
+	string ConnectionString,
+	string ProviderName,
+	int CommandTimeoutInSecs,
+	int RetryOperationMaxCount,
+	int HealthCheckingTimeoutInSecs,
+	string? DatabaseName
 );

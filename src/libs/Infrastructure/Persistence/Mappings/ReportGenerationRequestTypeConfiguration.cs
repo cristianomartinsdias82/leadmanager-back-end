@@ -1,8 +1,8 @@
-﻿using Domain.Reporting;
+﻿using Application.Reporting.Core;
 using Infrastructure.Persistence.ValueConverters;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
-using Shared.Reporting;
+using Shared.Results;
 
 namespace Infrastructure.Persistence.Mappings;
 
@@ -42,6 +42,6 @@ public sealed class ReportGenerationRequestTypeConfiguration : IEntityTypeConfig
 			   .IsRequired()
 			   .HasColumnType("VARCHAR")
 			   .HasMaxLength(40)
-			   .HasConversion(new EnumToStringDescriptionConverter<ReportGenerationOperationStatus>());
+			   .HasConversion(new EnumToStringDescriptionConverter<OperationStatuses>());
 	}
 }

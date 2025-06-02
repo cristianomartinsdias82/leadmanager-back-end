@@ -1,3 +1,3 @@
 ﻿namespace LeadManager.BackendServices.ReportGeneration.Core.Configuration;
 
-public sealed class UsersActionsReportGenerationSettings : ReportGenerationSettings {}
+internal sealed class UsersActionsReportGenerationSettings : ReportGenerationSettings { }

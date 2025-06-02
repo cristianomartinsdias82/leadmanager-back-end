@@ -1,6 +1,6 @@
-﻿using Shared.Reporting;
+﻿using Shared.Results;
 
-namespace Domain.Reporting;
+namespace Application.Reporting.Core;
 
 public sealed class ReportGenerationRequest
 {
@@ -14,7 +14,7 @@ public sealed class ReportGenerationRequest
 	public string? SerializedParameters { get; private set; } = default!;
 	public string? SerializedParametersDataType { get; private set; }
 	public int ExecutionAttempts { get; private set; }
-	public ReportGenerationOperationStatus Status { get; private set; }
+	public OperationStatuses Status { get; private set; }
 
 	public static ReportGenerationRequest Create(
 		ReportGenerationFeatures feature,
@@ -30,7 +30,7 @@ public sealed class ReportGenerationRequest
 		{
 			RequestedAt = requestedAt,
 			Feature = feature,
-			Status = ReportGenerationOperationStatus.Pending,
+			Status = OperationStatuses.Pending,
 			SerializedParameters = serializedParameters,
 			SerializedParametersDataType = serializedParametersDataType,
 			UserId = userId
@@ -43,6 +43,6 @@ public sealed class ReportGenerationRequest
 	public void SetLastProcessedDate(DateTimeOffset dateTimeOffset)
 		=> LastProcessedDate = dateTimeOffset;
 
-	public void SetStats(ReportGenerationOperationStatus status)
+	public void SetStats(OperationStatuses status)
 		=> Status = status;
 }

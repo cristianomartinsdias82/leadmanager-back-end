@@ -1,4 +1,4 @@
-﻿namespace Shared.Reporting;
+﻿namespace Application.Reporting.Core;
 
 public enum ReportGenerationFeatures : int
 {

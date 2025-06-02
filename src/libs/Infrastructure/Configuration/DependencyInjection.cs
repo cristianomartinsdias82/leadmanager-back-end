@@ -1,13 +1,23 @@
 ﻿using Application.Core.Contracts.Messaging;
 using Application.Core.Contracts.Persistence;
+using Application.Core.Contracts.Reporting;
 using Application.Core.Contracts.Repository.Caching;
 using Application.Core.Contracts.Repository.Prospecting;
 using Application.Core.Contracts.Repository.Security.Auditing;
 using Application.Core.Contracts.Repository.Security.OneTimePassword;
 using Application.Core.Contracts.Repository.UnitOfWork;
+using Application.Reporting.Core;
 using Infrastructure.EventDispatching;
 using Infrastructure.Messaging;
 using Infrastructure.Persistence;
+using Infrastructure.Reporting.LeadsList.AllFormats;
+using Infrastructure.Reporting.LeadsList.Csv;
+using Infrastructure.Reporting.LeadsList.Parquet;
+using Infrastructure.Reporting.LeadsList.Pdf;
+using Infrastructure.Reporting.UsersActions.AllFormats;
+using Infrastructure.Reporting.UsersActions.Csv;
+using Infrastructure.Reporting.UsersActions.Parquet;
+using Infrastructure.Reporting.UsersActions.Pdf;
 using Infrastructure.Repository.Caching;
 using Infrastructure.Repository.Prospecting;
 using Infrastructure.Repository.Security.Auditing;
@@ -19,7 +29,9 @@ using Microsoft.Extensions.DependencyInjection;
 using OpenTelemetry.Metrics;
 using OpenTelemetry.Trace;
 using Shared.Events.EventDispatching;
+using Shared.Exportation;
 using Shared.Settings;
+using System.Data.Common;
 
 namespace Infrastructure.Configuration;
 
@@ -29,9 +41,11 @@ public static class DependencyInjection
         => services.AddDataSource(configuration)
                    .AddRepository(configuration)
                    .AddEventDispatcher()
-                   .AddMessageBusHelper();
+                   .AddMessageBusHelper()
+				   .AddReportingGenerationServices();
 
-    private static IServiceCollection AddDataSource(this IServiceCollection services, IConfiguration configuration)
+
+	private static IServiceCollection AddDataSource(this IServiceCollection services, IConfiguration configuration)
     {
         var dataSourceSettings = configuration.GetSection(nameof(DataSourceSettings)).Get<DataSourceSettings>()!;
         services.AddSingleton(dataSourceSettings);
@@ -49,6 +63,8 @@ public static class DependencyInjection
         });
 
         services.AddScoped<ILeadManagerDbContext, LeadManagerDbContext>();
+
+		DbProviderFactories.RegisterFactory(dataSourceSettings.ProviderName, Microsoft.Data.SqlClient.SqlClientFactory.Instance);
 
 		return services;
     }
@@ -97,4 +113,33 @@ public static class DependencyInjection
 
     private static IServiceCollection AddMessageBusHelper(this IServiceCollection services)
         => services.AddSingleton<IMessageBusHelper, MessageBusHelper>();
+
+	private static IServiceCollection AddReportingGenerationServices(this IServiceCollection services)
+	{
+		services.AddSingleton<Func<ReportGenerationFeatures, ExportFormats, IReportGeneration>>((feature, format) =>
+		{
+			return feature switch
+			{
+				ReportGenerationFeatures.LeadsList => format switch
+				{
+					ExportFormats.Pdf => new PdfFormatLeadsListReportGenerator(),
+					ExportFormats.Csv => new CsvFormatLeadsListReportGenerator(),
+					ExportFormats.Parquet => new ParquetFormatLeadsListReportGenerator(),
+					ExportFormats.All => new AllFormatsLeadsListReportGenerator(),
+					_ => throw new NotImplementedException()
+				},
+				ReportGenerationFeatures.UsersActions => format switch
+				{
+					ExportFormats.Pdf => new PdfFormatUsersActionsReportGenerator(),
+					ExportFormats.Csv => new CsvFormatUsersActionsReportGenerator(),
+					ExportFormats.Parquet => new ParquetFormatUsersActionsReportGenerator(),
+					ExportFormats.All => new AllFormatsUsersActionsReportGenerator(),
+					_ => throw new NotImplementedException()
+				},
+				_ => throw new NotImplementedException()
+			};
+		});
+
+		return services;
+	}
 }

@@ -1,5 +1,5 @@
 ﻿using FluentValidation;
-using Shared.Reporting;
+using Shared.Exportation;
 
 namespace Application.Reporting.Commands.RequestReportGeneration;
 
@@ -13,12 +13,12 @@ public sealed class RequestReportGenerationCommandRequestValidator : AbstractVal
 
         RuleFor(request => request.Format)
             .NotEmpty()
-            .WithMessage("Formato relatório é obrigatório.");
+            .WithMessage("Formato do relatório é obrigatório.");
                     
         When(request => !string.IsNullOrWhiteSpace(request.Format), () =>
         {
             RuleFor(request => request.Format)
-                .Must(format => Enum.TryParse<ReportGenerationFormats>(format, true, out var _))
+                .Must(format => Enum.TryParse<ExportFormats>(format, true, out var _))
                 .WithMessage("Arquivo inválido.");
         });
     }

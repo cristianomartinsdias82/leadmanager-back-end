@@ -1,28 +1,27 @@
+using Application.Core.Configuration;
+using Infrastructure.Configuration;
 using LeadManager.BackendServices.ReportGeneration.Core.Configuration;
-using System.Data.Common;
+using LeadManager.BackendServices.ReportGeneration.DataService;
 
 namespace LeadManager.BackendServices.ReportGeneration;
 
-public class Program
+internal class Program
 {
 	public static void Main(string[] args)
 	{
 		var builder = Host.CreateApplicationBuilder(args);
+
 		builder.Services.AddHostedService<ReportGenerationWorker>();
 		builder.Services.AddSingleton(TimeProvider.System);
-
 		var reportGenerationWorkerSettings = builder
 												.Configuration
 												.GetSection(nameof(ReportGenerationWorkerSettings))
 												.Get<ReportGenerationWorkerSettings>()!;
 		builder.Services.AddSingleton(reportGenerationWorkerSettings);
+		builder.Services.AddSingleton<ReportGenerationRequestsDataService>();
 
-		var dataSourceSettings = builder
-									.Configuration
-									.GetSection(nameof(DataSourceSettings))
-									.Get<DataSourceSettings>()!;
-		builder.Services.AddSingleton(dataSourceSettings);
-		DbProviderFactories.RegisterFactory(dataSourceSettings.ProviderName, Microsoft.Data.SqlClient.SqlClientFactory.Instance);
+		builder.Services.AddApplicationServices(builder.Configuration, builder.Environment);
+		builder.Services.AddInfrastructureServices(builder.Configuration);
 
 		var host = builder.Build();
 		host.Run();

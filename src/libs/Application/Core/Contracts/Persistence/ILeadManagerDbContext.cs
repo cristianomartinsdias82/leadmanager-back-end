@@ -1,6 +1,6 @@
-﻿using Domain.Core;
+﻿using Application.Reporting.Core;
+using Domain.Core;
 using Domain.Prospecting.Entities;
-using Domain.Reporting;
 using Microsoft.EntityFrameworkCore;
 
 namespace Application.Core.Contracts.Persistence;
