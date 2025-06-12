@@ -1,5 +1,6 @@
 ﻿using Application.Reporting.Core;
 using Dapper;
+using Infrastructure.Persistence.Mappings;
 using LeadManager.BackendServices.ReportGeneration.Core.Configuration;
 using Polly;
 using Polly.Retry;
@@ -45,20 +46,20 @@ internal class ReportGenerationRequestsDataService
 
 					var requests = await connection.QueryAsync<ReportGenerationRequest>(
 						$"""
-						UPDATE TOP({_reportGenerationWorkerSettings.RequestProcessingBatchMaxSize}) Processes.ReportGenerationRequests
-						SET Status = 'ReadyForProcessing'
-						OUTPUT
-							 INSERTED.Id
-							,INSERTED.UserId
-							,INSERTED.Feature
-							,INSERTED.SerializedParameters
-							,INSERTED.SerializedParametersDataType
-							,INSERTED.Status
-							,INSERTED.RequestedAt
-							,INSERTED.LastProcessedDate
-							,INSERTED.ExecutionAttempts
-						FROM Processes.ReportGenerationRequests WITH (ROWLOCK, READPAST, UPDLOCK)
-						WHERE Status = 'Pending';
+							UPDATE TOP({_reportGenerationWorkerSettings.RequestProcessingBatchMaxSize}) {ReportGenerationRequestMetadata.DatabaseSchemaName}.{ReportGenerationRequestMetadata.TableName}
+							SET {nameof(ReportGenerationRequest.Status)} = 'ReadyForProcessing'
+							OUTPUT
+								 INSERTED.{nameof(ReportGenerationRequest.Id)}
+								,INSERTED.{nameof(ReportGenerationRequest.UserId)}
+								,INSERTED.{nameof(ReportGenerationRequest.Feature)}
+								,INSERTED.{nameof(ReportGenerationRequest.SerializedParameters)}
+								,INSERTED.{nameof(ReportGenerationRequest.SerializedParametersDataType)}
+								,INSERTED.{nameof(ReportGenerationRequest.Status)}
+								,INSERTED.{nameof(ReportGenerationRequest.RequestedAt)}
+								,INSERTED.{nameof(ReportGenerationRequest.LastProcessedDate)}
+								,INSERTED.{nameof(ReportGenerationRequest.ExecutionAttempts)}
+							FROM {ReportGenerationRequestMetadata.DatabaseSchemaName}.{ReportGenerationRequestMetadata.TableName} WITH (ROWLOCK, READPAST, UPDLOCK)
+							WHERE {nameof(ReportGenerationRequest.Status)} = 'Pending';
 						""");
 
 					return [.. requests];
@@ -75,7 +76,6 @@ internal class ReportGenerationRequestsDataService
 	}
 
 	public async Task MarkAsProcessingAsync(
-		//int requestId,
 		ReportGenerationRequest request,
 		DataSourceSettings dataSourceSettings,
 		CancellationToken cancellationToken = default)
@@ -91,14 +91,14 @@ internal class ReportGenerationRequestsDataService
 					await connection.OpenAsync(ct);
 
 					await connection.ExecuteAsync(
-						"""
+						$"""
 							UPDATE P SET
-								 P.Status = 'Processing'
-								,P.ExecutionAttempts += 1
-								,P.LastProcessedDate = @LastProcessedDate
-							FROM Processes.ReportGenerationRequests P (ROWLOCK)
+								 P.{nameof(ReportGenerationRequest.Status)} = 'Processing'
+								,P.{nameof(ReportGenerationRequest.ExecutionAttempts)} += 1
+								,P.{nameof(ReportGenerationRequest.LastProcessedDate)} = @LastProcessedDate
+							FROM {ReportGenerationRequestMetadata.DatabaseSchemaName}.{ReportGenerationRequestMetadata.TableName} P (ROWLOCK)
 							WHERE
-								 P.Id = @Id;
+								 P.{nameof(ReportGenerationRequest.Id)} = @Id;
 							""", param: new { LastProcessedDate = _timeProvider.GetLocalNow(), request.Id });
 				}
 				finally
@@ -115,7 +115,7 @@ internal class ReportGenerationRequestsDataService
 	public async Task<int> MarkAsSucceededAsync(
 		ReportGenerationRequest request,
 		DataSourceSettings dataSourceSettings,
-		string generatedFileFullPath,
+		string generatedFileName,
 		CancellationToken cancellationToken = default)
 	{
 		using var connection = _dbProviderFactory.CreateConnection()!;
@@ -129,13 +129,13 @@ internal class ReportGenerationRequestsDataService
 					await connection.OpenAsync(ct);
 
 					return await connection.ExecuteAsync(
-						"""
-						UPDATE P SET
-							 P.Status = 'Successful'
-							,P.GeneratedFileFullPath = @GeneratedFileFullPath
-						FROM Processes.ReportGenerationRequests P (ROWLOCK)
-						WHERE P.Id = @Id;
-						""", param: new { request.Id, generatedFileFullPath });
+						$"""
+							UPDATE P SET
+								 P.{nameof(ReportGenerationRequest.Status)} = 'Successful'
+								,P.{nameof(ReportGenerationRequest.GeneratedFileName)} = @GeneratedFileName
+							FROM {ReportGenerationRequestMetadata.DatabaseSchemaName}.{ReportGenerationRequestMetadata.TableName} P (ROWLOCK)
+							WHERE P.{nameof(ReportGenerationRequest.Id)} = @Id;
+						""", param: new { request.Id, generatedFileName });
 				}
 				catch (Exception exc)
 				{
@@ -175,19 +175,19 @@ internal class ReportGenerationRequestsDataService
 					await connection.OpenAsync(ct);
 
 					processingAttemptCount = await connection.ExecuteScalarAsync<int>(
-						"""
-						SELECT P.ExecutionAttempts
-						FROM Processes.ReportGenerationRequests P
-						WHERE P.Id = @Id;
+						$"""
+							SELECT P.{nameof(ReportGenerationRequest.ExecutionAttempts)}
+							FROM {ReportGenerationRequestMetadata.DatabaseSchemaName}.{ReportGenerationRequestMetadata.TableName} P
+							WHERE P.{nameof(ReportGenerationRequest.Id)} = @Id;
 						""", new { request.Id });
 
 					attemptsThresholdReached = processingAttemptCount == maxProcessingAttempts;
 
 					await connection.ExecuteAsync(
-						"""
-						UPDATE P SET P.Status = @Status
-						FROM Processes.ReportGenerationRequests P (ROWLOCK)
-						WHERE P.Id = @Id;
+						$"""
+							UPDATE P SET P.{nameof(ReportGenerationRequest.Status)} = @Status
+							FROM {ReportGenerationRequestMetadata.DatabaseSchemaName}.{ReportGenerationRequestMetadata.TableName} P (ROWLOCK)
+							WHERE P.{nameof(ReportGenerationRequest.Id)} = @Id;
 						""", param: new { Status = processingAttemptCount == maxProcessingAttempts ? "Failed" : "Pending", request.Id });
 
 					if (attemptsThresholdReached && onAttemptsThresholdReached is not null)
