@@ -18,7 +18,7 @@ namespace Infrastructure.Persistence.Migrations
 #pragma warning disable 612, 618
             modelBuilder
                 .HasDefaultSchema("Prospecting")
-                .HasAnnotation("ProductVersion", "9.0.3")
+                .HasAnnotation("ProductVersion", "9.0.5")
                 .HasAnnotation("Relational:MaxIdentifierLength", 128);
 
             SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder);
@@ -61,7 +61,7 @@ namespace Infrastructure.Persistence.Migrations
                     b.ToTable("AuditEntries", "Auditing");
                 });
 
-            modelBuilder.Entity("Application.Reporting.Shared.Model.ReportGenerationRequest", b =>
+            modelBuilder.Entity("Application.Reporting.Core.ReportGenerationRequest", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -77,8 +77,15 @@ namespace Infrastructure.Persistence.Migrations
                         .HasMaxLength(100)
                         .HasColumnType("VARCHAR");
 
+                    b.Property<string>("GeneratedFileName")
+                        .HasMaxLength(1000)
+                        .HasColumnType("VARCHAR");
+
                     b.Property<DateTimeOffset?>("LastProcessedDate")
                         .HasColumnType("datetimeoffset");
+
+                    b.Property<bool>("ReadinessUserNotificationDismissed")
+                        .HasColumnType("bit");
 
                     b.Property<DateTimeOffset>("RequestedAt")
                         .HasColumnType("datetimeoffset");
@@ -199,7 +206,7 @@ namespace Infrastructure.Persistence.Migrations
                             Logradouro = "Constelação do Escorpião",
                             Numero = "43",
                             RazaoSocial = "Lead Manager Brasil S.A.",
-                            RowVersion = new byte[] { 1, 156, 221, 8, 214, 228, 148, 230, 0, 21, 93, 90, 20, 27, 0, 0 }
+                            RowVersion = new byte[] { 1, 170, 221, 8, 155, 244, 244, 184, 212, 93, 100, 143, 164, 25, 0, 0 }
                         });
                 });
 

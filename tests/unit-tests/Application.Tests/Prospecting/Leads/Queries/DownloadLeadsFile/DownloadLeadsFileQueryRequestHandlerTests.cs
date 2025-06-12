@@ -38,7 +38,7 @@ public sealed class DownloadLeadsFileQueryRequestHandlerTests : IDisposable
 		DownloadLeadsFileQueryRequest request = new() { Id = Guid.NewGuid() };
 		_leadRepositoryMock.GetLeadsFileByIdAsync(Arg.Any<Guid>(), token)
 			.Returns(Task.FromResult<LeadsFile?>(leadsFile));
-		_fileStorageProviderMock.DownloadAsync(Arg.Any<string>(), Arg.Any<string>(), token)
+		_fileStorageProviderMock.DownloadAsync(Arg.Any<string>(), cancellationToken: token)
 			.Returns(fileFromStorage);
 
 		//Act
@@ -56,7 +56,7 @@ public sealed class DownloadLeadsFileQueryRequestHandlerTests : IDisposable
 				.GetLeadsFileByIdAsync(Arg.Any<Guid>(), token);
 		await _fileStorageProviderMock
 				.Received(1)
-				.DownloadAsync(Arg.Any<string>(), Arg.Any<string>(), token);
+				.DownloadAsync(Arg.Any<string>(), cancellationToken: token);
 	}
 
 	[Fact]
@@ -82,7 +82,7 @@ public sealed class DownloadLeadsFileQueryRequestHandlerTests : IDisposable
                 .GetLeadsFileByIdAsync(Arg.Any<Guid>(), token);
 		await _fileStorageProviderMock
 				.DidNotReceive()
-				.DownloadAsync(Arg.Any<string>(), Arg.Any<string>(), token);
+				.DownloadAsync(Arg.Any<string>(), cancellationToken: token);
 	}
 
 	[Fact]
@@ -94,7 +94,7 @@ public sealed class DownloadLeadsFileQueryRequestHandlerTests : IDisposable
 		DownloadLeadsFileQueryRequest request = new() { Id = Guid.NewGuid() };
 		_leadRepositoryMock.GetLeadsFileByIdAsync(Arg.Any<Guid>(), token)
 			.Returns(Task.FromResult<LeadsFile?>(leadsFile));
-		_fileStorageProviderMock.DownloadAsync(Arg.Any<string>(), Arg.Any<string>(), token)
+		_fileStorageProviderMock.DownloadAsync(Arg.Any<string>(), cancellationToken: token)
 			.Returns(Task.FromResult<IFile?>(default!));
 
 		//Act
@@ -111,7 +111,7 @@ public sealed class DownloadLeadsFileQueryRequestHandlerTests : IDisposable
 				.GetLeadsFileByIdAsync(Arg.Any<Guid>(), token);
 		await _fileStorageProviderMock
 				.Received(1)
-				.DownloadAsync(Arg.Any<string>(), Arg.Any<string>(), token);
+				.DownloadAsync(Arg.Any<string>(), cancellationToken: token);
 	}
 
 	public void Dispose()

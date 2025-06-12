@@ -43,5 +43,9 @@ public sealed class ReportGenerationRequestTypeConfiguration : IEntityTypeConfig
 			   .HasColumnType("VARCHAR")
 			   .HasMaxLength(40)
 			   .HasConversion(new EnumToStringDescriptionConverter<OperationStatuses>());
+
+		builder.Property(x => x.GeneratedFileName)
+			   .HasColumnType("VARCHAR")
+			   .HasMaxLength(1000);
 	}
 }

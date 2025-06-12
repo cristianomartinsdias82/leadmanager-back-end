@@ -155,7 +155,7 @@ internal sealed class BulkInsertLeadCommandRequestHandler : ApplicationRequestHa
 		{
 			await _fileStorageProvider.UploadAsync(
 										fileBytes,
-										fileId,
+										blobName: fileId,
 										cancellationToken: ct);
 
 			Array.Clear(fileBytes);

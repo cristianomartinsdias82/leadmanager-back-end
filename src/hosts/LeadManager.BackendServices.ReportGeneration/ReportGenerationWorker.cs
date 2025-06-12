@@ -64,9 +64,10 @@ internal class ReportGenerationWorker : BackgroundService
 												data.Request.Id,
 												data.Args!,
 												data.Request.Feature,
-												async(stoppingToken) => await _dataService.MarkAsSucceededAsync(
+												async(generatedFileFullPath, stoppingToken) => await _dataService.MarkAsSucceededAsync(
 																								data.Request,
 																								_dataSourceSettings,
+																								generatedFileFullPath,
 																								stoppingToken),
 												async(stoppingToken) => await _dataService.MarkAsFailedAsync(
 																								data.Request,

@@ -9,6 +9,6 @@ public sealed record GenerateReportCommandRequest(
 	int RequestId,
 	ReportGenerationRequestArgs ReportGenerationRequestArgs,
 	ReportGenerationFeatures Feature,
-	Func<CancellationToken, Task>? OnSuccess = default,
+	Func<string, CancellationToken, Task>? OnSuccess = default,
 	Func<CancellationToken, Task>? OnFailure = default)
 	: IRequest<ApplicationResponse<GenerateReportCommandResponse>>;

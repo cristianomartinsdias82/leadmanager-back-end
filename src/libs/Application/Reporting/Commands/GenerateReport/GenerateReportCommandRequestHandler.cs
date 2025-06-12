@@ -1,6 +1,8 @@
-﻿using Application.Core.Contracts.Reporting;
+﻿using Application.Core.Contracts.Persistence;
+using Application.Core.Contracts.Reporting;
 using Application.Reporting.Core;
 using CrossCutting.FileStorage;
+using CrossCutting.FileStorage.Configuration;
 using MediatR;
 using Microsoft.Extensions.Logging;
 using Shared.Events.EventDispatching;
@@ -17,6 +19,8 @@ internal sealed class GenerateReportCommandRequestHandler : ApplicationRequestHa
 	private readonly Func<IServiceProvider, ReportGenerationFeatures, ExportFormats, IReportGeneration> _reportGeneratorFactory;
 	private readonly ILogger<GenerateReportCommandRequestHandler> _logger;
 	private readonly IFileStorageProvider _fileStorageProvider;
+	private readonly StorageProviderSettings _storageProviderSettings;
+	private readonly ILeadManagerDbContext _dbContext;
 	private readonly TimeProvider _timeProvider;
 
 	public GenerateReportCommandRequestHandler(
@@ -26,6 +30,8 @@ internal sealed class GenerateReportCommandRequestHandler : ApplicationRequestHa
 		IMediator mediator,
 		IEventDispatching eventDispatcher,
 		IFileStorageProvider fileStorageProvider,
+		StorageProviderSettings storageProviderSettings,
+		ILeadManagerDbContext dbContext,
 		TimeProvider timeProvider)
 		: base(mediator, eventDispatcher)
 	{
@@ -33,6 +39,8 @@ internal sealed class GenerateReportCommandRequestHandler : ApplicationRequestHa
 		_serviceProvider = serviceProvider;
 		_reportGeneratorFactory = reportGeneratorFactory;
 		_fileStorageProvider = fileStorageProvider;
+		_storageProviderSettings = storageProviderSettings;
+		_dbContext = dbContext;
 		_timeProvider = timeProvider;
 	}
 
@@ -40,34 +48,25 @@ internal sealed class GenerateReportCommandRequestHandler : ApplicationRequestHa
 		GenerateReportCommandRequest request,
 		CancellationToken cancellationToken = default)
 	{
+		var reportGenerationRequest = await _dbContext
+												.ReportGenerationRequests
+												.FindAsync(request.RequestId, cancellationToken);
+
+		if (reportGenerationRequest is null)
+			return ApplicationResponse<GenerateReportCommandResponse>
+				.Create(default!, operationCode: OperationCodes.NotFound);
+
 		var reportGenerator = _reportGeneratorFactory(
 								_serviceProvider,
 								request.Feature,
 								request.ReportGenerationRequestArgs.ExportFormat);
 
-		var result = await reportGenerator.GenerateAsync(request.ReportGenerationRequestArgs.QueryOptions, cancellationToken);
+		var result = await reportGenerator
+							.GenerateAsync(request.ReportGenerationRequestArgs.QueryOptions, cancellationToken);
 
-		if (result.Success)
+		if (!result.Success)
 		{
-			if (request.OnSuccess is not null)
-			{
-				try
-				{
-					await request.OnSuccess(cancellationToken);
-				}
-				catch { }
-			}
-
-			await _fileStorageProvider.UploadAsync(
-										result.Data.DataBytes,
-										result.Data.Name ?? $"GeneratedFile-{_timeProvider.GetLocalNow():yyyyMMdd_hhmmss}.dat",
-										cancellationToken: cancellationToken);
-
-			return ApplicationResponse<GenerateReportCommandResponse>
-				.Create(new GenerateReportCommandResponse(result.Data));
-		}
-
-		_logger.LogError("Error while trying to generate report." +
+			_logger.LogError("Error while trying to generate report." +
 			" - Message: {Message}." +
 			" - Operation code: {OperationCode}" +
 			" - Request id: {RequestId}" +
@@ -81,21 +80,45 @@ internal sealed class GenerateReportCommandRequestHandler : ApplicationRequestHa
 			request.ReportGenerationRequestArgs.ExportFormat,
 			JsonSerializer.Serialize(request.ReportGenerationRequestArgs.QueryOptions));
 
-		if (request.OnFailure is not null)
+			if (request.OnFailure is not null)
+			{
+				try
+				{
+					await request.OnFailure(cancellationToken);
+				}
+				catch { }
+			}
+
+			return ApplicationResponse<GenerateReportCommandResponse>
+					.Create(
+						new GenerateReportCommandResponse(result.Data),
+						message: result.Message,
+						operationCode: result.OperationCode,
+						exception: result.Exception,
+						inconsistencies: [.. result.Inconsistencies ?? []]);
+		}
+
+		reportGenerationRequest
+			.SetGeneratedFileName(result.Data.Name ?? $"GeneratedFile-{_timeProvider.GetLocalNow():yyyyMMdd_hhmmss}.dat");
+
+		if (request.OnSuccess is not null)
 		{
 			try
 			{
-				await request.OnFailure(cancellationToken);
+				await request.OnSuccess(
+								reportGenerationRequest.GeneratedFileName!,
+								cancellationToken);
 			}
 			catch { }
 		}
 
+		await _fileStorageProvider.UploadAsync(
+									result.Data.DataBytes,
+									blobName: reportGenerationRequest.GeneratedFileName!,
+									blobPath: @$"{_storageProviderSettings.ReportGenerationStorageSettings.RootFolder}/{request.ReceiverId}",
+									cancellationToken: cancellationToken);
+
 		return ApplicationResponse<GenerateReportCommandResponse>
-				.Create(
-					new GenerateReportCommandResponse(result.Data),
-					message: result.Message,
-					operationCode: result.OperationCode,
-					exception: result.Exception,
-					inconsistencies: [..result.Inconsistencies ?? []]);
+			.Create(new GenerateReportCommandResponse(result.Data));
 	}
 }
