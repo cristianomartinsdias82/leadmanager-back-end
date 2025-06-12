@@ -15,6 +15,8 @@ public sealed class ReportGenerationRequest
 	public string? SerializedParametersDataType { get; private set; }
 	public int ExecutionAttempts { get; private set; }
 	public OperationStatuses Status { get; private set; }
+	public bool ReadinessUserNotificationDismissed { get; private set; }
+	public string? GeneratedFileName { get; private set; }
 
 	public static ReportGenerationRequest Create(
 		ReportGenerationFeatures feature,
@@ -45,4 +47,10 @@ public sealed class ReportGenerationRequest
 
 	public void SetStats(OperationStatuses status)
 		=> Status = status;
+
+	public void DismissReadinessNotification()
+		=> ReadinessUserNotificationDismissed = true;
+
+	public void SetGeneratedFileName(string fileName)
+		=> GeneratedFileName = fileName;
 }

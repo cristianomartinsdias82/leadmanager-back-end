@@ -22,7 +22,7 @@ internal sealed class BlobStorageProvider : FileStorageProvider
 	public override async Task<bool> UploadAsync(
 		ReadOnlyMemory<byte> bytes,
 		string blobName,
-		bool resetStreamPositionOnRead,
+		string? blobPath = default,
 		CancellationToken cancellationToken = default)
 	{
 		var serviceClient = new BlobServiceClient(_storageProvidersettings.ConnectionString);
@@ -35,7 +35,7 @@ internal sealed class BlobStorageProvider : FileStorageProvider
 
 			await containerClient.CreateIfNotExistsAsync();
 
-			var blobClient = containerClient.GetBlobClient(blobName);
+			var blobClient = containerClient.GetBlobClient(!string.IsNullOrWhiteSpace(blobPath) ? @$"{blobPath}\{blobName}" : blobName);
 
 			await blobClient.UploadAsync(
 								BinaryData.FromBytes(bytes),
@@ -48,7 +48,8 @@ internal sealed class BlobStorageProvider : FileStorageProvider
 
 	public override async Task<IFile?> DownloadAsync(
 		string blobName,
-		string? containerName,
+		string? blobPath = default,
+		string? containerName = default,
 		CancellationToken cancellationToken = default)
 		=> await Policy.Handle<Exception>()
 				.WaitAndRetryAsync(_storageProvidersettings.UploadAttemptsMaxCount, count => TimeSpan.FromSeconds(Math.Pow(2, count) + Random.Shared.Next(2, 4)))
@@ -58,7 +59,7 @@ internal sealed class BlobStorageProvider : FileStorageProvider
 
 					var containerClient = serviceClient.GetBlobContainerClient(containerName ?? _storageProvidersettings.ContainerName);
 
-					var blobClient = containerClient.GetBlobClient(blobName);
+					var blobClient = containerClient.GetBlobClient($"{(!string.IsNullOrWhiteSpace(blobPath) ? $@"{blobPath}\{blobName}" : blobName)}");
 
 					using var ms = new MemoryStream();
 
@@ -86,7 +87,7 @@ internal sealed class BlobStorageProvider : FileStorageProvider
 
 	public async override Task BatchRemoveAsync(
 		IEnumerable<string> blobNames,
-		string? containerName,
+		string? containerName = default,
 		CancellationToken cancellationToken = default)
 		=> await Policy.Handle<Exception>()
 				.WaitAndRetryAsync(_storageProvidersettings.UploadAttemptsMaxCount, count => TimeSpan.FromSeconds(Math.Pow(2, count) + Random.Shared.Next(2, 4)))

@@ -33,8 +33,7 @@ internal sealed class DownloadLeadsFileQueryRequestHandler : ApplicationRequestH
 
 		var file = await _fileStorageProvider.DownloadAsync(
             leadsFile.FileId,
-            default!,
-            cancellationToken);
+			cancellationToken: cancellationToken);
 
         return ApplicationResponse<DownloadLeadsFileDto?>.Create(
 			DownloadLeadsFileMapper.ToDto(file),

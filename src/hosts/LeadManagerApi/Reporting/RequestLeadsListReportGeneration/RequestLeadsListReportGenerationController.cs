@@ -4,18 +4,19 @@ using LeadManagerApi.Core.ApiFeatures;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
 using Shared.DataQuerying;
+using Shared.Results;
 using static Application.Security.LeadManagerSecurityConfiguration;
 
-namespace LeadManagerApi.Prospecting.Leads.GetUploadedLeadsFiles;
+namespace LeadManagerApi.Reporting.RequestLeadsListReportGeneration;
 
-[LeadsRoute("reporting/leads-list")]
+[ReportingRoute]
 [RequiredAllPermissions(Permissions.Read)]
 public sealed class RequestLeadsListReportGenerationController : LeadManagerController
 {
 	public RequestLeadsListReportGenerationController(ISender mediator) : base(mediator) { }
 
-	[HttpPost]
-	[ProducesResponseType(StatusCodes.Status202Accepted)]
+	[HttpPost("leads-list")]
+	[ProducesResponseType(typeof(ApplicationResponse<RequestReportGenerationCommandResponse>), StatusCodes.Status202Accepted)]
 	[ProducesResponseType(StatusCodes.Status401Unauthorized)]
 	[ProducesResponseType(StatusCodes.Status500InternalServerError)]
 	public async Task<IActionResult> RequestLeadsListReportGenerationAsync(
@@ -23,10 +24,10 @@ public sealed class RequestLeadsListReportGenerationController : LeadManagerCont
 		[FromBody] QueryOptions? queryOptions,
 		CancellationToken cancellationToken)
     {
-        var response = await Mediator.Send(new RequestReportGenerationCommandRequest(format, queryOptions), cancellationToken);
+        var result = await Mediator.Send(new RequestReportGenerationCommandRequest(format, queryOptions), cancellationToken);
 
 		return Result(
-				response,
+				result,
 				onSuccessStatusCodeFactory: (_, _) => StatusCodes.Status202Accepted);
     }
 }

@@ -115,6 +115,7 @@ internal class ReportGenerationRequestsDataService
 	public async Task<int> MarkAsSucceededAsync(
 		ReportGenerationRequest request,
 		DataSourceSettings dataSourceSettings,
+		string generatedFileFullPath,
 		CancellationToken cancellationToken = default)
 	{
 		using var connection = _dbProviderFactory.CreateConnection()!;
@@ -129,10 +130,12 @@ internal class ReportGenerationRequestsDataService
 
 					return await connection.ExecuteAsync(
 						"""
-						UPDATE P SET P.Status = 'Successful'
+						UPDATE P SET
+							 P.Status = 'Successful'
+							,P.GeneratedFileFullPath = @GeneratedFileFullPath
 						FROM Processes.ReportGenerationRequests P (ROWLOCK)
 						WHERE P.Id = @Id;
-						""", param: new { request.Id });
+						""", param: new { request.Id, generatedFileFullPath });
 				}
 				catch (Exception exc)
 				{

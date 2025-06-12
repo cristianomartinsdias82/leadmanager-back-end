@@ -1,4 +1,6 @@
-﻿namespace CrossCutting.FileStorage.Configuration;
+﻿using CrossCutting.FileStorage.Configuration.ReportGeneration;
+
+namespace CrossCutting.FileStorage.Configuration;
 
 public class StorageProviderSettings
 {
@@ -13,4 +15,6 @@ public class StorageProviderSettings
 	public int UploadAttemptsMaxCount { get; init; } = default!;
 
 	public int HealthCheckingTimeoutInSecs { get; init; } = default!;
+
+	public ReportGenerationStorageSettings ReportGenerationStorageSettings { get; init; } = default!;
 }

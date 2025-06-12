@@ -30,7 +30,7 @@ internal sealed class RequestReportGenerationCommandRequestHandler : Application
 
 	public async override Task<ApplicationResponse<RequestReportGenerationCommandResponse>> Handle(
 		RequestReportGenerationCommandRequest request,
-		CancellationToken cancellationToken)
+		CancellationToken cancellationToken = default)
 	{
 		var reportGenerationRequest = ReportGenerationRequest
 										.Create(
@@ -40,9 +40,9 @@ internal sealed class RequestReportGenerationCommandRequestHandler : Application
 												ExportFormat = Enum.Parse<ExportFormats>(request.Format, true),
 												QueryOptions = request.Query
 											}),
-											$"{typeof(ReportGenerationRequestArgs).FullName}, {typeof(ReportGenerationRequestArgs).AssemblyQualifiedName}",
+											$"{typeof(ReportGenerationRequestArgs).AssemblyQualifiedName}",
 											_timeProvider.GetLocalNow(),
-											_userService.GetUserEmail()!);
+											_userService.GetUserId().ToString()!);
 
 		_dbContext.ReportGenerationRequests.Add(reportGenerationRequest);
 		await _dbContext.SaveChangesAsync(cancellationToken);

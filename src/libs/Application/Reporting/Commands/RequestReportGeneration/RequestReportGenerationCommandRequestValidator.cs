@@ -19,7 +19,7 @@ public sealed class RequestReportGenerationCommandRequestValidator : AbstractVal
         {
             RuleFor(request => request.Format)
                 .Must(format => Enum.TryParse<ExportFormats>(format, true, out var _))
-                .WithMessage("Arquivo inválido.");
+                .WithMessage("Format de arquivo é inválido.");
         });
     }
 }

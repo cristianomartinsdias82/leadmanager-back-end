@@ -1,0 +1,3 @@
+﻿namespace Application.Reporting.Commands.DismissReportReadinessMessage;
+
+public sealed record DismissReportReadinessMessageCommandResponse();

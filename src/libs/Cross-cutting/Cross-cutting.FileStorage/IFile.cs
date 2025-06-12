@@ -6,5 +6,5 @@ public interface IFile
 	byte[] FileBytes { get; init; }
 	string? ContentType { get; init; }
 	string? Location { get; init; }
-	long? ContentLength { get; init; }
+	long ContentLength { get; init; }
 }
